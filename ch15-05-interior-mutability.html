@@ -26,8 +26,6 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="mdbook-quiz.css">
-        <link rel="stylesheet" href="consent.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
     </head>
     <body>
@@ -735,8 +733,10 @@ The runtime checks of the borrowing rules protect us from data races, and it’s
 sometimes worth trading a bit of speed for this flexibility in our data
 structures. Note that <code>RefCell&lt;T&gt;</code> does not work for multithreaded code!
 <code>Mutex&lt;T&gt;</code> is the thread-safe version of <code>RefCell&lt;T&gt;</code> and we’ll discuss
-<code>Mutex&lt;T&gt;</code> in Chapter 16.</p>
-
+<code>Mutex&lt;T&gt;</code> in Chapter 16.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -775,7 +775,5 @@ structures. Note that <code>RefCell&lt;T&gt;</code> does not work for multithrea
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="mdbook-quiz.js"></script>
-        <script type="text/javascript" src="consent.js"></script>
     </body>
 </html>

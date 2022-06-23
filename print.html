@@ -27,8 +27,6 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="mdbook-quiz.css">
-        <link rel="stylesheet" href="consent.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
     </head>
     <body>
@@ -150,10 +148,13 @@ to install or update Rust.</p>
 <p>The HTML format is available online at
 <a href="https://doc.rust-lang.org/stable/book/">https://doc.rust-lang.org/stable/book/</a>
 and offline with installations of Rust made with <code>rustup</code>; run <code>rustup docs --book</code> to open.</p>
-<p>Several community <a href="appendix-06-translation.html">translations</a> are also available.</p>
+<p>Several community [translations] are also available.</p>
 <p>This text is available in <a href="https://nostarch.com/rust">paperback and ebook format from No Starch
 Press</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="foreword"><a class="header" href="#foreword">Foreword</a></h1>
+<p>[translations]: appendix-06-translation.html<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="foreword"><a class="header" href="#foreword">Foreword</a></h1>
 <p>It wasn’t always so clear, but the Rust programming language is fundamentally
 about <em>empowerment</em>: no matter what kind of code you are writing now, Rust
 empowers you to reach farther, to program with confidence in a wider variety of
@@ -186,8 +187,10 @@ same skills to target your Raspberry Pi.</p>
 friendly and approachable text intended to help you level up not just your
 knowledge of Rust, but also your reach and confidence as a programmer in
 general. So dive in, get ready to learn—and welcome to the Rust community!</p>
-<p>— Nicholas Matsakis and Aaron Turon</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>— Nicholas Matsakis and Aaron Turon<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <blockquote>
 <p>Note: This edition of the book is the same as <a href="https://nostarch.com/rust">The Rust Programming
 Language</a> available in print and ebook format from <a href="https://nostarch.com/">No Starch
@@ -336,16 +339,20 @@ error. Ferris will also help you distinguish code that isn’t meant to work:</p
 doesn’t compile.</p>
 <h2 id="source-code"><a class="header" href="#source-code">Source Code</a></h2>
 <p>The source files from which this book is generated can be found on
-<a href="https://github.com/rust-lang/book/tree/main/src">GitHub</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<a href="https://github.com/rust-lang/book/tree/main/src">GitHub</a>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
 <p>Let’s start your Rust journey! There’s a lot to learn, but every journey starts
 somewhere. In this chapter, we’ll discuss:</p>
 <ul>
 <li>Installing Rust on Linux, macOS, and Windows</li>
 <li>Writing a program that prints <code>Hello, world!</code></li>
-<li>Using <code>cargo</code>, Rust’s package manager and build system</li>
+<li>Using <code>cargo</code>, Rust’s package manager and build system<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
 <p>The first step is to install Rust. We’ll download Rust through <code>rustup</code>, a
 command line tool for managing Rust versions and associated tools. You’ll need
 an internet connection for the download.</p>
@@ -429,8 +436,10 @@ you can read it offline. Run <code>rustup doc</code> to open the local documenta
 your browser.</p>
 <p>Any time a type or function is provided by the standard library and you’re not
 sure what it does or how to use it, use the application programming interface
-(API) documentation to find out!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="hello-world"><a class="header" href="#hello-world">Hello, World!</a></h2>
+(API) documentation to find out!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="hello-world"><a class="header" href="#hello-world">Hello, World!</a></h2>
 <p>Now that you’ve installed Rust, let’s write your first Rust program. It’s
 traditional when learning a new language to write a little program that prints
 the text <code>Hello, world!</code> to the screen, so we’ll do the same here!</p>
@@ -572,8 +581,10 @@ compile and run your program. Everything is a trade-off in language design.</p>
 <p>Just compiling with <code>rustc</code> is fine for simple programs, but as your project
 grows, you’ll want to manage all the options and make it easy to share your
 code. Next, we’ll introduce you to the Cargo tool, which will help you write
-real-world Rust programs.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="hello-cargo"><a class="header" href="#hello-cargo">Hello, Cargo!</a></h2>
+real-world Rust programs.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="hello-cargo"><a class="header" href="#hello-cargo">Hello, Cargo!</a></h2>
 <p>Cargo is Rust’s build system and package manager. Most Rustaceans use this tool
 to manage their Rust projects because Cargo handles a lot of tasks for you,
 such as building your code, downloading the libraries your code depends on, and
@@ -742,7 +753,7 @@ using Git, change to that project’s directory, and build:</p>
 $ cd someproject
 $ cargo build
 </code></pre>
-<p>For more information about Cargo, check out <a href="https://doc.rust-lang.org/cargo/">its documentation</a>.</p>
+<p>For more information about Cargo, check out [its documentation].</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>You’re already off to a great start on your Rust journey! In this chapter,
 you’ve learned how to:</p>
@@ -757,7 +768,10 @@ you’ve learned how to:</p>
 and writing Rust code. So, in Chapter 2, we’ll build a guessing game program.
 If you would rather start by learning how common programming concepts work in
 Rust, see Chapter 3 and then return to Chapter 2.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="programming-a-guessing-game"><a class="header" href="#programming-a-guessing-game">Programming a Guessing Game</a></h1>
+<p>[its documentation]: https://doc.rust-lang.org/cargo/<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="programming-a-guessing-game"><a class="header" href="#programming-a-guessing-game">Programming a Guessing Game</a></h1>
 <p>Let’s jump into Rust by working through a hands-on project together! This
 chapter introduces you to a few common Rust concepts by showing you how to use
 them in a real program. You’ll learn about <code>let</code>, <code>match</code>, methods, associated
@@ -1854,8 +1868,10 @@ few chapters, you’ll learn about these concepts in more detail. Chapter 3
 covers concepts that most programming languages have, such as variables, data
 types, and functions, and shows how to use them in Rust. Chapter 4 explores
 ownership, a feature that makes Rust different from other languages. Chapter 5
-discusses structs and method syntax, and Chapter 6 explains how enums work.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="common-programming-concepts"><a class="header" href="#common-programming-concepts">Common Programming Concepts</a></h1>
+discusses structs and method syntax, and Chapter 6 explains how enums work.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="common-programming-concepts"><a class="header" href="#common-programming-concepts">Common Programming Concepts</a></h1>
 <p>This chapter covers concepts that appear in almost every programming language
 and how they work in Rust. Many programming languages have much in common at
 their core. None of the concepts presented in this chapter are unique to Rust,
@@ -1872,9 +1888,11 @@ use these words as names of variables or functions. Most of the keywords have
 special meanings, and you’ll be using them to do various tasks in your Rust
 programs; a few have no current functionality associated with them but have
 been reserved for functionality that might be added to Rust in the future. You
-can find a list of the keywords in <a href="appendix-01-keywords.html">Appendix A</a><!-- ignore -->.</p>
+can find a list of the keywords in <a href="appendix-01-keywords.html">Appendix A</a><!-- ignore -->.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
 </blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="variables-and-mutability"><a class="header" href="#variables-and-mutability">Variables and Mutability</a></h2>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="variables-and-mutability"><a class="header" href="#variables-and-mutability">Variables and Mutability</a></h2>
 <p>As mentioned in the <a href="ch02-00-guessing-game-tutorial.html#storing-values-with-variables">“Storing Values with
 Variables”</a><!-- ignore --> section, by default
 variables are immutable. This is one of many nudges Rust gives you to write
@@ -1956,6 +1974,7 @@ The value of x is: 6
 <p>We’re allowed to change the value bound to <code>x</code> from <code>5</code> to <code>6</code> when <code>mut</code>
 is used. Ultimately, deciding whether to use mutability or not is up to you and
 depends on what you think is clearest in that particular situation.</p>
+<div class="quiz-placeholder" data-quiz-name="ch03-01-variables-and-mutability-section1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;For example, you can make a mutable variable `x` by writing: `let mut x = 1`.\n&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;mut&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the keyword used after `let` to indicate that a variable can be mutated?&quot;}},{&quot;context&quot;:&quot;This is a compiler error because line 4 tries to mutate `x` when `x` is not marked as `mut`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let x = 1;\n  println!(\&quot;{x}\&quot;);\n  x += 1;\n  println!(\&quot;{x}\&quot;);\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer/quiz"  data-quiz-fullscreen="" ></div>
 <h3 id="constants"><a class="header" href="#constants">Constants</a></h3>
 <p>Like immutable variables, <em>constants</em> are values that are bound to a name and
 are not allowed to change, but there are a few differences between constants
@@ -2074,8 +2093,10 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `variables` due to previous error
 </code></pre>
 <p>Now that we’ve explored how variables work, let’s look at more data types they
-can have.</p>
-<div class="quiz-placeholder" data-quiz-name="ch03-01-variables-and-mutability"  data-quiz-questions="{&quot;questions&quot;:[{&quot;program&quot;:&quot;fn main() {\n  let x = 1;\n  println!(\&quot;{x}\&quot;);\n  x += 1;\n  println!(\&quot;{x}\&quot;);\n}&quot;,&quot;type&quot;:&quot;Tracing&quot;}]}"  data-quiz-log-endpoint="https://mindover.computer/quiz" ></div><div style="break-before: page; page-break-before: always;"></div><h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
+can have.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="data-types"><a class="header" href="#data-types">Data Types</a></h2>
 <p>Every value in Rust is of a certain <em>data type</em>, which tells Rust what kind of
 data is being specified so it knows how to work with that data. We’ll look at
 two data type subsets: scalar and compound.</p>
@@ -2443,8 +2464,10 @@ low-level languages, this kind of check is not done, and when you provide an
 incorrect index, invalid memory can be accessed. Rust protects you against this
 kind of error by immediately exiting instead of allowing the memory access and
 continuing. Chapter 9 discusses more of Rust’s error handling and how you can
-write readable, safe code that neither panics nor allows invalid memory access.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+write readable, safe code that neither panics nor allows invalid memory access.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
 <p>Functions are prevalent in Rust code. You’ve already seen one of the most
 important functions in the language: the <code>main</code> function, which is the entry
 point of many programs. You’ve also seen the <code>fn</code> keyword, which allows you to
@@ -2733,8 +2756,10 @@ code. The definition of the function <code>plus_one</code> says that it will ret
 the unit type. Therefore, nothing is returned, which contradicts the function
 definition and results in an error. In this output, Rust provides a message to
 possibly help rectify this issue: it suggests removing the semicolon, which
-would fix the error.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
+would fix the error.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
 <p>All programmers strive to make their code easy to understand, but sometimes
 extra explanation is warranted. In these cases, programmers leave <em>comments</em> in
 their source code that the compiler will ignore but people reading the source
@@ -2772,8 +2797,10 @@ separate line above the code it’s annotating:</p>
 }
 </code></pre></pre>
 <p>Rust also has another kind of comment, documentation comments, which we’ll
-discuss in the “Publishing a Crate to Crates.io” section of Chapter 14.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="control-flow"><a class="header" href="#control-flow">Control Flow</a></h2>
+discuss in the “Publishing a Crate to Crates.io” section of Chapter 14.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="control-flow"><a class="header" href="#control-flow">Control Flow</a></h2>
 <p>The ability to run some code depending on if a condition is true, or run some
 code repeatedly while a condition is true, are basic building blocks in most
 programming languages. The most common constructs that let you control the flow
@@ -3212,14 +3239,18 @@ programs to do the following:</p>
 taking advantage of the repetition in the song.</li>
 </ul>
 <p>When you’re ready to move on, we’ll talk about a concept in Rust that <em>doesn’t</em>
-commonly exist in other programming languages: ownership.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="understanding-ownership"><a class="header" href="#understanding-ownership">Understanding Ownership</a></h1>
+commonly exist in other programming languages: ownership.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="understanding-ownership"><a class="header" href="#understanding-ownership">Understanding Ownership</a></h1>
 <p>Ownership is Rust’s most unique feature and has deep implications for the rest
 of the language. It enables Rust to make memory safety guarantees without
 needing a garbage collector, so it’s important to understand how ownership
 works. In this chapter, we’ll talk about ownership as well as several related
-features: borrowing, slices, and how Rust lays data out in memory.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="what-is-ownership"><a class="header" href="#what-is-ownership">What Is Ownership?</a></h2>
+features: borrowing, slices, and how Rust lays data out in memory.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="what-is-ownership"><a class="header" href="#what-is-ownership">What Is Ownership?</a></h2>
 <p><em>Ownership</em> is a set of rules that governs how a Rust program manages memory.
 All programs have to manage the way they use a computer’s memory while running.
 Some languages have garbage collection that regularly looks for no-longer used
@@ -3703,8 +3734,10 @@ fn calculate_length(s: String) -&gt; (String, usize) {
 <p><span class="caption">Listing 4-5: Returning ownership of parameters</span></p>
 <p>But this is too much ceremony and a lot of work for a concept that should be
 common. Luckily for us, Rust has a feature for using a value without
-transferring ownership, called <em>references</em>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="references-and-borrowing"><a class="header" href="#references-and-borrowing">References and Borrowing</a></h2>
+transferring ownership, called <em>references</em>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="references-and-borrowing"><a class="header" href="#references-and-borrowing">References and Borrowing</a></h2>
 <p>The issue with the tuple code in Listing 4-5 is that we have to return the
 <code>String</code> to the calling function so we can still use the <code>String</code> after the
 call to <code>calculate_length</code>, because the <code>String</code> was moved into
@@ -4036,8 +4069,10 @@ deallocated.</p>
 number of immutable references.</li>
 <li>References must always be valid.</li>
 </ul>
-<p>Next, we’ll look at a different kind of reference: slices.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="the-slice-type"><a class="header" href="#the-slice-type">The Slice Type</a></h2>
+<p>Next, we’ll look at a different kind of reference: slices.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="the-slice-type"><a class="header" href="#the-slice-type">The Slice Type</a></h2>
 <p><em>Slices</em> let you reference a contiguous sequence of elements in a collection
 rather than the whole collection. A slice is a kind of reference, so it does
 not have ownership.</p>
@@ -4458,8 +4493,10 @@ owner of data automatically clean up that data when the owner goes out of scope
 means you don’t have to write and debug extra code to get this control.</p>
 <p>Ownership affects how lots of other parts of Rust work, so we’ll talk about
 these concepts further throughout the rest of the book. Let’s move on to
-Chapter 5 and look at grouping pieces of data together in a <code>struct</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="using-structs-to-structure-related-data"><a class="header" href="#using-structs-to-structure-related-data">Using Structs to Structure Related Data</a></h1>
+Chapter 5 and look at grouping pieces of data together in a <code>struct</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="using-structs-to-structure-related-data"><a class="header" href="#using-structs-to-structure-related-data">Using Structs to Structure Related Data</a></h1>
 <p>A <em>struct</em>, or <em>structure</em>, is a custom data type that lets you package
 together and name multiple related values that make up a meaningful group. If
 you’re familiar with an object-oriented language, a <em>struct</em> is like an
@@ -4470,8 +4507,10 @@ a better way to group data.</p>
 define associated functions, especially the kind of associated functions called
 <em>methods</em>, to specify behavior associated with a struct type. Structs and enums
 (discussed in Chapter 6) are the building blocks for creating new types in your
-program’s domain to take full advantage of Rust’s compile time type checking.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="defining-and-instantiating-structs"><a class="header" href="#defining-and-instantiating-structs">Defining and Instantiating Structs</a></h2>
+program’s domain to take full advantage of Rust’s compile time type checking.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="defining-and-instantiating-structs"><a class="header" href="#defining-and-instantiating-structs">Defining and Instantiating Structs</a></h2>
 <p>Structs are similar to tuples, discussed in <a href="ch03-02-data-types.html#the-tuple-type">“The Tuple Type”</a><!--
 ignore --> section, in that both hold multiple related values. Like tuples, the
 pieces of a struct can be different types. Unlike with tuples, in a struct
@@ -4820,7 +4859,10 @@ after running update-rustc.sh:
 pbcopy < listings/ch05-using-structs-to-structure-related-data/no-listing-02-reference-in-struct/output.txt
 paste above
 add `> ` before every line -->
-<div style="break-before: page; page-break-before: always;"></div><h2 id="an-example-program-using-structs"><a class="header" href="#an-example-program-using-structs">An Example Program Using Structs</a></h2>
+<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="an-example-program-using-structs"><a class="header" href="#an-example-program-using-structs">An Example Program Using Structs</a></h2>
 <p>To understand when we might want to use structs, let’s write a program that
 calculates the area of a rectangle. We’ll start by using single variables, and
 then refactor the program until we’re using structs instead.</p>
@@ -5106,8 +5148,10 @@ section of the Rust Reference</a>.</p>
 It would be helpful to tie this behavior more closely to our <code>Rectangle</code>
 struct, because it won’t work with any other type. Let’s look at how we can
 continue to refactor this code by turning the <code>area</code> function into an <code>area</code>
-<em>method</em> defined on our <code>Rectangle</code> type.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="method-syntax"><a class="header" href="#method-syntax">Method Syntax</a></h2>
+<em>method</em> defined on our <code>Rectangle</code> type.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="method-syntax"><a class="header" href="#method-syntax">Method Syntax</a></h2>
 <p><em>Methods</em> are similar to functions: we declare them with the <code>fn</code> keyword and a
 name, they can have parameters and a return value, and they contain some code
 that’s run when the method is called from somewhere else. Unlike functions,
@@ -5443,8 +5487,10 @@ functions that are associated with your type, and methods are a kind of
 associated function that let you specify the behavior that instances of your
 structs have.</p>
 <p>But structs aren’t the only way you can create custom types: let’s turn to
-Rust’s enum feature to add another tool to your toolbox.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="enums-and-pattern-matching"><a class="header" href="#enums-and-pattern-matching">Enums and Pattern Matching</a></h1>
+Rust’s enum feature to add another tool to your toolbox.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="enums-and-pattern-matching"><a class="header" href="#enums-and-pattern-matching">Enums and Pattern Matching</a></h1>
 <p>In this chapter we’ll look at <em>enumerations</em>, also referred to as <em>enums</em>.
 Enums allow you to define a type by enumerating its possible <em>variants</em>. First,
 we’ll define and use an enum to show how an enum can encode meaning along with
@@ -5453,8 +5499,10 @@ expresses that a value can be either something or nothing. Then we’ll look at
 how pattern matching in the <code>match</code> expression makes it easy to run different
 code for different values of an enum. Finally, we’ll cover how the <code>if let</code>
 construct is another convenient and concise idiom available to handle enums in
-your code.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="defining-an-enum"><a class="header" href="#defining-an-enum">Defining an Enum</a></h2>
+your code.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="defining-an-enum"><a class="header" href="#defining-an-enum">Defining an Enum</a></h2>
 <p>Where structs give you a way of grouping together related fields and data, like
 a <code>Rectangle</code> with its <code>width</code> and <code>height</code>, enums give you a way of saying a
 value is one of a possible set of values. For example, we may want to say that
@@ -5850,8 +5898,10 @@ other code to run if you have a <code>None</code> value, and that code doesn’t
 value available. The <code>match</code> expression is a control flow construct that does
 just this when used with enums: it will run different code depending on which
 variant of the enum it has, and that code can use the data inside the matching
-value.</p>
-<div style="break-before: page; page-break-before: always;"></div><p><a id="the-match-control-flow-operator"></a></p>
+value.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><p><a id="the-match-control-flow-operator"></a></p>
 <h2 id="the-match-control-flow-construct"><a class="header" href="#the-match-control-flow-construct">The <code>match</code> Control Flow Construct</a></h2>
 <p>Rust has an extremely powerful control flow construct called <code>match</code> that allows
 you to compare a value against a series of patterns and then execute code based
@@ -6212,8 +6262,10 @@ code in this case.</p>
 <p>There’s more about patterns and matching that we’ll cover in <a href="ch18-00-patterns.html">Chapter
 18</a><!-- ignore -->. For now, we’re going to move on to the
 <code>if let</code> syntax, which can be useful in situations where the <code>match</code> expression
-is a bit wordy.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="concise-control-flow-with-if-let"><a class="header" href="#concise-control-flow-with-if-let">Concise Control Flow with <code>if let</code></a></h2>
+is a bit wordy.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="concise-control-flow-with-if-let"><a class="header" href="#concise-control-flow-with-if-let">Concise Control Flow with <code>if let</code></a></h2>
 <p>The <code>if let</code> syntax lets you combine <code>if</code> and <code>let</code> into a less verbose way to
 handle values that match one pattern while ignoring the rest. Consider the
 program in Listing 6-6 that matches on an <code>Option&lt;u8&gt;</code> value in the <code>config_max</code>
@@ -6324,8 +6376,10 @@ compiler will make certain your functions get only values of the type each
 function expects.</p>
 <p>In order to provide a well-organized API to your users that is straightforward
 to use and only exposes exactly what your users will need, let’s now turn to
-Rust’s modules.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="managing-growing-projects-with-packages-crates-and-modules"><a class="header" href="#managing-growing-projects-with-packages-crates-and-modules">Managing Growing Projects with Packages, Crates, and Modules</a></h1>
+Rust’s modules.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="managing-growing-projects-with-packages-crates-and-modules"><a class="header" href="#managing-growing-projects-with-packages-crates-and-modules">Managing Growing Projects with Packages, Crates, and Modules</a></h1>
 <p>As you write large programs, organizing your code will become increasingly
 important. By grouping related functionality and separating code with distinct
 features, you’ll clarify where to find code that implements a particular
@@ -6365,8 +6419,10 @@ privacy of paths</li>
 </ul>
 <p>In this chapter, we’ll cover all these features, discuss how they interact, and
 explain how to use them to manage scope. By the end, you should have a solid
-understanding of the module system and be able to work with scopes like a pro!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="packages-and-crates"><a class="header" href="#packages-and-crates">Packages and Crates</a></h2>
+understanding of the module system and be able to work with scopes like a pro!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="packages-and-crates"><a class="header" href="#packages-and-crates">Packages and Crates</a></h2>
 <p>The first parts of the module system we’ll cover are packages and crates.</p>
 <p>A <em>crate</em> is the smallest amount of code that the Rust compiler considers at a
 time. Even if you run <code>rustc</code> rather than <code>cargo</code> and pass a single source code
@@ -6422,8 +6478,10 @@ to <code>rustc</code> to build the library or binary.</p>
 contains a binary crate named <code>my-project</code>. If a package contains <em>src/main.rs</em>
 and <em>src/lib.rs</em>, it has two crates: a binary and a library, both with the same
 name as the package. A package can have multiple binary crates by placing files
-in the <em>src/bin</em> directory: each file will be a separate binary crate.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="defining-modules-to-control-scope-and-privacy"><a class="header" href="#defining-modules-to-control-scope-and-privacy">Defining Modules to Control Scope and Privacy</a></h2>
+in the <em>src/bin</em> directory: each file will be a separate binary crate.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="defining-modules-to-control-scope-and-privacy"><a class="header" href="#defining-modules-to-control-scope-and-privacy">Defining Modules to Control Scope and Privacy</a></h2>
 <p>In this section, we’ll talk about modules and other parts of the module system,
 namely <em>paths</em> that allow you to name items; the <code>use</code> keyword that brings a
 path into scope; and the <code>pub</code> keyword to make items public. We’ll also discuss
@@ -6586,8 +6644,10 @@ tree is rooted under the implicit module named <code>crate</code>.</p>
 <p>The module tree might remind you of the filesystem’s directory tree on your
 computer; this is a very apt comparison! Just like directories in a filesystem,
 you use modules to organize your code. And just like files in a directory, we
-need a way to find our modules.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="paths-for-referring-to-an-item-in-the-module-tree"><a class="header" href="#paths-for-referring-to-an-item-in-the-module-tree">Paths for Referring to an Item in the Module Tree</a></h2>
+need a way to find our modules.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="paths-for-referring-to-an-item-in-the-module-tree"><a class="header" href="#paths-for-referring-to-an-item-in-the-module-tree">Paths for Referring to an Item in the Module Tree</a></h2>
 <p>To show Rust where to find an item in a module tree, we use a path in the same
 way we use a path when navigating a filesystem. To call a function, we need to
 know its path.</p>
@@ -6946,8 +7006,10 @@ fields being public, so struct fields follow the general rule of everything
 being private by default unless annotated with <code>pub</code>.</p>
 <p>There’s one more situation involving <code>pub</code> that we haven’t covered, and that is
 our last module system feature: the <code>use</code> keyword. We’ll cover <code>use</code> by itself
-first, and then we’ll show how to combine <code>pub</code> and <code>use</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="bringing-paths-into-scope-with-the-use-keyword"><a class="header" href="#bringing-paths-into-scope-with-the-use-keyword">Bringing Paths into Scope with the <code>use</code> Keyword</a></h2>
+first, and then we’ll show how to combine <code>pub</code> and <code>use</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="bringing-paths-into-scope-with-the-use-keyword"><a class="header" href="#bringing-paths-into-scope-with-the-use-keyword">Bringing Paths into Scope with the <code>use</code> Keyword</a></h2>
 <p>Having to write out the paths to call functions can feel inconvenient and
 repetitive. In Listing 7-7, whether we chose the absolute or relative path to
 the <code>add_to_waitlist</code> function, every time we wanted to call <code>add_to_waitlist</code>
@@ -7327,8 +7389,10 @@ into the <code>tests</code> module; we’ll talk about that in the <a href="ch11
 Tests”</a><!-- ignore --> section in Chapter 11. The glob operator
 is also sometimes used as part of the prelude pattern: see <a href="../std/prelude/index.html#other-preludes">the standard
 library documentation</a><!-- ignore -->
-for more information on that pattern.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="separating-modules-into-different-files"><a class="header" href="#separating-modules-into-different-files">Separating Modules into Different Files</a></h2>
+for more information on that pattern.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="separating-modules-into-different-files"><a class="header" href="#separating-modules-into-different-files">Separating Modules into Different Files</a></h2>
 <p>So far, all the examples in this chapter defined multiple modules in one file.
 When modules get large, you might want to move their definitions to a separate
 file to make the code easier to navigate.</p>
@@ -7431,8 +7495,10 @@ scope with a <code>use</code> statement so you can use a shorter path for multip
 the item in that scope. Module code is private by default, but you can make
 definitions public by adding the <code>pub</code> keyword.</p>
 <p>In the next chapter, we’ll look at some collection data structures in the
-standard library that you can use in your neatly organized code.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="common-collections"><a class="header" href="#common-collections">Common Collections</a></h1>
+standard library that you can use in your neatly organized code.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="common-collections"><a class="header" href="#common-collections">Common Collections</a></h1>
 <p>Rust’s standard library includes a number of very useful data structures called
 <em>collections</em>. Most other data types represent one specific value, but
 collections can contain multiple values. Unlike the built-in array and tuple
@@ -7452,8 +7518,10 @@ particular implementation of the more general data structure called a <em>map</e
 <p>To learn about the other kinds of collections provided by the standard library,
 see <a href="../std/collections/index.html">the documentation</a>.</p>
 <p>We’ll discuss how to create and update vectors, strings, and hash maps, as well
-as what makes each special.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="storing-lists-of-values-with-vectors"><a class="header" href="#storing-lists-of-values-with-vectors">Storing Lists of Values with Vectors</a></h2>
+as what makes each special.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="storing-lists-of-values-with-vectors"><a class="header" href="#storing-lists-of-values-with-vectors">Storing Lists of Values with Vectors</a></h2>
 <p>The first collection type we’ll look at is <code>Vec&lt;T&gt;</code>, also known as a <em>vector</em>.
 Vectors allow you to store more than one value in a single data structure that
 puts all the values next to each other in memory. Vectors can only store values
@@ -7711,8 +7779,10 @@ are dropped</span></p>
 integers it holds will be cleaned up. The borrow checker ensures that any
 references to contents of a vector are only used while the vector itself is
 valid.</p>
-<p>Let’s move on to the next collection type: <code>String</code>!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="storing-utf-8-encoded-text-with-strings"><a class="header" href="#storing-utf-8-encoded-text-with-strings">Storing UTF-8 Encoded Text with Strings</a></h2>
+<p>Let’s move on to the next collection type: <code>String</code>!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="storing-utf-8-encoded-text-with-strings"><a class="header" href="#storing-utf-8-encoded-text-with-strings">Storing UTF-8 Encoded Text with Strings</a></h2>
 <p>We talked about strings in Chapter 4, but we’ll look at them in more depth now.
 New Rustaceans commonly get stuck on strings for a combination of three
 reasons: Rust’s propensity for exposing possible errors, strings being a more
@@ -8104,8 +8174,10 @@ off the <code>String</code> and <code>&amp;str</code> types to help handle these
 correctly. Be sure to check out the documentation for useful methods like
 <code>contains</code> for searching in a string and <code>replace</code> for substituting parts of a
 string with another string.</p>
-<p>Let’s switch to something a bit less complex: hash maps!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="storing-keys-with-associated-values-in-hash-maps"><a class="header" href="#storing-keys-with-associated-values-in-hash-maps">Storing Keys with Associated Values in Hash Maps</a></h2>
+<p>Let’s switch to something a bit less complex: hash maps!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="storing-keys-with-associated-values-in-hash-maps"><a class="header" href="#storing-keys-with-associated-values-in-hash-maps">Storing Keys with Associated Values in Hash Maps</a></h2>
 <p>The last of our common collections is the <em>hash map</em>. The type <code>HashMap&lt;K, V&gt;</code>
 stores a mapping of keys of type <code>K</code> to values of type <code>V</code> using a
 <em>hashing function</em>, which determines how it places these keys and values into
@@ -8353,8 +8425,10 @@ and hash maps have that will be helpful for these exercises!</p>
 <p>We’re getting into more complex programs in which operations can fail, so, it’s
 a perfect time to discuss error handling. We’ll do that next!</p>
 <div class="footnote-definition" id="siphash"><sup class="footnote-definition-label">1</sup>
-<p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a></p>
-</div>
+<p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a><script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"></div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h1>
 <p>Errors are a fact of life in software, so Rust has a number of features for
 handling situations in which something goes wrong. In many cases, Rust requires
@@ -8375,8 +8449,10 @@ the <code>panic!</code> macro that stops execution when the program encounters a
 unrecoverable error. This chapter covers calling <code>panic!</code> first and then talks
 about returning <code>Result&lt;T, E&gt;</code> values. Additionally, we’ll explore
 considerations when deciding whether to try to recover from an error or to stop
-execution.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="unrecoverable-errors-with-panic"><a class="header" href="#unrecoverable-errors-with-panic">Unrecoverable Errors with <code>panic!</code></a></h2>
+execution.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="unrecoverable-errors-with-panic"><a class="header" href="#unrecoverable-errors-with-panic">Unrecoverable Errors with <code>panic!</code></a></h2>
 <p>Sometimes, bad things happen in your code, and there’s nothing you can do about
 it. In these cases, Rust has the <code>panic!</code> macro. There are two ways to cause a
 panic in practice: by taking an action that causes our code to panic (such as
@@ -8521,8 +8597,10 @@ with what values to cause the panic and what the code should do instead.</p>
 <p>We’ll come back to <code>panic!</code> and when we should and should not use <code>panic!</code> to
 handle error conditions in the <a href="ch09-03-to-panic-or-not-to-panic.html#to-panic-or-not-to-panic">“To <code>panic!</code> or Not to
 <code>panic!</code>”</a><!-- ignore --> section later in this
-chapter. Next, we’ll look at how to recover from an error using <code>Result</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="recoverable-errors-with-result"><a class="header" href="#recoverable-errors-with-result">Recoverable Errors with <code>Result</code></a></h2>
+chapter. Next, we’ll look at how to recover from an error using <code>Result</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="recoverable-errors-with-result"><a class="header" href="#recoverable-errors-with-result">Recoverable Errors with <code>Result</code></a></h2>
 <p>Most errors aren’t serious enough to require the program to stop entirely.
 Sometimes, when a function fails, it’s for a reason that you can easily
 interpret and respond to. For example, if you try to open a file and that
@@ -9076,8 +9154,10 @@ documentation for more information on implementing the <code>Termination</code> 
 your own types.</p>
 <p>Now that we’ve discussed the details of calling <code>panic!</code> or returning <code>Result</code>,
 let’s return to the topic of how to decide which is appropriate to use in which
-cases.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="to-panic-or-not-to-panic"><a class="header" href="#to-panic-or-not-to-panic">To <code>panic!</code> or Not to <code>panic!</code></a></h2>
+cases.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="to-panic-or-not-to-panic"><a class="header" href="#to-panic-or-not-to-panic">To <code>panic!</code> or Not to <code>panic!</code></a></h2>
 <p>So how do you decide when you should call <code>panic!</code> and when you should return
 <code>Result</code>? When code panics, there’s no way to recover. You could call <code>panic!</code>
 for any error situation, whether there’s a possible way to recover or not, but
@@ -9328,8 +9408,10 @@ success or failure as well. Using <code>panic!</code> and <code>Result</code> in
 situations will make your code more reliable in the face of inevitable problems.</p>
 <p>Now that you’ve seen useful ways that the standard library uses generics with
 the <code>Option</code> and <code>Result</code> enums, we’ll talk about how generics work and how you
-can use them in your code.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="generic-types-traits-and-lifetimes"><a class="header" href="#generic-types-traits-and-lifetimes">Generic Types, Traits, and Lifetimes</a></h1>
+can use them in your code.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="generic-types-traits-and-lifetimes"><a class="header" href="#generic-types-traits-and-lifetimes">Generic Types, Traits, and Lifetimes</a></h1>
 <p>Every programming language has tools for effectively handling the duplication
 of concepts. In Rust, one such tool is <em>generics</em>: abstract stand-ins for
 concrete types or other properties. We can express the behavior of generics or
@@ -9479,8 +9561,10 @@ the same way that the function body can operate on an abstract <code>list</code>
 of specific values, generics allow code to operate on abstract types.</p>
 <p>For example, say we had two functions: one that finds the largest item in a
 slice of <code>i32</code> values and one that finds the largest item in a slice of <code>char</code>
-values. How would we eliminate that duplication? Let’s find out!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="generic-data-types"><a class="header" href="#generic-data-types">Generic Data Types</a></h2>
+values. How would we eliminate that duplication? Let’s find out!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="generic-data-types"><a class="header" href="#generic-data-types">Generic Data Types</a></h2>
 <p>We use generics to create definitions for items like function signatures or
 structs, which we can then use with many different concrete data types. Let’s
 first look at how to define functions, structs, enums, and methods using
@@ -9898,8 +9982,10 @@ the compiler. Because Rust compiles generic code into code that specifies the
 type in each instance, we pay no runtime cost for using generics. When the code
 runs, it performs just as it would if we had duplicated each definition by
 hand. The process of monomorphization makes Rust’s generics extremely efficient
-at runtime.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="traits-defining-shared-behavior"><a class="header" href="#traits-defining-shared-behavior">Traits: Defining Shared Behavior</a></h2>
+at runtime.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="traits-defining-shared-behavior"><a class="header" href="#traits-defining-shared-behavior">Traits: Defining Shared Behavior</a></h2>
 <p>A <em>trait</em> defines functionality a particular type has and can share with other
 types. We can use traits to define shared behavior in an abstract way. We can
 use <em>trait bounds</em> to specify that a generic type can be any type that has
@@ -10462,8 +10548,10 @@ moves these errors to compile time so we’re forced to fix the problems before
 our code is even able to run. Additionally, we don’t have to write code that
 checks for behavior at runtime because we’ve already checked at compile time.
 Doing so improves performance without having to give up the flexibility of
-generics.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="validating-references-with-lifetimes"><a class="header" href="#validating-references-with-lifetimes">Validating References with Lifetimes</a></h2>
+generics.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="validating-references-with-lifetimes"><a class="header" href="#validating-references-with-lifetimes">Validating References with Lifetimes</a></h2>
 <p>Lifetimes are another kind of generic that we’ve already been using. Rather
 than ensuring that a type has the behavior we want, lifetimes ensure that
 references are valid as long as we need them to be.</p>
@@ -11191,8 +11279,10 @@ this chapter: Chapter 17 discusses trait objects, which are another way to use
 traits. There are also more complex scenarios involving lifetime annotations
 that you will only need in very advanced scenarios; for those, you should read
 the <a href="../reference/index.html">Rust Reference</a>. But next, you’ll learn how to write tests in
-Rust so you can make sure your code is working the way it should.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="writing-automated-tests"><a class="header" href="#writing-automated-tests">Writing Automated Tests</a></h1>
+Rust so you can make sure your code is working the way it should.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="writing-automated-tests"><a class="header" href="#writing-automated-tests">Writing Automated Tests</a></h1>
 <p>In his 1972 essay “The Humble Programmer,” Edsger W. Dijkstra said that
 “Program testing can be a very effective way to show the presence of bugs, but
 it is hopelessly inadequate for showing their absence.” That doesn’t mean we
@@ -11218,8 +11308,10 @@ changed.</p>
 write good tests in one chapter, we’ll discuss the mechanics of Rust’s testing
 facilities. We’ll talk about the annotations and macros available to you when
 writing your tests, the default behavior and options provided for running your
-tests, and how to organize tests into unit tests and integration tests.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="how-to-write-tests"><a class="header" href="#how-to-write-tests">How to Write Tests</a></h2>
+tests, and how to organize tests into unit tests and integration tests.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="how-to-write-tests"><a class="header" href="#how-to-write-tests">How to Write Tests</a></h2>
 <p>Tests are Rust functions that verify that the non-test code is functioning in
 the expected manner. The bodies of test functions typically perform these three
 actions:</p>
@@ -12163,8 +12255,10 @@ tests that should fail if any operation within them returns an <code>Err</code> 
 question mark operator on the <code>Result&lt;T, E&gt;</code> value. Instead, use
 <code>assert!(value.is_err())</code>.</p>
 <p>Now that you know several ways to write tests, let’s look at what is happening
-when we run our tests and explore the different options we can use with <code>cargo test</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="controlling-how-tests-are-run"><a class="header" href="#controlling-how-tests-are-run">Controlling How Tests Are Run</a></h2>
+when we run our tests and explore the different options we can use with <code>cargo test</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="controlling-how-tests-are-run"><a class="header" href="#controlling-how-tests-are-run">Controlling How Tests Are Run</a></h2>
 <p>Just as <code>cargo run</code> compiles your code and then runs the resulting binary,
 <code>cargo test</code> compiles your code in test mode and runs the resulting test
 binary. The default behavior of the binary produced by <code>cargo test</code> is to run
@@ -12462,8 +12556,10 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 will be fast. When you’re at a point where it makes sense to check the results
 of the <code>ignored</code> tests and you have time to wait for the results, you can run
 <code>cargo test -- --ignored</code> instead. If you want to run all tests whether they’re
-ignored or not, you can run <code>cargo test -- --include-ignored</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="test-organization"><a class="header" href="#test-organization">Test Organization</a></h2>
+ignored or not, you can run <code>cargo test -- --include-ignored</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="test-organization"><a class="header" href="#test-organization">Test Organization</a></h2>
 <p>As mentioned at the start of the chapter, testing is a complex discipline, and
 different people use different terminology and organization. The Rust community
 thinks about tests in terms of two main categories: unit tests and integration
@@ -12755,8 +12851,10 @@ in the same way external code will use it. Even though Rust’s type system and
 ownership rules help prevent some kinds of bugs, tests are still important to
 reduce logic bugs having to do with how your code is expected to behave.</p>
 <p>Let’s combine the knowledge you learned in this chapter and in previous
-chapters to work on a project!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="an-io-project-building-a-command-line-program"><a class="header" href="#an-io-project-building-a-command-line-program">An I/O Project: Building a Command Line Program</a></h1>
+chapters to work on a project!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="an-io-project-building-a-command-line-program"><a class="header" href="#an-io-project-building-a-command-line-program">An I/O Project: Building a Command Line Program</a></h1>
 <p>This chapter is a recap of the many skills you’ve learned so far and an
 exploration of a few more standard library features. We’ll build a command line
 tool that interacts with file and command line input/output to practice some of
@@ -12792,8 +12890,10 @@ background knowledge you need to understand a real-world project such as
 </ul>
 <p>We’ll also briefly introduce closures, iterators, and trait objects, which
 Chapters <a href="ch13-00-functional-features.html">13</a><!-- ignore --> and <a href="ch17-00-oop.html">17</a><!-- ignore --> will cover in
-detail.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="accepting-command-line-arguments"><a class="header" href="#accepting-command-line-arguments">Accepting Command Line Arguments</a></h2>
+detail.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="accepting-command-line-arguments"><a class="header" href="#accepting-command-line-arguments">Accepting Command Line Arguments</a></h2>
 <p>Let’s create a new project with, as always, <code>cargo new</code>. We’ll call our project
 <code>minigrep</code> to distinguish it from the <code>grep</code> tool that you might already have
 on your system.</p>
@@ -12925,8 +13025,10 @@ In file sample.txt
 saved into the right variables. Later we’ll add some error handling to deal
 with certain potential erroneous situations, such as when the user provides no
 arguments; for now, we’ll ignore that situation and work on adding file-reading
-capabilities instead.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="reading-a-file"><a class="header" href="#reading-a-file">Reading a File</a></h2>
+capabilities instead.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="reading-a-file"><a class="header" href="#reading-a-file">Reading a File</a></h2>
 <p>Now we’ll add functionality to read the file specified in the <code>file_path</code>
 argument. First, we need a sample file to test it with: we’ll use a file with a
 small amount of text over multiple lines with some repeated words. Listing 12-3
@@ -13006,8 +13108,10 @@ not handling errors as well as we could. The program is still small, so these
 flaws aren’t a big problem, but as the program grows, it will be harder to fix
 them cleanly. It’s good practice to begin refactoring early on when developing
 a program, because it’s much easier to refactor smaller amounts of code. We’ll
-do that next.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="refactoring-to-improve-modularity-and-error-handling"><a class="header" href="#refactoring-to-improve-modularity-and-error-handling">Refactoring to Improve Modularity and Error Handling</a></h2>
+do that next.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="refactoring-to-improve-modularity-and-error-handling"><a class="header" href="#refactoring-to-improve-modularity-and-error-handling">Refactoring to Improve Modularity and Error Handling</a></h2>
 <p>To improve our program, we’ll fix four problems that have to do with the
 program’s structure and how it’s handling potential errors. First, our <code>main</code>
 function now performs two tasks: it parses arguments and reads files. As our
@@ -13807,8 +13911,10 @@ future. Now it’s much easier to handle errors, and we’ve made the code more
 modular. Almost all of our work will be done in <em>src/lib.rs</em> from here on out.</p>
 <p>Let’s take advantage of this newfound modularity by doing something that would
 have been difficult with the old code but is easy with the new code: we’ll
-write some tests!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="developing-the-librarys-functionality-with-test-driven-development"><a class="header" href="#developing-the-librarys-functionality-with-test-driven-development">Developing the Library’s Functionality with Test-Driven Development</a></h2>
+write some tests!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="developing-the-librarys-functionality-with-test-driven-development"><a class="header" href="#developing-the-librarys-functionality-with-test-driven-development">Developing the Library’s Functionality with Test-Driven Development</a></h2>
 <p>Now that we’ve extracted the logic into <em>src/lib.rs</em> and left the argument
 collecting and error handling in <em>src/main.rs</em>, it’s much easier to write tests
 for the core functionality of our code. We can call functions directly with
@@ -14337,8 +14443,10 @@ about how to structure applications. We’ve also learned a bit about file input
 and output, lifetimes, testing, and command line parsing.</p>
 <p>To round out this project, we’ll briefly demonstrate how to work with
 environment variables and how to print to standard error, both of which are
-useful when you’re writing command line programs.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="working-with-environment-variables"><a class="header" href="#working-with-environment-variables">Working with Environment Variables</a></h2>
+useful when you’re writing command line programs.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="working-with-environment-variables"><a class="header" href="#working-with-environment-variables">Working with Environment Variables</a></h2>
 <p>We’ll improve <code>minigrep</code> by adding an extra feature: an option for
 case-insensitive searching that the user can turn on via an environment
 variable. We could make this feature a command line option and require that
@@ -14972,8 +15080,10 @@ whether the command line argument or the environment variable should take
 precedence if the program is run with one set to case sensitive and one set to
 ignore case.</p>
 <p>The <code>std::env</code> module contains many more useful features for dealing with
-environment variables: check out its documentation to see what is available.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="writing-error-messages-to-standard-error-instead-of-standard-output"><a class="header" href="#writing-error-messages-to-standard-error-instead-of-standard-output">Writing Error Messages to Standard Error Instead of Standard Output</a></h2>
+environment variables: check out its documentation to see what is available.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="writing-error-messages-to-standard-error-instead-of-standard-output"><a class="header" href="#writing-error-messages-to-standard-error-instead-of-standard-output">Writing Error Messages to Standard Error Instead of Standard Output</a></h2>
 <p>At the moment, we’re writing all of our output to the terminal using the
 <code>println!</code> macro. In most terminals, there are two kinds of output: <em>standard
 output</em> (<code>stdout</code>) for general information and <em>standard error</em> (<code>stderr</code>) for
@@ -15065,8 +15175,10 @@ the concepts in previous chapters, your code will be well organized, store data
 effectively in the appropriate data structures, handle errors nicely, and be
 well tested.</p>
 <p>Next, we’ll explore some Rust features that were influenced by functional
-languages: closures and iterators.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="functional-language-features-iterators-and-closures"><a class="header" href="#functional-language-features-iterators-and-closures">Functional Language Features: Iterators and Closures</a></h1>
+languages: closures and iterators.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="functional-language-features-iterators-and-closures"><a class="header" href="#functional-language-features-iterators-and-closures">Functional Language Features: Iterators and Closures</a></h1>
 <p>Rust’s design has taken inspiration from many existing languages and
 techniques, and one significant influence is <em>functional programming</em>.
 Programming in a functional style often includes using functions as values by
@@ -15086,8 +15198,10 @@ might think!)</li>
 <p>Other Rust features, such as pattern matching and enums, which we’ve covered in
 other chapters, are influenced by the functional style as well. Mastering
 closures and iterators is an important part of writing idiomatic, fast Rust
-code, so we’ll devote this entire chapter to them.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="closures-anonymous-functions-that-can-capture-their-environment"><a class="header" href="#closures-anonymous-functions-that-can-capture-their-environment">Closures: Anonymous Functions that Can Capture Their Environment</a></h2>
+code, so we’ll devote this entire chapter to them.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="closures-anonymous-functions-that-can-capture-their-environment"><a class="header" href="#closures-anonymous-functions-that-can-capture-their-environment">Closures: Anonymous Functions that Can Capture Their Environment</a></h2>
 <p>Rust’s closures are anonymous functions you can save in a variable or pass as
 arguments to other functions. You can create the closure in one place and then
 call the closure to evaluate it in a different context. Unlike functions,
@@ -15613,8 +15727,10 @@ is allowed</span></p>
 <p>The <code>Fn</code> traits are important when defining or using functions or types that
 make use of closures. The next section discusses iterators, and many iterator
 methods take closure arguments. Keep these details of closures in mind as we
-explore iterators!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="processing-a-series-of-items-with-iterators"><a class="header" href="#processing-a-series-of-items-with-iterators">Processing a Series of Items with Iterators</a></h2>
+explore iterators!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="processing-a-series-of-items-with-iterators"><a class="header" href="#processing-a-series-of-items-with-iterators">Processing a Series of Items with Iterators</a></h2>
 <p>The iterator pattern allows you to perform some task on a sequence of items in
 turn. An iterator is responsible for the logic of iterating over each item and
 determining when the sequence has finished. When you use iterators, you don’t
@@ -15884,8 +16000,10 @@ compares the value with each shoe’s size, keeping only shoes of the size
 specified. Finally, calling <code>collect</code> gathers the values returned by the
 adapted iterator into a vector that’s returned by the function.</p>
 <p>The test shows that when we call <code>shoes_in_size</code>, we get back only shoes
-that have the same size as the value we specified.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="improving-our-io-project"><a class="header" href="#improving-our-io-project">Improving Our I/O Project</a></h2>
+that have the same size as the value we specified.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="improving-our-io-project"><a class="header" href="#improving-our-io-project">Improving Our I/O Project</a></h2>
 <p>With this new knowledge about iterators, we can improve the I/O project in
 Chapter 12 by using iterators to make places in the code clearer and more
 concise. Let’s look at how iterators can improve our implementation of the
@@ -16522,8 +16640,10 @@ that are unique to this code, such as the filtering condition each element in
 the iterator must pass.</p>
 <p>But are the two implementations truly equivalent? The intuitive assumption
 might be that the more low-level loop will be faster. Let’s talk about
-performance.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="comparing-performance-loops-vs-iterators"><a class="header" href="#comparing-performance-loops-vs-iterators">Comparing Performance: Loops vs. Iterators</a></h2>
+performance.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="comparing-performance-loops-vs-iterators"><a class="header" href="#comparing-performance-loops-vs-iterators">Comparing Performance: Loops vs. Iterators</a></h2>
 <p>To determine whether to use loops or iterators, you need to know which
 implementation is faster: the version of the <code>search</code> function with an explicit
 <code>for</code> loop or the version with iterators.</p>
@@ -16602,8 +16722,10 @@ iterators are such that runtime performance is not affected. This is part of
 Rust’s goal to strive to provide zero-cost abstractions.</p>
 <p>Now that we’ve improved the expressiveness of our I/O project, let’s look at
 some more features of <code>cargo</code> that will help us share the project with the
-world.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="more-about-cargo-and-cratesio"><a class="header" href="#more-about-cargo-and-cratesio">More About Cargo and Crates.io</a></h1>
+world.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="more-about-cargo-and-cratesio"><a class="header" href="#more-about-cargo-and-cratesio">More About Cargo and Crates.io</a></h1>
 <p>So far we’ve used only the most basic features of Cargo to build, run, and test
 our code, but it can do a lot more. In this chapter, we’ll discuss some of its
 other, more advanced features to show you how to do the following:</p>
@@ -16616,8 +16738,10 @@ other, more advanced features to show you how to do the following:</p>
 </ul>
 <p>Cargo can do even more than the functionality we cover in this chapter, so for
 a full explanation of all its features, see <a href="https://doc.rust-lang.org/cargo/">its
-documentation</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="customizing-builds-with-release-profiles"><a class="header" href="#customizing-builds-with-release-profiles">Customizing Builds with Release Profiles</a></h2>
+documentation</a>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="customizing-builds-with-release-profiles"><a class="header" href="#customizing-builds-with-release-profiles">Customizing Builds with Release Profiles</a></h2>
 <p>In Rust, <em>release profiles</em> are predefined and customizable profiles with
 different configurations that allow a programmer to have more control over
 various options for compiling code. Each profile is configured independently of
@@ -16671,8 +16795,10 @@ Cargo will use the defaults for the <code>dev</code> profile plus our customizat
 <code>opt-level</code>. Because we set <code>opt-level</code> to <code>1</code>, Cargo will apply more
 optimizations than the default, but not as many as in a release build.</p>
 <p>For the full list of configuration options and defaults for each profile, see
-<a href="https://doc.rust-lang.org/cargo/reference/profiles.html">Cargo’s documentation</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="publishing-a-crate-to-cratesio"><a class="header" href="#publishing-a-crate-to-cratesio">Publishing a Crate to Crates.io</a></h2>
+<a href="https://doc.rust-lang.org/cargo/reference/profiles.html">Cargo’s documentation</a>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="publishing-a-crate-to-cratesio"><a class="header" href="#publishing-a-crate-to-cratesio">Publishing a Crate to Crates.io</a></h2>
 <p>We’ve used packages from <a href="https://crates.io/">crates.io</a><!-- ignore --> as
 dependencies of our project, but you can also share your code with other people
 by publishing your own packages. The crate registry at
@@ -17124,8 +17250,10 @@ to start depending on a version again:</p>
       Unyank guessing_game_:1.0.1
 </code></pre>
 <p>A yank <em>does not</em> delete any code. It cannot, for example, delete accidentally
-uploaded secrets. If that happens, you must reset those secrets immediately.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="cargo-workspaces"><a class="header" href="#cargo-workspaces">Cargo Workspaces</a></h2>
+uploaded secrets. If that happens, you must reset those secrets immediately.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="cargo-workspaces"><a class="header" href="#cargo-workspaces">Cargo Workspaces</a></h2>
 <p>In Chapter 12, we built a package that included a binary crate and a library
 crate. As your project develops, you might find that the library crate
 continues to get bigger and you want to split your package further into
@@ -17440,8 +17568,10 @@ way as the <code>add_one</code> crate!</p>
 <p>As your project grows, consider using a workspace: it’s easier to understand
 smaller, individual components than one big blob of code. Furthermore, keeping
 the crates in a workspace can make coordination between crates easier if they
-are often changed at the same time.</p>
-<div style="break-before: page; page-break-before: always;"></div><!-- Old link, do not remove -->
+are often changed at the same time.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><!-- Old link, do not remove -->
 <p><a id="installing-binaries-from-cratesio-with-cargo-install"></a></p>
 <h2 id="installing-binaries-with-cargo-install"><a class="header" href="#installing-binaries-with-cargo-install">Installing Binaries with <code>cargo install</code></a></h2>
 <p>The <code>cargo install</code> command allows you to install and use binary crates
@@ -17479,8 +17609,10 @@ cargo install something you don't have, copy relevant output below
 <p>The second-to-last line of the output shows the location and the name of the
 installed binary, which in the case of <code>ripgrep</code> is <code>rg</code>. As long as the
 installation directory is in your <code>$PATH</code>, as mentioned previously, you can
-then run <code>rg --help</code> and start using a faster, rustier tool for searching files!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="extending-cargo-with-custom-commands"><a class="header" href="#extending-cargo-with-custom-commands">Extending Cargo with Custom Commands</a></h2>
+then run <code>rg --help</code> and start using a faster, rustier tool for searching files!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="extending-cargo-with-custom-commands"><a class="header" href="#extending-cargo-with-custom-commands">Extending Cargo with Custom Commands</a></h2>
 <p>Cargo is designed so you can extend it with new subcommands without having to
 modify Cargo. If a binary in your <code>$PATH</code> is named <code>cargo-something</code>, you can
 run it as if it was a Cargo subcommand by running <code>cargo something</code>. Custom
@@ -17493,8 +17625,10 @@ part of what makes the Rust ecosystem useful for many different tasks. Rust’s
 standard library is small and stable, but crates are easy to share, use, and
 improve on a timeline different from that of the language. Don’t be shy about
 sharing code that’s useful to you on <a href="https://crates.io/">crates.io</a><!-- ignore
--->; it’s likely that it will be useful to someone else as well!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="smart-pointers"><a class="header" href="#smart-pointers">Smart Pointers</a></h1>
+-->; it’s likely that it will be useful to someone else as well!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="smart-pointers"><a class="header" href="#smart-pointers">Smart Pointers</a></h1>
 <p>A <em>pointer</em> is a general concept for a variable that contains an address in
 memory. This address refers to, or “points at,” some other data. The most
 common kind of pointer in Rust is a reference, which you learned about in
@@ -17539,8 +17673,10 @@ the borrowing rules at runtime instead of compile time</li>
 <p>In addition, we’ll cover the <em>interior mutability</em> pattern where an immutable
 type exposes an API for mutating an interior value. We’ll also discuss
 <em>reference cycles</em>: how they can leak memory and how to prevent them.</p>
-<p>Let’s dive in!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="using-boxt-to-point-to-data-on-the-heap"><a class="header" href="#using-boxt-to-point-to-data-on-the-heap">Using <code>Box&lt;T&gt;</code> to Point to Data on the Heap</a></h2>
+<p>Let’s dive in!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="using-boxt-to-point-to-data-on-the-heap"><a class="header" href="#using-boxt-to-point-to-data-on-the-heap">Using <code>Box&lt;T&gt;</code> to Point to Data on the Heap</a></h2>
 <p>The most straightforward smart pointer is a <em>box</em>, whose type is written
 <code>Box&lt;T&gt;</code>. Boxes allow you to store data on the heap rather than the stack. What
 remains on the stack is the pointer to the heap data. Refer to Chapter 4 to
@@ -17789,8 +17925,10 @@ value goes out of scope, the heap data that the box is pointing to is cleaned
 up as well because of the <code>Drop</code> trait implementation. These two traits will be
 even more important to the functionality provided by the other smart pointer
 types we’ll discuss in the rest of this chapter. Let’s explore these two traits
-in more detail.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="treating-smart-pointers-like-regular-references-with-the-deref-trait"><a class="header" href="#treating-smart-pointers-like-regular-references-with-the-deref-trait">Treating Smart Pointers Like Regular References with the <code>Deref</code> Trait</a></h2>
+in more detail.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="treating-smart-pointers-like-regular-references-with-the-deref-trait"><a class="header" href="#treating-smart-pointers-like-regular-references-with-the-deref-trait">Treating Smart Pointers Like Regular References with the <code>Deref</code> Trait</a></h2>
 <p>Implementing the <code>Deref</code> trait allows you to customize the behavior of the
 <em>dereference operator</em> <code>*</code> (not to be confused with the multiplication or glob
 operator). By implementing <code>Deref</code> in such a way that a smart pointer can be
@@ -18140,8 +18278,10 @@ Converting an immutable reference to a mutable reference would require that the
 initial immutable reference is the only immutable reference to that data, but
 the borrowing rules don’t guarantee that. Therefore, Rust can’t make the
 assumption that converting an immutable reference to a mutable reference is
-possible.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="running-code-on-cleanup-with-the-drop-trait"><a class="header" href="#running-code-on-cleanup-with-the-drop-trait">Running Code on Cleanup with the <code>Drop</code> Trait</a></h2>
+possible.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="running-code-on-cleanup-with-the-drop-trait"><a class="header" href="#running-code-on-cleanup-with-the-drop-trait">Running Code on Cleanup with the <code>Drop</code> Trait</a></h2>
 <p>The second trait important to the smart pointer pattern is <code>Drop</code>, which lets
 you customize what happens when a value is about to go out of scope. You can
 provide an implementation for the <code>Drop</code> trait on any type, and that code can
@@ -18324,8 +18464,10 @@ references are always valid also ensures that <code>drop</code> gets called only
 the value is no longer being used.</p>
 <p>Now that we’ve examined <code>Box&lt;T&gt;</code> and some of the characteristics of smart
 pointers, let’s look at a few other smart pointers defined in the standard
-library.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="rct-the-reference-counted-smart-pointer"><a class="header" href="#rct-the-reference-counted-smart-pointer"><code>Rc&lt;T&gt;</code>, the Reference Counted Smart Pointer</a></h2>
+library.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="rct-the-reference-counted-smart-pointer"><a class="header" href="#rct-the-reference-counted-smart-pointer"><code>Rc&lt;T&gt;</code>, the Reference Counted Smart Pointer</a></h2>
 <p>In the majority of cases, ownership is clear: you know exactly which variable
 owns a given value. However, there are cases when a single value might have
 multiple owners. For example, in graph data structures, multiple edges might
@@ -18506,8 +18648,10 @@ in Chapter 4: multiple mutable borrows to the same place can cause data races
 and inconsistencies. But being able to mutate data is very useful! In the next
 section, we’ll discuss the interior mutability pattern and the <code>RefCell&lt;T&gt;</code>
 type that you can use in conjunction with an <code>Rc&lt;T&gt;</code> to work with this
-immutability restriction.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="refcellt-and-the-interior-mutability-pattern"><a class="header" href="#refcellt-and-the-interior-mutability-pattern"><code>RefCell&lt;T&gt;</code> and the Interior Mutability Pattern</a></h2>
+immutability restriction.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="refcellt-and-the-interior-mutability-pattern"><a class="header" href="#refcellt-and-the-interior-mutability-pattern"><code>RefCell&lt;T&gt;</code> and the Interior Mutability Pattern</a></h2>
 <p><em>Interior mutability</em> is a design pattern in Rust that allows you to mutate
 data even when there are immutable references to that data; normally, this
 action is disallowed by the borrowing rules. To mutate data, the pattern uses
@@ -19101,8 +19245,10 @@ The runtime checks of the borrowing rules protect us from data races, and it’s
 sometimes worth trading a bit of speed for this flexibility in our data
 structures. Note that <code>RefCell&lt;T&gt;</code> does not work for multithreaded code!
 <code>Mutex&lt;T&gt;</code> is the thread-safe version of <code>RefCell&lt;T&gt;</code> and we’ll discuss
-<code>Mutex&lt;T&gt;</code> in Chapter 16.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="reference-cycles-can-leak-memory"><a class="header" href="#reference-cycles-can-leak-memory">Reference Cycles Can Leak Memory</a></h2>
+<code>Mutex&lt;T&gt;</code> in Chapter 16.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="reference-cycles-can-leak-memory"><a class="header" href="#reference-cycles-can-leak-memory">Reference Cycles Can Leak Memory</a></h2>
 <p>Rust’s memory safety guarantees make it difficult, but not impossible, to
 accidentally create memory that is never cleaned up (known as a <em>memory leak</em>).
 Preventing memory leaks entirely is not one of Rust’s guarantees, meaning
@@ -19556,8 +19702,10 @@ memory leaks and how to prevent them using <code>Weak&lt;T&gt;</code>.</p>
 smart pointers, check out <a href="../nomicon/index.html">“The Rustonomicon”</a> for more useful
 information.</p>
 <p>Next, we’ll talk about concurrency in Rust. You’ll even learn about a few new
-smart pointers.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="fearless-concurrency"><a class="header" href="#fearless-concurrency">Fearless Concurrency</a></h1>
+smart pointers.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="fearless-concurrency"><a class="header" href="#fearless-concurrency">Fearless Concurrency</a></h1>
 <p>Handling concurrent programming safely and efficiently is another of Rust’s
 major goals. <em>Concurrent programming</em>, where different parts of a program
 execute independently, and <em>parallel programming</em>, where different parts of a
@@ -19602,9 +19750,11 @@ for your situation and requirements.</p>
 <li><em>Shared-state</em> concurrency, where multiple threads have access to some piece
 of data</li>
 <li>The <code>Sync</code> and <code>Send</code> traits, which extend Rust’s concurrency guarantees to
-user-defined types as well as types provided by the standard library</li>
+user-defined types as well as types provided by the standard library<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Using Threads to Run Code Simultaneously</a></h2>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Using Threads to Run Code Simultaneously</a></h2>
 <p>In most current operating systems, an executed program’s code is run in a
 <em>process</em>, and the operating system will manage multiple processes at once.
 Within a program, you can also have independent parts that run simultaneously.
@@ -19937,8 +20087,10 @@ rules when we try to use <code>v</code> in the main thread. The <code>move</code
 Rust’s conservative default of borrowing; it doesn’t let us violate the
 ownership rules.</p>
 <p>With a basic understanding of threads and the thread API, let’s look at what we
-can <em>do</em> with threads.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="using-message-passing-to-transfer-data-between-threads"><a class="header" href="#using-message-passing-to-transfer-data-between-threads">Using Message Passing to Transfer Data Between Threads</a></h2>
+can <em>do</em> with threads.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="using-message-passing-to-transfer-data-between-threads"><a class="header" href="#using-message-passing-to-transfer-data-between-threads">Using Message Passing to Transfer Data Between Threads</a></h2>
 <p>One increasingly popular approach to ensuring safe concurrency is <em>message
 passing</em>, where threads or actors communicate by sending each other messages
 containing data. Here’s the idea in a slogan from <a href="https://golang.org/doc/effective_go.html#concurrency">the Go language
@@ -20248,8 +20400,10 @@ what makes concurrency interesting as well as difficult. If you experiment with
 <code>thread::sleep</code>, giving it various values in the different threads, each run
 will be more nondeterministic and create different output each time.</p>
 <p>Now that we’ve looked at how channels work, let’s look at a different method of
-concurrency.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="shared-state-concurrency"><a class="header" href="#shared-state-concurrency">Shared-State Concurrency</a></h2>
+concurrency.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="shared-state-concurrency"><a class="header" href="#shared-state-concurrency">Shared-State Concurrency</a></h2>
 <p>Message passing is a fine way of handling concurrency, but it’s not the only
 one. Another method would be for multiple threads to access the same shared
 data. Consider this part of the slogan from the Go language documentation
@@ -20546,8 +20700,10 @@ mutexes in any language and have a go at implementing them in Rust. The
 standard library API documentation for <code>Mutex&lt;T&gt;</code> and <code>MutexGuard</code> offers
 useful information.</p>
 <p>We’ll round out this chapter by talking about the <code>Send</code> and <code>Sync</code> traits and
-how we can use them with custom types.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="extensible-concurrency-with-the-sync-and-send-traits"><a class="header" href="#extensible-concurrency-with-the-sync-and-send-traits">Extensible Concurrency with the <code>Sync</code> and <code>Send</code> Traits</a></h2>
+how we can use them with custom types.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="extensible-concurrency-with-the-sync-and-send-traits"><a class="header" href="#extensible-concurrency-with-the-sync-and-send-traits">Extensible Concurrency with the <code>Sync</code> and <code>Send</code> Traits</a></h2>
 <p>Interestingly, the Rust language has <em>very</em> few concurrency features. Almost
 every concurrency feature we’ve talked about so far in this chapter has been
 part of the standard library, not the language. Your options for handling
@@ -20614,8 +20770,10 @@ other languages. Concurrent programming is no longer a concept to be afraid of:
 go forth and make your programs concurrent, fearlessly!</p>
 <p>Next, we’ll talk about idiomatic ways to model problems and structure solutions
 as your Rust programs get bigger. In addition, we’ll discuss how Rust’s idioms
-relate to those you might be familiar with from object-oriented programming.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="object-oriented-programming-features-of-rust"><a class="header" href="#object-oriented-programming-features-of-rust">Object-Oriented Programming Features of Rust</a></h1>
+relate to those you might be familiar with from object-oriented programming.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="object-oriented-programming-features-of-rust"><a class="header" href="#object-oriented-programming-features-of-rust">Object-Oriented Programming Features of Rust</a></h1>
 <p>Object-oriented programming (OOP) is a way of modeling programs. Objects as a
 programmatic concept were introduced in the programming language Simula in the
 1960s. Those objects influenced Alan Kay’s programming architecture in which
@@ -20626,8 +20784,10 @@ but by others it is not. In this chapter, we’ll explore certain characteristic
 that are commonly considered object-oriented and how those characteristics
 translate to idiomatic Rust. We’ll then show you how to implement an
 object-oriented design pattern in Rust and discuss the trade-offs of doing so
-versus implementing a solution using some of Rust’s strengths instead.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="characteristics-of-object-oriented-languages"><a class="header" href="#characteristics-of-object-oriented-languages">Characteristics of Object-Oriented Languages</a></h2>
+versus implementing a solution using some of Rust’s strengths instead.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="characteristics-of-object-oriented-languages"><a class="header" href="#characteristics-of-object-oriented-languages">Characteristics of Object-Oriented Languages</a></h2>
 <p>There is no consensus in the programming community about what features a
 language must have to be considered object-oriented. Rust is influenced by many
 programming paradigms, including OOP; for example, we explored the features
@@ -20783,8 +20943,10 @@ inheritance (meaning a subclass can only inherit from one class), further
 restricting the flexibility of a program’s design.</p>
 <p>For these reasons, Rust takes the different approach of using trait objects
 instead of inheritance. Let’s look at how trait objects enable polymorphism in
-Rust.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="using-trait-objects-that-allow-for-values-of-different-types"><a class="header" href="#using-trait-objects-that-allow-for-values-of-different-types">Using Trait Objects That Allow for Values of Different Types</a></h2>
+Rust.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="using-trait-objects-that-allow-for-values-of-different-types"><a class="header" href="#using-trait-objects-that-allow-for-values-of-different-types">Using Trait Objects That Allow for Values of Different Types</a></h2>
 <p>In Chapter 8, we mentioned that one limitation of vectors is that they can
 store elements of only one type. We created a workaround in Listing 8-9 where
 we defined a <code>SpreadsheetCell</code> enum that had variants to hold integers, floats,
@@ -21109,8 +21271,10 @@ call. This lookup incurs a runtime cost that doesn’t occur with static
 dispatch. Dynamic dispatch also prevents the compiler from choosing to inline a
 method’s code, which in turn prevents some optimizations. However, we did get
 extra flexibility in the code that we wrote in Listing 17-5 and were able to
-support in Listing 17-9, so it’s a trade-off to consider.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="implementing-an-object-oriented-design-pattern"><a class="header" href="#implementing-an-object-oriented-design-pattern">Implementing an Object-Oriented Design Pattern</a></h2>
+support in Listing 17-9, so it’s a trade-off to consider.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="implementing-an-object-oriented-design-pattern"><a class="header" href="#implementing-an-object-oriented-design-pattern">Implementing an Object-Oriented Design Pattern</a></h2>
 <p>The <em>state pattern</em> is an object-oriented design pattern. The crux of the
 pattern is that we define a set of states a value can have internally. The
 states are represented by a set of <em>state objects</em>, and the value’s behavior
@@ -21962,8 +22126,10 @@ be the best way to take advantage of Rust’s strengths, but is an available
 option.</p>
 <p>Next, we’ll look at patterns, which are another of Rust’s features that enable
 lots of flexibility. We’ve looked at them briefly throughout the book but
-haven’t seen their full capability yet. Let’s go!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="patterns-and-matching"><a class="header" href="#patterns-and-matching">Patterns and Matching</a></h1>
+haven’t seen their full capability yet. Let’s go!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="patterns-and-matching"><a class="header" href="#patterns-and-matching">Patterns and Matching</a></h1>
 <p><em>Patterns</em> are a special syntax in Rust for matching against the structure of
 types, both complex and simple. Using patterns in conjunction with <code>match</code>
 expressions and other constructs gives you more control over a program’s
@@ -21987,8 +22153,10 @@ doesn’t, the code associated with the pattern won’t run.</p>
 valid places to use patterns, the difference between refutable and irrefutable
 patterns, and the different kinds of pattern syntax that you might see. By the
 end of the chapter, you’ll know how to use patterns to express many concepts in
-a clear way.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="all-the-places-patterns-can-be-used"><a class="header" href="#all-the-places-patterns-can-be-used">All the Places Patterns Can Be Used</a></h2>
+a clear way.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="all-the-places-patterns-can-be-used"><a class="header" href="#all-the-places-patterns-can-be-used">All the Places Patterns Can Be Used</a></h2>
 <p>Patterns pop up in a number of places in Rust, and you’ve been using them a lot
 without realizing it! This section discusses all the places where patterns are
 valid.</p>
@@ -22232,8 +22400,10 @@ discussed in Chapter 13.</p>
 <p>At this point, you’ve seen several ways of using patterns, but patterns don’t
 work the same in every place we can use them. In some places, the patterns must
 be irrefutable; in other circumstances, they can be refutable. We’ll discuss
-these two concepts next.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="refutability-whether-a-pattern-might-fail-to-match"><a class="header" href="#refutability-whether-a-pattern-might-fail-to-match">Refutability: Whether a Pattern Might Fail to Match</a></h2>
+these two concepts next.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="refutability-whether-a-pattern-might-fail-to-match"><a class="header" href="#refutability-whether-a-pattern-might-fail-to-match">Refutability: Whether a Pattern Might Fail to Match</a></h2>
 <p>Patterns come in two forms: refutable and irrefutable. Patterns that will match
 for any possible value passed are <em>irrefutable</em>. An example would be <code>x</code> in the
 statement <code>let x = 5;</code> because <code>x</code> matches anything and therefore cannot fail
@@ -22341,8 +22511,10 @@ this syntax isn’t particularly useful and could be replaced with a simpler
 <code>let</code> statement.</p>
 <p>Now that you know where to use patterns and the difference between refutable
 and irrefutable patterns, let’s cover all the syntax we can use to create
-patterns.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="pattern-syntax"><a class="header" href="#pattern-syntax">Pattern Syntax</a></h2>
+patterns.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="pattern-syntax"><a class="header" href="#pattern-syntax">Pattern Syntax</a></h2>
 <p>In this section, we gather all the syntax valid in patterns and discuss why and
 when you might want to use each one.</p>
 <h3 id="matching-literals"><a class="header" href="#matching-literals">Matching Literals</a></h3>
@@ -23018,8 +23190,10 @@ function parameters make those constructs more useful, enabling the
 destructuring of values into smaller parts at the same time as assigning to
 variables. We can create simple or complex patterns to suit our needs.</p>
 <p>Next, for the penultimate chapter of the book, we’ll look at some advanced
-aspects of a variety of Rust’s features.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-features"><a class="header" href="#advanced-features">Advanced Features</a></h1>
+aspects of a variety of Rust’s features.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-features"><a class="header" href="#advanced-features">Advanced Features</a></h1>
 <p>By now, you’ve learned the most commonly used parts of the Rust programming
 language. Before we do one more project in Chapter 20, we’ll look at a few
 aspects of the language you might run into every once in a while, but may not
@@ -23038,8 +23212,10 @@ and dynamically sized types</li>
 <li>Advanced functions and closures: function pointers and returning closures</li>
 <li>Macros: ways to define code that defines more code at compile time</li>
 </ul>
-<p>It’s a panoply of Rust features with something for everyone! Let’s dive in!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="unsafe-rust"><a class="header" href="#unsafe-rust">Unsafe Rust</a></h2>
+<p>It’s a panoply of Rust features with something for everyone! Let’s dive in!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="unsafe-rust"><a class="header" href="#unsafe-rust">Unsafe Rust</a></h2>
 <p>All the code we’ve discussed so far has had Rust’s memory safety guarantees
 enforced at compile time. However, Rust has a second language hidden inside it
 that doesn’t enforce these memory safety guarantees: it’s called <em>unsafe Rust</em>
@@ -23519,8 +23695,10 @@ instance. You can learn more about unions in <a href="../reference/items/unions.
 isn’t wrong or even frowned upon. But it is trickier to get <code>unsafe</code> code
 correct because the compiler can’t help uphold memory safety. When you have a
 reason to use <code>unsafe</code> code, you can do so, and having the explicit <code>unsafe</code>
-annotation makes it easier to track down the source of problems when they occur.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="advanced-traits"><a class="header" href="#advanced-traits">Advanced Traits</a></h2>
+annotation makes it easier to track down the source of problems when they occur.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="advanced-traits"><a class="header" href="#advanced-traits">Advanced Traits</a></h2>
 <p>We first covered traits in the <a href="ch10-02-traits.html#traits-defining-shared-behavior">“Traits: Defining Shared
 Behavior”</a><!-- ignore --> section of Chapter
 10, but we didn’t discuss the more advanced details. Now that you know more
@@ -24189,8 +24367,10 @@ the inner type would be a solution. If we don’t want the <code>Wrapper</code> 
 all the methods of the inner type—for example, to restrict the <code>Wrapper</code> type’s
 behavior—we would have to implement just the methods we do want manually.</p>
 <p>This newtype pattern is also useful even when traits are not involved. Let’s
-switch focus and look at some advanced ways to interact with Rust’s type system.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="advanced-types"><a class="header" href="#advanced-types">Advanced Types</a></h2>
+switch focus and look at some advanced ways to interact with Rust’s type system.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="advanced-types"><a class="header" href="#advanced-types">Advanced Types</a></h2>
 <p>The Rust type system has some features that we’ve so far mentioned but haven’t
 yet discussed. We’ll start by discussing newtypes in general as we examine why
 newtypes are useful as types. Then we’ll move on to type aliases, a feature
@@ -24542,8 +24722,10 @@ compile time. The <code>?Trait</code> syntax with this meaning is only available
 <p>Also note that we switched the type of the <code>t</code> parameter from <code>T</code> to <code>&amp;T</code>.
 Because the type might not be <code>Sized</code>, we need to use it behind some kind of
 pointer. In this case, we’ve chosen a reference.</p>
-<p>Next, we’ll talk about functions and closures!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="advanced-functions-and-closures"><a class="header" href="#advanced-functions-and-closures">Advanced Functions and Closures</a></h2>
+<p>Next, we’ll talk about functions and closures!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="advanced-functions-and-closures"><a class="header" href="#advanced-functions-and-closures">Advanced Functions and Closures</a></h2>
 <p>This section explores some advanced features related to functions and closures,
 including function pointers and returning closures.</p>
 <h3 id="function-pointers"><a class="header" href="#function-pointers">Function Pointers</a></h3>
@@ -24676,8 +24858,10 @@ We can use a trait object:</p>
 section <a href="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types">“Using Trait Objects That Allow for Values of Different
 Types”</a><!--
 ignore --> in Chapter 17.</p>
-<p>Next, let’s look at macros!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="macros"><a class="header" href="#macros">Macros</a></h2>
+<p>Next, let’s look at macros!<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="macros"><a class="header" href="#macros">Macros</a></h2>
 <p>We’ve used macros like <code>println!</code> throughout this book, but we haven’t fully
 explored what a macro is and how it works. The term <em>macro</em> refers to a family
 of features in Rust: <em>declarative</em> macros with <code>macro_rules!</code> and three kinds
@@ -24963,7 +25147,7 @@ writing a procedural macro more convenient. The code in the outer function
 procedural macro crate you see or create. The code you specify in the body of
 the inner function (<code>impl_hello_macro</code> in this case) will be different
 depending on your procedural macro’s purpose.</p>
-<p>We’ve introduced three new crates: <code>proc_macro</code>, <a href="https://crates.io/crates/syn"><code>syn</code></a>, and <a href="https://crates.io/crates/quote"><code>quote</code></a>. The
+<p>We’ve introduced three new crates: <code>proc_macro</code>, <a href="https://crates.io/crates/syn"><code>syn</code></a>, and [<code>quote</code>]. The
 <code>proc_macro</code> crate comes with Rust, so we didn’t need to add that to the
 dependencies in <em>Cargo.toml</em>. The <code>proc_macro</code> crate is the compiler’s API that
 allows us to read and manipulate Rust code from our code.</p>
@@ -25150,7 +25334,10 @@ recognize these concepts and syntax. Use this chapter as a reference to guide
 you to solutions.</p>
 <p>Next, we’ll put everything we’ve discussed throughout the book into practice
 and do one more project!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="final-project-building-a-multithreaded-web-server"><a class="header" href="#final-project-building-a-multithreaded-web-server">Final Project: Building a Multithreaded Web Server</a></h1>
+<p>[<code>quote</code>]: https://crates.io/crates/quote<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="final-project-building-a-multithreaded-web-server"><a class="header" href="#final-project-building-a-multithreaded-web-server">Final Project: Building a Multithreaded Web Server</a></h1>
 <p>It’s been a long journey, but we’ve reached the end of the book. In this
 chapter, we’ll build one more project together to demonstrate some of the
 concepts we covered in the final chapters, as well as recap some earlier
@@ -25177,8 +25364,10 @@ systems programming language, we can choose the level of abstraction we want to
 work with and can go to a lower level than is possible or practical in other
 languages. We’ll therefore write the basic HTTP server and thread pool manually
 so you can learn the general ideas and techniques behind the crates you might
-use in the future.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="building-a-single-threaded-web-server"><a class="header" href="#building-a-single-threaded-web-server">Building a Single-Threaded Web Server</a></h2>
+use in the future.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="building-a-single-threaded-web-server"><a class="header" href="#building-a-single-threaded-web-server">Building a Single-Threaded Web Server</a></h2>
 <p>We’ll start by getting a single-threaded web server working. Before we begin,
 let’s look at a quick overview of the protocols involved in building web
 servers. The details of these protocols are beyond the scope of this book, but
@@ -25749,8 +25938,10 @@ requests with a 404 response.</p>
 <p>Currently, our server runs in a single thread, meaning it can only serve one
 request at a time. Let’s examine how that can be a problem by simulating some
 slow requests. Then we’ll fix it so our server can handle multiple requests at
-once.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="turning-our-single-threaded-server-into-a-multithreaded-server"><a class="header" href="#turning-our-single-threaded-server-into-a-multithreaded-server">Turning Our Single-Threaded Server into a Multithreaded Server</a></h2>
+once.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="turning-our-single-threaded-server-into-a-multithreaded-server"><a class="header" href="#turning-our-single-threaded-server-into-a-multithreaded-server">Turning Our Single-Threaded Server into a Multithreaded Server</a></h2>
 <p>Right now, the server will process each request in turn, meaning it won’t
 process a second connection until the first is finished processing. If the
 server received more and more requests, this serial execution would be less and
@@ -26956,8 +27147,10 @@ longer than intended if we aren’t mindful of the lifetime of the
 temporary values used in the expression on the right hand side of the equals
 sign are immediately dropped when the <code>let</code> statement ends. However, <code>while let</code> (and <code>if let</code> and <code>match</code>) does not drop temporary values until the end of
 the associated block. In Listing 20-21, the lock remains held for the duration
-of the call to <code>job()</code>, meaning other workers cannot receive jobs.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="graceful-shutdown-and-cleanup"><a class="header" href="#graceful-shutdown-and-cleanup">Graceful Shutdown and Cleanup</a></h2>
+of the call to <code>job()</code>, meaning other workers cannot receive jobs.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="graceful-shutdown-and-cleanup"><a class="header" href="#graceful-shutdown-and-cleanup">Graceful Shutdown and Cleanup</a></h2>
 <p>The code in Listing 20-20 is responding to requests asynchronously through the
 use of a thread pool, as we intended. We get some warnings about the <code>workers</code>,
 <code>id</code>, and <code>thread</code> fields that we’re not using in a direct way that reminds us
@@ -27840,11 +28033,15 @@ robustness to the thread pool we implemented.</li>
 joining us on this tour of Rust. You’re now ready to implement your own Rust
 projects and help with other peoples’ projects. Keep in mind that there is a
 welcoming community of other Rustaceans who would love to help you with any
-challenges you encounter on your Rust journey.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="appendix"><a class="header" href="#appendix">Appendix</a></h1>
+challenges you encounter on your Rust journey.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h1 id="appendix"><a class="header" href="#appendix">Appendix</a></h1>
 <p>The following sections contain reference material you may find useful in your
-Rust journey.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-a-keywords"><a class="header" href="#appendix-a-keywords">Appendix A: Keywords</a></h2>
+Rust journey.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-a-keywords"><a class="header" href="#appendix-a-keywords">Appendix A: Keywords</a></h2>
 <p>The following list contains keywords that are reserved for current or future
 use by the Rust language. As such, they cannot be used as identifiers (except
 as raw identifiers as we’ll discuss in the “<a href="appendix-01-keywords.html#raw-identifiers">Raw
@@ -27892,7 +28089,7 @@ higher-ranked lifetime</li>
 <li><code>trait</code> - define a trait</li>
 <li><code>true</code> - Boolean true literal</li>
 <li><code>type</code> - define a type alias or associated type</li>
-<li><code>union</code> - define a <a href="../reference/items/unions.html">union</a> and is only a keyword when used in a union declaration</li>
+<li><code>union</code> - define a [union] and is only a keyword when used in a union declaration</li>
 <li><code>unsafe</code> - denote unsafe code, functions, traits, or implementations</li>
 <li><code>use</code> - bring symbols into scope</li>
 <li><code>where</code> - denote clauses that constrain a type</li>
@@ -27955,7 +28152,10 @@ edition. If you depend on a library that’s written using the 2015 edition and
 has a <code>try</code> function, you’ll need to use the raw identifier syntax, <code>r#try</code> in
 this case, to call that function from your 2018 edition code. See <a href="appendix-05-editions.html">Appendix
 E</a><!-- ignore --> for more information on editions.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-b-operators-and-symbols"><a class="header" href="#appendix-b-operators-and-symbols">Appendix B: Operators and Symbols</a></h2>
+<p>[union]: ../reference/items/unions.html<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-b-operators-and-symbols"><a class="header" href="#appendix-b-operators-and-symbols">Appendix B: Operators and Symbols</a></h2>
 <p>This appendix contains a glossary of Rust’s syntax, including operators and
 other symbols that appear by themselves or in the context of paths, generics,
 trait bounds, macros, attributes, comments, tuples, and brackets.</p>
@@ -28125,8 +28325,10 @@ macros and specifying attributes on an item.</p>
 | <code>[expr; len]</code> | Array literal containing <code>len</code> copies of <code>expr</code> |
 | <code>[type; len]</code> | Array type containing <code>len</code> instances of <code>type</code> |
 | <code>expr[expr]</code> | Collection indexing. Overloadable (<code>Index</code>, <code>IndexMut</code>) |
-| <code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code> | Collection indexing pretending to be collection slicing, using <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code>, or <code>RangeFull</code> as the “index” |</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-c-derivable-traits"><a class="header" href="#appendix-c-derivable-traits">Appendix C: Derivable Traits</a></h2>
+| <code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code> | Collection indexing pretending to be collection slicing, using <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code>, or <code>RangeFull</code> as the “index” |<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-c-derivable-traits"><a class="header" href="#appendix-c-derivable-traits">Appendix C: Derivable Traits</a></h2>
 <p>In various places in the book, we’ve discussed the <code>derive</code> attribute, which
 you can apply to a struct or enum definition. The <code>derive</code> attribute generates
 code that will implement a trait with its own default implementation on the
@@ -28266,8 +28468,10 @@ set and use a default value for the rest of the fields by using
 <p>The <code>Default</code> trait is required when you use the method <code>unwrap_or_default</code> on
 <code>Option&lt;T&gt;</code> instances, for example. If the <code>Option&lt;T&gt;</code> is <code>None</code>, the method
 <code>unwrap_or_default</code> will return the result of <code>Default::default</code> for the type
-<code>T</code> stored in the <code>Option&lt;T&gt;</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-d---useful-development-tools"><a class="header" href="#appendix-d---useful-development-tools">Appendix D - Useful Development Tools</a></h2>
+<code>T</code> stored in the <code>Option&lt;T&gt;</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-d---useful-development-tools"><a class="header" href="#appendix-d---useful-development-tools">Appendix D - Useful Development Tools</a></h2>
 <p>In this appendix, we talk about some useful development tools that the Rust
 project provides. We’ll look at automatic formatting, quick ways to apply
 warning fixes, a linter, and integrating with IDEs.</p>
@@ -28385,8 +28589,10 @@ communicate with each other. Different clients can use <code>rust-analyzer</code
 <p>Visit the <code>rust-analyzer</code> project’s <a href="https://rust-analyzer.github.io">home page</a> for installation
 instructions, then install the language server support in your particular IDE.
 Your IDE will gain abilities such as autocompletion, jump to definition, and
-inline errors.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-e---editions"><a class="header" href="#appendix-e---editions">Appendix E - Editions</a></h2>
+inline errors.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-e---editions"><a class="header" href="#appendix-e---editions">Appendix E - Editions</a></h2>
 <p>In Chapter 1, you saw that <code>cargo new</code> adds a bit of metadata to your
 <em>Cargo.toml</em> file about an edition. This appendix talks about what that means!</p>
 <p>The Rust language and compiler have a six-week release cycle, meaning users get
@@ -28433,8 +28639,10 @@ editions if you want to take advantage of such features.</p>
 <p>For more details, the <a href="https://doc.rust-lang.org/stable/edition-guide/"><em>Edition
 Guide</em></a> is a complete book
 about editions that enumerates the differences between editions and explains
-how to automatically upgrade your code to a new edition via <code>cargo fix</code>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-f-translations-of-the-book"><a class="header" href="#appendix-f-translations-of-the-book">Appendix F: Translations of the Book</a></h2>
+how to automatically upgrade your code to a new edition via <code>cargo fix</code>.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-f-translations-of-the-book"><a class="header" href="#appendix-f-translations-of-the-book">Appendix F: Translations of the Book</a></h2>
 <p>For resources in languages other than English. Most are still in progress; see
 <a href="https://github.com/rust-lang/book/issues?q=is%3Aopen+is%3Aissue+label%3ATranslations">the Translations label</a> to help or let us know about a new translation!</p>
 <ul>
@@ -28460,9 +28668,11 @@ how to automatically upgrade your code to a new edition via <code>cargo fix</cod
 <li><a href="https://github.com/RustDili/dokuman/tree/master/ceviriler">Turkish</a>, <a href="https://rustdili.github.io/">online</a></li>
 <li><a href="https://github.com/venkatarun95/rust-book-hindi">हिंदी</a></li>
 <li><a href="https://github.com/rust-lang-th/book-th">ไทย</a></li>
-<li><a href="https://github.com/DanKHansen/book-dk">Danske</a></li>
+<li><a href="https://github.com/DanKHansen/book-dk">Danske</a><script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-g---how-rust-is-made-and-nightly-rust"><a class="header" href="#appendix-g---how-rust-is-made-and-nightly-rust">Appendix G - How Rust is Made and “Nightly Rust”</a></h2>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="appendix-g---how-rust-is-made-and-nightly-rust"><a class="header" href="#appendix-g---how-rust-is-made-and-nightly-rust">Appendix G - How Rust is Made and “Nightly Rust”</a></h2>
 <p>This appendix is about how Rust is made and how that affects you as a Rust
 developer.</p>
 <h3 id="stability-without-stagnation"><a class="header" href="#stability-without-stagnation">Stability Without Stagnation</a></h3>
@@ -28615,8 +28825,10 @@ to try out the new feature, team members will discuss the feature, how it’s
 worked out on nightly, and decide if it should make it into stable Rust or not.
 If the decision is to move forward, the feature gate is removed, and the
 feature is now considered stable! It rides the trains into a new stable release
-of Rust.</p>
-
+of Rust.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -28643,8 +28855,6 @@ of Rust.</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="mdbook-quiz.js"></script>
-        <script type="text/javascript" src="consent.js"></script>
         <script type="text/javascript">
         window.addEventListener('load', function() {
             window.setTimeout(window.print, 100);

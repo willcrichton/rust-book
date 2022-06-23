@@ -26,8 +26,6 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="mdbook-quiz.css">
-        <link rel="stylesheet" href="consent.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
     </head>
     <body>
@@ -223,6 +221,7 @@ The value of x is: 6
 <p>We’re allowed to change the value bound to <code>x</code> from <code>5</code> to <code>6</code> when <code>mut</code>
 is used. Ultimately, deciding whether to use mutability or not is up to you and
 depends on what you think is clearest in that particular situation.</p>
+<div class="quiz-placeholder" data-quiz-name="ch03-01-variables-and-mutability-section1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;For example, you can make a mutable variable `x` by writing: `let mut x = 1`.\n&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;mut&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the keyword used after `let` to indicate that a variable can be mutated?&quot;}},{&quot;context&quot;:&quot;This is a compiler error because line 4 tries to mutate `x` when `x` is not marked as `mut`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let x = 1;\n  println!(\&quot;{x}\&quot;);\n  x += 1;\n  println!(\&quot;{x}\&quot;);\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer/quiz"  data-quiz-fullscreen="" ></div>
 <h3 id="constants"><a class="header" href="#constants">Constants</a></h3>
 <p>Like immutable variables, <em>constants</em> are values that are bound to a name and
 are not allowed to change, but there are a few differences between constants
@@ -341,8 +340,10 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `variables` due to previous error
 </code></pre>
 <p>Now that we’ve explored how variables work, let’s look at more data types they
-can have.</p>
-<div class="quiz-placeholder" data-quiz-name="ch03-01-variables-and-mutability"  data-quiz-questions="{&quot;questions&quot;:[{&quot;program&quot;:&quot;fn main() {\n  let x = 1;\n  println!(\&quot;{x}\&quot;);\n  x += 1;\n  println!(\&quot;{x}\&quot;);\n}&quot;,&quot;type&quot;:&quot;Tracing&quot;}]}"  data-quiz-log-endpoint="https://mindover.computer/quiz" ></div>
+can have.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -381,7 +382,5 @@ can have.</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="mdbook-quiz.js"></script>
-        <script type="text/javascript" src="consent.js"></script>
     </body>
 </html>

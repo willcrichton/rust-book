@@ -26,8 +26,6 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="mdbook-quiz.css">
-        <link rel="stylesheet" href="consent.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
     </head>
     <body>
@@ -712,8 +710,10 @@ requests with a 404 response.</p>
 <p>Currently, our server runs in a single thread, meaning it can only serve one
 request at a time. Let’s examine how that can be a problem by simulating some
 slow requests. Then we’ll fix it so our server can handle multiple requests at
-once.</p>
-
+once.<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -752,7 +752,5 @@ once.</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="mdbook-quiz.js"></script>
-        <script type="text/javascript" src="consent.js"></script>
     </body>
 </html>

@@ -26,8 +26,6 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="mdbook-quiz.css">
-        <link rel="stylesheet" href="consent.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
     </head>
     <body>
@@ -427,7 +425,7 @@ writing a procedural macro more convenient. The code in the outer function
 procedural macro crate you see or create. The code you specify in the body of
 the inner function (<code>impl_hello_macro</code> in this case) will be different
 depending on your procedural macro’s purpose.</p>
-<p>We’ve introduced three new crates: <code>proc_macro</code>, <a href="https://crates.io/crates/syn"><code>syn</code></a>, and <a href="https://crates.io/crates/quote"><code>quote</code></a>. The
+<p>We’ve introduced three new crates: <code>proc_macro</code>, <a href="https://crates.io/crates/syn"><code>syn</code></a>, and [<code>quote</code>]. The
 <code>proc_macro</code> crate comes with Rust, so we didn’t need to add that to the
 dependencies in <em>Cargo.toml</em>. The <code>proc_macro</code> crate is the compiler’s API that
 allows us to read and manipulate Rust code from our code.</p>
@@ -614,7 +612,10 @@ recognize these concepts and syntax. Use this chapter as a reference to guide
 you to solutions.</p>
 <p>Next, we’ll put everything we’ve discussed throughout the book into practice
 and do one more project!</p>
-
+<p>[<code>quote</code>]: https://crates.io/crates/quote<script type="text/javascript" src="mdbook-quiz/mdbook-quiz.js"></script></p>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/mdbook-quiz.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -653,7 +654,5 @@ and do one more project!</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="mdbook-quiz.js"></script>
-        <script type="text/javascript" src="consent.js"></script>
     </body>
 </html>
