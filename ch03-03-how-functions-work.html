@@ -239,6 +239,7 @@ The measurement is: 5h
 </code></pre>
 <p>Because we called the function with <code>5</code> as the value for <code>value</code> and <code>'h'</code> as
 the value for <code>unit_label</code>, the program output contains those values.</p>
+<div class="quiz-placeholder" data-quiz-name="ch03-03-functions-sec1-parameters"  data-quiz-questions="{&quot;questions&quot;:[{&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;fn&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;The keyword for declaring a new function in Rust is:&quot;}},{&quot;context&quot;:&quot;A function must declare the types of its parameters.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:1},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn f(x) { \n  println!(\&quot;{x}\&quot;);\n}\n\nfn main() {\n  f(0);\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer/quiz"  data-quiz-fullscreen="" ></div>
 <h3 id="statements-and-expressions"><a class="header" href="#statements-and-expressions">Statements and Expressions</a></h3>
 <p>Function bodies are made up of a series of statements optionally ending in an
 expression. So far, the functions we’ve covered haven’t included an ending
@@ -428,7 +429,8 @@ code. The definition of the function <code>plus_one</code> says that it will ret
 the unit type. Therefore, nothing is returned, which contradicts the function
 definition and results in an error. In this output, Rust provides a message to
 possibly help rectify this issue: it suggests removing the semicolon, which
-would fix the error.<script type="text/javascript" src="mdbook-quiz/embed.js"></script></p>
+would fix the error.</p>
+<div class="quiz-placeholder" data-quiz-name="ch03-03-functions-sec2-expressions"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;A block is an expression (#1) that is allowed to contain statements. It also defines a syntactic scope for let-bindings inside it (#3).\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:2},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;1 only&quot;,&quot;2 only&quot;,&quot;1 and 3&quot;,&quot;2 and 3&quot;],&quot;prompt&quot;:&quot;In Rust, a curly-brace block (like `{ /* ... */ }`) is:\n1. An expression\n2. A statement\n3. A syntactic scope\n&quot;}},{&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;3&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn f(x: i32) -&gt; i32 { x + 1 }\nfn main() {\n  println!(\&quot;{}\&quot;, f({\n    let y = 1;\n    y + 1\n  }));\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer/quiz"  data-quiz-fullscreen="" ></div><script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
 <script type="text/javascript" src="mdbook-quiz/consent.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
