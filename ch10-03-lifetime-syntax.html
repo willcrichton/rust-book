@@ -502,6 +502,8 @@ disallows the code in Listing 10-23 as possibly having an invalid reference.</p>
 references passed in to the <code>longest</code> function and how the returned reference
 is used. Make hypotheses about whether or not your experiments will pass the
 borrow checker before you compile; then check to see if you’re right!</p>
+<div class="quiz-placeholder" data-quiz-name="ch10-03-lifetimes-sec1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Lifetimes help identify how long an object is \&quot;live\&quot;, and whether references to that object outlive the object itself. \n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:3},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;Using the result of a fallible computation before checking for the possibility of error&quot;,&quot;Indexing past the bounds of an array (buffer overflow)&quot;,&quot;Not allocating enough memory for an object&quot;,&quot;Using a reference to an object after its memory has been freed&quot;],&quot;prompt&quot;:&quot;Which kind of programming error is a lifetime supposed to prevent?&quot;}},{&quot;context&quot;:&quot;If the type signature says that the function must return a reference with lifetime `'a`, then it would be invalid to return\na reference with a different lifetime '`b`, i.e. `y` here.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:5},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn shortest&lt;'a, 'b&gt;(x: &amp;'a str, y: &amp;'b str) -&gt; &amp;'a str {\n  if x.len() &lt; y.len() {\n    x\n  } else {\n    y\n  }\n}\n\nfn main() {\n  println!(\&quot;{}\&quot;, shortest(\&quot;hello\&quot;, \&quot;rust\&quot;));\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="e4f5918ce06172bfe100b34407df9dac9389213e
+" ></div>
 <h3 id="thinking-in-terms-of-lifetimes"><a class="header" href="#thinking-in-terms-of-lifetimes">Thinking in Terms of Lifetimes</a></h3>
 <p>The way in which you need to specify lifetime parameters depends on what your
 function is doing. For example, if we changed the implementation of the
@@ -868,7 +870,10 @@ traits. There are also more complex scenarios involving lifetime annotations
 that you will only need in very advanced scenarios; for those, you should read
 the <a href="../reference/index.html">Rust Reference</a>. But next, you’ll learn how to write tests in
 Rust so you can make sure your code is working the way it should.</p>
-
+<script type="text/javascript" src="mdbook-quiz/embed.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
+<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
+<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
