@@ -27,6 +27,8 @@
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
+        <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -438,11 +440,9 @@ will be fast. When you’re at a point where it makes sense to check the results
 of the <code>ignored</code> tests and you have time to wait for the results, you can run
 <code>cargo test -- --ignored</code> instead. If you want to run all tests whether they’re
 ignored or not, you can run <code>cargo test -- --include-ignored</code>.</p>
-<div class="quiz-placeholder" data-quiz-name="ch11-02-running-tests"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Tests are run in parallel by default, so actions which are not thread-safe (like writing to a single file) may cause a race condition.\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;Writing text to a single file&quot;,&quot;Logging strings to stdout&quot;,&quot;Failing via panics&quot;,&quot;Reading data from a single database&quot;],&quot;prompt&quot;:&quot;When running `cargo test` with no additional configuration, which of the following actions may not work correctly if done by multiple tests?\n&quot;}},{&quot;context&quot;:&quot;The shortest substring string that is not contained in `test_logger_and_database` but is contained in `test_the_logger` and `test_the_database`\nis \&quot;th\&quot; (the prefix of \&quot;the\&quot;).\n&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;th&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Consider a program with the following unit test:\n\n```\n#[test]\nfn test_the_logger() { /* ... */ }\n\n#[test]\nfn test_the_database() { /* ... */ }\n\n#[test]\nfn test_logger_and_database() { /* ... */ }\n```\n\nWhat is the *shortest* string you can pass to `cargo test &lt;the_string&gt;` such that *only* `test_the_logger` and `test_the_database` are executed?\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5f9cbf77c6bb8af6f464461e008118123d2a479a
+<div class="quiz-placeholder" data-quiz-name="ch11-02-running-tests"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Tests are run in parallel by default, so actions which are not thread-safe (like writing to a single file) may cause a race condition.\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;Writing text to a single file&quot;,&quot;Logging strings to stdout&quot;,&quot;Failing via panics&quot;,&quot;Reading data from a single database&quot;],&quot;prompt&quot;:&quot;When running `cargo test` with no additional configuration, which of the following actions may not work correctly if done by multiple tests?\n&quot;}},{&quot;context&quot;:&quot;The shortest substring string that is not contained in `test_logger_and_database` but is contained in `test_the_logger` and `test_the_database`\nis \&quot;th\&quot; (the prefix of \&quot;the\&quot;).\n&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;th&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Consider a program with the following unit test:\n\n```\n#[test]\nfn test_the_logger() { /* ... */ }\n\n#[test]\nfn test_the_database() { /* ... */ }\n\n#[test]\nfn test_logger_and_database() { /* ... */ }\n```\n\nWhat is the *shortest* string you can pass to `cargo test &lt;the_string&gt;` such that *only* `test_the_logger` and `test_the_database` are executed?\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5655aed2c0189b881aa8aa4beac294211e4b15eb
 " ></div><script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
-<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
-<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -481,5 +481,7 @@ ignored or not, you can run <code>cargo test -- --include-ignored</code>.</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
     </body>
 </html>

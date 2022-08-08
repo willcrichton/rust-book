@@ -27,6 +27,8 @@
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
+        <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -426,12 +428,10 @@ It would be helpful to tie this behavior more closely to our <code>Rectangle</co
 struct, because it won’t work with any other type. Let’s look at how we can
 continue to refactor this code by turning the <code>area</code> function into an <code>area</code>
 <em>method</em> defined on our <code>Rectangle</code> type.</p>
-<div class="quiz-placeholder" data-quiz-name="ch05-02-example-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \n`rect1` is moved by calling `area`, so it cannot be used on the next line.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:14},&quot;prompt&quot;:{&quot;program&quot;:&quot;#[derive(Debug)]\nstruct Rectangle {\n  width: u32,\n  height: u32,\n}\n\nfn main() {\n  let rect1 = Rectangle {\n    width: 30,\n    height: 50,\n  };\n\n  let a = area(rect1);\n  println!(\&quot;{:?} {}\&quot;, rect1, a);\n}\n\nfn area(rectangle: Rectangle) -&gt; u32 {\n  rectangle.width * rectangle.height\n}\n&quot;}},{&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;`Display` is for cases where a value has a unique string representation, while `Debug` does not assume that&quot;,&quot;`Display` is for printing values to the console, while `Debug` is for viewing values in a debugger&quot;,&quot;`Display` cannot be implemented for structs, while `Debug` can be implemented for structs&quot;,&quot;There is no difference, `Display` and `Debug` are aliases for the same trait.&quot;],&quot;prompt&quot;:&quot;What is the difference between the `Display` and `Debug` traits?&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5f9cbf77c6bb8af6f464461e008118123d2a479a
+<div class="quiz-placeholder" data-quiz-name="ch05-02-example-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \n`rect1` is moved by calling `area`, so it cannot be used on the next line.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:14},&quot;prompt&quot;:{&quot;program&quot;:&quot;#[derive(Debug)]\nstruct Rectangle {\n  width: u32,\n  height: u32,\n}\n\nfn main() {\n  let rect1 = Rectangle {\n    width: 30,\n    height: 50,\n  };\n\n  let a = area(rect1);\n  println!(\&quot;{:?} {}\&quot;, rect1, a);\n}\n\nfn area(rectangle: Rectangle) -&gt; u32 {\n  rectangle.width * rectangle.height\n}\n&quot;}},{&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;`Display` is for cases where a value has a unique string representation, while `Debug` does not assume that&quot;,&quot;`Display` is for printing values to the console, while `Debug` is for viewing values in a debugger&quot;,&quot;`Display` cannot be implemented for structs, while `Debug` can be implemented for structs&quot;,&quot;There is no difference, `Display` and `Debug` are aliases for the same trait.&quot;],&quot;prompt&quot;:&quot;What is the difference between the `Display` and `Debug` traits?&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5655aed2c0189b881aa8aa4beac294211e4b15eb
 " ></div>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
-<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
-<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -470,5 +470,7 @@ continue to refactor this code by turning the <code>area</code> function into an
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
     </body>
 </html>

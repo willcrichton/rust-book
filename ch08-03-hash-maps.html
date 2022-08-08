@@ -27,6 +27,8 @@
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
+        <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -366,7 +368,7 @@ algorithms.</p>
 <div class="footnote-definition" id="siphash"><sup class="footnote-definition-label">1</sup>
 <p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a></p>
 </div>
-<div class="quiz-placeholder" data-quiz-name="ch08-03-hashmap"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;`h` cannot be mutated (`h.insert(\&quot;k2\&quot;, 1)`) while an immutable reference (`v1`) to it is live.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::collections::HashMap;\nfn main() {\n  let mut h = HashMap::new();\n  h.insert(\&quot;k1\&quot;, 0);\n  let v1 = &amp;h[\&quot;k1\&quot;];\n  h.insert(\&quot;k2\&quot;, 1);\n  let v2 = &amp;h[\&quot;k2\&quot;];\n  println!(\&quot;{} {}\&quot;, v1, v2);\n}\n&quot;}},{&quot;context&quot;:&quot;This program stores a vector of indexes for each occurrence of a given letter into a hashmap. \nThen it sums all the indexes for the letter 'l', which occurs at indexes 2 and 3 in the string `\&quot;hello!\&quot;`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;5&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::collections::HashMap;\nfn main() {\n  let mut h = HashMap::new();\n  for (i, c) in \&quot;hello!\&quot;.chars().enumerate() {\n    h.entry(c).or_insert(Vec::new()).push(i);\n  }\n  let mut sum = 0;\n  for i in &amp;h[&amp;'l'] {\n    sum += i;\n  }\n  println!(\&quot;{}\&quot;, sum);\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5f9cbf77c6bb8af6f464461e008118123d2a479a
+<div class="quiz-placeholder" data-quiz-name="ch08-03-hashmap"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;`h` cannot be mutated (`h.insert(\&quot;k2\&quot;, 1)`) while an immutable reference (`v1`) to it is live.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::collections::HashMap;\nfn main() {\n  let mut h = HashMap::new();\n  h.insert(\&quot;k1\&quot;, 0);\n  let v1 = &amp;h[\&quot;k1\&quot;];\n  h.insert(\&quot;k2\&quot;, 1);\n  let v2 = &amp;h[\&quot;k2\&quot;];\n  println!(\&quot;{} {}\&quot;, v1, v2);\n}\n&quot;}},{&quot;context&quot;:&quot;This program stores a vector of indexes for each occurrence of a given letter into a hashmap. \nThen it sums all the indexes for the letter 'l', which occurs at indexes 2 and 3 in the string `\&quot;hello!\&quot;`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;5&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::collections::HashMap;\nfn main() {\n  let mut h = HashMap::new();\n  for (i, c) in \&quot;hello!\&quot;.chars().enumerate() {\n    h.entry(c).or_insert(Vec::new()).push(i);\n  }\n  let mut sum = 0;\n  for i in &amp;h[&amp;'l'] {\n    sum += i;\n  }\n  println!(\&quot;{}\&quot;, sum);\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5655aed2c0189b881aa8aa4beac294211e4b15eb
 " ></div>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Vectors, strings, and hash maps will provide a large amount of functionality
@@ -392,8 +394,6 @@ and hash maps have that will be helpful for these exercises!</p>
 a perfect time to discuss error handling. We’ll do that next!</p>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
-<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
-<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -432,5 +432,7 @@ a perfect time to discuss error handling. We’ll do that next!</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
     </body>
 </html>

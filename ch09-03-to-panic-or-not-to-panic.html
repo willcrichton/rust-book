@@ -27,6 +27,8 @@
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
+        <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -379,7 +381,7 @@ hasn’t been checked by the conditions in the <code>Guess::new</code> function.
 <p>A function that has a parameter or returns only numbers between 1 and 100 could
 then declare in its signature that it takes or returns a <code>Guess</code> rather than an
 <code>i32</code> and wouldn’t need to do any additional checks in its body.</p>
-<div class="quiz-placeholder" data-quiz-name="ch09-03-panic-or-not"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Here, the programmer would likely want to use a *recoverable* error (the `Option`). If a CLI user passes an incorrectly formatted flag,\nthen the CLI library might want to provide additional help like displaying the possible set of flags. A panic would force the application\nto only show the panic message, and would probably be a worse user experience.\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;`parse_flag_v1`&quot;,&quot;`parse_flag_v2`&quot;],&quot;prompt&quot;:&quot;A Rust programmer is designing a library for writing command-line interfaces. As a part of this library, they are implementing a function \nto parse command-line flags. Which implementation would be most appropriate for this domain?\n\n```\nfn parse_flag_v1(flag: &amp;str) -&gt; Option&lt;String&gt; {\n  if flag.starts_with(\&quot;--\&quot;) {\n    Some(flag.strip_prefix(\&quot;--\&quot;).unwrap())\n  } else {\n    None\n  }\n}\n\nfn parse_flag_v2(flag: &amp;str) -&gt; String {\n  if !flag.starts_with(\&quot;--\&quot;) {\n    panic!(\&quot;Invalid flag {flag}\&quot;)\n  }\n\n  flag.strip_prefix(\&quot;--\&quot;).unwrap()\n}\n```\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5f9cbf77c6bb8af6f464461e008118123d2a479a
+<div class="quiz-placeholder" data-quiz-name="ch09-03-panic-or-not"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Here, the programmer would likely want to use a *recoverable* error (the `Option`). If a CLI user passes an incorrectly formatted flag,\nthen the CLI library might want to provide additional help like displaying the possible set of flags. A panic would force the application\nto only show the panic message, and would probably be a worse user experience.\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;`parse_flag_v1`&quot;,&quot;`parse_flag_v2`&quot;],&quot;prompt&quot;:&quot;A Rust programmer is designing a library for writing command-line interfaces. As a part of this library, they are implementing a function \nto parse command-line flags. Which implementation would be most appropriate for this domain?\n\n```\nfn parse_flag_v1(flag: &amp;str) -&gt; Option&lt;String&gt; {\n  if flag.starts_with(\&quot;--\&quot;) {\n    Some(flag.strip_prefix(\&quot;--\&quot;).unwrap())\n  } else {\n    None\n  }\n}\n\nfn parse_flag_v2(flag: &amp;str) -&gt; String {\n  if !flag.starts_with(\&quot;--\&quot;) {\n    panic!(\&quot;Invalid flag {flag}\&quot;)\n  }\n\n  flag.strip_prefix(\&quot;--\&quot;).unwrap()\n}\n```\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5655aed2c0189b881aa8aa4beac294211e4b15eb
 " ></div>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Rust’s error handling features are designed to help you write more robust code.
@@ -395,8 +397,6 @@ the <code>Option</code> and <code>Result</code> enums, we’ll talk about how ge
 can use them in your code.</p>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
-<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
-<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -435,5 +435,7 @@ can use them in your code.</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
     </body>
 </html>

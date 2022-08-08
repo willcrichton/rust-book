@@ -27,6 +27,8 @@
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
+        <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -432,12 +434,10 @@ ownership rules help prevent some kinds of bugs, tests are still important to
 reduce logic bugs having to do with how your code is expected to behave.</p>
 <p>Let’s combine the knowledge you learned in this chapter and in previous
 chapters to work on a project!</p>
-<div class="quiz-placeholder" data-quiz-name="ch11-03-test-organization"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;All unit tests in a given file have access to that file's private functions, regardless of being in a `mod test` or not.\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:3},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;It can reduce the size of generated compiler artifacts&quot;,&quot;It can improve compile times&quot;,&quot;It separates test helper functions from library code&quot;,&quot;It gives your tests access to private functions&quot;],&quot;prompt&quot;:&quot;Which of the following is NOT a reason to wrap unit tests in `#[cfg(test)] mod test { ... }`?\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5f9cbf77c6bb8af6f464461e008118123d2a479a
+<div class="quiz-placeholder" data-quiz-name="ch11-03-test-organization"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;All unit tests in a given file have access to that file's private functions, regardless of being in a `mod test` or not.\n&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:3},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;It can reduce the size of generated compiler artifacts&quot;,&quot;It can improve compile times&quot;,&quot;It separates test helper functions from library code&quot;,&quot;It gives your tests access to private functions&quot;],&quot;prompt&quot;:&quot;Which of the following is NOT a reason to wrap unit tests in `#[cfg(test)] mod test { ... }`?\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="5655aed2c0189b881aa8aa4beac294211e4b15eb
 " ></div>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
-<script type="text/javascript" src="mdbook-quiz/consent.js"></script>
-<link rel="stylesheet" type="text/css" href="mdbook-quiz/consent.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -476,5 +476,7 @@ chapters to work on a project!</p>
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
     </body>
 </html>
