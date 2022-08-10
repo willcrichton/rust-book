@@ -428,7 +428,7 @@ It would be helpful to tie this behavior more closely to our <code>Rectangle</co
 struct, because it won’t work with any other type. Let’s look at how we can
 continue to refactor this code by turning the <code>area</code> function into an <code>area</code>
 <em>method</em> defined on our <code>Rectangle</code> type.</p>
-<div class="quiz-placeholder" data-quiz-name="ch05-02-example-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \n`rect1` is moved by calling `area`, so it cannot be used on the next line.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:14},&quot;prompt&quot;:{&quot;program&quot;:&quot;#[derive(Debug)]\nstruct Rectangle {\n  width: u32,\n  height: u32,\n}\n\nfn main() {\n  let rect1 = Rectangle {\n    width: 30,\n    height: 50,\n  };\n\n  let a = area(rect1);\n  println!(\&quot;{:?} {}\&quot;, rect1, a);\n}\n\nfn area(rectangle: Rectangle) -&gt; u32 {\n  rectangle.width * rectangle.height\n}\n&quot;}},{&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;`Display` is for cases where a value has a unique string representation, while `Debug` does not assume that&quot;,&quot;`Display` is for printing values to the console, while `Debug` is for viewing values in a debugger&quot;,&quot;`Display` cannot be implemented for structs, while `Debug` can be implemented for structs&quot;,&quot;There is no difference, `Display` and `Debug` are aliases for the same trait.&quot;],&quot;prompt&quot;:&quot;What is the difference between the `Display` and `Debug` traits?&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="f94e0d01aa9c98128683bbf87d8f9f18d46f116b
+<div class="quiz-placeholder" data-quiz-name="ch05-02-example-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \n`rect1` is moved by calling `area`, so it cannot be used on the next line.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:14},&quot;prompt&quot;:{&quot;program&quot;:&quot;#[derive(Debug)]\nstruct Rectangle {\n  width: u32,\n  height: u32,\n}\n\nfn main() {\n  let rect1 = Rectangle {\n    width: 30,\n    height: 50,\n  };\n\n  let a = area(rect1);\n  println!(\&quot;{:?} {}\&quot;, rect1, a);\n}\n\nfn area(rectangle: Rectangle) -&gt; u32 {\n  rectangle.width * rectangle.height\n}\n&quot;}},{&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:0},&quot;prompt&quot;:{&quot;choices&quot;:[&quot;`Display` is for cases where a value has a unique string representation, while `Debug` does not assume that&quot;,&quot;`Display` is for printing values to the console, while `Debug` is for viewing values in a debugger&quot;,&quot;`Display` cannot be implemented for structs, while `Debug` can be implemented for structs&quot;,&quot;There is no difference, `Display` and `Debug` are aliases for the same trait.&quot;],&quot;prompt&quot;:&quot;What is the difference between the `Display` and `Debug` traits?&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="7ffc70bd28ce87df68c2e666ff7c52acabf30093
 " ></div>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script>
 <link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
@@ -458,6 +458,20 @@ continue to refactor this code by turning the <code>area</code> function into an
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>
