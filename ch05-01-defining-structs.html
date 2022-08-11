@@ -482,8 +482,7 @@ error: could not compile `structs` due to 2 previous errors
 references in structs, but for now, we’ll fix errors like these using owned
 types like <code>String</code> instead of references like <code>&amp;str</code>.</p>
 </blockquote>
-<div class="quiz-placeholder" data-quiz-name="ch05-01-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nThe `..p` syntax is a shallow copy of each field, so the second `p.x += 1` has no effect on `p2`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;2&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;struct Point {\n  x: i32,\n  y: i32\n}\n\nfn main() {\n  let mut a = Point { x: 1, y: 2 };\n  a.x += 1;\n  let b = Point { y: 1, ..a };\n  a.x += 1;\n  println!(\&quot;{}\&quot;, b.x);\n}\n&quot;}},{&quot;context&quot;:&quot; \nRust understands that `.x` refers to a different object than `.y`, so it is valid to take simultaneous mutable references\nto both fields.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;2 3&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;struct Point {\n  x: i32,\n  y: i32\n}\n\nfn main() {\n  let mut p = Point { x: 1, y: 2 };\n  let x = &amp;mut p.x;\n  let y = &amp;mut p.y;\n  *x += 1;\n  *y += 1;\n  println!(\&quot;{} {}\&quot;, p.x, p.y);\n}\n&quot;}}]}"  data-quiz-log-endpoint="https://mindover.computer"  data-quiz-fullscreen=""  data-quiz-cache-answers=""  data-quiz-commit-hash="7ffc70bd28ce87df68c2e666ff7c52acabf30093
-" ></div>
+<div class="quiz-placeholder" data-quiz-name="ch05-01-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nThe `..p` syntax is a shallow copy of each field, so the second `p.x += 1` has no effect on `p2`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;2&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;struct Point {\n  x: i32,\n  y: i32\n}\n\nfn main() {\n  let mut a = Point { x: 1, y: 2 };\n  a.x += 1;\n  let b = Point { y: 1, ..a };\n  a.x += 1;\n  println!(\&quot;{}\&quot;, b.x);\n}\n&quot;}},{&quot;context&quot;:&quot; \nRust understands that `.x` refers to a different object than `.y`, so it is valid to take simultaneous mutable references\nto both fields.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;2 3&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;struct Point {\n  x: i32,\n  y: i32\n}\n\nfn main() {\n  let mut p = Point { x: 1, y: 2 };\n  let x = &amp;mut p.x;\n  let y = &amp;mut p.y;\n  *x += 1;\n  *y += 1;\n  println!(\&quot;{} {}\&quot;, p.x, p.y);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <!-- manual-regeneration
 for the error above
 after running update-rustc.sh:
@@ -544,6 +543,7 @@ add `> ` before every line -->
 
         <!-- Custom JS scripts -->
         <script type="text/javascript" src="ferris.js"></script>
+        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
         <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
         <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
     </body>
