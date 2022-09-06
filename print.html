@@ -4000,6 +4000,30 @@ can read more about it in <a href="https://doc.rust-lang.org/edition-guide/rust-
 the Rust compiler pointing out a potential bug early (at compile time rather
 than at runtime) and showing you exactly where the problem is. Then you don’t
 have to track down why your data isn’t what you thought it was.</p>
+<h3 id="implicit-borrowing"><a class="header" href="#implicit-borrowing">Implicit Borrowing</a></h3>
+<p>Borrows and references are used <em>everywhere</em> in Rust. So to make Rust programs less verbose, the Rust compiler has a number of strategies for implicitly creating borrows and converting references. For example, mutable references can be moved by direct assignment:</p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+  let mut s = String::from(&quot;Hello world&quot;);
+  let s2 = &amp;mut s;
+  let s3 = s2;
+  println!(&quot;{}&quot;, s2); // Not valid because s2 is moved
+}
+</code></pre>
+<p>But mutable references are <em>not</em> moved by function calls:</p>
+<pre><pre class="playground"><code class="language-rust">fn consume(_s: &amp;mut String) {}
+fn main() {
+  let mut s = String::from(&quot;Hello world&quot;);
+  let s2 = &amp;mut s;
+  consume(s2);
+  println!(&quot;{}&quot;, s2); // Valid because s2 is NOT moved
+}
+</code></pre></pre>
+<p>This fact contradicts what you learned in the previous section! But this program works because Rust automatically <em>reborrows</em> mutable references when passed as input to a function call. That way, Rust programmers don't have to keep creating new mutable references on every call. Inside the compiler, the call to <code>consume</code> is transformed to look like this:</p>
+<pre><code class="language-rust ignore">  consume(&amp;mut *s2);
+</code></pre>
+<p>Therefore <code>s2</code> is not <em>moved</em> by <code>consume</code>, but rather <em>borrowed</em> by <code>consume</code>.</p>
+<p>The complete set of implicit behavior is beyond the scope of this chapter. We will introduce these rules as the book goes on, for example how Rust deals with methods (<a href="ch05-03-method-syntax.html">Section 5.3</a>) and smart pointers (<a href="ch15-00-smart-pointers.html">Section 15.2</a>). For now, just be aware that these rules exist. If you come across a piece of Rust code that seems wrong but actually compiles, then these rules might be the reason.</p>
+<p>Conversely, you can assume that Rust will never implicitly convert borrows in a way that would violate ownership. For instance, an immutable reference will never turn into a mutable reference (unless you use <a href="ch15-05-interior-mutability.html">interior mutability</a>), and a mutable reference will never turn into an owned value (unless you use <a href="https://doc.rust-lang.org/std/mem/fn.take.html"><code>std::mem::take</code></a>).</p>
 <div class="quiz-placeholder" data-quiz-name="ch04-02-references-sec2-mut"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Although `n` is marked as `mut`, the reference to `n` must also be marked as `mut`. So a valid version of this program would say `incr(&amp;mut n)`.\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:7},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn incr(n: &amp;mut i32) {\n  *n += 1;\n}\n\nfn main() {\n  let mut n = 1;\n  incr(&amp;n);\n  println!(\&quot;{n}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;It is illegal to use a mutable reference to a value (`s3`) while an immutable reference is live (`s2`).\n&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let mut s = String::from(\&quot;hello\&quot;);\n  let s2 = &amp;s;\n  let s3 = &amp;mut s;\n  s3.push_str(\&quot; world\&quot;);\n  println!(\&quot;{s2}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h3 id="dangling-references"><a class="header" href="#dangling-references">Dangling References</a></h3>
 <p>In languages with pointers, it’s easy to erroneously create a <em>dangling
