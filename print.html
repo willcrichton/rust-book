@@ -3907,6 +3907,9 @@ fn change(some_string: &amp;mut String) {
 <p>First, we change <code>s</code> to be <code>mut</code>. Then we create a mutable reference with <code>&amp;mut s</code> where we call the <code>change</code> function, and update the function signature to
 accept a mutable reference with <code>some_string: &amp;mut String</code>. This makes it very
 clear that the <code>change</code> function will mutate the value it borrows.</p>
+<!-- BEGIN INTERVENTION: 5080616f-6f4c-43f7-aa3a-8b23f2798937 -->
+<p>Unlike languages like C and C++ with a single reference-creating syntax, the <code>&amp;mut</code> operator is different from the <code>&amp;</code> operator. The expression <code>&amp;s</code> creates an <em>immutable</em> reference of type <code>&amp;String</code>, while the expression <code>&amp;mut s</code> creates a <em>mutable</em> reference of type <code>&amp;mut String</code>. The <code>&amp;</code> operator <em>cannot</em> be used to create a mutable reference.</p>
+<!-- END INTERVENTION -->
 <p>Mutable references have one big restriction: if you have a mutable reference to
 a value, you can have no other references to that value. This code that
 attempts to create two mutable references to <code>s</code> will fail:</p>
@@ -4030,30 +4033,6 @@ can read more about it in <a href="https://doc.rust-lang.org/edition-guide/rust-
 the Rust compiler pointing out a potential bug early (at compile time rather
 than at runtime) and showing you exactly where the problem is. Then you don’t
 have to track down why your data isn’t what you thought it was.</p>
-<h3 id="implicit-borrowing"><a class="header" href="#implicit-borrowing">Implicit Borrowing</a></h3>
-<p>Borrows and references are used <em>everywhere</em> in Rust. So to make Rust programs less verbose, the Rust compiler has a number of strategies for implicitly creating borrows and converting references. For example, mutable references can be moved by direct assignment:</p>
-<pre><code class="language-rust ignore does_not_compile">fn main() {
-  let mut s = String::from(&quot;Hello world&quot;);
-  let s2 = &amp;mut s;
-  let s3 = s2;
-  println!(&quot;{}&quot;, s2); // Not valid because s2 is moved
-}
-</code></pre>
-<p>But mutable references are <em>not</em> moved by function calls:</p>
-<pre><pre class="playground"><code class="language-rust">fn consume(_s: &amp;mut String) {}
-fn main() {
-  let mut s = String::from(&quot;Hello world&quot;);
-  let s2 = &amp;mut s;
-  consume(s2);
-  println!(&quot;{}&quot;, s2); // Valid because s2 is NOT moved
-}
-</code></pre></pre>
-<p>This fact contradicts what you learned in the previous section! But this program works because Rust automatically <em>reborrows</em> mutable references when passed as input to a function call. That way, Rust programmers don't have to keep creating new mutable references on every call. Inside the compiler, the call to <code>consume</code> is transformed to look like this:</p>
-<pre><code class="language-rust ignore">  consume(&amp;mut *s2);
-</code></pre>
-<p>Therefore <code>s2</code> is not <em>moved</em> by <code>consume</code>, but rather <em>borrowed</em> by <code>consume</code>.</p>
-<p>The complete set of implicit behavior is beyond the scope of this chapter. We will introduce these rules as the book goes on, for example how Rust deals with methods (<a href="ch05-03-method-syntax.html">Section 5.3</a>) and smart pointers (<a href="ch15-00-smart-pointers.html">Section 15.2</a>). For now, just be aware that these rules exist. If you come across a piece of Rust code that seems wrong but actually compiles, then these rules might be the reason.</p>
-<p>Conversely, Rust will never implicitly convert borrows in a way that would violate ownership. For example, if you use an immutable reference <code>&amp;x</code> where a mutable reference <code>&amp;mut x</code> is expected, Rust will not automatically convert <code>&amp;x</code> to <code>&amp;mut x</code>. You have to write out <code>&amp;mut x</code> yourself.</p>
 <div class="quiz-placeholder" data-quiz-name="ch04-02-references-sec2-mut"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Although `n` is marked as `mut`, the reference to `n` must also be marked as `mut`. So a valid version of this program would say `incr(&amp;mut n)`.\n&quot;,&quot;id&quot;:&quot;5080616f-6f4c-43f7-aa3a-8b23f2798937&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:7},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn incr(n: &amp;mut i32) {\n  *n += 1;\n}\n\nfn main() {\n  let mut n = 1;\n  incr(&amp;n);\n  println!(\&quot;{n}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;It is illegal to use a mutable reference to a value (`s3`) while an immutable reference \nis live (`s2`). The last line of the error is the `println` on line 6, because if you \ndeleted that line, then this program would compile.\n&quot;,&quot;id&quot;:&quot;e9846c5d-1254-4420-9986-dae4af86b9af&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let mut s = String::from(\&quot;hello\&quot;);\n  let s2 = &amp;s;\n  let s3 = &amp;mut s;\n  s3.push_str(\&quot; world\&quot;);\n  println!(\&quot;{s2}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h3 id="dangling-references"><a class="header" href="#dangling-references">Dangling References</a></h3>
 <p>In languages with pointers, it’s easy to erroneously create a <em>dangling
@@ -4282,26 +4261,31 @@ that state at all. We have three unrelated variables floating around that
 need to be kept in sync.</p>
 <p>Luckily, Rust has a solution to this problem: string slices.</p>
 <h3 id="string-slices"><a class="header" href="#string-slices">String Slices</a></h3>
+<!-- BEGIN INTERVENTION: 7fbda6e4-dca7-458e-ab52-fab03181f90b -->
 <p>A <em>string slice</em> is a reference to part of a <code>String</code>, and it looks like this:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let s = String::from(&quot;hello world&quot;);
 
-    let hello = &amp;s[0..5];
-    let world = &amp;s[6..11];
+    let hello: &amp;str = &amp;s[0..5];
+    let world: &amp;str = &amp;s[6..11];
+    let s2: &amp;String = &amp;s; // not a slice, for comparison
 <span class="boring">}
 </span></code></pre></pre>
-<p>Rather than a reference to the entire <code>String</code>, <code>hello</code> is a reference to a
+<p>Rather than a reference to the entire <code>String</code> (like <code>s2</code>), <code>hello</code> is a reference to a
 portion of the <code>String</code>, specified in the extra <code>[0..5]</code> bit. We create slices
 using a range within brackets by specifying <code>[starting_index..ending_index]</code>,
 where <code>starting_index</code> is the first position in the slice and <code>ending_index</code> is
-one more than the last position in the slice. Internally, the slice data
+one more than the last position in the slice.
+Internally, the slice data
 structure stores the starting position and the length of the slice, which
 corresponds to <code>ending_index</code> minus <code>starting_index</code>. So in the case of <code>let world = &amp;s[6..11];</code>, <code>world</code> would be a slice that contains a pointer to the
 byte at index 6 of <code>s</code> with a length value of 5.</p>
 <p>Figure 4-6 shows this in a diagram.</p>
-<img alt="world containing a pointer to the byte at index 6 of String s and a length 5" src="img/trpl04-06.svg" class="center" style="width: 50%;" />
+<img alt="world containing a pointer to the byte at index 6 of String s and a length 5" src="img/trpl04-06.svg" class="center" style="width: 80%;" />
 <p><span class="caption">Figure 4-6: String slice referring to part of a
 <code>String</code></span></p>
+<p>Note that there is a difference between <code>s2: &amp;String</code>, a reference to an owned string, and <code>hello: &amp;str</code>, a string slice. <code>s2</code> is two pointers away from the string data, while <code>hello</code> directly points to the string data without going through <code>s</code>.</p>
+<!-- END INTERVENTION -->
 <p>With Rust’s <code>..</code> range syntax, if you want to start at index zero, you can drop
 the value before the two periods. In other words, these are equal:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -6325,9 +6309,52 @@ Type”</a><!-- ignore --> section) as the code that goes with the <code>_</code
 that doesn’t match a pattern in an earlier arm, and we don’t want to run any
 code in this case.</p>
 <p>There’s more about patterns and matching that we’ll cover in <a href="ch18-00-patterns.html">Chapter
-18</a><!-- ignore -->. For now, we’re going to move on to the
-<code>if let</code> syntax, which can be useful in situations where the <code>match</code> expression
-is a bit wordy.</p>
+18</a><!-- ignore -->.</p>
+<!-- BEGIN INTERVENTION: 1e4f082c-ffa4-4d33-8726-2dbcd72e1aa2 -->
+<h2 id="how-matches-interact-with-ownership"><a class="header" href="#how-matches-interact-with-ownership">How Matches Interact with Ownership</a></h2>
+<p>If an enum contains non-copyable data like a String, then you should be careful with whether a match will move or borrow that data. For example, this program using an <code>Option&lt;String&gt;</code> will compile:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let opt: Option&lt;String&gt; = Some(String::from(&quot;Hello world&quot;));
+
+match opt {
+    Some(_) =&gt; println!(&quot;Some!&quot;),
+    None =&gt; println!(&quot;None!&quot;)
+};
+
+println!(&quot;{:?}&quot;, opt);
+<span class="boring">}
+</span></code></pre></pre>
+<p>But if we replace the placeholder in <code>Some(_)</code> with a variable name, like <code>Some(s)</code>, then the program will NOT compile:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>let opt: Option&lt;String&gt; = Some(String::from(&quot;Hello world&quot;));
+
+match opt {
+    // _ became s
+    Some(s) =&gt; println!(&quot;Some: {}&quot;, s),
+    None =&gt; println!(&quot;None!&quot;)
+};
+
+println!(&quot;{:?}&quot;, opt);
+<span class="boring">}
+</span></code></pre>
+<p><code>opt</code> is a plain enum — its type is <code>Option&lt;String&gt;</code> and not a reference like <code>&amp;Option&lt;String&gt;</code>. Therefore a match on <code>opt</code> will move non-ignored fields like <code>s</code>. After the match expression, the data within <code>opt</code> has been moved, so it is illegal to use <code>opt</code> in the <code>println</code>.</p>
+<p>If we want to peek into <code>opt</code> without moving its contents, the idiomatic solution is to match on a reference:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let opt: Option&lt;String&gt; = Some(String::from(&quot;Hello world&quot;));
+
+// opt became &amp;opt
+match &amp;opt {
+    Some(s) =&gt; println!(&quot;Some: {}&quot;, s),
+    None =&gt; println!(&quot;None!&quot;)
+};
+
+println!(&quot;{:?}&quot;, opt);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Rust will “push down” the reference from the outer enum, <code>&amp;Option&lt;String&gt;</code>, to the inner field, <code>&amp;String</code>. Therefore <code>s</code> has type <code>&amp;String</code>, and <code>opt</code> can be used after the match. To better understand this “pushing down” mechanism, see the section about <a href="https://doc.rust-lang.org/reference/patterns.html#binding-modes">binding modes</a> in the Rust Reference.</p>
+<!-- END INTERVENTION -->
 <div class="quiz-placeholder" data-quiz-name="ch06-02-match-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nEach match is tried from top to bottom. Both the second and third pattern are applicable, so the second one is used.\n&quot;,&quot;id&quot;:&quot;5b6e4016-c089-4cb3-96a7-ca9f88694488&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;5&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;enum Location {\n  Point(i32),\n  Range(i32, i32)\n}\n\nfn main() {\n  let l: Location = Location::Range(0, 5);\n  let n = match l {\n    Location::Point(_) =&gt; -1,\n    Location::Range(_, n) =&gt; n,\n    Location::Range(0, _) =&gt; 0,\n    _ =&gt; -2\n  };\n  println!(\&quot;{n}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;This function \&quot;unwraps\&quot; the option by consuming ownership of it and retrieving the value inside, but if no value exists then it falls back by returning `other`.\nThis is a real function in the standard library!\n&quot;,&quot;id&quot;:&quot;f7c361e0-733a-4d48-9809-736e3c1e2b67&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Returns the object inside `self` if it exists, and `other` otherwise&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Returns a new option containing the object inside `self` if it exists, and `other` otherwise&quot;,&quot;Inserts `other` into `self` if `self` does not already contain a value&quot;,&quot;Returns a reference to the object inside `self` if it exists, and `other` otherwise&quot;],&quot;prompt&quot;:&quot;Consider this method implemented for the `Option` type:\n\n```\nimpl&lt;T&gt; Option&lt;T&gt; {\n  fn unwrap_or(self, other: T) -&gt; T {\n    match self {\n      Some(t) =&gt; t,\n      None =&gt; other\n    }\n  }\n}\n```\n\nWhich sentence best describes the behavior of this function?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script><link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css"><div style="break-before: page; page-break-before: always;"></div><h2 id="concise-control-flow-with-if-let"><a class="header" href="#concise-control-flow-with-if-let">Concise Control Flow with <code>if let</code></a></h2>
 <p>The <code>if let</code> syntax lets you combine <code>if</code> and <code>let</code> into a less verbose way to
@@ -7741,36 +7768,40 @@ ending up in that situation.</p>
 Rustonomicon”</a>.</p>
 </blockquote>
 <h3 id="iterating-over-the-values-in-a-vector"><a class="header" href="#iterating-over-the-values-in-a-vector">Iterating over the Values in a Vector</a></h3>
+<!-- BEGIN INTERVENTION: e8da8773-8df2-4279-8c27-b7e9eda1dddd -->
 <p>To access each element in a vector in turn, we would iterate through all of the
 elements rather than use indices to access one at a time. Listing 8-7 shows how
 to use a <code>for</code> loop to get immutable references to each element in a vector of
 <code>i32</code> values and print them.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let v = vec![100, 32, 57];
-    for i in &amp;v {
-        println!(&quot;{}&quot;, i);
+    for n_ref in &amp;v {
+        // n_ref has type &amp;i32
+        let n_plus_one: i32 = *n_ref + 1;
+        println!(&quot;{}&quot;, n_plus_one);
     }
 <span class="boring">}
 </span></code></pre></pre>
-<p><span class="caption">Listing 8-7: Printing each element in a vector by
+<p><span class="caption">Listing 8-7: Accessing each element in a vector by
 iterating over the elements using a <code>for</code> loop</span></p>
+<p>To read the number that <code>n_ref</code> refers to, we have to use the <code>*</code> dereference operator to get to the value in <code>n_ref</code> before we can add 1 to it. We’ll talk more about the dereference operator in the <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Following the
+Pointer to the Value with the Dereference Operator”</a><!-- ignore -->
+section of Chapter 15.</p>
 <p>We can also iterate over mutable references to each element in a mutable vector
 in order to make changes to all the elements. The <code>for</code> loop in Listing 8-8
 will add <code>50</code> to each element.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let mut v = vec![100, 32, 57];
-    for i in &amp;mut v {
-        *i += 50;
+    for n_ref in &amp;mut v {
+        // n_ref has type &amp;mut i32
+        *n_ref += 50;
     }
 <span class="boring">}
 </span></code></pre></pre>
 <p><span class="caption">Listing 8-8: Iterating over mutable references to
 elements in a vector</span></p>
-<p>To change the value that the mutable reference refers to, we have to use the
-<code>*</code> dereference operator to get to the value in <code>i</code> before we can use the <code>+=</code>
-operator. We’ll talk more about the dereference operator in the <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Following the
-Pointer to the Value with the Dereference Operator”</a><!-- ignore -->
-section of Chapter 15.</p>
+<p>To change the value that the mutable reference refers to, we again use the <code>*</code> dereference operator to get to the value in <code>n_ref</code> before we can use the <code>+=</code> operator. </p>
+<!-- END INTERVENTION -->
 <p>Iterating over a vector, whether immutably or mutably, is safe because of the
 borrow checker's rules. If we attempted to insert or remove items in the <code>for</code>
 loop bodies in Listing 8-7 and Listing 8-8, we would get a compiler error
@@ -8002,14 +8033,19 @@ method, Rust uses a <em>deref coercion</em>, which here turns <code>&amp;s2</cod
 We’ll discuss deref coercion in more depth in Chapter 15. Because <code>add</code> does
 not take ownership of the <code>s</code> parameter, <code>s2</code> will still be a valid <code>String</code>
 after this operation.</p>
+<!-- BEGIN INTERVENTION: f1ab2171-96f0-4380-b16d-9055a9a00415 -->
 <p>Second, we can see in the signature that <code>add</code> takes ownership of <code>self</code>,
 because <code>self</code> does <em>not</em> have an <code>&amp;</code>. This means <code>s1</code> in Listing 8-18 will be
 moved into the <code>add</code> call and will no longer be valid after that. So although
 <code>let s3 = s1 + &amp;s2;</code> looks like it will copy both strings and create a new one,
-this statement actually takes ownership of <code>s1</code>, appends a copy of the contents
-of <code>s2</code>, and then returns ownership of the result. In other words, it looks
-like it’s making a lot of copies but isn’t; the implementation is more
-efficient than copying.</p>
+this statement instead does the following:</p>
+<ol>
+<li><code>add</code> takes ownership of <code>s1</code>,</li>
+<li>it appends a copy of the contents of <code>s2</code> to <code>s1</code>, </li>
+<li>and then it returns back ownership of <code>s1</code>.</li>
+</ol>
+<p>If <code>s1</code> has enough capacity for <code>s2</code>, then no memory allocations occur. However, if <code>s1</code> does not have enough capacity for <code>s2</code>, then <code>s1</code> will internally make a larger memory allocation to fit both strings.</p>
+<!-- END INTERVENTION -->
 <p>If we need to concatenate multiple strings, the behavior of the <code>+</code> operator
 gets unwieldy:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
@@ -9745,16 +9781,11 @@ help: consider restricting type parameter `T`
 For more information about this error, try `rustc --explain E0369`.
 error: could not compile `chapter10` due to previous error
 </code></pre>
-<p>The help text mentions <code>std::cmp::PartialOrd</code>, which is a <em>trait</em>, and we’re
-going to talk about traits in the next section. For now, know that this error
-states that the body of <code>largest</code> won’t work for all possible types that <code>T</code>
-could be. Because we want to compare values of type <code>T</code> in the body, we can
-only use types whose values can be ordered. To enable comparisons, the standard
-library has the <code>std::cmp::PartialOrd</code> trait that you can implement on types
-(see Appendix C for more on this trait). By following the help text's
-suggestion, we restrict the types valid for <code>T</code> to only those that implement
-<code>PartialOrd</code> and this example will compile, because the standard library
-implements <code>PartialOrd</code> on both <code>i32</code> and <code>char</code>.</p>
+<!-- BEGIN INTERVENTION: 0aad53ff-89d7-4d14-8e3d-c17809220252 -->
+<p>The issue above is that when <code>largest</code> takes a slice <code>&amp;[T]</code> as input, the function cannot assume <em>anything</em> about the type <code>T</code>. It could be <code>i32</code>, it could be <code>String</code>, it could be <a href="https://doc.rust-lang.org/std/fs/struct.File.html"><code>File</code></a>. However, <code>largest</code> requires that <code>T</code> is something you can compare with <code>&gt;</code> (i.e. that <code>T</code> implements <code>PartialOrd</code>, a trait which we will discuss in the next section). Some types like <code>i32</code> and <code>String</code> are comparable, but other types like <code>File</code> are not comparable.</p>
+<p>In a language like C++ with <a href="https://en.cppreference.com/w/cpp/language/templates">templates</a>, the compiler would not complain about the implementation of <code>largest</code>, but instead it would complain about trying to call <code>largest</code> on e.g. a file slice <code>&amp;[File]</code>. Rust instead requires you to state the expected capabilities of generic types up front. If <code>T</code> needs to be comparable, then <code>largest</code> must say so. Therefore this compiler error says <code>largest</code> will not compile until <code>T</code> is restricted.</p>
+<p>Additionally, unlike languages like Java where all objects have a set of core methods like <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()"><code>Object.toString()</code></a>, there are no core methods in Rust. Without restrictions, a generic type <code>T</code> has no capabilities: it cannot be printed, cloned, or mutated (although it can be dropped).</p>
+<!-- END INTERVENTION -->
 <h3 id="in-struct-definitions"><a class="header" href="#in-struct-definitions">In Struct Definitions</a></h3>
 <p>We can also define structs to use a generic type parameter in one or more
 fields using the <code>&lt;&gt;</code> syntax. Listing 10-6 defines a <code>Point&lt;T&gt;</code> struct to hold
@@ -9943,6 +9974,9 @@ method; other instances of <code>Point&lt;T&gt;</code> where <code>T</code> is n
 have this method defined. The method measures how far our point is from the
 point at coordinates (0.0, 0.0) and uses mathematical operations that are
 available only for floating point types.</p>
+<!-- BEGIN INTERVENTION: 694bb2d0-f2e6-4b0b-a3e7-2d9f9e8b3d09 -->
+<p>You cannot simultaneously implement specific <em>and</em> generic methods of the same name this way. For example, if you implemented a general <code>distance_from_origin</code> for all types <code>T</code> and a specific <code>distance_from_origin</code> for <code>f32</code>, then the compiler will reject your program: Rust does not know which implementation to use when you call <code>Point&lt;f32&gt;::distance_from_origin</code>. More generally, Rust does not have inheritance-like mechanisms for specializing methods as you might find in an object-oriented language, with one exception (default trait methods) discussed in the next section.</p>
+<!-- END INTERVENTION -->
 <p>Generic type parameters in a struct definition aren’t always the same as those
 you use in that same struct’s method signatures. Listing 10-11 uses the generic
 types <code>X1</code> and <code>Y1</code> for the <code>Point</code> struct and <code>X2</code> <code>Y2</code> for the <code>mixup</code> method
@@ -11142,10 +11176,14 @@ lifetimes, and the second and third rules apply to output lifetimes. If the
 compiler gets to the end of the three rules and there are still references for
 which it can’t figure out lifetimes, the compiler will stop with an error.
 These rules apply to <code>fn</code> definitions as well as <code>impl</code> blocks.</p>
-<p>The first rule is that the compiler assigns a lifetime parameter to each
-parameter that’s a reference. In other words, a function with one parameter gets
-one lifetime parameter: <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>; a function with two
-parameters gets two separate lifetime parameters: <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>; and so on.</p>
+<!-- BEGIN INTERVENTION: d03748df-8dcf-4ec8-bd30-341927544665 -->
+<p>The first rule is that the compiler assigns a different lifetime parameter to each lifetime in each input type. References like <code>&amp;'_ i32</code> needs a lifetime parameter, and structures like <code>ImportantExcerpt&lt;'_&gt;</code> need a lifetime parameter. For example:</p>
+<ul>
+<li>The function <code>fn foo(x: &amp;i32)</code> would get one lifetime parameter and become <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>. </li>
+<li>The function <code>fn foo(x: &amp;i32, y: &amp;i32)</code> would get two lifetime parameters and become <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>.</li>
+<li>The function <code>fn foo(x: &amp;ImportantExcerpt)</code> would get two lifetime parameters and become <code>fn foo&lt;'a, 'b&gt;(&amp;'a ImportantExcerpt&lt;'b&gt;)</code>.</li>
+</ul>
+<!-- END INTERVENTION -->
 <p>The second rule is that, if there is exactly one input lifetime parameter, that
 lifetime is assigned to all output lifetime parameters: <code>fn foo&lt;'a&gt;(x: &amp;'a i32) -&gt; &amp;'a i32</code>.</p>
 <p>The third rule is that, if there are multiple input lifetime parameters, but

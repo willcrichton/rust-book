@@ -280,26 +280,31 @@ that state at all. We have three unrelated variables floating around that
 need to be kept in sync.</p>
 <p>Luckily, Rust has a solution to this problem: string slices.</p>
 <h3 id="string-slices"><a class="header" href="#string-slices">String Slices</a></h3>
+<!-- BEGIN INTERVENTION: 7fbda6e4-dca7-458e-ab52-fab03181f90b -->
 <p>A <em>string slice</em> is a reference to part of a <code>String</code>, and it looks like this:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let s = String::from(&quot;hello world&quot;);
 
-    let hello = &amp;s[0..5];
-    let world = &amp;s[6..11];
+    let hello: &amp;str = &amp;s[0..5];
+    let world: &amp;str = &amp;s[6..11];
+    let s2: &amp;String = &amp;s; // not a slice, for comparison
 <span class="boring">}
 </span></code></pre></pre>
-<p>Rather than a reference to the entire <code>String</code>, <code>hello</code> is a reference to a
+<p>Rather than a reference to the entire <code>String</code> (like <code>s2</code>), <code>hello</code> is a reference to a
 portion of the <code>String</code>, specified in the extra <code>[0..5]</code> bit. We create slices
 using a range within brackets by specifying <code>[starting_index..ending_index]</code>,
 where <code>starting_index</code> is the first position in the slice and <code>ending_index</code> is
-one more than the last position in the slice. Internally, the slice data
+one more than the last position in the slice.
+Internally, the slice data
 structure stores the starting position and the length of the slice, which
 corresponds to <code>ending_index</code> minus <code>starting_index</code>. So in the case of <code>let world = &amp;s[6..11];</code>, <code>world</code> would be a slice that contains a pointer to the
 byte at index 6 of <code>s</code> with a length value of 5.</p>
 <p>Figure 4-6 shows this in a diagram.</p>
-<img alt="world containing a pointer to the byte at index 6 of String s and a length 5" src="img/trpl04-06.svg" class="center" style="width: 50%;" />
+<img alt="world containing a pointer to the byte at index 6 of String s and a length 5" src="img/trpl04-06.svg" class="center" style="width: 80%;" />
 <p><span class="caption">Figure 4-6: String slice referring to part of a
 <code>String</code></span></p>
+<p>Note that there is a difference between <code>s2: &amp;String</code>, a reference to an owned string, and <code>hello: &amp;str</code>, a string slice. <code>s2</code> is two pointers away from the string data, while <code>hello</code> directly points to the string data without going through <code>s</code>.</p>
+<!-- END INTERVENTION -->
 <p>With Rust’s <code>..</code> range syntax, if you want to start at index zero, you can drop
 the value before the two periods. In other words, these are equal:</p>
 <pre><pre class="playground"><code class="language-rust">

@@ -498,9 +498,52 @@ Type”</a><!-- ignore --> section) as the code that goes with the <code>_</code
 that doesn’t match a pattern in an earlier arm, and we don’t want to run any
 code in this case.</p>
 <p>There’s more about patterns and matching that we’ll cover in <a href="ch18-00-patterns.html">Chapter
-18</a><!-- ignore -->. For now, we’re going to move on to the
-<code>if let</code> syntax, which can be useful in situations where the <code>match</code> expression
-is a bit wordy.</p>
+18</a><!-- ignore -->.</p>
+<!-- BEGIN INTERVENTION: 1e4f082c-ffa4-4d33-8726-2dbcd72e1aa2 -->
+<h2 id="how-matches-interact-with-ownership"><a class="header" href="#how-matches-interact-with-ownership">How Matches Interact with Ownership</a></h2>
+<p>If an enum contains non-copyable data like a String, then you should be careful with whether a match will move or borrow that data. For example, this program using an <code>Option&lt;String&gt;</code> will compile:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let opt: Option&lt;String&gt; = Some(String::from(&quot;Hello world&quot;));
+
+match opt {
+    Some(_) =&gt; println!(&quot;Some!&quot;),
+    None =&gt; println!(&quot;None!&quot;)
+};
+
+println!(&quot;{:?}&quot;, opt);
+<span class="boring">}
+</span></code></pre></pre>
+<p>But if we replace the placeholder in <code>Some(_)</code> with a variable name, like <code>Some(s)</code>, then the program will NOT compile:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>let opt: Option&lt;String&gt; = Some(String::from(&quot;Hello world&quot;));
+
+match opt {
+    // _ became s
+    Some(s) =&gt; println!(&quot;Some: {}&quot;, s),
+    None =&gt; println!(&quot;None!&quot;)
+};
+
+println!(&quot;{:?}&quot;, opt);
+<span class="boring">}
+</span></code></pre>
+<p><code>opt</code> is a plain enum — its type is <code>Option&lt;String&gt;</code> and not a reference like <code>&amp;Option&lt;String&gt;</code>. Therefore a match on <code>opt</code> will move non-ignored fields like <code>s</code>. After the match expression, the data within <code>opt</code> has been moved, so it is illegal to use <code>opt</code> in the <code>println</code>.</p>
+<p>If we want to peek into <code>opt</code> without moving its contents, the idiomatic solution is to match on a reference:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let opt: Option&lt;String&gt; = Some(String::from(&quot;Hello world&quot;));
+
+// opt became &amp;opt
+match &amp;opt {
+    Some(s) =&gt; println!(&quot;Some: {}&quot;, s),
+    None =&gt; println!(&quot;None!&quot;)
+};
+
+println!(&quot;{:?}&quot;, opt);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Rust will “push down” the reference from the outer enum, <code>&amp;Option&lt;String&gt;</code>, to the inner field, <code>&amp;String</code>. Therefore <code>s</code> has type <code>&amp;String</code>, and <code>opt</code> can be used after the match. To better understand this “pushing down” mechanism, see the section about <a href="https://doc.rust-lang.org/reference/patterns.html#binding-modes">binding modes</a> in the Rust Reference.</p>
+<!-- END INTERVENTION -->
 <div class="quiz-placeholder" data-quiz-name="ch06-02-match-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nEach match is tried from top to bottom. Both the second and third pattern are applicable, so the second one is used.\n&quot;,&quot;id&quot;:&quot;5b6e4016-c089-4cb3-96a7-ca9f88694488&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;5&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;enum Location {\n  Point(i32),\n  Range(i32, i32)\n}\n\nfn main() {\n  let l: Location = Location::Range(0, 5);\n  let n = match l {\n    Location::Point(_) =&gt; -1,\n    Location::Range(_, n) =&gt; n,\n    Location::Range(0, _) =&gt; 0,\n    _ =&gt; -2\n  };\n  println!(\&quot;{n}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;This function \&quot;unwraps\&quot; the option by consuming ownership of it and retrieving the value inside, but if no value exists then it falls back by returning `other`.\nThis is a real function in the standard library!\n&quot;,&quot;id&quot;:&quot;f7c361e0-733a-4d48-9809-736e3c1e2b67&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Returns the object inside `self` if it exists, and `other` otherwise&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Returns a new option containing the object inside `self` if it exists, and `other` otherwise&quot;,&quot;Inserts `other` into `self` if `self` does not already contain a value&quot;,&quot;Returns a reference to the object inside `self` if it exists, and `other` otherwise&quot;],&quot;prompt&quot;:&quot;Consider this method implemented for the `Option` type:\n\n```\nimpl&lt;T&gt; Option&lt;T&gt; {\n  fn unwrap_or(self, other: T) -&gt; T {\n    match self {\n      Some(t) =&gt; t,\n      None =&gt; other\n    }\n  }\n}\n```\n\nWhich sentence best describes the behavior of this function?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <script type="text/javascript" src="mdbook-quiz/embed.js"></script><link rel="stylesheet" type="text/css" href="mdbook-quiz/embed.css">
                     </main>

@@ -302,14 +302,19 @@ method, Rust uses a <em>deref coercion</em>, which here turns <code>&amp;s2</cod
 We’ll discuss deref coercion in more depth in Chapter 15. Because <code>add</code> does
 not take ownership of the <code>s</code> parameter, <code>s2</code> will still be a valid <code>String</code>
 after this operation.</p>
+<!-- BEGIN INTERVENTION: f1ab2171-96f0-4380-b16d-9055a9a00415 -->
 <p>Second, we can see in the signature that <code>add</code> takes ownership of <code>self</code>,
 because <code>self</code> does <em>not</em> have an <code>&amp;</code>. This means <code>s1</code> in Listing 8-18 will be
 moved into the <code>add</code> call and will no longer be valid after that. So although
 <code>let s3 = s1 + &amp;s2;</code> looks like it will copy both strings and create a new one,
-this statement actually takes ownership of <code>s1</code>, appends a copy of the contents
-of <code>s2</code>, and then returns ownership of the result. In other words, it looks
-like it’s making a lot of copies but isn’t; the implementation is more
-efficient than copying.</p>
+this statement instead does the following:</p>
+<ol>
+<li><code>add</code> takes ownership of <code>s1</code>,</li>
+<li>it appends a copy of the contents of <code>s2</code> to <code>s1</code>, </li>
+<li>and then it returns back ownership of <code>s1</code>.</li>
+</ol>
+<p>If <code>s1</code> has enough capacity for <code>s2</code>, then no memory allocations occur. However, if <code>s1</code> does not have enough capacity for <code>s2</code>, then <code>s1</code> will internally make a larger memory allocation to fit both strings.</p>
+<!-- END INTERVENTION -->
 <p>If we need to concatenate multiple strings, the behavior of the <code>+</code> operator
 gets unwieldy:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {

@@ -264,16 +264,11 @@ help: consider restricting type parameter `T`
 For more information about this error, try `rustc --explain E0369`.
 error: could not compile `chapter10` due to previous error
 </code></pre>
-<p>The help text mentions <code>std::cmp::PartialOrd</code>, which is a <em>trait</em>, and we’re
-going to talk about traits in the next section. For now, know that this error
-states that the body of <code>largest</code> won’t work for all possible types that <code>T</code>
-could be. Because we want to compare values of type <code>T</code> in the body, we can
-only use types whose values can be ordered. To enable comparisons, the standard
-library has the <code>std::cmp::PartialOrd</code> trait that you can implement on types
-(see Appendix C for more on this trait). By following the help text's
-suggestion, we restrict the types valid for <code>T</code> to only those that implement
-<code>PartialOrd</code> and this example will compile, because the standard library
-implements <code>PartialOrd</code> on both <code>i32</code> and <code>char</code>.</p>
+<!-- BEGIN INTERVENTION: 0aad53ff-89d7-4d14-8e3d-c17809220252 -->
+<p>The issue above is that when <code>largest</code> takes a slice <code>&amp;[T]</code> as input, the function cannot assume <em>anything</em> about the type <code>T</code>. It could be <code>i32</code>, it could be <code>String</code>, it could be <a href="https://doc.rust-lang.org/std/fs/struct.File.html"><code>File</code></a>. However, <code>largest</code> requires that <code>T</code> is something you can compare with <code>&gt;</code> (i.e. that <code>T</code> implements <code>PartialOrd</code>, a trait which we will discuss in the next section). Some types like <code>i32</code> and <code>String</code> are comparable, but other types like <code>File</code> are not comparable.</p>
+<p>In a language like C++ with <a href="https://en.cppreference.com/w/cpp/language/templates">templates</a>, the compiler would not complain about the implementation of <code>largest</code>, but instead it would complain about trying to call <code>largest</code> on e.g. a file slice <code>&amp;[File]</code>. Rust instead requires you to state the expected capabilities of generic types up front. If <code>T</code> needs to be comparable, then <code>largest</code> must say so. Therefore this compiler error says <code>largest</code> will not compile until <code>T</code> is restricted.</p>
+<p>Additionally, unlike languages like Java where all objects have a set of core methods like <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString()"><code>Object.toString()</code></a>, there are no core methods in Rust. Without restrictions, a generic type <code>T</code> has no capabilities: it cannot be printed, cloned, or mutated (although it can be dropped).</p>
+<!-- END INTERVENTION -->
 <h3 id="in-struct-definitions"><a class="header" href="#in-struct-definitions">In Struct Definitions</a></h3>
 <p>We can also define structs to use a generic type parameter in one or more
 fields using the <code>&lt;&gt;</code> syntax. Listing 10-6 defines a <code>Point&lt;T&gt;</code> struct to hold
@@ -462,6 +457,9 @@ method; other instances of <code>Point&lt;T&gt;</code> where <code>T</code> is n
 have this method defined. The method measures how far our point is from the
 point at coordinates (0.0, 0.0) and uses mathematical operations that are
 available only for floating point types.</p>
+<!-- BEGIN INTERVENTION: 694bb2d0-f2e6-4b0b-a3e7-2d9f9e8b3d09 -->
+<p>You cannot simultaneously implement specific <em>and</em> generic methods of the same name this way. For example, if you implemented a general <code>distance_from_origin</code> for all types <code>T</code> and a specific <code>distance_from_origin</code> for <code>f32</code>, then the compiler will reject your program: Rust does not know which implementation to use when you call <code>Point&lt;f32&gt;::distance_from_origin</code>. More generally, Rust does not have inheritance-like mechanisms for specializing methods as you might find in an object-oriented language, with one exception (default trait methods) discussed in the next section.</p>
+<!-- END INTERVENTION -->
 <p>Generic type parameters in a struct definition aren’t always the same as those
 you use in that same struct’s method signatures. Listing 10-11 uses the generic
 types <code>X1</code> and <code>Y1</code> for the <code>Point</code> struct and <code>X2</code> <code>Y2</code> for the <code>mixup</code> method

@@ -301,36 +301,40 @@ ending up in that situation.</p>
 Rustonomicon”</a>.</p>
 </blockquote>
 <h3 id="iterating-over-the-values-in-a-vector"><a class="header" href="#iterating-over-the-values-in-a-vector">Iterating over the Values in a Vector</a></h3>
+<!-- BEGIN INTERVENTION: e8da8773-8df2-4279-8c27-b7e9eda1dddd -->
 <p>To access each element in a vector in turn, we would iterate through all of the
 elements rather than use indices to access one at a time. Listing 8-7 shows how
 to use a <code>for</code> loop to get immutable references to each element in a vector of
 <code>i32</code> values and print them.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let v = vec![100, 32, 57];
-    for i in &amp;v {
-        println!(&quot;{}&quot;, i);
+    for n_ref in &amp;v {
+        // n_ref has type &amp;i32
+        let n_plus_one: i32 = *n_ref + 1;
+        println!(&quot;{}&quot;, n_plus_one);
     }
 <span class="boring">}
 </span></code></pre></pre>
-<p><span class="caption">Listing 8-7: Printing each element in a vector by
+<p><span class="caption">Listing 8-7: Accessing each element in a vector by
 iterating over the elements using a <code>for</code> loop</span></p>
+<p>To read the number that <code>n_ref</code> refers to, we have to use the <code>*</code> dereference operator to get to the value in <code>n_ref</code> before we can add 1 to it. We’ll talk more about the dereference operator in the <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Following the
+Pointer to the Value with the Dereference Operator”</a><!-- ignore -->
+section of Chapter 15.</p>
 <p>We can also iterate over mutable references to each element in a mutable vector
 in order to make changes to all the elements. The <code>for</code> loop in Listing 8-8
 will add <code>50</code> to each element.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let mut v = vec![100, 32, 57];
-    for i in &amp;mut v {
-        *i += 50;
+    for n_ref in &amp;mut v {
+        // n_ref has type &amp;mut i32
+        *n_ref += 50;
     }
 <span class="boring">}
 </span></code></pre></pre>
 <p><span class="caption">Listing 8-8: Iterating over mutable references to
 elements in a vector</span></p>
-<p>To change the value that the mutable reference refers to, we have to use the
-<code>*</code> dereference operator to get to the value in <code>i</code> before we can use the <code>+=</code>
-operator. We’ll talk more about the dereference operator in the <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Following the
-Pointer to the Value with the Dereference Operator”</a><!-- ignore -->
-section of Chapter 15.</p>
+<p>To change the value that the mutable reference refers to, we again use the <code>*</code> dereference operator to get to the value in <code>n_ref</code> before we can use the <code>+=</code> operator. </p>
+<!-- END INTERVENTION -->
 <p>Iterating over a vector, whether immutably or mutably, is safe because of the
 borrow checker's rules. If we attempted to insert or remove items in the <code>for</code>
 loop bodies in Listing 8-7 and Listing 8-8, we would get a compiler error
