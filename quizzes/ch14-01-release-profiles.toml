@@ -1,0 +1,14 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+When you run `cargo build` with no additional flags, which release profile is used by default?
+"""
+answer.answer = "`dev`"
+prompt.distractors = [
+    "`release`",
+    "`build`",    
+]
+context = """
+To minimize compile times, the default profile is `dev`. You should add `--release` if you want the `release` profile
+for longer compile times but faster code execution. (There is no `build` profile).
+"""

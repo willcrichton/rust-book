@@ -76,10 +76,6 @@
     - [Working with Environment Variables](ch12-05-working-with-environment-variables.md)
     - [Writing Error Messages to Standard Error Instead of Standard Output](ch12-06-writing-to-stderr-instead-of-stdout.md)
 
-- [End of Experiment](end-of-experiment.md)
-
----
-
 ## Thinking in Rust
 
 - [Functional Language Features: Iterators and Closures](ch13-00-functional-features.md)
@@ -132,6 +128,8 @@
     - [Building a Single-Threaded Web Server](ch20-01-single-threaded.md)
     - [Turning Our Single-Threaded Server into a Multithreaded Server](ch20-02-multithreaded.md)
     - [Graceful Shutdown and Cleanup](ch20-03-graceful-shutdown-and-cleanup.md)
+
+- [End of Experiment](end-of-experiment.md)
 
 - [Appendix](appendix-00.md)
     - [A - Keywords](appendix-01-keywords.md)
