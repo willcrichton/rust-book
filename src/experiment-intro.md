@@ -17,7 +17,7 @@ Every quiz looks like the one below. Try it out by clicking "Start".
 
 If you get a question incorrect, you can choose to either retry the quiz, or see the correct answers. We encourage you to retry the quiz until you get 100% &mdash; feel free to review the content before retrying the quiz. Note that once you see the correct answers, you cannot retry the quiz.
 
-If you spot an issue in a question, you can submit a bug report by clicking the 🐞 icon. If you spot any other issue in this book, you can file an issue on our Github repository: <https://github.com/willcrichton/rust-book>
+If you spot an issue in a question, you can submit a bug report by clicking the 🐞 icon. If you spot any other issue in this book, you can file an issue on our Github repository: <https://github.com/cognitive-engineering-lab/rust-book>
 
 ## 2. Highlighting
 
