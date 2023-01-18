@@ -43,7 +43,7 @@ jobs:
         npm install -g pnpm
         git clone https://github.com/willcrichton/graco
         cd graco && npm install && npm link && cd ..
-        cargo install --git https://github.com/willcrichton/mdbook-quiz --debug --features rust-editor
+        cargo install --git https://github.com/cognitive-engineering-lab/mdbook-quiz --debug --features rust-editor
 
     - name: Install js-extensions
       run: |

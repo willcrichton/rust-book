@@ -109,6 +109,7 @@
     - [Characteristics of Object-Oriented Languages](ch17-01-what-is-oo.md)
     - [Using Trait Objects That Allow for Values of Different Types](ch17-02-trait-objects.md)
     - [Implementing an Object-Oriented Design Pattern](ch17-03-oo-design-patterns.md)
+    - [Ownership Inventory #4](ch17-04-inventory.md)
 
 ## Advanced Topics
 
