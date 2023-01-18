@@ -32,7 +32,7 @@ Which of the following are valid reasons to prefer the trait object version (`f_
 """
 answer.answer = ["Faster compile times", "Smaller binary size"]
 prompt.distractors = [
-    "Improved performance",
+    "Improved runtime performance",
     "Better developer ergonomics"
 ]
 context = """

@@ -1,0 +1,49 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Consider the following program:
+
+```
+let a = [(0, 1)];
+let ?? = a;
+```
+
+Which of the following are valid patterns that could replace the `??` placeholder?
+"""
+answer.answer = [
+    "`_`",
+    "`[(n, ..)]`",
+    "`[..]`"
+]
+prompt.distractors = [
+    "`(_, n)`"
+]
+context = """ 
+The pattern `(_, n)` is not valid because `a` is an array of tuples, not a tuple itself.
+"""
+
+[[questions]]
+type = "Tracing"
+prompt.program = """
+fn main() {
+    let mut v = vec![(1, 2), (3, 4)].into_iter();
+    let mut sum = 0;    
+    while let Some(t) = v.next() {
+        let (_, n) = t;
+        sum += n;
+    }
+    println!("{sum}");
+}
+"""
+answer.doesCompile = true
+answer.stdout = "6"
+context = """ 
+This example provides a valid use of `while let` matching and `let` matching. Note that you
+could combine them, e.g.
+
+```
+while let Some((_, n)) = v.next() {
+    /* ... */
+}
+```
+"""
