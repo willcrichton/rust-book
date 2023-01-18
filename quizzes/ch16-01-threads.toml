@@ -1,4 +1,5 @@
 [[questions]]
+id = "53cb3740-2962-4379-a25f-a65e72812a95"
 type = "Tracing"
 prompt.program = """
 use std::thread;
@@ -23,6 +24,7 @@ The `move` keyword causes `n` to be copied into the closure, so the assignments
 """
 
 [[questions]]
+id = "c2a84e6d-8143-4944-bf20-b00e49144ac9"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider this example from the text where a vector is improperly captured by a thread:

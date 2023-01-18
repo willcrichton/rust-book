@@ -1,5 +1,6 @@
 
 [[questions]]
+id = "5d60cfc4-6377-48e7-96e4-fe1de0b0904e"
 type = "Tracing"
 prompt.program = """
 use std::fmt::Debug;
@@ -19,6 +20,7 @@ Unlike some OOP languages, a trait object cannot be "downcasted" to a more concr
 """
 
 [[questions]]
+id = "cce62358-5291-4eb3-84d6-fbc570873ee3"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider implementing a generic function in two ways:

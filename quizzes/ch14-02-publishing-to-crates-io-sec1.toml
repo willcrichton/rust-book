@@ -1,4 +1,5 @@
 [[questions]]
+id = "e2df0a8a-7bdd-40a3-9918-e4a856978cbb"
 type = "MultipleChoice"
 prompt.prompt = """
 Say you are publishing a library, and you want to write documentation about the entire library at the top of the `lib.rs` file.
@@ -14,6 +15,7 @@ context = """
 """
 
 [[questions]]
+id = "cfb65011-0578-4032-8aaa-b346b091602b"
 type = "MultipleChoice"
 prompt.prompt = """
 Say you are creating a library `worldly` with the following function `lib.rs`:

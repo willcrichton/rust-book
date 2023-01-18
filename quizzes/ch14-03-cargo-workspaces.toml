@@ -1,4 +1,5 @@
 [[questions]]
+id = "20846719-fe7b-48b8-abfd-9c5f1174472f"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider a workspace with the following structure:
@@ -41,6 +42,7 @@ From the perspective of `a`, `b` is an external crate like any other, so you don
 """
 
 [[questions]]
+id = "bc8a69b2-d9a8-4438-8657-391c3fda5ed9"
 type = "ShortAnswer"
 prompt.prompt = """
 Consider a workspace with three packages `a`, `b`, and `c`. Their respective manifests are:

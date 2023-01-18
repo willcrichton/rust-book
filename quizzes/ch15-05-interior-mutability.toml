@@ -1,4 +1,5 @@
 [[questions]]
+id = "01904807-74c7-41ad-8d8b-cfb30e5ce10c"
 type = "MultipleChoice"
 prompt.prompt = """
 Which of the following best describes the concept of *interior mutability* in Rust?
@@ -15,6 +16,7 @@ safely mutate data within `T`.
 """
 
 [[questions]]
+id = "380cd865-76c5-419c-8961-af4c59d2ab71"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider an API that tracks the number of calls to a particular method:
@@ -47,6 +49,7 @@ an immutable reference as input.
 """
 
 [[questions]]
+id = "d4ae1b8e-79a7-4485-828f-fb30cdeb29d5"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider the following incorrect implementation of a `RefCell` that does not check

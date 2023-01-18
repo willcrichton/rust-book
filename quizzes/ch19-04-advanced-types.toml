@@ -1,4 +1,5 @@
 [[questions]]
+id = "d3d9197f-8baf-4ec5-9988-282c67636d3c"
 type = "Tracing"
 prompt.program = """
 fn expect_none(x: Option<i32>) -> ! {
@@ -20,6 +21,7 @@ some of the time, not all of the time.
 """
 
 [[questions]]
+id = "5c5cb765-a561-459f-8223-9e72e824c5da"
 type = "Tracing"
 prompt.program = """
 fn is_equal<T: Eq>(t1: &T, t2: &T) -> bool {

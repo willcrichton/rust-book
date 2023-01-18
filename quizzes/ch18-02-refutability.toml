@@ -1,4 +1,5 @@
 [[questions]]
+id = "35e59c95-3d83-4277-8d88-a1986f4086d7"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider pattern-matching on an expression of some type `T`.
@@ -15,6 +16,7 @@ A pattern is refutable if there exists some value of the expected type that isn'
 """
 
 [[questions]]
+id = "3c29eb2d-cbe9-4a2c-99b8-aa5c6467c8b4"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider the following program:

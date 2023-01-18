@@ -1,4 +1,5 @@
 [[questions]]
+id = "6f3c2a68-24f7-439b-9fe0-426abd27e487"
 type = "Tracing"
 prompt.program = """
 fn main() {
@@ -15,6 +16,7 @@ A box can hold a mutable reference, so dereferencing `b` twice gets back to `n`.
 """
 
 [[questions]]
+id = "57595a80-c79f-4aae-a1d4-cdaf212d7c21"
 type = "ShortAnswer"
 prompt.prompt = """
 Say we have a program with a variable:

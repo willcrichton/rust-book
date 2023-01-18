@@ -1,4 +1,5 @@
 [[questions]]
+id = "e6cbd582-9692-4045-a984-8770a12e1b95"
 type = "MultipleChoice"
 prompt.prompt = """
 Which of the following best describes the rationale for why Rust will infer the types of arguments/returns for closures, but not top-level functions?
@@ -16,6 +17,7 @@ interface level: a function will always have exactly the type it says it has.
 """
 
 [[questions]]
+id = "f844d1c2-3f63-4cdb-b16e-6e818e996e0d"
 type = "MultipleChoice"
 prompt.prompt = """
 Rust permits pattern matching within closure arguments, including the use of the underscore. For example, you could write the following:

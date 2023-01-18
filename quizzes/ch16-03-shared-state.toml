@@ -1,4 +1,5 @@
 [[questions]]
+id = "ceb96826-6c98-40e1-bff4-0bb61f35679d"
 type = "MultipleChoice"
 prompt.prompt = """
 In some concurrency APIs, a mutex is separate from the data it guards. For example, imagine a hypothetical Mutex API like this:
@@ -26,6 +27,7 @@ that the mutex is unlocked once the data is no longer accessible.
 """
 
 [[questions]]
+id = "e5ac0c92-4694-4647-bd20-67825fe038b7"
 type = "Tracing"
 prompt.program = """
 use std::{sync::Arc, thread};

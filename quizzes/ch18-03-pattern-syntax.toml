@@ -1,4 +1,5 @@
 [[questions]]
+id = "5dcd923f-13a4-4181-b252-4b580547249f"
 type = "Tracing"
 prompt.program = """
 fn main() {
@@ -18,6 +19,7 @@ The second branch requires that `x == 0`, which is true, so the pattern succeeds
 """
 
 [[questions]]
+id = "0b0d90c3-c81b-4b81-9e1b-f8bd58a22c6c"
 type = "Tracing"
 prompt.program = """
 fn main() {
@@ -37,6 +39,7 @@ array element is being referred to.
 """
 
 [[questions]]
+id = "a7d38ffa-66b2-472a-90a5-b026b28ad3df"
 type = "MultipleChoice"
 prompt.prompt = """
 Say we have a `Point` type with the following definition:

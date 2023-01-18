@@ -1,4 +1,5 @@
 [[questions]]
+id = "d50dd9fb-f84c-4748-9e45-cd3dc8d5fb47"
 type = "MultipleChoice"
 prompt.prompt = """
 Which of the following best describes why iterators are described as "lazy"?
@@ -15,6 +16,7 @@ Lazy generally means "does not do work until asked", and iterators do not perfor
 """
 
 [[questions]]
+id = "19eac65e-44ad-4349-9632-47bdbb519d46"
 type = "MultipleChoice"
 prompt.prompt = """
 True/false: these two code snippets are semantically equivalent.
@@ -40,6 +42,7 @@ The for-loop is a syntactic sugar for the `while let`, which is itself a sugar f
 """
 
 [[questions]]
+id = "ff652580-b487-4379-bd70-652f5803321d"
 type = "Tracing"
 prompt.program = """
 fn main() {

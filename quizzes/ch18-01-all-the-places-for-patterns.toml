@@ -1,4 +1,5 @@
 [[questions]]
+id = "ac0045c7-981a-46cb-baeb-adaa533804ad"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider the following program:
@@ -23,6 +24,7 @@ The pattern `(_, n)` is not valid because `a` is an array of tuples, not a tuple
 """
 
 [[questions]]
+id = "214d5183-5a88-4f5e-a54b-09909bd50bf7"
 type = "Tracing"
 prompt.program = """
 fn main() {

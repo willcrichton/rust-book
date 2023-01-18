@@ -1,4 +1,5 @@
 [[questions]]
+id = "7e4eeb62-55c2-443b-a8cc-fba060501245"
 type = "MultipleChoice"
 prompt.prompt = """
 Say you are publishing a library `foobar v0.1.0`. After running `cargo publish`, you realize there is a bug in one
@@ -16,6 +17,7 @@ and then publish a new version such as `v0.1.1`.
 """
 
 [[questions]]
+id = "84ac16a8-2460-4baf-8913-06da6e3603e6"
 type = "MultipleChoice"
 prompt.prompt = """
 Which of the following steps is NOT required to publish a crate to Crates.io?

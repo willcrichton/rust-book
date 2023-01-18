@@ -1,4 +1,5 @@
 [[questions]]
+id = "a055fa7c-89e2-467e-8458-62cbf3ffb8bf"
 type = "Tracing"
 prompt.program = """
 fn main() {
@@ -15,6 +16,7 @@ context = """
 """
 
 [[questions]]
+id = "266d3cb3-de76-4b91-bd13-c3d6cb9e7fd7"
 type = "Tracing"
 prompt.program = """
 fn main() {
@@ -31,6 +33,7 @@ Because `add_suffix` does not capture `s`, it is fine to read `s` before mutatin
 """
 
 [[questions]]
+id = "0f298680-d870-47a1-962c-1c668f75cb68"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider the following API:
@@ -54,6 +57,7 @@ context = """
 
 
 [[questions]]
+id = "65f574b1-b418-4abe-852e-8b14d88368a7"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider the following API:

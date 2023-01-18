@@ -1,4 +1,5 @@
 [[questions]]
+id = "8c80f9e8-2d95-43cc-9aa4-04d617dd8cb9"
 type = "Tracing"
 prompt.program = """
 macro_rules! manylet {
@@ -25,6 +26,7 @@ then the first binding to `x` moves `s`, and the second binding to `y` is invali
 """
 
 [[questions]]
+id = "f4f664ef-4b0b-43ac-ba90-5051a4ef89fb"
 type = "MultipleChoice"
 prompt.prompt = """
 Which of the following are valid reasons for implementing a macro as a
@@ -48,6 +50,7 @@ items and not just expressions.
 """
 
 [[questions]]
+id = "4c7dce03-99c6-41e3-8482-ccf4e30974ff"
 type = "MultipleChoice"
 prompt.prompt = """
 Which of the following best describes the input to a procedural macro? 

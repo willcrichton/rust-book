@@ -1,4 +1,5 @@
 [[questions]]
+id = "9ff33b87-38e2-471b-8ca4-9c31a6431376"
 type = "MultipleChoice"
 prompt.prompt = """
 **Program 1:**
@@ -27,6 +28,7 @@ instead gets an immutable reference.
 
 
 [[questions]]
+id = "3ee8d846-d282-4de1-8e83-5ca0bc44fc13"
 type = "MultipleChoice"
 prompt.prompt = """
 **Program 1:**

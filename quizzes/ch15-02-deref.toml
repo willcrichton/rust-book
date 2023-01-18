@@ -1,4 +1,5 @@
 [[questions]]
+id = "f4971d37-55d5-48c5-9966-a28b54ed3bee"
 type = "Tracing"
 prompt.program = """
 use std::ops::Deref;
@@ -33,6 +34,7 @@ Note that copying `n` to `n2` does not dereference `n`.
 """
 
 [[questions]]
+id = "71f06e6c-d2cb-4ba9-bae3-7bebca4c10da"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider the use of deref coercions in the expression `b.len()`:

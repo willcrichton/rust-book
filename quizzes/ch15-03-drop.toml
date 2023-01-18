@@ -1,4 +1,5 @@
 [[questions]]
+id = "8282968d-b1d3-42b4-b128-f97b951db4c6"
 type = "Tracing"
 prompt.program = """
 struct Example(i32);
@@ -21,6 +22,7 @@ An owned value cannot be dropped twice, so it is a compiler error to call a drop
 """
 
 [[questions]]
+id = "b9121273-1c1e-4e99-9cff-a23f845aaeeb"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider this snippet that allocates a string:

@@ -1,4 +1,5 @@
 [[questions]]
+id = "7859b06e-72ba-4c07-a3e2-b4f8cb7fd903"
 type = "MultipleChoice"
 prompt.prompt = """
 Recall the definition of the `Add` trait:
@@ -24,6 +25,7 @@ motivating factor for having `Rhs` be a type parameter in the `Add` trait.
 """
 
 [[questions]]
+id = "d2c77d93-3887-40a2-b93a-501aa315d676"
 type = "MultipleChoice"
 prompt.prompt = """
 Recall the definition of the `Add` trait:
@@ -56,6 +58,7 @@ the structure of `Rhs`, so it would be impossible to implement any sensible addi
 """
 
 [[questions]]
+id = "79db9ca4-693f-4e62-8b8d-356b51a63006"
 type = "Tracing"
 prompt.program = """
 mod inner {
@@ -82,6 +85,7 @@ implementation. Fully-qualified syntax is not necessary here.
 """
 
 [[questions]]
+id = "cb7e4d54-e95b-4153-99d6-e8f380e4f8b4"
 type = "MultipleChoice"
 prompt.prompt = """
 Consider implementing a trait `Trait` for a type `T`. In which of the following situations
