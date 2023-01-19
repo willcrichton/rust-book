@@ -34,10 +34,14 @@ You can use highlights to save information for yourself. You can also use highli
 The book's content may change as you go through the experiment. We will update this page as we add new features. Here's the changelog:
 
 **Upcoming changes:**
-  * We will add questions to the remaining chapters of the book.
-  * We will add ownership-specific quizzes to test your understanding of ownership in later chapters.
+  * We are designing a new ownership chapter that provides a more visual approach to explaining ownership.
 
 **Past changes:**
+* January 18, 2022
+  * Questions have been added for the remaining chapters of the book.    
+* December 15, 2022
+  * New sections called "Ownership Inventory" have been added throughout the book
+    with challenging ownership-related questions.    
 * November 7, 2022
   * Only questions with incorrect answers will be shown on a retry.
   * Most multiple-choice questions will have their choices randomized.
