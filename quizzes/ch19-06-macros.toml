@@ -3,7 +3,7 @@ id = "8c80f9e8-2d95-43cc-9aa4-04d617dd8cb9"
 type = "Tracing"
 prompt.program = """
 macro_rules! manylet {
-    ( $( $i:ident ),* = $e:expr ) ⇒ {
+    ( $( $i:ident ),* = $e:expr ) => {
         $(
             let mut $i = $e;
         )*
@@ -20,7 +20,7 @@ fn main() {
 answer.doesCompile = false
 answer.lineNumber = 11
 context = """
-The `manylet` macro syntactically duplicates the exression `e` as a binding to each
+The `manylet` macro syntactically duplicates the expression `e` as a binding to each
 variable on the left-hand side of the equals. However, because `s` is an owned string, 
 then the first binding to `x` moves `s`, and the second binding to `y` is invalid.
 """
