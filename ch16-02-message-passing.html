@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Using Message Passing to Transfer Data Between Threads - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -174,8 +182,7 @@ want to send over the channel.</p>
 
 fn main() {
     let (tx, rx) = mpsc::channel();
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 16-6: Creating a channel and assigning the two
 halves to <code>tx</code> and <code>rx</code></span></p>
 <p>We create a new channel using the <code>mpsc::channel</code> function; <code>mpsc</code> stands for
@@ -210,8 +217,7 @@ fn main() {
         let val = String::from(&quot;hi&quot;);
         tx.send(val).unwrap();
     });
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 16-7: Moving <code>tx</code> to a spawned thread and sending
 “hi”</span></p>
 <p>Again, we’re using <code>thread::spawn</code> to create a new thread and then using <code>move</code>
@@ -240,8 +246,7 @@ fn main() {
 
     let received = rx.recv().unwrap();
     println!(&quot;Got: {}&quot;, received);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 16-8: Receiving the value “hi” in the main thread
 and printing it</span></p>
 <p>The receiver has two useful methods: <code>recv</code> and <code>try_recv</code>. We’re using <code>recv</code>,
@@ -290,8 +295,7 @@ fn main() {
 
     let received = rx.recv().unwrap();
     println!(&quot;Got: {}&quot;, received);
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 16-9: Attempting to use <code>val</code> after we’ve sent it
 down the channel</span></p>
 <p>Here, we try to print <code>val</code> after we’ve sent it down the channel via <code>tx.send</code>.
@@ -352,8 +356,7 @@ fn main() {
     for received in rx {
         println!(&quot;Got: {}&quot;, received);
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 16-10: Sending multiple messages and pausing
 between each</span></p>
 <p>This time, the spawned thread has a vector of strings that we want to send to
@@ -425,8 +428,7 @@ so by cloning the transmitter, as shown in Listing 16-11:</p>
     }
 
     // --snip--
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 16-11: Sending multiple messages from multiple
 producers</span></p>
 <p>This time, before we create the first spawned thread, we call <code>clone</code> on the
@@ -461,9 +463,11 @@ concurrency.</p>
                             <a rel="prev" href="ch16-01-threads.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch16-03-shared-state.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -473,6 +477,7 @@ concurrency.</p>
                     <a rel="prev" href="ch16-01-threads.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch16-03-shared-state.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -480,34 +485,29 @@ concurrency.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

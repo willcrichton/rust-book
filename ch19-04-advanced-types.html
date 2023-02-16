@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Advanced Types - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -185,8 +193,7 @@ the alias <code>Kilometers</code> to <code>i32</code> like so:</p>
 </span><span class="boring">    let y: Kilometers = 5;
 </span><span class="boring">
 </span><span class="boring">    println!(&quot;x + y = {}&quot;, x + y);
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>Now, the alias <code>Kilometers</code> is a <em>synonym</em> for <code>i32</code>; unlike the <code>Millimeters</code>
 and <code>Meters</code> types we created in Listing 19-15, <code>Kilometers</code> is not a separate,
 new type. Values that have the type <code>Kilometers</code> will be treated the same as
@@ -198,8 +205,7 @@ values of type <code>i32</code>:</p>
     let y: Kilometers = 5;
 
     println!(&quot;x + y = {}&quot;, x + y);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Because <code>Kilometers</code> and <code>i32</code> are the same type, we can add values of both
 types and we can pass <code>Kilometers</code> values to functions that take <code>i32</code>
 parameters. However, using this method, we don’t get the type checking benefits
@@ -208,8 +214,7 @@ mix up <code>Kilometers</code> and <code>i32</code> values somewhere, the compil
 an error.</p>
 <p>The main use case for type synonyms is to reduce repetition. For example, we
 might have a lengthy type like this:</p>
-<pre><code class="language-rust ignore">Box&lt;dyn Fn() + Send + 'static&gt;
-</code></pre>
+<pre><code class="language-rust ignore">Box&lt;dyn Fn() + Send + 'static&gt;</code></pre>
 <p>Writing this lengthy type in function signatures and as type annotations all
 over the code can be tiresome and error prone. Imagine having a project full of
 code like that in Listing 19-24.</p>
@@ -224,8 +229,7 @@ code like that in Listing 19-24.</p>
         // --snip--
 <span class="boring">        Box::new(|| ())
 </span>    }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 19-24: Using a long type in many places</span></p>
 <p>A type alias makes this code more manageable by reducing the repetition. In
 Listing 19-25, we’ve introduced an alias named <code>Thunk</code> for the verbose type and
@@ -243,8 +247,7 @@ can replace all uses of the type with the shorter alias <code>Thunk</code>.</p>
         // --snip--
 <span class="boring">        Box::new(|| ())
 </span>    }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 19-25: Introducing a type alias <code>Thunk</code> to reduce
 repetition</span></p>
 <p>This code is much easier to read and write! Choosing a meaningful name for a
@@ -267,8 +270,7 @@ pub trait Write {
 
     fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;(), Error&gt;;
     fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;(), Error&gt;;
-}
-</code></pre>
+}</code></pre>
 <p>The <code>Result&lt;..., Error&gt;</code> is repeated a lot. As such, <code>std::io</code> has this type
 alias declaration:</p>
 <pre><code class="language-rust noplayground"><span class="boring">use std::fmt;
@@ -281,8 +283,7 @@ alias declaration:</p>
 </span><span class="boring">
 </span><span class="boring">    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;()&gt;;
 </span><span class="boring">    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;()&gt;;
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>Because this declaration is in the <code>std::io</code> module, we can use the fully
 qualified alias <code>std::io::Result&lt;T&gt;</code>; that is, a <code>Result&lt;T, E&gt;</code> with the <code>E</code>
 filled in as <code>std::io::Error</code>. The <code>Write</code> trait function signatures end up
@@ -297,8 +298,7 @@ looking like this:</p>
 
     fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;()&gt;;
     fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;()&gt;;
-}
-</code></pre>
+}</code></pre>
 <p>The type alias helps in two ways: it makes code easier to write <em>and</em> it gives
 us a consistent interface across all of <code>std::io</code>. Because it’s an alias, it’s
 just another <code>Result&lt;T, E&gt;</code>, which means we can use any methods that work on
@@ -311,8 +311,7 @@ return. Here is an example:</p>
 <pre><code class="language-rust noplayground">fn bar() -&gt; ! {
     // --snip--
 <span class="boring">    panic!();
-</span>}
-</code></pre>
+</span>}</code></pre>
 <p>This code is read as “the function <code>bar</code> returns never.” Functions that return
 never are called <em>diverging functions</em>. We can’t create values of the type <code>!</code>
 so <code>bar</code> can never possibly return.</p>
@@ -359,8 +358,7 @@ here in Listing 19-26.</p>
 </span><span class="boring">            }
 </span><span class="boring">        }
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 19-26: A <code>match</code> with an arm that ends in
 <code>continue</code></span></p>
 <p>At the time, we skipped over some details in this code. In Chapter 6 in <a href="ch06-02-match.html#the-match-control-flow-operator">“The
@@ -373,8 +371,7 @@ example, the following code doesn’t work:</p>
         Ok(_) =&gt; 5,
         Err(_) =&gt; &quot;hello&quot;,
     };
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>The type of <code>guess</code> in this code would have to be an integer <em>and</em> a string,
 and Rust requires that <code>guess</code> have only one type. So what does <code>continue</code>
 return? How were we allowed to return a <code>u32</code> from one arm and have another arm
@@ -405,8 +402,7 @@ this definition:</p>
             None =&gt; panic!(&quot;called `Option::unwrap()` on a `None` value&quot;),
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p>In this code, the same thing happens as in the <code>match</code> in Listing 19-26: Rust
 sees that <code>val</code> has the type <code>T</code> and <code>panic!</code> has the type <code>!</code>, so the result
 of the overall <code>match</code> expression is <code>T</code>. This code works because <code>panic!</code>
@@ -419,8 +415,7 @@ returning a value from <code>unwrap</code>, so this code is valid.</p>
     loop {
         print!(&quot;and ever &quot;);
     }
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>Here, the loop never ends, so <code>!</code> is the value of the expression. However, this
 wouldn’t be true if we included a <code>break</code>, because the loop would terminate
 when it got to the <code>break</code>.</p>
@@ -438,8 +433,7 @@ we can’t create a variable of type <code>str</code>, nor can we take an argume
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s1: str = &quot;Hello there!&quot;;
     let s2: str = &quot;How's it going?&quot;;
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>Rust needs to know how much memory to allocate for any value of a particular
 type, and all values of a type must use the same amount of memory. If Rust
 allowed us to write this code, these two <code>str</code> values would need to take up the
@@ -474,20 +468,17 @@ implicitly adds a bound on <code>Sized</code> to every generic function. That is
 generic function definition like this:</p>
 <pre><code class="language-rust ignore">fn generic&lt;T&gt;(t: T) {
     // --snip--
-}
-</code></pre>
+}</code></pre>
 <p>is actually treated as though we had written this:</p>
 <pre><code class="language-rust ignore">fn generic&lt;T: Sized&gt;(t: T) {
     // --snip--
-}
-</code></pre>
+}</code></pre>
 <p>By default, generic functions will work only on types that have a known size at
 compile time. However, you can use the following special syntax to relax this
 restriction:</p>
 <pre><code class="language-rust ignore">fn generic&lt;T: ?Sized&gt;(t: &amp;T) {
     // --snip--
-}
-</code></pre>
+}</code></pre>
 <p>A trait bound on <code>?Sized</code> means “<code>T</code> may or may not be <code>Sized</code>” and this
 notation overrides the default that generic types must have a known size at
 compile time. The <code>?Trait</code> syntax with this meaning is only available for
@@ -505,9 +496,11 @@ pointer. In this case, we’ve chosen a reference.</p>
                             <a rel="prev" href="ch19-03-advanced-traits.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch19-05-advanced-functions-and-closures.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -517,6 +510,7 @@ pointer. In this case, we’ve chosen a reference.</p>
                     <a rel="prev" href="ch19-03-advanced-traits.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch19-05-advanced-functions-and-closures.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -524,34 +518,29 @@ pointer. In this case, we’ve chosen a reference.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

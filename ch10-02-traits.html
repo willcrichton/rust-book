@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Traits: Defining Shared Behavior - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -168,8 +176,7 @@ shows the definition of a public <code>Summary</code> trait that expresses this 
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait Summary {
     fn summarize(&amp;self) -&gt; String;
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 10-12: A <code>Summary</code> trait that consists of the
 behavior provided by a <code>summarize</code> method</span></p>
 <p>Here, we declare a trait using the <code>trait</code> keyword and then the trait’s name,
@@ -222,8 +229,7 @@ impl Summary for Tweet {
     fn summarize(&amp;self) -&gt; String {
         format!(&quot;{}: {}&quot;, self.username, self.content)
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 10-13: Implementing the <code>Summary</code> trait on the
 <code>NewsArticle</code> and <code>Tweet</code> types</span></p>
 <p>Implementing a trait on a type is similar to implementing regular methods. The
@@ -252,8 +258,7 @@ fn main() {
     };
 
     println!(&quot;1 new tweet: {}&quot;, tweet.summarize());
-}
-</code></pre>
+}</code></pre>
 <p>This code prints <code>1 new tweet: horse_ebooks: of course, as you probably already know, people</code>.</p>
 <p>Other crates that depend on the <code>aggregator</code> crate can also bring the <code>Summary</code>
 trait into scope to implement <code>Summary</code> on their own types. One restriction to
@@ -308,8 +313,7 @@ Listing 10-12.</p>
 </span><span class="boring">    fn summarize(&amp;self) -&gt; String {
 </span><span class="boring">        format!(&quot;{}: {}&quot;, self.username, self.content)
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 10-14: Defining a <code>Summary</code> trait with a default
 implementation of the <code>summarize</code> method</span></p>
 <p>To use a default implementation to summarize instances of <code>NewsArticle</code>, we
@@ -332,8 +336,7 @@ the <code>summarize</code> method on an instance of <code>NewsArticle</code>, li
     };
 
     println!(&quot;New article available! {}&quot;, article.summarize());
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>This code prints <code>New article available! (Read more...)</code>.</p>
 <p>Creating a default implementation doesn’t require us to change anything about
 the implementation of <code>Summary</code> on <code>Tweet</code> in Listing 10-13. The reason is that
@@ -365,8 +368,7 @@ a small part of it. For example, we could define the <code>Summary</code> trait 
 </span><span class="boring">    fn summarize_author(&amp;self) -&gt; String {
 </span><span class="boring">        format!(&quot;@{}&quot;, self.username)
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>To use this version of <code>Summary</code>, we only need to define <code>summarize_author</code>
 when we implement the trait on a type:</p>
 <pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
@@ -388,8 +390,7 @@ when we implement the trait on a type:</p>
     fn summarize_author(&amp;self) -&gt; String {
         format!(&quot;@{}&quot;, self.username)
     }
-}
-</code></pre>
+}</code></pre>
 <p>After we define <code>summarize_author</code>, we can call <code>summarize</code> on instances of the
 <code>Tweet</code> struct, and the default implementation of <code>summarize</code> will call the
 definition of <code>summarize_author</code> that we’ve provided. Because we’ve implemented
@@ -408,12 +409,11 @@ definition of <code>summarize_author</code> that we’ve provided. Because we’
     };
 
     println!(&quot;1 new tweet: {}&quot;, tweet.summarize());
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>This code prints <code>1 new tweet: (Read more from @horse_ebooks...)</code>.</p>
 <p>Note that it isn’t possible to call the default implementation from an
 overriding implementation of that same method.</p>
-<div class="quiz-placeholder" data-quiz-name="ch10-02-traits-sec1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The implementation of `MakeNoise` provides a specific implementation for `Dog` and uses the default implementation for `Cat`.\nTherefore calling `make_noise` on each prints `bark` and `(silence)`, respectively. \n&quot;,&quot;id&quot;:&quot;c4adb1a8-ca6a-43c1-ae34-54302f674ece&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;bark\n(silence)&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;trait MakeNoise {\n  fn make_noise(&amp;self) {\n    println!(\&quot;(silence)\&quot;);\n  }\n}\n\nstruct Dog;\nstruct Cat;\n\nimpl MakeNoise for Dog {\n  fn make_noise(&amp;self) {\n    println!(\&quot;bark\&quot;);\n  }\n}\n\nimpl MakeNoise for Cat {}\n\nfn main() {\n  Dog.make_noise();\n  Cat.make_noise();\n}\n&quot;}},{&quot;context&quot;:&quot;The \&quot;orphan rule\&quot; requires that you cannot implement an external trait for an external type, \nto ensure code doesn't break if two crates provide conflicting implementations.\n&quot;,&quot;id&quot;:&quot;783f2485-e5b9-483b-8368-064366c77285&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;You can implement an external trait for an external type&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;You can implement an external trait for a local type&quot;,&quot;You can implement a local trait for an external type&quot;,&quot;You can implement a local trait for a local type&quot;],&quot;prompt&quot;:&quot;Which of the following statements is NOT true about when Rust allows you to implement a trait?&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
+<div class="quiz-placeholder" data-quiz-name="ch10-02-traits-sec1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The implementation of `MakeNoise` provides a specific implementation for `Dog` and uses the default implementation for `Cat`.\nTherefore calling `make_noise` on each prints `bark` and `(silence)`, respectively. \n&quot;,&quot;id&quot;:&quot;c4adb1a8-ca6a-43c1-ae34-54302f674ece&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;bark\n(silence)&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;trait MakeNoise {\n  fn make_noise(&amp;self) {\n    println!(\&quot;(silence)\&quot;);\n  }\n}\n\nstruct Dog {}\nstruct Cat {}\n\nimpl MakeNoise for Dog {\n  fn make_noise(&amp;self) {\n    println!(\&quot;bark\&quot;);\n  }\n}\n\nimpl MakeNoise for Cat {}\n\nfn main() {\n  let dog = Dog {};\n  let cat = Cat {};\n  dog.make_noise();\n  cat.make_noise();\n}\n&quot;}},{&quot;context&quot;:&quot;The \&quot;orphan rule\&quot; requires that you cannot implement an external trait for an external type, \nto ensure code doesn't break if two crates provide conflicting implementations.\n&quot;,&quot;id&quot;:&quot;783f2485-e5b9-483b-8368-064366c77285&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;You can implement an external trait for a local type&quot;,&quot;You can implement a local trait for an external type&quot;,&quot;You can implement a local trait for a local type&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;You can implement an external trait for an external type&quot;],&quot;prompt&quot;:&quot;The following are statements about what kinds of trait implementations are permitted by Rust. Select each statement which is true.&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h3 id="traits-as-parameters"><a class="header" href="#traits-as-parameters">Traits as Parameters</a></h3>
 <p>Now that you know how to define and implement traits, we can explore how to use
 traits to define functions that accept many different types. We'll use the
@@ -453,8 +453,7 @@ trait. To do this, we use the <code>impl Trait</code> syntax, like this:</p>
 </span><span class="boring">
 </span>pub fn notify(item: &amp;impl Summary) {
     println!(&quot;Breaking news! {}&quot;, item.summarize());
-}
-</code></pre>
+}</code></pre>
 <p>Instead of a concrete type for the <code>item</code> parameter, we specify the <code>impl</code>
 keyword and the trait name. This parameter accepts any type that implements the
 specified trait. In the body of <code>notify</code>, we can call any methods on <code>item</code>
@@ -469,8 +468,7 @@ because those types don’t implement <code>Summary</code>.</p>
 sugar for a longer form known as a <em>trait bound</em>; it looks like this:</p>
 <pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item: &amp;T) {
     println!(&quot;Breaking news! {}&quot;, item.summarize());
-}
-</code></pre>
+}</code></pre>
 <p>This longer form is equivalent to the example in the previous section but is
 more verbose. We place trait bounds with the declaration of the generic type
 parameter after a colon and inside angle brackets.</p>
@@ -478,14 +476,12 @@ parameter after a colon and inside angle brackets.</p>
 cases, while the fuller trait bound syntax can express more complexity in other
 cases. For example, we can have two parameters that implement <code>Summary</code>. Doing
 so with the <code>impl Trait</code> syntax looks like this:</p>
-<pre><code class="language-rust ignore">pub fn notify(item1: &amp;impl Summary, item2: &amp;impl Summary) {
-</code></pre>
+<pre><code class="language-rust ignore">pub fn notify(item1: &amp;impl Summary, item2: &amp;impl Summary) {</code></pre>
 <p>Using <code>impl Trait</code> is appropriate if we want this function to allow <code>item1</code> and
 <code>item2</code> to have different types (as long as both types implement <code>Summary</code>). If
 we want to force both parameters to have the same type, however, we must use a
 trait bound, like this:</p>
-<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item1: &amp;T, item2: &amp;T) {
-</code></pre>
+<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item1: &amp;T, item2: &amp;T) {</code></pre>
 <p>The generic type <code>T</code> specified as the type of the <code>item1</code> and <code>item2</code>
 parameters constrains the function such that the concrete type of the value
 passed as an argument for <code>item1</code> and <code>item2</code> must be the same.</p>
@@ -494,11 +490,9 @@ passed as an argument for <code>item1</code> and <code>item2</code> must be the 
 display formatting as well as <code>summarize</code> on <code>item</code>: we specify in the <code>notify</code>
 definition that <code>item</code> must implement both <code>Display</code> and <code>Summary</code>. We can do
 so using the <code>+</code> syntax:</p>
-<pre><code class="language-rust ignore">pub fn notify(item: &amp;(impl Summary + Display)) {
-</code></pre>
+<pre><code class="language-rust ignore">pub fn notify(item: &amp;(impl Summary + Display)) {</code></pre>
 <p>The <code>+</code> syntax is also valid with trait bounds on generic types:</p>
-<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary + Display&gt;(item: &amp;T) {
-</code></pre>
+<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary + Display&gt;(item: &amp;T) {</code></pre>
 <p>With the two trait bounds specified, the body of <code>notify</code> can call <code>summarize</code>
 and use <code>{}</code> to format <code>item</code>.</p>
 <h4 id="clearer-trait-bounds-with-where-clauses"><a class="header" href="#clearer-trait-bounds-with-where-clauses">Clearer Trait Bounds with <code>where</code> Clauses</a></h4>
@@ -508,8 +502,7 @@ trait bound information between the function’s name and its parameter list,
 making the function signature hard to read. For this reason, Rust has alternate
 syntax for specifying trait bounds inside a <code>where</code> clause after the function
 signature. So instead of writing this:</p>
-<pre><code class="language-rust ignore">fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: &amp;T, u: &amp;U) -&gt; i32 {
-</code></pre>
+<pre><code class="language-rust ignore">fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: &amp;T, u: &amp;U) -&gt; i32 {</code></pre>
 <p>we can use a <code>where</code> clause, like this:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T, U&gt;(t: &amp;T, u: &amp;U) -&gt; i32
 where
@@ -517,8 +510,7 @@ where
     U: Clone + Debug,
 {
 <span class="boring">    unimplemented!()
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>This function’s signature is less cluttered: the function name, parameter list,
 and return type are close together, similar to a function without lots of trait
 bounds.</p>
@@ -564,8 +556,7 @@ value of some type that implements a trait, as shown here:</p>
         reply: false,
         retweet: false,
     }
-}
-</code></pre>
+}</code></pre>
 <p>By using <code>impl Summary</code> for the return type, we specify that the
 <code>returns_summarizable</code> function returns some type that implements the <code>Summary</code>
 trait without naming the concrete type. In this case, <code>returns_summarizable</code>
@@ -632,8 +623,7 @@ return type specified as <code>impl Summary</code> wouldn’t work:</p>
             retweet: false,
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p>Returning either a <code>NewsArticle</code> or a <code>Tweet</code> isn’t allowed due to restrictions
 around how the <code>impl Trait</code> syntax is implemented in the compiler. We’ll cover
 how to write a function with this behavior in the <a href="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types">“Using Trait Objects That
@@ -672,8 +662,7 @@ impl&lt;T: Display + PartialOrd&gt; Pair&lt;T&gt; {
             println!(&quot;The largest member is y = {}&quot;, self.y);
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 10-15: Conditionally implementing methods on a
 generic type depending on trait bounds</span></p>
 <p>We can also conditionally implement a trait for any type that implements
@@ -684,18 +673,15 @@ Rust standard library. For example, the standard library implements the
 block in the standard library looks similar to this code:</p>
 <pre><code class="language-rust ignore">impl&lt;T: Display&gt; ToString for T {
     // --snip--
-}
-</code></pre>
+}</code></pre>
 <p>Because the standard library has this blanket implementation, we can call the
 <code>to_string</code> method defined by the <code>ToString</code> trait on any type that implements
 the <code>Display</code> trait. For example, we can turn integers into their corresponding
 <code>String</code> values like this because integers implement <code>Display</code>:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = 3.to_string();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Blanket implementations appear in the documentation for the trait in the
 “Implementors” section.</p>
 <p>Traits and trait bounds let us write code that uses generic type parameters to
@@ -718,9 +704,11 @@ generics.</p>
                             <a rel="prev" href="ch10-01-syntax.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch10-03-lifetime-syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -730,6 +718,7 @@ generics.</p>
                     <a rel="prev" href="ch10-01-syntax.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch10-03-lifetime-syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -737,34 +726,29 @@ generics.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

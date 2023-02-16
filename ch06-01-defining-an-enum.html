@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Defining an Enum - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -175,8 +183,7 @@ variants of the enum:</p>
 </span><span class="boring">    route(IpAddrKind::V6);
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn route(ip_kind: IpAddrKind) {}
-</span></code></pre></pre>
+</span><span class="boring">fn route(ip_kind: IpAddrKind) {}</span></code></pre></pre>
 <p><code>IpAddrKind</code> is now a custom data type that we can use elsewhere in our code.</p>
 <h3 id="enum-values"><a class="header" href="#enum-values">Enum Values</a></h3>
 <p>We can create instances of each of the two variants of <code>IpAddrKind</code> like this:</p>
@@ -193,8 +200,7 @@ variants of the enum:</p>
 </span><span class="boring">    route(IpAddrKind::V6);
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn route(ip_kind: IpAddrKind) {}
-</span></code></pre></pre>
+</span><span class="boring">fn route(ip_kind: IpAddrKind) {}</span></code></pre></pre>
 <p>Note that the variants of the enum are namespaced under its identifier, and we
 use a double colon to separate the two. This is useful because now both values
 <code>IpAddrKind::V4</code> and <code>IpAddrKind::V6</code> are of the same type: <code>IpAddrKind</code>. We
@@ -212,8 +218,7 @@ can then, for instance, define a function that takes any <code>IpAddrKind</code>
 </span><span class="boring">    route(IpAddrKind::V6);
 </span><span class="boring">}
 </span><span class="boring">
-</span>fn route(ip_kind: IpAddrKind) {}
-</code></pre></pre>
+</span>fn route(ip_kind: IpAddrKind) {}</code></pre></pre>
 <p>And we can call this function with either variant:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">enum IpAddrKind {
 </span><span class="boring">    V4,
@@ -228,8 +233,7 @@ can then, for instance, define a function that takes any <code>IpAddrKind</code>
     route(IpAddrKind::V6);
 <span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn route(ip_kind: IpAddrKind) {}
-</span></code></pre></pre>
+</span><span class="boring">fn route(ip_kind: IpAddrKind) {}</span></code></pre></pre>
 <p>Using enums has even more advantages. Thinking more about our IP address type,
 at the moment we don’t have a way to store the actual IP address <em>data</em>; we
 only know what <em>kind</em> it is. Given that you just learned about structs in
@@ -255,8 +259,7 @@ Listing 6-1.</p>
         kind: IpAddrKind::V6,
         address: String::from(&quot;::1&quot;),
     };
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 6-1: Storing the data and <code>IpAddrKind</code> variant of
 an IP address using a <code>struct</code></span></p>
 <p>Here, we’ve defined a struct <code>IpAddr</code> that has two fields: a <code>kind</code> field that
@@ -280,8 +283,7 @@ variants will have associated <code>String</code> values:</p>
     let home = IpAddr::V4(String::from(&quot;127.0.0.1&quot;));
 
     let loopback = IpAddr::V6(String::from(&quot;::1&quot;));
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We attach data to each variant of the enum directly, so there is no need for an
 extra struct. Here it’s also easier to see another detail of how enums work:
 the name of each enum variant that we define also becomes a function that
@@ -304,8 +306,7 @@ a struct. Enums handle this case with ease:</p>
     let home = IpAddr::V4(127, 0, 0, 1);
 
     let loopback = IpAddr::V6(String::from(&quot;::1&quot;));
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We’ve shown several different ways to define data structures to store version
 four and version six IP addresses. However, as it turns out, wanting to store
 IP addresses and encode which kind they are is so common that <a href="https://doc.rust-lang.org/std/net/enum.IpAddr.html">the standard
@@ -314,8 +315,7 @@ the standard library defines <code>IpAddr</code>: it has the exact enum and vari
 we’ve defined and used, but it embeds the address data inside the variants in
 the form of two different structs, which are defined differently for each
 variant:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>struct Ipv4Addr {
     // --snip--
@@ -329,8 +329,7 @@ enum IpAddr {
     V4(Ipv4Addr),
     V6(Ipv6Addr),
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This code illustrates that you can put any kind of data inside an enum variant:
 strings, numeric types, or structs, for example. You can even include another
 enum! Also, standard library types are often not much more complicated than
@@ -348,8 +347,7 @@ variety of types embedded in its variants.</p>
     ChangeColor(i32, i32, i32),
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 6-2: A <code>Message</code> enum whose variants each store
 different amounts and types of values</span></p>
 <p>This enum has four variants with different types:</p>
@@ -372,8 +370,7 @@ struct MoveMessage {
 struct WriteMessage(String); // tuple struct
 struct ChangeColorMessage(i32, i32, i32); // tuple struct
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p>But if we used the different structs, which each have their own type, we
 couldn’t as easily define a function to take any of these kinds of messages as
 we could with the <code>Message</code> enum defined in Listing 6-2, which is a single type.</p>
@@ -396,8 +393,7 @@ enums. Here’s a method named <code>call</code> that we could define on our <co
 
     let m = Message::Write(String::from(&quot;hello&quot;));
     m.call();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The body of the method would use <code>self</code> to get the value that we called the
 method on. In this example, we’ve created a variable <code>m</code> that has the value
 <code>Message::Write(String::from(&quot;hello&quot;))</code>, and that is what <code>self</code> will be in the
@@ -441,15 +437,13 @@ implementation. As such, Rust does not have nulls, but it does have an enum
 that can encode the concept of a value being present or absent. This enum is
 <code>Option&lt;T&gt;</code>, and it is <a href="https://doc.rust-lang.org/std/option/enum.Option.html">defined by the standard library</a><!-- ignore -->
 as follows:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Option&lt;T&gt; {
     None,
     Some(T),
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The <code>Option&lt;T&gt;</code> enum is so useful that it’s even included in the prelude; you
 don’t need to bring it into scope explicitly. Its variants are also included in
 the prelude: you can use <code>Some</code> and <code>None</code> directly without the <code>Option::</code>
@@ -467,8 +461,7 @@ types and string types:</p>
     let some_char = Some('e');
 
     let absent_number: Option&lt;i32&gt; = None;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The type of <code>some_number</code> is <code>Option&lt;i32&gt;</code>. The type of <code>some_char</code> is
 <code>Option&lt;char&gt;</code>, which is a different type. Rust can infer these types because
 we’ve specified a value inside the <code>Some</code> variant. For <code>absent_number</code>, Rust
@@ -489,8 +482,7 @@ trying to add an <code>i8</code> to an <code>Option&lt;i8&gt;</code>:</p>
     let y: Option&lt;i8&gt; = Some(5);
 
     let sum = x + y;
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>If we run this code, we get an error message like this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
@@ -557,9 +549,11 @@ value.</p>
                             <a rel="prev" href="ch06-00-enums.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch06-02-match.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -569,6 +563,7 @@ value.</p>
                     <a rel="prev" href="ch06-00-enums.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch06-02-match.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -576,34 +571,29 @@ value.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

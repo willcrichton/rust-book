@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Generic Data Types - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -191,8 +199,7 @@ fn main() {
     let result = largest_char(&amp;char_list);
     println!(&quot;The largest char is {}&quot;, result);
 <span class="boring">    assert_eq!(*result, 'y');
-</span>}
-</code></pre></pre>
+</span>}</code></pre></pre>
 <p><span class="caption">Listing 10-4: Two functions that differ only in their
 names and the types in their signatures</span></p>
 <p>The <code>largest_i32</code> function is the one we extracted in Listing 10-3 that finds
@@ -211,8 +218,7 @@ Similarly, when we use a type parameter name in a function signature, we have
 to declare the type parameter name before we use it. To define the generic
 <code>largest</code> function, place type name declarations inside angle brackets, <code>&lt;&gt;</code>,
 between the name of the function and the parameter list, like this:</p>
-<pre><code class="language-rust ignore">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {
-</code></pre>
+<pre><code class="language-rust ignore">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {</code></pre>
 <p>We read this definition as: the function <code>largest</code> is generic over some type
 <code>T</code>. This function has one parameter named <code>list</code>, which is a slice of values
 of type <code>T</code>. The <code>largest</code> function will return a reference to a value of the
@@ -244,8 +250,7 @@ fn main() {
 
     let result = largest(&amp;char_list);
     println!(&quot;The largest char is {}&quot;, result);
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 10-5: The <code>largest</code> function using generic type
 parameters; this doesn’t yet compile</span></p>
 <p>If we compile this code right now, we’ll get this error:</p>
@@ -285,8 +290,7 @@ fields using the <code>&lt;&gt;</code> syntax. Listing 10-6 defines a <code>Poin
 fn main() {
     let integer = Point { x: 5, y: 10 };
     let float = Point { x: 1.0, y: 4.0 };
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 10-6: A <code>Point&lt;T&gt;</code> struct that holds <code>x</code> and <code>y</code>
 values of type <code>T</code></span></p>
 <p>The syntax for using generics in struct definitions is similar to that used in
@@ -306,8 +310,7 @@ Listing 10-7, our code won’t compile.</p>
 
 fn main() {
     let wont_work = Point { x: 5, y: 4.0 };
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 10-7: The fields <code>x</code> and <code>y</code> must be the same
 type because both have the same generic data type <code>T</code>.</span></p>
 <p>In this example, when we assign the integer value 5 to <code>x</code>, we let the compiler
@@ -339,8 +342,7 @@ fn main() {
     let both_integer = Point { x: 5, y: 10 };
     let both_float = Point { x: 1.0, y: 4.0 };
     let integer_and_float = Point { x: 5, y: 4.0 };
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 10-8: A <code>Point&lt;T, U&gt;</code> generic over two types so
 that <code>x</code> and <code>y</code> can be values of different types</span></p>
 <p>Now all the instances of <code>Point</code> shown are allowed! You can use as many generic
@@ -352,15 +354,13 @@ pieces.</p>
 <p>As we did with structs, we can define enums to hold generic data types in their
 variants. Let’s take another look at the <code>Option&lt;T&gt;</code> enum that the standard
 library provides, which we used in Chapter 6:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Option&lt;T&gt; {
     Some(T),
     None,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This definition should now make more sense to you. As you can see, the
 <code>Option&lt;T&gt;</code> enum is generic over type <code>T</code> and has two variants: <code>Some</code>, which
 holds one value of type <code>T</code>, and a <code>None</code> variant that doesn’t hold any value.
@@ -369,15 +369,13 @@ optional value, and because <code>Option&lt;T&gt;</code> is generic, we can use 
 no matter what the type of the optional value is.</p>
 <p>Enums can use multiple generic types as well. The definition of the <code>Result</code>
 enum that we used in Chapter 9 is one example:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Result&lt;T, E&gt; {
     Ok(T),
     Err(E),
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The <code>Result</code> enum is generic over two types, <code>T</code> and <code>E</code>, and has two variants:
 <code>Ok</code>, which holds a value of type <code>T</code>, and <code>Err</code>, which holds a value of type
 <code>E</code>. This definition makes it convenient to use the <code>Result</code> enum anywhere we
@@ -409,8 +407,7 @@ fn main() {
     let p = Point { x: 5, y: 10 };
 
     println!(&quot;p.x = {}&quot;, p.x());
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 10-9: Implementing a method named <code>x</code> on the
 <code>Point&lt;T&gt;</code> struct that will return a reference to the <code>x</code> field of type
 <code>T</code></span></p>
@@ -451,8 +448,7 @@ use the concrete type <code>f32</code>, meaning we don’t declare any types aft
 </span><span class="boring">    let p = Point { x: 5, y: 10 };
 </span><span class="boring">
 </span><span class="boring">    println!(&quot;p.x = {}&quot;, p.x());
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 10-10: An <code>impl</code> block that only applies to a
 struct with a particular concrete type for the generic type parameter <code>T</code></span></p>
 <p>This code means the type <code>Point&lt;f32&gt;</code> will have a <code>distance_from_origin</code>
@@ -491,8 +487,7 @@ fn main() {
     let p3 = p1.mixup(p2);
 
     println!(&quot;p3.x = {}, p3.y = {}&quot;, p3.x, p3.y);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 10-11: A method that uses generic types different
 from its struct’s definition</span></p>
 <p>In <code>main</code>, we’ve defined a <code>Point</code> that has an <code>i32</code> for <code>x</code> (with value <code>5</code>)
@@ -521,13 +516,11 @@ places where generic code is called and generates code for the concrete types
 the generic code is called with.</p>
 <p>Let’s look at how this works by using the standard library’s generic
 <code>Option&lt;T&gt;</code> enum:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let integer = Some(5);
 let float = Some(5.0);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>When Rust compiles this code, it performs monomorphization. During that
 process, the compiler reads the values that have been used in <code>Option&lt;T&gt;</code>
 instances and identifies two kinds of <code>Option&lt;T&gt;</code>: one is <code>i32</code> and the other
@@ -550,8 +543,7 @@ enum Option_f64 {
 fn main() {
     let integer = Option_i32::Some(5);
     let float = Option_f64::Some(5.0);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>The generic <code>Option&lt;T&gt;</code> is replaced with the specific definitions created by
 the compiler. Because Rust compiles generic code into code that specifies the
 type in each instance, we pay no runtime cost for using generics. When the code
@@ -567,9 +559,11 @@ at runtime.</p>
                             <a rel="prev" href="ch10-00-generics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch10-02-traits.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -579,6 +573,7 @@ at runtime.</p>
                     <a rel="prev" href="ch10-00-generics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch10-02-traits.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -586,34 +581,29 @@ at runtime.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

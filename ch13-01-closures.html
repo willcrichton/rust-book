@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Closures: Anonymous Functions that Capture Their Environment - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -223,8 +231,7 @@ fn main() {
         &quot;The user with preference {:?} gets {:?}&quot;,
         user_pref2, giveaway2
     );
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 13-1: Shirt company giveaway situation</span></p>
 <p>The <code>store</code> defined in <code>main</code> has two blue shirts and one red shirt remaining
 to distribute for this limited-edition promotion. We call the <code>giveaway</code> method
@@ -313,8 +320,7 @@ argument as we did in Listing 13-1.</p>
 </span><span class="boring">    let simulated_random_number = 7;
 </span><span class="boring">
 </span><span class="boring">    generate_workout(simulated_user_specified_value, simulated_random_number);
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 13-2: Adding optional type annotations of the
 parameter and return value types in the closure</span></p>
 <p>With type annotations added, the syntax of closures looks more similar to the
@@ -326,8 +332,7 @@ optional:</p>
 <pre><code class="language-rust ignore">fn  add_one_v1   (x: u32) -&gt; u32 { x + 1 }
 let add_one_v2 = |x: u32| -&gt; u32 { x + 1 };
 let add_one_v3 = |x|             { x + 1 };
-let add_one_v4 = |x|               x + 1  ;
-</code></pre>
+let add_one_v4 = |x|               x + 1  ;</code></pre>
 <p>The first line shows a function definition, and the second line shows a fully
 annotated closure definition. In the third line, we remove the type annotations
 from the closure definition. In the fourth line, we remove the brackets, which
@@ -351,8 +356,7 @@ which we’ve done here with <code>String</code> the first time. If we then try 
 
     let s = example_closure(String::from(&quot;hello&quot;));
     let n = example_closure(5);
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 13-3: Attempting to call a closure whose types
 are inferred with two different types</span></p>
 <p>The compiler gives us this error:</p>
@@ -393,8 +397,7 @@ the value:</p>
     println!(&quot;Before calling closure: {:?}&quot;, list);
     only_borrows();
     println!(&quot;After calling closure: {:?}&quot;, list);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 13-4: Defining and calling a closure that
 captures an immutable reference</span></p>
 <p>This example also illustrates that a variable can bind to a closure definition,
@@ -424,8 +427,7 @@ the <code>list</code> vector. The closure now captures a mutable reference:</p>
 
     borrows_mutably();
     println!(&quot;After calling closure: {:?}&quot;, list);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 13-5: Defining and calling a closure that
 captures a mutable reference</span></p>
 <p>This code compiles, runs, and prints:</p>
@@ -462,8 +464,7 @@ fn main() {
     thread::spawn(move || println!(&quot;From thread: {:?}&quot;, list))
         .join()
         .unwrap();
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 13-6: Using <code>move</code> to force the closure for the
 thread to take ownership of <code>list</code></span></p>
 <p>We spawn a new thread, giving the thread a closure to run as an argument. The
@@ -524,8 +525,7 @@ we used in Listing 13-1:</p>
             None =&gt; f(),
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p>Recall that <code>T</code> is the generic type representing the type of the value in the
 <code>Some</code> variant of an <code>Option</code>. That type <code>T</code> is also the return type of the
 <code>unwrap_or_else</code> function: code that calls <code>unwrap_or_else</code> on an
@@ -573,8 +573,7 @@ fn main() {
 
     list.sort_by_key(|r| r.width);
     println!(&quot;{:#?}&quot;, list);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 13-7: Using <code>sort_by_key</code> to order rectangles by
 width</span></p>
 <p>This code prints:</p>
@@ -625,8 +624,7 @@ fn main() {
         r.width
     });
     println!(&quot;{:#?}&quot;, list);
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 13-8: Attempting to use an <code>FnOnce</code> closure with
 <code>sort_by_key</code></span></p>
 <p>This is a contrived, convoluted way (that doesn’t work) to try and count the
@@ -687,8 +685,7 @@ fn main() {
         r.width
     });
     println!(&quot;{:#?}, sorted in {num_sort_operations} operations&quot;, list);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 13-9: Using an <code>FnMut</code> closure with <code>sort_by_key</code>
 is allowed</span></p>
 <p>The <code>Fn</code> traits are important when defining or using functions or types that
@@ -704,9 +701,11 @@ as we continue!</p>
                             <a rel="prev" href="ch13-00-functional-features.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch13-02-iterators.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -716,6 +715,7 @@ as we continue!</p>
                     <a rel="prev" href="ch13-00-functional-features.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch13-02-iterators.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -723,34 +723,29 @@ as we continue!</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

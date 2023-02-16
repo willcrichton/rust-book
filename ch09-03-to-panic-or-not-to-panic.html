@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>To panic! or Not to panic! - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -186,8 +194,7 @@ that you’ll never have an <code>Err</code> variant, it’s perfectly acceptabl
     let home: IpAddr = &quot;127.0.0.1&quot;
         .parse()
         .expect(&quot;Hardcoded IP address should be valid&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We’re creating an <code>IpAddr</code> instance by parsing a hardcoded string. We can see
 that <code>127.0.0.1</code> is a valid IP address, so it’s acceptable to use <code>expect</code>
 here. However, having a hardcoded, valid string doesn’t change the return type
@@ -309,8 +316,7 @@ number being in range, like so:</p>
 </span><span class="boring">            }
 </span><span class="boring">        }
 </span>    }
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>The <code>if</code> expression checks whether our value is out of range, tells the user
 about the problem, and calls <code>continue</code> to start the next iteration of the loop
 and ask for another guess. After the <code>if</code> expression, we can proceed with the
@@ -330,8 +336,7 @@ receives a value between 1 and 100.</p>
 file requires the `rand` crate. We do want to include it for reader
 experimentation purposes, but don't want to include it for rustdoc testing
 purposes. -->
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct Guess {
     value: i32,
@@ -350,8 +355,7 @@ impl Guess {
         self.value
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 9-13: A <code>Guess</code> type that will only continue with
 values between 1 and 100</span></p>
 <p>First, we define a struct named <code>Guess</code> that has a field named <code>value</code> that
@@ -381,7 +385,7 @@ hasn’t been checked by the conditions in the <code>Guess::new</code> function.
 <p>A function that has a parameter or returns only numbers between 1 and 100 could
 then declare in its signature that it takes or returns a <code>Guess</code> rather than an
 <code>i32</code> and wouldn’t need to do any additional checks in its body.</p>
-<div class="quiz-placeholder" data-quiz-name="ch09-03-panic-or-not"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Here, the programmer would likely want to use a *recoverable* error (the `Result`). If a CLI user passes an incorrectly formatted flag,\nthen the CLI library might want to provide additional help like displaying the possible set of flags. A panic would force the application\nto only show the panic message, and would probably be a worse user experience.\n&quot;,&quot;id&quot;:&quot;31c55174-3fdf-4a21-959c-bb4056def264&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`parse_flag_v1`&quot;},&quot;prompt&quot;:{&quot;answerIndex&quot;:0,&quot;distractors&quot;:[&quot;`parse_flag_v2`&quot;],&quot;prompt&quot;:&quot;A Rust programmer is designing a library for writing command-line interfaces. As a part of this library, they are implementing a function to parse command-line flags provided by a user. Which implementation would be most appropriate for this domain?\n\n```\nfn parse_flag_v1(flag: &amp;str) -&gt; Result&lt;String, String&gt; {\n  match flag.strip_prefix(\&quot;--\&quot;) {\n    Some(no_dash) =&gt; Ok(no_dash.to_string()),\n    None =&gt; Err(format!(\&quot;Invalid flag {flag}\&quot;))\n  }\n}\n\nfn parse_flag_v2(flag: &amp;str) -&gt; String {\n  match flag.strip_prefix(\&quot;--\&quot;) {\n    Some(no_dash) =&gt; no_dash.to_string(),\n    None =&gt; panic!(\&quot;Invalid flag {flag}\&quot;)\n  }\n}\n```\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
+<div class="quiz-placeholder" data-quiz-name="ch09-03-panic-or-not"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Here, the programmer would likely want to use a *recoverable* error (the `Result`). If a CLI user passes an incorrectly formatted flag,\nthen the CLI library might want to provide additional help like displaying the possible set of flags. A panic would force the application\nto only show the panic message, and would probably be a worse user experience.\n&quot;,&quot;id&quot;:&quot;31c55174-3fdf-4a21-959c-bb4056def264&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`parse_flag_v1`&quot;},&quot;prompt&quot;:{&quot;answerIndex&quot;:0,&quot;distractors&quot;:[&quot;`parse_flag_v2`&quot;],&quot;prompt&quot;:&quot;A Rust programmer is designing a library for writing command-line interfaces. \nAs a part of this library, they are implementing a function to parse command-line flags provided by a user. \nWhich implementation would be most appropriate for this domain?\n\n```\nfn parse_flag_v1(flag: &amp;str) -&gt; Result&lt;String, String&gt; {\n  match flag.strip_prefix(\&quot;--\&quot;) {\n    Some(no_dash) =&gt; Ok(no_dash.to_string()),\n    None =&gt; Err(format!(\&quot;Invalid flag {flag}\&quot;))\n  }\n}\n\nfn parse_flag_v2(flag: &amp;str) -&gt; String {\n  match flag.strip_prefix(\&quot;--\&quot;) {\n    Some(no_dash) =&gt; no_dash.to_string(),\n    None =&gt; panic!(\&quot;Invalid flag {flag}\&quot;)\n  }\n}\n```\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Rust’s error handling features are designed to help you write more robust code.
 The <code>panic!</code> macro signals that your program is in a state it can’t handle and
@@ -402,9 +406,11 @@ can use them in your code.</p>
                             <a rel="prev" href="ch09-02-recoverable-errors-with-result.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch10-00-generics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -414,6 +420,7 @@ can use them in your code.</p>
                     <a rel="prev" href="ch09-02-recoverable-errors-with-result.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch10-00-generics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -421,34 +428,29 @@ can use them in your code.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

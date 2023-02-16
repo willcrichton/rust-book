@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Defining and Instantiating Structs - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -160,8 +168,7 @@ struct that stores information about a user account.</p>
     sign_in_count: u64,
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 5-1: A <code>User</code> struct definition</span></p>
 <p>To use a struct after we’ve defined it, we create an <em>instance</em> of that struct
 by specifying concrete values for each of the fields. We create an instance by
@@ -185,8 +192,7 @@ example, we can declare a particular user as shown in Listing 5-2.</p>
         active: true,
         sign_in_count: 1,
     };
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 5-2: Creating an instance of the <code>User</code>
 struct</span></p>
 <p>To get a specific value from a struct, we use dot notation. For example, to
@@ -210,8 +216,7 @@ field of a mutable <code>User</code> instance.</p>
     };
 
     user1.email = String::from(&quot;anotheremail@example.com&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 5-3: Changing the value in the <code>email</code> field of a
 <code>User</code> instance</span></p>
 <p>Note that the entire instance must be mutable; Rust doesn’t allow us to mark
@@ -242,8 +247,7 @@ the <code>sign_in_count</code> gets a value of <code>1</code>.</p>
 </span><span class="boring">        String::from(&quot;someone@example.com&quot;),
 </span><span class="boring">        String::from(&quot;someusername123&quot;),
 </span><span class="boring">    );
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 5-4: A <code>build_user</code> function that takes an email
 and username and returns a <code>User</code> instance</span></p>
 <p>It makes sense to name the function parameters with the same name as the struct
@@ -277,8 +281,7 @@ repetition of <code>email</code> and <code>username</code>, as shown in Listing 
 </span><span class="boring">        String::from(&quot;someone@example.com&quot;),
 </span><span class="boring">        String::from(&quot;someusername123&quot;),
 </span><span class="boring">    );
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 5-5: A <code>build_user</code> function that uses field init
 shorthand because the <code>email</code> and <code>username</code> parameters have the same name as
 struct fields</span></p>
@@ -317,8 +320,7 @@ otherwise use the same values from <code>user1</code> that we created in Listing
         email: String::from(&quot;another@example.com&quot;),
         sign_in_count: user1.sign_in_count,
     };
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 5-6: Creating a new <code>User</code> instance using one of
 the values from <code>user1</code></span></p>
 <p>Using struct update syntax, we can achieve the same effect with less code, as
@@ -345,8 +347,7 @@ explicitly set should have the same value as the fields in the given instance.</
         email: String::from(&quot;another@example.com&quot;),
         ..user1
     };
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 5-7: Using struct update syntax to set a new
 <code>email</code> value for a <code>User</code> instance but use the rest of the values from
 <code>user1</code></span></p>
@@ -383,8 +384,7 @@ struct Point(i32, i32, i32);
 fn main() {
     let black = Color(0, 0, 0);
     let origin = Point(0, 0, 0);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>Note that the <code>black</code> and <code>origin</code> values are different types, because they’re
 instances of different tuple structs. Each struct you define is its own type,
 even though the fields within the struct might have the same types. For
@@ -405,8 +405,7 @@ named <code>AlwaysEqual</code>:</p>
 
 fn main() {
     let subject = AlwaysEqual;
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>To define <code>AlwaysEqual</code>, we use the <code>struct</code> keyword, the name we want, then a
 semicolon. No need for curly brackets or parentheses! Then we can get an
 instance of <code>AlwaysEqual</code> in the <code>subject</code> variable in a similar way: using the
@@ -443,8 +442,7 @@ fn main() {
         active: true,
         sign_in_count: 1,
     };
-}
-</code></pre>
+}</code></pre>
 <p>The compiler will complain that it needs lifetime specifiers:</p>
 <pre><code class="language-console">$ cargo run
    Compiling structs v0.1.0 (file:///projects/structs)
@@ -497,9 +495,11 @@ add `> ` before every line -->
                             <a rel="prev" href="ch05-00-structs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch05-02-example-structs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -509,6 +509,7 @@ add `> ` before every line -->
                     <a rel="prev" href="ch05-00-structs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch05-02-example-structs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -516,34 +517,29 @@ add `> ` before every line -->
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

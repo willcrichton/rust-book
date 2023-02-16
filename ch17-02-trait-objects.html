@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Using Trait Objects That Allow for Values of Different Types - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -203,8 +211,7 @@ behavior.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait Draw {
     fn draw(&amp;self);
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-3: Definition of the <code>Draw</code> trait</span></p>
 <p>This syntax should look familiar from our discussions on how to define traits
 in Chapter 10. Next comes some new syntax: Listing 17-4 defines a struct named
@@ -218,8 +225,7 @@ a <code>Box</code> that implements the <code>Draw</code> trait.</p>
 </span><span class="boring">
 </span>pub struct Screen {
     pub components: Vec&lt;Box&lt;dyn Draw&gt;&gt;,
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-4: Definition of the <code>Screen</code> struct with a
 <code>components</code> field holding a vector of trait objects that implement the <code>Draw</code>
 trait</span></p>
@@ -240,8 +246,7 @@ trait</span></p>
             component.draw();
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-5: A <code>run</code> method on <code>Screen</code> that calls the
 <code>draw</code> method on each component</span></p>
 <p>This works differently from defining a struct that uses a generic type
@@ -268,8 +273,7 @@ where
             component.draw();
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-6: An alternate implementation of the <code>Screen</code>
 struct and its <code>run</code> method using generics and trait bounds</span></p>
 <p>This restricts us to a <code>Screen</code> instance that has a list of components all of
@@ -313,8 +317,7 @@ impl Draw for Button {
     fn draw(&amp;self) {
         // code to actually draw a button
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-7: A <code>Button</code> struct that implements the
 <code>Draw</code> trait</span></p>
 <p>The <code>width</code>, <code>height</code>, and <code>label</code> fields on <code>Button</code> will differ from the
@@ -344,8 +347,7 @@ impl Draw for SelectBox {
     }
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre>
+</span><span class="boring">fn main() {}</span></code></pre>
 <p><span class="caption">Listing 17-8: Another crate using <code>gui</code> and implementing
 the <code>Draw</code> trait on a <code>SelectBox</code> struct</span></p>
 <p>Our library’s user can now write their <code>main</code> function to create a <code>Screen</code>
@@ -391,8 +393,7 @@ fn main() {
     };
 
     screen.run();
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-9: Using trait objects to store values of
 different types that implement the same trait</span></p>
 <p>When we wrote the library, we didn’t know that someone might add the
@@ -425,8 +426,7 @@ fn main() {
     };
 
     screen.run();
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-10: Attempting to use a type that doesn’t
 implement the trait object’s trait</span></p>
 <p>We’ll get this error because <code>String</code> doesn’t implement the <code>Draw</code> trait:</p>
@@ -477,9 +477,11 @@ support in Listing 17-9, so it’s a trade-off to consider.</p>
                             <a rel="prev" href="ch17-01-what-is-oo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch17-03-oo-design-patterns.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -489,6 +491,7 @@ support in Listing 17-9, so it’s a trade-off to consider.</p>
                     <a rel="prev" href="ch17-01-what-is-oo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch17-03-oo-design-patterns.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -496,34 +499,29 @@ support in Listing 17-9, so it’s a trade-off to consider.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>References and Borrowing - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -164,8 +172,7 @@ value:</p>
 
 fn calculate_length(s: &amp;String) -&gt; usize {
     s.len()
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>First, notice that all the tuple code in the variable declaration and the
 function return value is gone. Second, note that we pass <code>&amp;s1</code> into
 <code>calculate_length</code> and, in its definition, we take <code>&amp;String</code> rather than
@@ -190,8 +197,7 @@ Chapter 15.</p>
 </span><span class="boring">
 </span><span class="boring">fn calculate_length(s: &amp;String) -&gt; usize {
 </span><span class="boring">    s.len()
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>The <code>&amp;s1</code> syntax lets us create a reference that <em>refers</em> to the value of <code>s1</code>
 but does not own it. Because it does not own it, the value it points to will
 not be dropped when the reference stops being used.</p>
@@ -208,8 +214,7 @@ the parameter <code>s</code> is a reference. Let’s add some explanatory annota
 </span>fn calculate_length(s: &amp;String) -&gt; usize { // s is a reference to a String
     s.len()
 } // Here, s goes out of scope. But because it does not have ownership of what
-  // it refers to, it is not dropped.
-</code></pre></pre>
+  // it refers to, it is not dropped.</code></pre></pre>
 <p>The scope in which the variable <code>s</code> is valid is the same as any function
 parameter’s scope, but the value pointed to by the reference is not dropped
 when <code>s</code> stops being used because <code>s</code> doesn’t have ownership. When functions
@@ -230,8 +235,7 @@ Listing 4-6. Spoiler alert: it doesn’t work!</p>
 
 fn change(some_string: &amp;String) {
     some_string.push_str(&quot;, world&quot;);
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 4-6: Attempting to modify a borrowed value</span></p>
 <p>Here’s the error:</p>
 <pre><code class="language-console">$ cargo run
@@ -262,8 +266,7 @@ with just a few small tweaks that use, instead, a <em>mutable reference</em>:</p
 
 fn change(some_string: &amp;mut String) {
     some_string.push_str(&quot;, world&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>First, we change <code>s</code> to be <code>mut</code>. Then we create a mutable reference with <code>&amp;mut s</code> where we call the <code>change</code> function, and update the function signature to
 accept a mutable reference with <code>some_string: &amp;mut String</code>. This makes it very
 clear that the <code>change</code> function will mutate the value it borrows.</p>
@@ -281,8 +284,7 @@ attempts to create two mutable references to <code>s</code> will fail:</p>
     let r2 = &amp;mut s;
 
     println!(&quot;{}, {}&quot;, r1, r2);
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>Here’s the error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -329,8 +331,7 @@ multiple mutable references, just not <em>simultaneous</em> ones:</p>
     } // r1 goes out of scope here, so we can make a new reference with no problems.
 
     let r2 = &amp;mut s;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Rust enforces a similar rule for combining mutable and immutable references.
 This code results in an error:</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
@@ -341,8 +342,7 @@ This code results in an error:</p>
     let r3 = &amp;mut s; // BIG PROBLEM
 
     println!(&quot;{}, {}, and {}&quot;, r1, r2, r3);
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>Here’s the error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -381,8 +381,7 @@ occurs before the mutable reference is introduced:</p>
 
     let r3 = &amp;mut s; // no problem
     println!(&quot;{}&quot;, r3);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The scopes of the immutable references <code>r1</code> and <code>r2</code> end after the <code>println!</code>
 where they are last used, which is before the mutable reference <code>r3</code> is
 created. These scopes don’t overlap, so this code is allowed. The ability of
@@ -413,8 +412,7 @@ fn dangle() -&gt; &amp;String {
     let s = String::from(&quot;hello&quot;);
 
     &amp;s
-}
-</code></pre>
+}</code></pre>
 <p>Here’s the error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -452,8 +450,7 @@ for it to be borrowed from
 
     &amp;s // we return a reference to the String, s
 } // Here, s goes out of scope, and is dropped. Its memory goes away.
-  // Danger!
-</code></pre>
+  // Danger!</code></pre>
 <p>Because <code>s</code> is created inside <code>dangle</code>, when the code of <code>dangle</code> is finished,
 <code>s</code> will be deallocated. But we tried to return a reference to it. That means
 this reference would be pointing to an invalid <code>String</code>. That’s no good! Rust
@@ -467,8 +464,7 @@ won’t let us do this.</p>
     let s = String::from(&quot;hello&quot;);
 
     s
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>This works without any problems. Ownership is moved out, and nothing is
 deallocated.</p>
 <h3 id="the-rules-of-references"><a class="header" href="#the-rules-of-references">The Rules of References</a></h3>
@@ -487,9 +483,11 @@ number of immutable references.</li>
                             <a rel="prev" href="ch04-01-what-is-ownership.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch04-03-slices.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -499,6 +497,7 @@ number of immutable references.</li>
                     <a rel="prev" href="ch04-01-what-is-ownership.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch04-03-slices.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -506,34 +505,29 @@ number of immutable references.</li>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

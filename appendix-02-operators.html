@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>B - Operators and Symbols - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -151,7 +159,7 @@ appear in context, a short explanation, and whether that operator is
 overloadable. If an operator is overloadable, the relevant trait to use to
 overload that operator is listed.</p>
 <p><span class="caption">Table B-1: Operators</span></p>
-<table><thead><tr><th>Operator</th><th>Example</th><th>Explanation</th><th>Overloadable?</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Example</th><th>Explanation</th><th>Overloadable?</th></tr></thead><tbody>
 <tr><td><code>!</code></td><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Macro expansion</td><td></td></tr>
 <tr><td><code>!</code></td><td><code>!expr</code></td><td>Bitwise or logical complement</td><td><code>Not</code></td></tr>
 <tr><td><code>!=</code></td><td><code>expr != expr</code></td><td>Nonequality comparison</td><td><code>PartialEq</code></td></tr>
@@ -207,13 +215,14 @@ overload that operator is listed.</p>
 <tr><td><code>||</code></td><td><code>expr || expr</code></td><td>Short-circuiting logical OR</td><td></td></tr>
 <tr><td><code>?</code></td><td><code>expr?</code></td><td>Error propagation</td><td></td></tr>
 </tbody></table>
+</div>
 <h3 id="non-operator-symbols"><a class="header" href="#non-operator-symbols">Non-operator Symbols</a></h3>
 <p>The following list contains all symbols that don’t function as operators; that
 is, they don’t behave like a function or method call.</p>
 <p>Table B-2 shows symbols that appear on their own and are valid in a variety of
 locations.</p>
 <p><span class="caption">Table B-2: Stand-Alone Syntax</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>'ident</code></td><td>Named lifetime or loop label</td></tr>
 <tr><td><code>...u8</code>, <code>...i32</code>, <code>...f64</code>, <code>...usize</code>, etc.</td><td>Numeric literal of specific type</td></tr>
 <tr><td><code>&quot;...&quot;</code></td><td>String literal</td></tr>
@@ -226,10 +235,11 @@ locations.</p>
 <tr><td><code>!</code></td><td>Always empty bottom type for diverging functions</td></tr>
 <tr><td><code>_</code></td><td>“Ignored” pattern binding; also used to make integer literals readable</td></tr>
 </tbody></table>
+</div>
 <p>Table B-3 shows symbols that appear in the context of a path through the module
 hierarchy to an item.</p>
 <p><span class="caption">Table B-3: Path-Related Syntax</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>ident::ident</code></td><td>Namespace path</td></tr>
 <tr><td><code>::path</code></td><td>Path relative to the crate root (i.e., an explicitly absolute path)</td></tr>
 <tr><td><code>self::path</code></td><td>Path relative to the current module (i.e., an explicitly relative path).</td></tr>
@@ -240,10 +250,11 @@ hierarchy to an item.</p>
 <tr><td><code>type::method(...)</code></td><td>Disambiguating a method call by naming the type for which it’s defined</td></tr>
 <tr><td><code>&lt;type as trait&gt;::method(...)</code></td><td>Disambiguating a method call by naming the trait and type</td></tr>
 </tbody></table>
+</div>
 <p>Table B-4 shows symbols that appear in the context of using generic type
 parameters.</p>
 <p><span class="caption">Table B-4: Generics</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>path&lt;...&gt;</code></td><td>Specifies parameters to generic type in a type (e.g., <code>Vec&lt;u8&gt;</code>)</td></tr>
 <tr><td><code>path::&lt;...&gt;</code>, <code>method::&lt;...&gt;</code></td><td>Specifies parameters to generic type, function, or method in an expression; often referred to as turbofish (e.g., <code>&quot;42&quot;.parse::&lt;i32&gt;()</code>)</td></tr>
 <tr><td><code>fn ident&lt;...&gt; ...</code></td><td>Define generic function</td></tr>
@@ -253,10 +264,11 @@ parameters.</p>
 <tr><td><code>for&lt;...&gt; type</code></td><td>Higher-ranked lifetime bounds</td></tr>
 <tr><td><code>type&lt;ident=type&gt;</code></td><td>A generic type where one or more associated types have specific assignments (e.g., <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
 </tbody></table>
+</div>
 <p>Table B-5 shows symbols that appear in the context of constraining generic type
 parameters with trait bounds.</p>
 <p><span class="caption">Table B-5: Trait Bound Constraints</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>T: U</code></td><td>Generic parameter <code>T</code> constrained to types that implement <code>U</code></td></tr>
 <tr><td><code>T: 'a</code></td><td>Generic type <code>T</code> must outlive lifetime <code>'a</code> (meaning the type cannot transitively contain any references with lifetimes shorter than <code>'a</code>)</td></tr>
 <tr><td><code>T: 'static</code></td><td>Generic type <code>T</code> contains no borrowed references other than <code>'static</code> ones</td></tr>
@@ -264,10 +276,11 @@ parameters with trait bounds.</p>
 <tr><td><code>T: ?Sized</code></td><td>Allow generic type parameter to be a dynamically sized type</td></tr>
 <tr><td><code>'a + trait</code>, <code>trait + trait</code></td><td>Compound type constraint</td></tr>
 </tbody></table>
+</div>
 <p>Table B-6 shows symbols that appear in the context of calling or defining
 macros and specifying attributes on an item.</p>
 <p><span class="caption">Table B-6: Macros and Attributes</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>#[meta]</code></td><td>Outer attribute</td></tr>
 <tr><td><code>#![meta]</code></td><td>Inner attribute</td></tr>
 <tr><td><code>$ident</code></td><td>Macro substitution</td></tr>
@@ -275,9 +288,10 @@ macros and specifying attributes on an item.</p>
 <tr><td><code>$(…)…</code></td><td>Macro repetition</td></tr>
 <tr><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Macro invocation</td></tr>
 </tbody></table>
+</div>
 <p>Table B-7 shows symbols that create comments.</p>
 <p><span class="caption">Table B-7: Comments</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>//</code></td><td>Line comment</td></tr>
 <tr><td><code>//!</code></td><td>Inner line doc comment</td></tr>
 <tr><td><code>///</code></td><td>Outer line doc comment</td></tr>
@@ -285,9 +299,10 @@ macros and specifying attributes on an item.</p>
 <tr><td><code>/*!...*/</code></td><td>Inner block doc comment</td></tr>
 <tr><td><code>/**...*/</code></td><td>Outer block doc comment</td></tr>
 </tbody></table>
+</div>
 <p>Table B-8 shows symbols that appear in the context of using tuples.</p>
 <p><span class="caption">Table B-8: Tuples</span></p>
-<table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Symbol</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>()</code></td><td>Empty tuple (aka unit), both literal and type</td></tr>
 <tr><td><code>(expr)</code></td><td>Parenthesized expression</td></tr>
 <tr><td><code>(expr,)</code></td><td>Single-element tuple expression</td></tr>
@@ -297,22 +312,24 @@ macros and specifying attributes on an item.</p>
 <tr><td><code>expr(expr, ...)</code></td><td>Function call expression; also used to initialize tuple <code>struct</code>s and tuple <code>enum</code> variants</td></tr>
 <tr><td><code>expr.0</code>, <code>expr.1</code>, etc.</td><td>Tuple indexing</td></tr>
 </tbody></table>
+</div>
 <p>Table B-9 shows the contexts in which curly braces are used.</p>
 <p><span class="caption">Table B-9: Curly Brackets</span></p>
-<table><thead><tr><th>Context</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Context</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>{...}</code></td><td>Block expression</td></tr>
 <tr><td><code>Type {...}</code></td><td><code>struct</code> literal</td></tr>
 </tbody></table>
+</div>
 <p>Table B-10 shows the contexts in which square brackets are used.</p>
 <p><span class="caption">Table B-10: Square Brackets</span></p>
-<table><thead><tr><th>Context</th><th>Explanation</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th>Context</th><th>Explanation</th></tr></thead><tbody>
 <tr><td><code>[...]</code></td><td>Array literal</td></tr>
 <tr><td><code>[expr; len]</code></td><td>Array literal containing <code>len</code> copies of <code>expr</code></td></tr>
 <tr><td><code>[type; len]</code></td><td>Array type containing <code>len</code> instances of <code>type</code></td></tr>
 <tr><td><code>expr[expr]</code></td><td>Collection indexing. Overloadable (<code>Index</code>, <code>IndexMut</code>)</td></tr>
 <tr><td><code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code></td><td>Collection indexing pretending to be collection slicing, using <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code>, or <code>RangeFull</code> as the “index”</td></tr>
 </tbody></table>
-
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
@@ -320,9 +337,11 @@ macros and specifying attributes on an item.</p>
                             <a rel="prev" href="appendix-01-keywords.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="appendix-03-derivable-traits.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -332,6 +351,7 @@ macros and specifying attributes on an item.</p>
                     <a rel="prev" href="appendix-01-keywords.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="appendix-03-derivable-traits.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -339,34 +359,29 @@ macros and specifying attributes on an item.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

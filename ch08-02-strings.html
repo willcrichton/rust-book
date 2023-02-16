@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Storing UTF-8 Encoded Text with Strings - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -178,8 +186,7 @@ of a function that works the same way with <code>Vec&lt;T&gt;</code> and <code>S
 function to create an instance, shown in Listing 8-11.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let mut s = String::new();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-11: Creating a new, empty <code>String</code></span></p>
 <p>This line creates a new empty string called <code>s</code>, which we can then load data
 into. Often, we’ll have some initial data that we want to start the string
@@ -193,8 +200,7 @@ two examples.</p>
 
     // the method also works on a literal directly:
     let s = &quot;initial contents&quot;.to_string();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-12: Using the <code>to_string</code> method to create a
 <code>String</code> from a string literal</span></p>
 <p>This code creates a string containing <code>initial contents</code>.</p>
@@ -203,8 +209,7 @@ literal. The code in Listing 8-13 is equivalent to the code from Listing 8-12
 that uses <code>to_string</code>.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let s = String::from(&quot;initial contents&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-13: Using the <code>String::from</code> function to create
 a <code>String</code> from a string literal</span></p>
 <p>Because strings are used for so many things, we can use many different generic
@@ -226,8 +231,7 @@ data in them, as shown in Listing 8-14.</p>
     let hello = String::from(&quot;Olá&quot;);
     let hello = String::from(&quot;Здравствуйте&quot;);
     let hello = String::from(&quot;Hola&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-14: Storing greetings in different languages in
 strings</span></p>
 <p>All of these are valid <code>String</code> values.</p>
@@ -241,8 +245,7 @@ as shown in Listing 8-15.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let mut s = String::from(&quot;foo&quot;);
     s.push_str(&quot;bar&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-15: Appending a string slice to a <code>String</code>
 using the <code>push_str</code> method</span></p>
 <p>After these two lines, <code>s</code> will contain <code>foobar</code>. The <code>push_str</code> method takes a
@@ -254,8 +257,7 @@ parameter. For example, in the code in Listing 8-16, we want to be able to use
     let s2 = &quot;bar&quot;;
     s1.push_str(s2);
     println!(&quot;s2 is {}&quot;, s2);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-16: Using a string slice after appending its
 contents to a <code>String</code></span></p>
 <p>If the <code>push_str</code> method took ownership of <code>s2</code>, we wouldn’t be able to print
@@ -266,8 +268,7 @@ method.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let mut s = String::from(&quot;lo&quot;);
     s.push('l');
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-17: Adding one character to a <code>String</code> value
 using <code>push</code></span></p>
 <p>As a result, <code>s</code> will contain <code>lol</code>.</p>
@@ -278,8 +279,7 @@ the <code>+</code> operator, as shown in Listing 8-18.</p>
 </span>    let s1 = String::from(&quot;Hello, &quot;);
     let s2 = String::from(&quot;world!&quot;);
     let s3 = s1 + &amp;s2; // note s1 has been moved here and can no longer be used
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-18: Using the <code>+</code> operator to combine two
 <code>String</code> values into a new <code>String</code> value</span></p>
 <p>The string <code>s3</code> will contain <code>Hello, world!</code>. The reason <code>s1</code> is no longer
@@ -287,8 +287,7 @@ valid after the addition, and the reason we used a reference to <code>s2</code>,
 with the signature of the method that’s called when we use the <code>+</code> operator.
 The <code>+</code> operator uses the <code>add</code> method, whose signature looks something like
 this:</p>
-<pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {
-</code></pre>
+<pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
 <p>In the standard library, you'll see <code>add</code> defined using generics and associated
 types. Here, we’ve substituted in concrete types, which is what happens when we
 call this method with <code>String</code> values. We’ll discuss generics in Chapter 10.
@@ -326,8 +325,7 @@ gets unwieldy:</p>
     let s3 = String::from(&quot;toe&quot;);
 
     let s = s1 + &quot;-&quot; + &amp;s2 + &quot;-&quot; + &amp;s3;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>At this point, <code>s</code> will be <code>tic-tac-toe</code>. With all of the <code>+</code> and <code>&quot;</code>
 characters, it’s difficult to see what’s going on. For more complicated string
 combining, we can instead use the <code>format!</code> macro:</p>
@@ -337,8 +335,7 @@ combining, we can instead use the <code>format!</code> macro:</p>
     let s3 = String::from(&quot;toe&quot;);
 
     let s = format!(&quot;{}-{}-{}&quot;, s1, s2, s3);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This code also sets <code>s</code> to <code>tic-tac-toe</code>. The <code>format!</code> macro works like
 <code>println!</code>, but instead of printing the output to the screen, it returns a
 <code>String</code> with the contents. The version of the code using <code>format!</code> is much
@@ -353,8 +350,7 @@ get an error. Consider the invalid code in Listing 8-19.</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s1 = String::from(&quot;hello&quot;);
     let h = s1[0];
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 8-19: Attempting to use indexing syntax with a
 String</span></p>
 <p>This code will result in the following error:</p>
@@ -397,8 +393,7 @@ encoded UTF-8 example strings from Listing 8-14. First, this one:</p>
 </span><span class="boring">    let hello = String::from(&quot;Olá&quot;);
 </span><span class="boring">    let hello = String::from(&quot;Здравствуйте&quot;);
 </span>    let hello = String::from(&quot;Hola&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>In this case, <code>len</code> will be 4, which means the vector storing the string “Hola”
 is 4 bytes long. Each of these letters takes 1 byte when encoded in UTF-8. The
 following line, however, may surprise you. (Note that this string begins with
@@ -415,16 +410,14 @@ the capital Cyrillic letter Ze, not the Arabic number 3.)</p>
 </span><span class="boring">    let hello = String::from(&quot;Olá&quot;);
 </span>    let hello = String::from(&quot;Здравствуйте&quot;);
 <span class="boring">    let hello = String::from(&quot;Hola&quot;);
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>Asked how long the string is, you might say 12. In fact, Rust’s answer is 24:
 that’s the number of bytes it takes to encode “Здравствуйте” in UTF-8, because
 each Unicode scalar value in that string takes 2 bytes of storage. Therefore,
 an index into the string’s bytes will not always correlate to a valid Unicode
 scalar value. To demonstrate, consider this invalid Rust code:</p>
 <pre><code class="language-rust ignore does_not_compile">let hello = &quot;Здравствуйте&quot;;
-let answer = &amp;hello[0];
-</code></pre>
+let answer = &amp;hello[0];</code></pre>
 <p>You already know that <code>answer</code> will not be <code>З</code>, the first letter. When encoded
 in UTF-8, the first byte of <code>З</code> is <code>208</code> and the second is <code>151</code>, so it would
 seem that <code>answer</code> should in fact be <code>208</code>, but <code>208</code> is not a valid character
@@ -471,14 +464,12 @@ character, a grapheme cluster, or a string slice. If you really need to use
 indices to create string slices, therefore, Rust asks you to be more specific.</p>
 <p>Rather than indexing using <code>[]</code> with a single number, you can use <code>[]</code> with a
 range to create a string slice containing particular bytes:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello = &quot;Здравствуйте&quot;;
 
 let s = &amp;hello[0..4];
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Here, <code>s</code> will be a <code>&amp;str</code> that contains the first 4 bytes of the string.
 Earlier, we mentioned that each of these characters was 2 bytes, which means
 <code>s</code> will be <code>Зд</code>.</p>
@@ -499,28 +490,24 @@ can crash your program.</p>
 you want characters or bytes. For individual Unicode scalar values, use the
 <code>chars</code> method. Calling <code>chars</code> on “Зд” separates out and returns two values
 of type <code>char</code>, and you can iterate over the result to access each element:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for c in &quot;Зд&quot;.chars() {
     println!(&quot;{}&quot;, c);
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This code will print the following:</p>
 <pre><code class="language-text">З
 д
 </code></pre>
 <p>Alternatively, the <code>bytes</code> method returns each raw byte, which might be
 appropriate for your domain:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for b in &quot;Зд&quot;.bytes() {
     println!(&quot;{}&quot;, b);
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This code will print the four bytes that make up this string:</p>
 <pre><code class="language-text">208
 151
@@ -557,9 +544,11 @@ string with another string.</p>
                             <a rel="prev" href="ch08-01-vectors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch08-03-hash-maps.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -569,6 +558,7 @@ string with another string.</p>
                     <a rel="prev" href="ch08-01-vectors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch08-03-hash-maps.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -576,34 +566,29 @@ string with another string.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

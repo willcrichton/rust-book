@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>What is Ownership? - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -233,12 +241,10 @@ boilerplate code.</p>
 <p>As a first example of ownership, we’ll look at the <em>scope</em> of some variables. A
 scope is the range within a program for which an item is valid. Take the
 following variable:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = &quot;hello&quot;;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The variable <code>s</code> refers to a string literal, where the value of the string is
 hardcoded into the text of our program. The variable is valid from the point at
 which it’s declared until the end of the current <em>scope</em>. Listing 4-1 shows a
@@ -249,8 +255,7 @@ program with comments annotating where the variable <code>s</code> would be vali
 
         // do stuff with s
     }                      // this scope is now over, and s is no longer valid
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 4-1: A variable and the scope in which it is
 valid</span></p>
 <p>In other words, there are two important points in time here:</p>
@@ -283,12 +288,10 @@ these situations, Rust has a second string type, <code>String</code>. This type 
 data allocated on the heap and as such is able to store an amount of text that
 is unknown to us at compile time. You can create a <code>String</code> from a string
 literal using the <code>from</code> function, like so:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = String::from(&quot;hello&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The double colon <code>::</code> operator allows us to namespace this particular <code>from</code>
 function under the <code>String</code> type rather than using some sort of name like
 <code>string_from</code>. We’ll discuss this syntax more in the <a href="ch05-03-method-syntax.html#method-syntax">“Method
@@ -302,8 +305,7 @@ Module Tree”</a><!-- ignore --> in Chapter 7.</p>
     s.push_str(&quot;, world!&quot;); // push_str() appends a literal to a String
 
     println!(&quot;{}&quot;, s); // This will print `hello, world!`
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>So, what’s the difference here? Why can <code>String</code> be mutated but literals
 cannot? The difference is how these two types deal with memory.</p>
 <h3 id="memory-and-allocation"><a class="header" href="#memory-and-allocation">Memory and Allocation</a></h3>
@@ -343,8 +345,7 @@ from Listing 4-1 using a <code>String</code> instead of a string literal:</p>
         // do stuff with s
     }                                  // this scope is now over, and s is no
                                        // longer valid
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>There is a natural point at which we can return the memory our <code>String</code> needs
 to the allocator: when <code>s</code> goes out of scope. When a variable goes out of
 scope, Rust calls a special function for us. This function is called
@@ -367,8 +368,7 @@ Let’s look at an example using an integer in Listing 4-2.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let x = 5;
     let y = x;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 4-2: Assigning the integer value of variable <code>x</code>
 to <code>y</code></span></p>
 <p>We can probably guess what this is doing: “bind the value <code>5</code> to <code>x</code>; then make
@@ -380,8 +380,7 @@ onto the stack.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let s1 = String::from(&quot;hello&quot;);
     let s2 = s1;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This looks very similar, so we might assume that the way it works would be the
 same: that is, the second line would make a copy of the value in <code>s1</code> and bind
 it to <code>s2</code>. But this isn’t quite what happens.</p>
@@ -428,8 +427,7 @@ created; it won’t work:</p>
     let s2 = s1;
 
     println!(&quot;{}, world!&quot;, s1);
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>You’ll get an error like this because Rust prevents you from using the
 invalidated reference:</p>
 <pre><code class="language-console">$ cargo run
@@ -476,8 +474,7 @@ programming languages, you’ve probably seen them before.</p>
     let s2 = s1.clone();
 
     println!(&quot;s1 = {}, s2 = {}&quot;, s1, s2);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This works just fine and explicitly produces the behavior shown in Figure 4-3,
 where the heap data <em>does</em> get copied.</p>
 <p>When you see a call to <code>clone</code>, you know that some arbitrary code is being
@@ -491,8 +488,7 @@ part of which was shown in Listing 4-2 – works and is valid:</p>
     let y = x;
 
     println!(&quot;x = {}, y = {}&quot;, x, y);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>But this code seems to contradict what we just learned: we don’t have a call to
 <code>clone</code>, but <code>x</code> is still valid and wasn’t moved into <code>y</code>.</p>
 <p>The reason is that types such as integers that have a known size at compile
@@ -554,8 +550,7 @@ fn takes_ownership(some_string: String) { // some_string comes into scope
 
 fn makes_copy(some_integer: i32) { // some_integer comes into scope
     println!(&quot;{}&quot;, some_integer);
-} // Here, some_integer goes out of scope. Nothing special happens.
-</code></pre></pre>
+} // Here, some_integer goes out of scope. Nothing special happens.</code></pre></pre>
 <p><span class="caption">Listing 4-3: Functions with ownership and scope
 annotated</span></p>
 <p>If we tried to use <code>s</code> after the call to <code>takes_ownership</code>, Rust would throw a
@@ -595,8 +590,7 @@ fn takes_and_gives_back(a_string: String) -&gt; String { // a_string comes into
                                                       // scope
 
     a_string  // a_string is returned and moves out to the calling function
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 4-4: Transferring ownership of return
 values</span></p>
 <p>The ownership of a variable follows the same pattern every time: assigning a
@@ -622,8 +616,7 @@ fn calculate_length(s: String) -&gt; (String, usize) {
     let length = s.len(); // len() returns the length of a String
 
     (s, length)
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 4-5: Returning ownership of parameters</span></p>
 <p>But this is too much ceremony and a lot of work for a concept that should be
 common. Luckily for us, Rust has a feature for using a value without
@@ -633,8 +626,7 @@ transferring ownership, called <em>references</em>.</p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
   let x = if true { 1 } else { &quot;hello&quot; };
   assert_eq!(x + 1, 2);
-}
-</code></pre>
+}</code></pre>
 <p>If this program were allowed to execute, <code>x</code> would always be <code>1</code>, and so computing <code>x + 1</code> would always work without issue. That's because the <code>if</code> condition is <code>true</code>. But the compiler ignores the actual value of the condition, and assumes either branch <em>could</em> be executed. Therefore this program is rejected because <code>x</code> cannot be both a number and a string.</p>
 <p>Similarly, the compiler may reject programs that seem acceptable under the rules of ownership. For example, like this program:</p>
 <pre><code class="language-rust ignore does_not_compile">fn move_two(s1: String, s2: String) -&gt; String {
@@ -645,8 +637,7 @@ fn main() {
   let (s1, s2) = (String::from(&quot;a&quot;), String::from(&quot;b&quot;));
   let s3 = move_two(s1, s2);
   println!(&quot;{} {}&quot;, s2, s3);
-}
-</code></pre>
+}</code></pre>
 <p>Even though <code>s2</code> is never used or returned in <code>move_two</code>, the compiler still considers <code>s2</code> to be moved when calling <code>move_two</code>.</p>
 <p>So as you're learning about ownership and Rust, keep in mind that the compiler's safety checks often assume the worst case about your code. Part of learning to write Rust is convincing the compiler that the worst case is still safe!</p>
 <div class="quiz-placeholder" data-quiz-name="ch04-01-ownership-sec3-functions"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The string `s` is moved into `add_suffix` after calling it, so it cannot be used on line 8.\n&quot;,&quot;id&quot;:&quot;94425a4e-043e-47f8-9fba-c5b09fb60aa3&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:8},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn add_suffix(mut s: String) {\n  s.push_str(\&quot; world\&quot;);\n}\n\nfn main() {\n  let s = String::from(\&quot;hello\&quot;);\n  add_suffix(s);\n  println!(\&quot;{s}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;First, the call to `String::from` causes an initial heap allocation. Then the call `s.clone()` does a deep copy that involves a second heap allocation. \nMoving (or shallow-copying) a `String` does not cause a heap allocation.\n&quot;,&quot;id&quot;:&quot;c66f045e-8e45-4c24-bc7e-58ca45d7974e&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;2&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the maximum number of times a heap allocation could occur in the following program? Write your answer using digits, like `1` or `2` etc.\n(You can ignore allocations due to buffering within `println!`.)\n\n```\nfn print(s: String) {\n  println!(\&quot;{s}\&quot;);\n}\n\nfn main() {\n  let s = String::from(\&quot;Hello\&quot;);\n  print(s.clone());\n  print(s);\n}\n```\n&quot;}},{&quot;context&quot;:&quot;Because `s` could be moved inside of the if-statement, it is illegal to use it on line 8.\n&quot;,&quot;id&quot;:&quot;c00e3638-861b-4f9e-a55c-bfb67af79280&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:8},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let s = String::from(\&quot;hello\&quot;);\n  let s2;\n  let b = false;\n  if b {\n    s2 = s;\n  }\n  println!(\&quot;{s}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
@@ -658,9 +649,11 @@ fn main() {
                             <a rel="prev" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch04-02-references-and-borrowing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -670,6 +663,7 @@ fn main() {
                     <a rel="prev" href="ch04-00-understanding-ownership.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch04-02-references-and-borrowing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -677,34 +671,29 @@ fn main() {
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

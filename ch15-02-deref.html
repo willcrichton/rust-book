@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Treating Smart Pointers Like Regular References with the Deref Trait - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -174,8 +182,7 @@ reference to the value:</p>
 
     assert_eq!(5, x);
     assert_eq!(5, *y);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 15-6: Using the dereference operator to follow a
 reference to an <code>i32</code> value</span></p>
 <p>The variable <code>x</code> holds an <code>i32</code> value <code>5</code>. We set <code>y</code> equal to a reference to
@@ -225,8 +232,7 @@ Listing 15-6:</p>
 
     assert_eq!(5, x);
     assert_eq!(5, *y);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 15-7: Using the dereference operator on a
 <code>Box&lt;i32&gt;</code></span></p>
 <p>The main difference between Listing 15-7 and Listing 15-6 is that here we set
@@ -252,8 +258,7 @@ impl&lt;T&gt; MyBox&lt;T&gt; {
     }
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 15-8: Defining a <code>MyBox&lt;T&gt;</code> type</span></p>
 <p>We define a struct named <code>MyBox</code> and declare a generic parameter <code>T</code>, because
 we want our type to hold values of any type. The <code>MyBox</code> type is a tuple struct
@@ -278,8 +283,7 @@ code in Listing 15-9 won’t compile because Rust doesn’t know how to derefere
 
     assert_eq!(5, x);
     assert_eq!(5, *y);
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 15-9: Attempting to use <code>MyBox&lt;T&gt;</code> in the same
 way we used references and <code>Box&lt;T&gt;</code></span></p>
 <p>Here’s the resulting compilation error:</p>
@@ -329,8 +333,7 @@ impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
 </span><span class="boring">
 </span><span class="boring">    assert_eq!(5, x);
 </span><span class="boring">    assert_eq!(5, *y);
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 15-10: Implementing <code>Deref</code> on <code>MyBox&lt;T&gt;</code></span></p>
 <p>The <code>type Target = T;</code> syntax defines an associated type for the <code>Deref</code>
 trait to use. Associated types are a slightly different way of declaring a
@@ -348,8 +351,7 @@ that implements <code>Deref</code> and call the <code>deref</code> method to get
 it knows how to dereference.</p>
 <p>When we entered <code>*y</code> in Listing 15-9, behind the scenes Rust actually ran this
 code:</p>
-<pre><code class="language-rust ignore">*(y.deref())
-</code></pre>
+<pre><code class="language-rust ignore">*(y.deref())</code></pre>
 <p>Rust substitutes the <code>*</code> operator with a call to the <code>deref</code> method and then a
 plain dereference so we don’t have to think about whether or not we need to
 call the <code>deref</code> method. This Rust feature lets us write code that functions
@@ -389,8 +391,7 @@ parameter:</p>
     println!(&quot;Hello, {name}!&quot;);
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 15-11: A <code>hello</code> function that has the parameter
 <code>name</code> of type <code>&amp;str</code></span></p>
 <p>We can call the <code>hello</code> function with a string slice as an argument, such as
@@ -422,8 +423,7 @@ with a reference to a value of type <code>MyBox&lt;String&gt;</code>, as shown i
 </span>fn main() {
     let m = MyBox::new(String::from(&quot;Rust&quot;));
     hello(&amp;m);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 15-12: Calling <code>hello</code> with a reference to a
 <code>MyBox&lt;String&gt;</code> value, which works because of deref coercion</span></p>
 <p>Here we’re calling the <code>hello</code> function with the argument <code>&amp;m</code>, which is a
@@ -462,8 +462,7 @@ of type <code>&amp;MyBox&lt;String&gt;</code>.</p>
 </span>fn main() {
     let m = MyBox::new(String::from(&quot;Rust&quot;));
     hello(&amp;(*m)[..]);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 15-13: The code we would have to write if Rust
 didn’t have deref coercion</span></p>
 <p>The <code>(*m)</code> dereferences the <code>MyBox&lt;String&gt;</code> into a <code>String</code>. Then the <code>&amp;</code> and
@@ -511,9 +510,11 @@ possible.</p>
                             <a rel="prev" href="ch15-01-box.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch15-03-drop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -523,6 +524,7 @@ possible.</p>
                     <a rel="prev" href="ch15-01-box.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch15-03-drop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -530,34 +532,29 @@ possible.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

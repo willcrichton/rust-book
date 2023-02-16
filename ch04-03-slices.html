@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>The Slice Type - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -151,8 +159,7 @@ If the function doesn’t find a space in the string, the whole string must be
 one word, so the entire string should be returned.</p>
 <p>Let’s work through how we’d write the signature of this function without using
 slices, to understand the problem that slices will solve:</p>
-<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?
-</code></pre>
+<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?</code></pre>
 <p>The <code>first_word</code> function has a <code>&amp;String</code> as a parameter. We don’t want
 ownership, so this is fine. But what should we return? We don’t really have a
 way to talk about <em>part</em> of a string. However, we could return the index of the
@@ -170,8 +177,7 @@ end of the word, indicated by a space. Let’s try that, as shown in Listing 4-7
     s.len()
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 4-7: The <code>first_word</code> function that returns a
 byte index value into the <code>String</code> parameter</span></p>
 <p>Because we need to go through the <code>String</code> element by element and check whether
@@ -189,8 +195,7 @@ a value is a space, we’ll convert our <code>String</code> to an array of bytes
 </span><span class="boring">    s.len()
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre>
+</span><span class="boring">fn main() {}</span></code></pre>
 <p>Next, we create an iterator over the array of bytes using the <code>iter</code> method:</p>
 <pre><code class="language-rust ignore"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
 </span><span class="boring">    let bytes = s.as_bytes();
@@ -204,8 +209,7 @@ a value is a space, we’ll convert our <code>String</code> to an array of bytes
 </span><span class="boring">    s.len()
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre>
+</span><span class="boring">fn main() {}</span></code></pre>
 <p>We’ll discuss iterators in more detail in <a href="ch13-02-iterators.html">Chapter 13</a><!-- ignore -->.
 For now, know that <code>iter</code> is a method that returns each element in a collection
 and that <code>enumerate</code> wraps the result of <code>iter</code> and returns each element as
@@ -233,8 +237,7 @@ Otherwise, we return the length of the string by using <code>s.len()</code>:</p>
     s.len()
 <span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre>
+</span><span class="boring">fn main() {}</span></code></pre>
 <p>We now have a way to find out the index of the end of the first word in the
 string, but there’s a problem. We’re returning a <code>usize</code> on its own, but it’s
 only a meaningful number in the context of the <code>&amp;String</code>. In other words,
@@ -263,8 +266,7 @@ uses the <code>first_word</code> function from Listing 4-7.</p>
 
     // word still has the value 5 here, but there's no more string that
     // we could meaningfully use the value 5 with. word is now totally invalid!
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 4-8: Storing the result from calling the
 <code>first_word</code> function and then changing the <code>String</code> contents</span></p>
 <p>This program compiles without any errors and would also do so if we used <code>word</code>
@@ -275,8 +277,7 @@ because the contents of <code>s</code> have changed since we saved <code>5</code
 <p>Having to worry about the index in <code>word</code> getting out of sync with the data in
 <code>s</code> is tedious and error prone! Managing these indices is even more brittle if
 we write a <code>second_word</code> function. Its signature would have to look like this:</p>
-<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; (usize, usize) {
-</code></pre>
+<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; (usize, usize) {</code></pre>
 <p>Now we’re tracking a starting <em>and</em> an ending index, and we have even more
 values that were calculated from data in a particular state but aren’t tied to
 that state at all. We have three unrelated variables floating around that
@@ -291,8 +292,7 @@ need to be kept in sync.</p>
     let hello: &amp;str = &amp;s[0..5];
     let world: &amp;str = &amp;s[6..11];
     let s2: &amp;String = &amp;s; // not a slice, for comparison
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Rather than a reference to the entire <code>String</code> (like <code>s2</code>), <code>hello</code> is a reference to a
 portion of the <code>String</code>, specified in the extra <code>[0..5]</code> bit. We create slices
 using a range within brackets by specifying <code>[starting_index..ending_index]</code>,
@@ -310,19 +310,16 @@ byte at index 6 of <code>s</code> with a length value of 5.</p>
 <!-- END INTERVENTION -->
 <p>With Rust’s <code>..</code> range syntax, if you want to start at index zero, you can drop
 the value before the two periods. In other words, these are equal:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = String::from(&quot;hello&quot;);
 
 let slice = &amp;s[0..2];
 let slice = &amp;s[..2];
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>By the same token, if your slice includes the last byte of the <code>String</code>, you
 can drop the trailing number. That means these are equal:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = String::from(&quot;hello&quot;);
 
@@ -330,12 +327,10 @@ let len = s.len();
 
 let slice = &amp;s[3..len];
 let slice = &amp;s[3..];
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>You can also drop both values to take a slice of the entire string. So these
 are equal:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = String::from(&quot;hello&quot;);
 
@@ -343,8 +338,7 @@ let len = s.len();
 
 let slice = &amp;s[0..len];
 let slice = &amp;s[..];
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <blockquote>
 <p>Note: String slice range indices must occur at valid UTF-8 character
 boundaries. If you attempt to create a string slice in the middle of a
@@ -368,8 +362,7 @@ slice. The type that signifies “string slice” is written as <code>&amp;str</
     &amp;s[..]
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p>We get the index for the end of the word in the same way as we did in Listing
 4-7, by looking for the first occurrence of a space. When we find a space, we
 return a string slice using the start of the string and the index of the space
@@ -378,8 +371,7 @@ as the starting and ending indices.</p>
 underlying data. The value is made up of a reference to the starting point of
 the slice and the number of elements in the slice.</p>
 <p>Returning a slice would also work for a <code>second_word</code> function:</p>
-<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {
-</code></pre>
+<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
 <p>We now have a straightforward API that’s much harder to mess up, because the
 compiler will ensure the references into the <code>String</code> remain valid. Remember
 the bug in the program in Listing 4-8, when we got the index to the end of the
@@ -410,8 +402,7 @@ compile-time error:</p>
     s.clear(); // error!
 
     println!(&quot;the first word is: {}&quot;, word);
-}
-</code></pre>
+}</code></pre>
 <p>Here’s the compiler error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
@@ -441,20 +432,17 @@ but it has also eliminated an entire class of errors at compile time!</p>
 <h4 id="string-literals-are-slices"><a class="header" href="#string-literals-are-slices">String Literals Are Slices</a></h4>
 <p>Recall that we talked about string literals being stored inside the binary. Now
 that we know about slices, we can properly understand string literals:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = &quot;Hello, world!&quot;;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The type of <code>s</code> here is <code>&amp;str</code>: it’s a slice pointing to that specific point of
 the binary. This is also why string literals are immutable; <code>&amp;str</code> is an
 immutable reference.</p>
 <h4 id="string-slices-as-parameters"><a class="header" href="#string-slices-as-parameters">String Slices as Parameters</a></h4>
 <p>Knowing that you can take slices of literals and <code>String</code> values leads us to
 one more improvement on <code>first_word</code>, and that’s its signature:</p>
-<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; &amp;str {
-</code></pre>
+<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; &amp;str {</code></pre>
 <p>A more experienced Rustacean would write the signature shown in Listing 4-9
 instead because it allows us to use the same function on both <code>&amp;String</code> values
 and <code>&amp;str</code> values.</p>
@@ -489,8 +477,7 @@ and <code>&amp;str</code> values.</p>
 </span><span class="boring">    // Because string literals *are* string slices already,
 </span><span class="boring">    // this works too, without the slice syntax!
 </span><span class="boring">    let word = first_word(my_string_literal);
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 4-9: Improving the <code>first_word</code> function by using
 a string slice for the type of the <code>s</code> parameter</span></p>
 <p>If we have a string slice, we can pass that directly. If we have a <code>String</code>, we
@@ -532,29 +519,24 @@ API more general and useful without losing any functionality:</p>
     // Because string literals *are* string slices already,
     // this works too, without the slice syntax!
     let word = first_word(my_string_literal);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <h3 id="other-slices"><a class="header" href="#other-slices">Other Slices</a></h3>
 <p>String slices, as you might imagine, are specific to strings. But there’s a
 more general slice type, too. Consider this array:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let a = [1, 2, 3, 4, 5];
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Just as we might want to refer to a part of a string, we might want to refer
 to part of an array. We’d do so like this:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let a = [1, 2, 3, 4, 5];
 
 let slice = &amp;a[1..3];
 
 assert_eq!(slice, &amp;[2, 3]);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This slice has the type <code>&amp;[i32]</code>. It works the same way as string slices do, by
 storing a reference to the first element and a length. You’ll use this kind of
 slice for all sorts of other collections. We’ll discuss these collections in
@@ -577,9 +559,11 @@ Chapter 5 and look at grouping pieces of data together in a <code>struct</code>.
                             <a rel="prev" href="ch04-02-references-and-borrowing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch05-00-structs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -589,6 +573,7 @@ Chapter 5 and look at grouping pieces of data together in a <code>struct</code>.
                     <a rel="prev" href="ch04-02-references-and-borrowing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch05-00-structs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -596,34 +581,29 @@ Chapter 5 and look at grouping pieces of data together in a <code>struct</code>.
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

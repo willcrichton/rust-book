@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Advanced Traits - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -166,8 +174,7 @@ iterating over. The definition of the <code>Iterator</code> trait is as shown in
     type Item;
 
     fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;;
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-12: The definition of the <code>Iterator</code> trait
 that has an associated type <code>Item</code></span></p>
 <p>The type <code>Item</code> is a placeholder, and the <code>next</code> method’s definition shows that
@@ -202,14 +209,12 @@ the <code>Item</code> type is <code>u32</code>:</p>
 </span><span class="boring">            None
 </span><span class="boring">        }
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>This syntax seems comparable to that of generics. So why not just define the
 <code>Iterator</code> trait with generics, as shown in Listing 19-13?</p>
 <pre><code class="language-rust noplayground">pub trait Iterator&lt;T&gt; {
     fn next(&amp;mut self) -&gt; Option&lt;T&gt;;
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-13: A hypothetical definition of the
 <code>Iterator</code> trait using generics</span></p>
 <p>The difference is that when using generics, as in Listing 19-13, we must
@@ -269,8 +274,7 @@ fn main() {
         Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
         Point { x: 3, y: 3 }
     );
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 19-14: Implementing the <code>Add</code> trait to overload
 the <code>+</code> operator for <code>Point</code> instances</span></p>
 <p>The <code>add</code> method adds the <code>x</code> values of two <code>Point</code> instances and the <code>y</code>
@@ -279,16 +283,14 @@ associated type named <code>Output</code> that determines the type returned from
 method.</p>
 <p>The default generic type in this code is within the <code>Add</code> trait. Here is its
 definition:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>trait Add&lt;Rhs=Self&gt; {
     type Output;
 
     fn add(self, rhs: Rhs) -&gt; Self::Output;
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This code should look generally familiar: a trait with one method and an
 associated type. The new part is <code>Rhs=Self</code>: this syntax is called <em>default
 type parameters</em>. The <code>Rhs</code> generic type parameter (short for “right hand
@@ -319,8 +321,7 @@ impl Add&lt;Meters&gt; for Millimeters {
     fn add(self, other: Meters) -&gt; Millimeters {
         Millimeters(self.0 + (other.0 * 1000))
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-15: Implementing the <code>Add</code> trait on
 <code>Millimeters</code> to add <code>Millimeters</code> to <code>Meters</code></span></p>
 <p>To add <code>Millimeters</code> and <code>Meters</code>, we specify <code>impl Add&lt;Meters&gt;</code> to set the
@@ -379,8 +380,7 @@ impl Human {
     }
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 19-16: Two traits are defined to have a <code>fly</code>
 method and are implemented on the <code>Human</code> type, and a <code>fly</code> method is
 implemented on <code>Human</code> directly</span></p>
@@ -418,8 +418,7 @@ the method that is directly implemented on the type, as shown in Listing 19-17.<
 </span>fn main() {
     let person = Human;
     person.fly();
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 19-17: Calling <code>fly</code> on an instance of
 <code>Human</code></span></p>
 <p>Running this code will print <code>*waving arms furiously*</code>, showing that Rust
@@ -461,8 +460,7 @@ Listing 19-18 demonstrates this syntax.</p>
     Pilot::fly(&amp;person);
     Wizard::fly(&amp;person);
     person.fly();
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 19-18: Specifying which trait’s <code>fly</code> method we
 want to call</span></p>
 <p>Specifying the trait name before the method name clarifies to Rust which
@@ -511,8 +509,7 @@ impl Animal for Dog {
 
 fn main() {
     println!(&quot;A baby dog is called a {}&quot;, Dog::baby_name());
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 19-19: A trait with an associated function and a
 type with an associated function of the same name that also implements the
 trait</span></p>
@@ -555,8 +552,7 @@ Listing 19-20, we’ll get a compilation error.</p>
 </span><span class="boring">
 </span>fn main() {
     println!(&quot;A baby dog is called a {}&quot;, Animal::baby_name());
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-20: Attempting to call the <code>baby_name</code>
 function from the <code>Animal</code> trait, but Rust doesn’t know which implementation to
 use</span></p>
@@ -601,8 +597,7 @@ use fully qualified syntax.</p>
 </span><span class="boring">
 </span>fn main() {
     println!(&quot;A baby dog is called a {}&quot;, &lt;Dog as Animal&gt;::baby_name());
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 19-21: Using fully qualified syntax to specify
 that we want to call the <code>baby_name</code> function from the <code>Animal</code> trait as
 implemented on <code>Dog</code></span></p>
@@ -617,8 +612,7 @@ implemented on <code>Dog</code> by saying that we want to treat the <code>Dog</c
 A baby dog is called a puppy
 </code></pre>
 <p>In general, fully qualified syntax is defined as follows:</p>
-<pre><code class="language-rust ignore">&lt;Type as Trait&gt;::function(receiver_if_method, next_arg, ...);
-</code></pre>
+<pre><code class="language-rust ignore">&lt;Type as Trait&gt;::function(receiver_if_method, next_arg, ...);</code></pre>
 <p>For associated functions that aren’t methods, there would not be a <code>receiver</code>:
 there would only be the list of other arguments. You could use fully qualified
 syntax everywhere that you call functions or methods. However, you’re allowed
@@ -666,8 +660,7 @@ trait OutlinePrint: fmt::Display {
     }
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 19-22: Implementing the <code>OutlinePrint</code> trait that
 requires the functionality from <code>Display</code></span></p>
 <p>Because we’ve specified that <code>OutlinePrint</code> requires the <code>Display</code> trait, we
@@ -703,8 +696,7 @@ impl OutlinePrint for Point {}
 </span><span class="boring">fn main() {
 </span><span class="boring">    let p = Point { x: 1, y: 3 };
 </span><span class="boring">    p.outline_print();
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>We get an error saying that <code>Display</code> is required but not implemented:</p>
 <pre><code class="language-console">$ cargo run
    Compiling traits-example v0.1.0 (file:///projects/traits-example)
@@ -758,8 +750,7 @@ impl fmt::Display for Point {
 </span><span class="boring">fn main() {
 </span><span class="boring">    let p = Point { x: 1, y: 3 };
 </span><span class="boring">    p.outline_print();
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>Then implementing the <code>OutlinePrint</code> trait on <code>Point</code> will compile
 successfully, and we can call <code>outline_print</code> on a <code>Point</code> instance to display
 it within an outline of asterisks.</p>
@@ -796,8 +787,7 @@ impl fmt::Display for Wrapper {
 fn main() {
     let w = Wrapper(vec![String::from(&quot;hello&quot;), String::from(&quot;world&quot;)]);
     println!(&quot;w = {}&quot;, w);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 19-23: Creating a <code>Wrapper</code> type around
 <code>Vec&lt;String&gt;</code> to implement <code>Display</code></span></p>
 <p>The implementation of <code>Display</code> uses <code>self.0</code> to access the inner <code>Vec&lt;T&gt;</code>,
@@ -825,9 +815,11 @@ switch focus and look at some advanced ways to interact with Rust’s type syste
                             <a rel="prev" href="ch19-01-unsafe-rust.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch19-04-advanced-types.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -837,6 +829,7 @@ switch focus and look at some advanced ways to interact with Rust’s type syste
                     <a rel="prev" href="ch19-01-unsafe-rust.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch19-04-advanced-types.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -844,34 +837,29 @@ switch focus and look at some advanced ways to interact with Rust’s type syste
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

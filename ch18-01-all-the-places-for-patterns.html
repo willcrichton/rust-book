@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>All the Places Patterns Can Be Used - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -161,8 +169,7 @@ expression to run if the value matches that arm’s pattern, like this:</p>
 <pre><code class="language-rust ignore">match x {
     None =&gt; None,
     Some(i) =&gt; Some(i + 1),
-}
-</code></pre>
+}</code></pre>
 <p>The patterns in this <code>match</code> expression are the <code>None</code> and <code>Some(i)</code> on the
 left of each arrow.</p>
 <p>One requirement for <code>match</code> expressions is that they need to be <em>exhaustive</em> in
@@ -207,8 +214,7 @@ input.</p>
     } else {
         println!(&quot;Using blue as the background color&quot;);
     }
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 18-1: Mixing <code>if let</code>, <code>else if</code>, <code>else if let</code>,
 and <code>else</code></span></p>
 <p>If the user specifies a favorite color, that color is used as the background.
@@ -245,8 +251,7 @@ values in the vector in the opposite order in which they were pushed.</p>
     while let Some(top) = stack.pop() {
         println!(&quot;{}&quot;, top);
     }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-2: Using a <code>while let</code> loop to print values
 for as long as <code>stack.pop()</code> returns <code>Some</code></span></p>
 <p>This example prints 3, 2, and then 1. The <code>pop</code> method takes the last element
@@ -265,8 +270,7 @@ apart, a tuple as part of the <code>for</code> loop.</p>
     for (index, value) in v.iter().enumerate() {
         println!(&quot;{} is at index {}&quot;, value, index);
     }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-3: Using a pattern in a <code>for</code> loop to
 destructure a tuple</span></p>
 <p>The code in Listing 18-3 will print the following:</p>
@@ -288,12 +292,10 @@ output.</p>
 <code>match</code> and <code>if let</code>, but in fact, we’ve used patterns in other places as well,
 including in <code>let</code> statements. For example, consider this straightforward
 variable assignment with <code>let</code>:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let x = 5;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Every time you've used a <code>let</code> statement like this you've been using patterns,
 although you might not have realized it! More formally, a <code>let</code> statement looks
 like this:</p>
@@ -309,8 +311,7 @@ effectively means “bind everything to the variable <code>x</code>, whatever th
 18-4, which uses a pattern with <code>let</code> to destructure a tuple.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let (x, y, z) = (1, 2, 3);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-4: Using a pattern to destructure a tuple and
 create three variables at once</span></p>
 <p>Here, we match a tuple against a pattern. Rust compares the value <code>(1, 2, 3)</code>
@@ -323,8 +324,7 @@ example, Listing 18-5 shows an attempt to destructure a tuple with three
 elements into two variables, which won’t work.</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let (x, y) = (1, 2, 3);
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 18-5: Incorrectly constructing a pattern whose
 variables don’t match the number of elements in the tuple</span></p>
 <p>Attempting to compile this code results in this type error:</p>
@@ -358,8 +358,7 @@ declares a function named <code>foo</code> that takes one parameter named <code>
     // code goes here
 }
 <span class="boring">
-</span><span class="boring">fn main() {}
-</span></code></pre></pre>
+</span><span class="boring">fn main() {}</span></code></pre></pre>
 <p><span class="caption">Listing 18-6: A function signature uses patterns in the
 parameters</span></p>
 <p>The <code>x</code> part is a pattern! As we did with <code>let</code>, we could match a tuple in a
@@ -373,8 +372,7 @@ as we pass it to a function.</p>
 fn main() {
     let point = (3, 5);
     print_coordinates(&amp;point);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 18-7: A function with parameters that destructure
 a tuple</span></p>
 <p>This code prints <code>Current location: (3, 5)</code>. The values <code>&amp;(3, 5)</code> match the
@@ -395,9 +393,11 @@ these two concepts next.</p>
                             <a rel="prev" href="ch18-00-patterns.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch18-02-refutability.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -407,6 +407,7 @@ these two concepts next.</p>
                     <a rel="prev" href="ch18-00-patterns.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch18-02-refutability.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -414,34 +415,29 @@ these two concepts next.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

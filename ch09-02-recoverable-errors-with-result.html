@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Recoverable Errors with Result - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -150,15 +158,13 @@ file instead of terminating the process.</p>
 <p>Recall from <a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-the-result-type">“Handling Potential Failure with the <code>Result</code>
 Type”</a><!-- ignore --> in Chapter 2 that the <code>Result</code> enum is
 defined as having two variants, <code>Ok</code> and <code>Err</code>, as follows:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Result&lt;T, E&gt; {
     Ok(T),
     Err(E),
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The <code>T</code> and <code>E</code> are generic type parameters: we’ll discuss generics in more
 detail in Chapter 10. What you need to know right now is that <code>T</code> represents
 the type of the value that will be returned in a success case within the <code>Ok</code>
@@ -174,8 +180,7 @@ fail. In Listing 9-3 we try to open a file.</p>
 
 fn main() {
     let greeting_file_result = File::open(&quot;hello.txt&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 9-3: Opening a file</span></p>
 <p>The return type of <code>File::open</code> is a <code>Result&lt;T, E&gt;</code>. The generic parameter <code>T</code>
 has been filled in by the implementation of <code>File::open</code> with the type of the
@@ -206,8 +211,7 @@ fn main() {
         Ok(file) =&gt; file,
         Err(error) =&gt; panic!(&quot;Problem opening the file: {:?}&quot;, error),
     };
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 9-4: Using a <code>match</code> expression to handle the
 <code>Result</code> variants that might be returned</span></p>
 <p>Note that, like the <code>Option</code> enum, the <code>Result</code> enum and its variants have been
@@ -258,8 +262,7 @@ fn main() {
             }
         },
     };
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 9-5: Handling different kinds of errors in
 different ways</span></p>
 <p>The type of the value that <code>File::open</code> returns inside the <code>Err</code> variant is
@@ -299,8 +302,7 @@ fn main() {
             panic!(&quot;Problem opening the file: {:?}&quot;, error);
         }
     });
-}
-</code></pre>
+}</code></pre>
 <p>Although this code has the same behavior as Listing 9-5, it doesn’t contain
 any <code>match</code> expressions and is cleaner to read. Come back to this example
 after you’ve read Chapter 13, and look up the <code>unwrap_or_else</code> method in the
@@ -321,8 +323,7 @@ call the <code>panic!</code> macro for us. Here is an example of <code>unwrap</c
 
 fn main() {
     let greeting_file = File::open(&quot;hello.txt&quot;).unwrap();
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>If we run this code without a <em>hello.txt</em> file, we’ll see an error message from
 the <code>panic!</code> call that the <code>unwrap</code> method makes:</p>
 <!-- manual-regeneration
@@ -344,8 +345,7 @@ your intent and make tracking down the source of a panic easier. The syntax of
 fn main() {
     let greeting_file = File::open(&quot;hello.txt&quot;)
         .expect(&quot;hello.txt should be included in this project&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>We use <code>expect</code> in the same way as <code>unwrap</code>: to return the file handle or call
 the <code>panic!</code> macro. The error message used by <code>expect</code> in its call to <code>panic!</code>
 will be the parameter that we pass to <code>expect</code>, rather than the default
@@ -377,8 +377,7 @@ to the code that called the function.</p>
 <!-- Deliberately not using rustdoc_include here; the `main` function in the
 file panics. We do want to include it for reader experimentation purposes, but
 don't want to include it for rustdoc testing purposes. -->
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::fs::File;
 use std::io::{self, Read};
@@ -398,8 +397,7 @@ fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
         Err(e) =&gt; Err(e),
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 9-6: A function that returns errors to the
 calling code using <code>match</code></span></p>
 <p>This function can be written in a much shorter way, but we’re going to start by
@@ -455,8 +453,7 @@ same functionality as in Listing 9-6, but this implementation uses the
 <!-- Deliberately not using rustdoc_include here; the `main` function in the
 file panics. We do want to include it for reader experimentation purposes, but
 don't want to include it for rustdoc testing purposes. -->
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::fs::File;
 use std::io;
@@ -468,8 +465,7 @@ fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
     username_file.read_to_string(&amp;mut username)?;
     Ok(username)
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 9-7: A function that returns errors to the
 calling code using the <code>?</code> operator</span></p>
 <p>The <code>?</code> placed after a <code>Result</code> value is defined to work in almost the same way
@@ -506,8 +502,7 @@ method calls immediately after the <code>?</code>, as shown in Listing 9-8.</p>
 <!-- Deliberately not using rustdoc_include here; the `main` function in the
 file panics. We do want to include it for reader experimentation purposes, but
 don't want to include it for rustdoc testing purposes. -->
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::fs::File;
 use std::io;
@@ -520,8 +515,7 @@ fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
 
     Ok(username)
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 9-8: Chaining method calls after the <code>?</code>
 operator</span></p>
 <p>We’ve moved the creation of the new <code>String</code> in <code>username</code> to the beginning of
@@ -537,8 +531,7 @@ this is just a different, more ergonomic way to write it.</p>
 <!-- Deliberately not using rustdoc_include here; the `main` function in the
 file panics. We do want to include it for reader experimentation purposes, but
 don't want to include it for rustdoc testing purposes. -->
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::fs;
 use std::io;
@@ -546,8 +539,7 @@ use std::io;
 fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
     fs::read_to_string(&quot;hello.txt&quot;)
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 9-9: Using <code>fs::read_to_string</code> instead of
 opening and then reading the file</span></p>
 <p>Reading a file into a string is a fairly common operation, so the standard
@@ -572,8 +564,7 @@ we use <code>?</code> on:</p>
 
 fn main() {
     let greeting_file = File::open(&quot;hello.txt&quot;)?;
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 9-10: Attempting to use the <code>?</code> in the <code>main</code>
 function that returns <code>()</code> won’t compile</span></p>
 <p>This code opens a file, which might fail. The <code>?</code> operator follows the <code>Result</code>
@@ -624,8 +615,7 @@ given text:</p>
 </span><span class="boring">
 </span><span class="boring">    assert_eq!(last_char_of_first_line(&quot;&quot;), None);
 </span><span class="boring">    assert_eq!(last_char_of_first_line(&quot;\nhi&quot;), None);
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 9-11: Using the <code>?</code> operator on an <code>Option&lt;T&gt;</code>
 value</span></p>
 <p>This function returns <code>Option&lt;char&gt;</code> because it’s possible that there is a
@@ -668,8 +658,7 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     let greeting_file = File::open(&quot;hello.txt&quot;)?;
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 9-12: Changing <code>main</code> to return <code>Result&lt;(), E&gt;</code>
 allows the use of the <code>?</code> operator on <code>Result</code> values</span></p>
 <p>The <code>Box&lt;dyn Error&gt;</code> type is a <em>trait object</em>, which we’ll talk about in the
@@ -695,7 +684,7 @@ your own types.</p>
 <p>Now that we’ve discussed the details of calling <code>panic!</code> or returning <code>Result</code>,
 let’s return to the topic of how to decide which is appropriate to use in which
 cases.</p>
-<div class="quiz-placeholder" data-quiz-name="ch09-02-recoverable-errors-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;If `e` is a `Result`, then `e?` extracts the value inside the `Ok` if possible, otherwise returning the `Err` out of the current function.\n&quot;,&quot;id&quot;:&quot;91fb1ec6-fb11-4b6f-88df-dbc921a4108f&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;```\nmatch e {\n  Ok(x) =&gt; x,\n  Err(err) =&gt; { return Err(err); }\n}\n```\n  &quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;```\nif let Err(err) = e {\n  return Err(err);\n}\n```\n  &quot;,&quot;```\ne.unwrap()\n```\n  &quot;,&quot;```\nmatch e {\n  Ok(x) =&gt; x,\n  Err(err) =&gt; panic!(\&quot;{err}\&quot;)\n}\n```\n  &quot;],&quot;prompt&quot;:&quot;Given an arbitrary expression `e` of type `Result&lt;T, E&gt;`, which code snippet represents how `e?` is translated?&quot;}},{&quot;context&quot;:&quot;`File::open` returns a `Result`, but the return type of `read_username_from_file` expects an `Option`. Therefore it is invalid to use the `?`\noperator until the `Result` has been converted to an `Option` (e.g. with the `Result::ok` method).\n&quot;,&quot;id&quot;:&quot;0ea46358-f560-4d3e-85d2-a1806eb7c797&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;// assume hello.txt has the contents \&quot;will\&quot;\n\nfn read_username_from_file() -&gt; Option&lt;String&gt; {\n  let mut username_file = File::open(\&quot;hello.txt\&quot;)?;\n  let mut username = String::new();\n  username_file.read_to_string(&amp;mut username)?;\n  Some(username)\n}\n\nfn main() {\n  println!(\&quot;{}\&quot;, read_username_from_file().unwrap()); \n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
+<div class="quiz-placeholder" data-quiz-name="ch09-02-recoverable-errors-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;If `e` is a `Result`, then `e?` extracts the value inside the `Ok` if possible, otherwise returning the `Err` out of the current function.\n&quot;,&quot;id&quot;:&quot;91fb1ec6-fb11-4b6f-88df-dbc921a4108f&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;```\nmatch e {\n  Ok(x) =&gt; x,\n  Err(err) =&gt; { return Err(err); }\n}\n```\n  &quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;```\nif let Err(err) = e {\n  return Err(err);\n}\n```\n  &quot;,&quot;```\ne.unwrap()\n```\n  &quot;,&quot;```\nmatch e {\n  Ok(x) =&gt; x,\n  Err(err) =&gt; panic!(\&quot;{err}\&quot;)\n}\n```\n  &quot;],&quot;prompt&quot;:&quot;Given an arbitrary expression `e` of type `Result&lt;T, E&gt;`, which code snippet best represents how `e?` is translated?&quot;}},{&quot;context&quot;:&quot;`File::open` returns a `Result`, but the return type of `read_username_from_file` expects an `Option`. Therefore it is invalid to use the `?`\noperator until the `Result` has been converted to an `Option` (e.g. with the `Result::ok` method).\n&quot;,&quot;id&quot;:&quot;0ea46358-f560-4d3e-85d2-a1806eb7c797&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;// assume hello.txt has the contents \&quot;will\&quot;\n\nfn read_username_from_file() -&gt; Option&lt;String&gt; {\n  let mut username_file = File::open(\&quot;hello.txt\&quot;)?;\n  let mut username = String::new();\n  username_file.read_to_string(&amp;mut username)?;\n  Some(username)\n}\n\nfn main() {\n  println!(\&quot;{}\&quot;, read_username_from_file().unwrap()); \n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <script type="text/javascript" src="quiz/lib.js"></script><link rel="stylesheet" type="text/css" href="quiz/lib.css">
                     </main>
 
@@ -704,9 +693,11 @@ cases.</p>
                             <a rel="prev" href="ch09-01-unrecoverable-errors-with-panic.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch09-03-to-panic-or-not-to-panic.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -716,6 +707,7 @@ cases.</p>
                     <a rel="prev" href="ch09-01-unrecoverable-errors-with-panic.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch09-03-to-panic-or-not-to-panic.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -723,34 +715,29 @@ cases.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

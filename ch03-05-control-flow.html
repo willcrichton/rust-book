@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Control Flow - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -161,8 +169,7 @@ the <code>if</code> expression. In the <em>src/main.rs</em> file, input the foll
     } else {
         println!(&quot;condition was false&quot;);
     }
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>All <code>if</code> expressions start with the keyword <code>if</code>, followed by a condition. In
 this case, the condition checks whether or not the variable <code>number</code> has a
 value less than 5. We place the block of code to execute if the condition is true
@@ -193,8 +200,7 @@ condition was true
 </span><span class="boring">    } else {
 </span><span class="boring">        println!(&quot;condition was false&quot;);
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>Run the program again, and look at the output:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -212,8 +218,7 @@ following code:</p>
     if number {
         println!(&quot;number was three&quot;);
     }
-}
-</code></pre>
+}</code></pre>
 <p>The <code>if</code> condition evaluates to a value of <code>3</code> this time, and Rust throws an
 error:</p>
 <pre><code class="language-console">$ cargo run
@@ -240,8 +245,7 @@ expression to the following:</p>
     if number != 0 {
         println!(&quot;number was something other than zero&quot;);
     }
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>Running this code will print <code>number was something other than zero</code>.</p>
 <h4 id="handling-multiple-conditions-with-else-if"><a class="header" href="#handling-multiple-conditions-with-else-if">Handling Multiple Conditions with <code>else if</code></a></h4>
 <p>You can use multiple conditions by combining <code>if</code> and <code>else</code> in an <code>else if</code>
@@ -259,8 +263,7 @@ expression. For example:</p>
     } else {
         println!(&quot;number is not divisible by 4, 3, or 2&quot;);
     }
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>This program has four possible paths it can take. After running it, you should
 see the following output:</p>
 <pre><code class="language-console">$ cargo run
@@ -287,8 +290,7 @@ statement to assign the outcome to a variable, as in Listing 3-2.</p>
     let number = if condition { 5 } else { 6 };
 
     println!(&quot;The value of number is: {number}&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 3-2: Assigning the result of an <code>if</code> expression
 to a variable</span></p>
 <p>The <code>number</code> variable will be bound to a value based on the outcome of the <code>if</code>
@@ -313,8 +315,7 @@ example, we’ll get an error:</p>
     let number = if condition { 5 } else { &quot;six&quot; };
 
     println!(&quot;The value of number is: {number}&quot;);
-}
-</code></pre>
+}</code></pre>
 <p>When we try to compile this code, we’ll get an error. The <code>if</code> and <code>else</code> arms
 have value types that are incompatible, and Rust indicates exactly where to
 find the problem in the program:</p>
@@ -356,8 +357,7 @@ like this:</p>
     loop {
         println!(&quot;again!&quot;);
     }
-}
-</code></pre>
+}</code></pre>
 <p>When we run this program, we’ll see <code>again!</code> printed over and over continuously
 until we stop the program manually. Most terminals support the keyboard shortcut
 <span class="keystroke">ctrl-c</span> to interrupt a program that is stuck in
@@ -409,8 +409,7 @@ use it, as shown here:</p>
     };
 
     println!(&quot;The result is {result}&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>Before the loop, we declare a variable named <code>counter</code> and initialize it to
 <code>0</code>. Then we declare a variable named <code>result</code> to hold the value returned from
 the loop. On every iteration of the loop, we add <code>1</code> to the <code>counter</code> variable,
@@ -444,8 +443,7 @@ single quote. Here’s an example with two nested loops:</p>
         count += 1;
     }
     println!(&quot;End count = {count}&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>The outer loop has the label <code>'counting_up</code>, and it will count up from 0 to 2.
 The inner loop without a label counts down from 10 to 9. The first <code>break</code> that
 doesn’t specify a label will exit the inner loop only. The <code>break 'counting_up;</code> statement will exit the outer loop. This code prints:</p>
@@ -483,8 +481,7 @@ time, and then, after the loop, print a message and exit.</p>
     }
 
     println!(&quot;LIFTOFF!!!&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 3-3: Using a <code>while</code> loop to run code while a
 condition holds true</span></p>
 <p>This construct eliminates a lot of nesting that would be necessary if you used
@@ -504,8 +501,7 @@ element in the array <code>a</code>.</p>
 
         index += 1;
     }
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 3-4: Looping through each element of a collection
 using a <code>while</code> loop</span></p>
 <p>Here, the code counts up through the elements in the array. It starts at index
@@ -540,8 +536,7 @@ for each item in a collection. A <code>for</code> loop looks like the code in Li
     for element in a {
         println!(&quot;the value is: {element}&quot;);
     }
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p><span class="caption">Listing 3-5: Looping through each element of a collection
 using a <code>for</code> loop</span></p>
 <p>When we run this code, we’ll see the same output as in Listing 3-4. More
@@ -566,10 +561,9 @@ we’ve not yet talked about, <code>rev</code>, to reverse the range:</p>
         println!(&quot;{number}!&quot;);
     }
     println!(&quot;LIFTOFF!!!&quot;);
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>This code is a bit nicer, isn’t it?</p>
-<div class="quiz-placeholder" data-quiz-name="ch03-05-control-flow-sec2-loops"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;It will in fact terminate after the first iteration of the loop.\n&quot;,&quot;id&quot;:&quot;c5b27431-c318-4243-9621-cadacb737f5a&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;True&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;False&quot;],&quot;prompt&quot;:&quot;True/false: this code will terminate and not loop forever or crash.\n\n```\nfn main() {\n    let mut x = 0;\n    'a: loop {\n        x += 1;\n        'b: loop {\n            if x &gt; 10 {\n                continue 'a;\n            } else {\n                break 'b;\n            }      \n        }\n        break;       \n    }\n}\n```\n&quot;}},{&quot;context&quot;:&quot;The array `a` has the element `5` repeated 10 times, therefore its sum is `50`.\n&quot;,&quot;id&quot;:&quot;46a52842-d4eb-4dc9-8885-f31a2f2f59b4&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;50&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let a = [5; 10];\n    let mut sum = 0;\n    for x in a {\n        sum += x;\n    }\n    println!(\&quot;{sum}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
+<div class="quiz-placeholder" data-quiz-name="ch03-05-control-flow-sec2-loops"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;It will in fact terminate after the first iteration of the loop.\n&quot;,&quot;id&quot;:&quot;c5b27431-c318-4243-9621-cadacb737f5a&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;True&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;False&quot;],&quot;prompt&quot;:&quot;True/false: this code will terminate and not loop forever or crash.\n\n```\nfn main() {\n    let mut x = 0;\n    'a: loop {\n        x += 1;\n        'b: loop {\n            if x &gt; 10 {\n                continue 'a;\n            } else {\n                break 'b;\n            }      \n        }\n        break;       \n    }\n}\n```\n&quot;}},{&quot;context&quot;:&quot;The array `a` has the element `5` repeated 10 times, therefore its sum is `50`. The answer is not `15` --- note that the syntax `[5; 10]` is different from `[5, 10]`.\n&quot;,&quot;id&quot;:&quot;46a52842-d4eb-4dc9-8885-f31a2f2f59b4&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;50&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let a = [5; 10];\n    let mut sum = 0;\n    for x in a {\n        sum += x;\n    }\n    println!(\&quot;{sum}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>You made it! That was a sizable chapter: you learned about variables, scalar
 and compound data types, functions, comments, <code>if</code> expressions, and loops!
@@ -591,9 +585,11 @@ commonly exist in other programming languages: ownership.</p>
                             <a rel="prev" href="ch03-04-comments.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -603,6 +599,7 @@ commonly exist in other programming languages: ownership.</p>
                     <a rel="prev" href="ch03-04-comments.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch04-00-understanding-ownership.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -610,34 +607,29 @@ commonly exist in other programming languages: ownership.</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

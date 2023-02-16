@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>How to Write Tests - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -193,8 +201,7 @@ mod tests {
         let result = 2 + 2;
         assert_eq!(result, 4);
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-1: The test module and function generated
 automatically by <code>cargo new</code></span></p>
 <p>For now, let’s ignore the top two lines and focus on the function. Note the
@@ -258,8 +265,7 @@ mod tests {
     fn exploration() {
         assert_eq!(2 + 2, 4);
     }
-}
-</code></pre>
+}</code></pre>
 <p>Then run <code>cargo test</code> again. The output now shows <code>exploration</code> instead of
 <code>it_works</code>:</p>
 <pre><code class="language-console">$ cargo test
@@ -297,8 +303,7 @@ mod tests {
     fn another() {
         panic!(&quot;Make this test fail&quot;);
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-3: Adding a second test that will fail because
 we call the <code>panic!</code> macro</span></p>
 <p>Run the tests again using <code>cargo test</code>. The output should look like Listing
@@ -363,8 +368,7 @@ impl Rectangle {
     fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
         self.width &gt; other.width &amp;&amp; self.height &gt; other.height
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-5: Using the <code>Rectangle</code> struct and its
 <code>can_hold</code> method from Chapter 5</span></p>
 <p>The <code>can_hold</code> method returns a Boolean, which means it’s a perfect use case
@@ -402,8 +406,7 @@ mod tests {
 
         assert!(larger.can_hold(&amp;smaller));
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-6: A test for <code>can_hold</code> that checks whether a
 larger rectangle can indeed hold a smaller rectangle</span></p>
 <p>Note that we’ve added a new line inside the <code>tests</code> module: <code>use super::*;</code>.
@@ -482,8 +485,7 @@ mod tests {
 
         assert!(!smaller.can_hold(&amp;larger));
     }
-}
-</code></pre>
+}</code></pre>
 <p>Because the correct result of the <code>can_hold</code> function in this case is <code>false</code>,
 we need to negate that result before we pass it to the <code>assert!</code> macro. As a
 result, our test will pass if <code>can_hold</code> returns <code>false</code>:</p>
@@ -553,8 +555,7 @@ impl Rectangle {
 </span><span class="boring">
 </span><span class="boring">        assert!(!smaller.can_hold(&amp;larger));
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>Running the tests now produces the following:</p>
 <pre><code class="language-console">$ cargo test
    Compiling rectangle v0.1.0 (file:///projects/rectangle)
@@ -608,8 +609,7 @@ mod tests {
     fn it_adds_two() {
         assert_eq!(4, add_two(2));
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-7: Testing the function <code>add_two</code> using the
 <code>assert_eq!</code> macro</span></p>
 <p>Let’s check that it passes!</p>
@@ -646,8 +646,7 @@ fails. Change the implementation of the <code>add_two</code> function to instead
 </span><span class="boring">    fn it_adds_two() {
 </span><span class="boring">        assert_eq!(4, add_two(2));
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>Run the tests again:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -732,8 +731,7 @@ mod tests {
         let result = greeting(&quot;Carol&quot;);
         assert!(result.contains(&quot;Carol&quot;));
     }
-}
-</code></pre>
+}</code></pre>
 <p>The requirements for this program haven’t been agreed upon yet, and we’re
 pretty sure the <code>Hello</code> text at the beginning of the greeting will change. We
 decided we don’t want to have to update the test when the requirements change,
@@ -755,8 +753,7 @@ input parameter.</p>
 </span><span class="boring">        let result = greeting(&quot;Carol&quot;);
 </span><span class="boring">        assert!(result.contains(&quot;Carol&quot;));
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>Running this test produces the following:</p>
 <pre><code class="language-console">$ cargo test
    Compiling greeter v0.1.0 (file:///projects/greeter)
@@ -802,8 +799,7 @@ string with a placeholder filled in with the actual value we got from the
             result
         );
     }
-<span class="boring">}
-</span></code></pre>
+<span class="boring">}</span></code></pre>
 <p>Now when we run the test, we’ll get a more informative error message:</p>
 <pre><code class="language-console">$ cargo test
    Compiling greeter v0.1.0 (file:///projects/greeter)
@@ -865,8 +861,7 @@ mod tests {
     fn greater_than_100() {
         Guess::new(200);
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-8: Testing that a condition will cause a
 <code>panic!</code></span></p>
 <p>We place the <code>#[should_panic]</code> attribute after the <code>#[test]</code> attribute and
@@ -915,8 +910,7 @@ impl Guess {
 </span><span class="boring">    fn greater_than_100() {
 </span><span class="boring">        Guess::new(200);
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>When we run the test in Listing 11-8, it will fail:</p>
 <pre><code class="language-console">$ cargo test
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
@@ -983,8 +977,7 @@ mod tests {
     fn greater_than_100() {
         Guess::new(200);
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 11-9: Testing for a <code>panic!</code> with a panic message
 containing a specified substring</span></p>
 <p>This test will pass because the value we put in the <code>should_panic</code> attribute’s
@@ -1028,8 +1021,7 @@ fails, let’s again introduce a bug into our code by swapping the bodies of the
 </span><span class="boring">    fn greater_than_100() {
 </span><span class="boring">        Guess::new(200);
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>This time when we run the <code>should_panic</code> test, it will fail:</p>
 <pre><code class="language-console">$ cargo test
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
@@ -1072,8 +1064,7 @@ mod tests {
             Err(String::from(&quot;two plus two does not equal four&quot;))
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p>The <code>it_works</code> function now has the <code>Result&lt;(), String&gt;</code> return type. In the
 body of the function, rather than calling the <code>assert_eq!</code> macro, we return
 <code>Ok(())</code> when the test passes and an <code>Err</code> with a <code>String</code> inside when the test
@@ -1095,9 +1086,11 @@ when we run our tests and explore the different options we can use with <code>ca
                             <a rel="prev" href="ch11-00-testing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch11-02-running-tests.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -1107,6 +1100,7 @@ when we run our tests and explore the different options we can use with <code>ca
                     <a rel="prev" href="ch11-00-testing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch11-02-running-tests.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -1114,34 +1108,29 @@ when we run our tests and explore the different options we can use with <code>ca
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Macros - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -197,12 +205,10 @@ use <code>macro_rules!</code> by looking at how the <code>vec!</code> macro is d
 covered how we can use the <code>vec!</code> macro to create a new vector with particular
 values. For example, the following macro creates a new vector containing three
 integers:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let v: Vec&lt;u32&gt; = vec![1, 2, 3];
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>We could also use the <code>vec!</code> macro to make a vector of two integers or a vector
 of five string slices. We wouldn’t be able to use a function to do the same
 because we wouldn’t know the number or type of values up front.</p>
@@ -219,8 +225,7 @@ macro_rules! vec {
             temp_vec
         }
     };
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-28: A simplified version of the <code>vec!</code> macro
 definition</span></p>
 <blockquote>
@@ -270,8 +275,7 @@ will be the following:</p>
     temp_vec.push(2);
     temp_vec.push(3);
     temp_vec
-}
-</code></pre>
+}</code></pre>
 <p>We’ve defined a macro that can take any number of arguments of any type and can
 generate code to create a vector containing the specified elements.</p>
 <p>To learn more about how to write macros, consult the online documentation or
@@ -294,8 +298,7 @@ macro variety.</p>
 
 #[some_attribute]
 pub fn some_name(input: TokenStream) -&gt; TokenStream {
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-29: An example of defining a procedural
 macro</span></p>
 <p>The function that defines a procedural macro takes a <code>TokenStream</code> as an input
@@ -327,8 +330,7 @@ struct Pancakes;
 
 fn main() {
     Pancakes::hello_macro();
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-30: The code a user of our crate will be able
 to write when using our procedural macro</span></p>
 <p>This code will print <code>Hello, Macro! My name is Pancakes!</code> when we’re done. The
@@ -339,8 +341,7 @@ first step is to make a new library crate, like this:</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait HelloMacro {
     fn hello_macro();
-}
-</code></pre>
+}</code></pre>
 <p>We have a trait and its function. At this point, our crate user could implement
 the trait to achieve the desired functionality, like so:</p>
 <pre><code class="language-rust ignore">use hello_macro::HelloMacro;
@@ -355,8 +356,7 @@ impl HelloMacro for Pancakes {
 
 fn main() {
     Pancakes::hello_macro();
-}
-</code></pre>
+}</code></pre>
 <p>However, they would need to write the implementation block for each type they
 wanted to use with <code>hello_macro</code>; we want to spare them from having to do this
 work.</p>
@@ -410,8 +410,7 @@ pub fn hello_macro_derive(input: TokenStream) -&gt; TokenStream {
 
     // Build the trait implementation
     impl_hello_macro(&amp;ast)
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-31: Code that most procedural macro crates
 will require in order to process Rust code</span></p>
 <p>Notice that we’ve split the code into the <code>hello_macro_derive</code> function, which
@@ -458,8 +457,7 @@ struct we get from parsing the <code>struct Pancakes;</code> string:</p>
             )
         }
     )
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-32: The <code>DeriveInput</code> instance we get when
 parsing the code that has the macro’s attribute in Listing 19-30</span></p>
 <p>The fields of this struct show that the Rust code we’ve parsed is a unit struct
@@ -507,8 +505,7 @@ into a <code>DeriveInput</code> instance, let’s generate the code that impleme
         }
     };
     gen.into()
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 19-33: Implementing the <code>HelloMacro</code> trait using
 the parsed Rust code</span></p>
 <p>We get an <code>Ident</code> struct instance containing the name (identifier) of the
@@ -565,13 +562,11 @@ enums; attributes can be applied to other items as well, such as functions.
 Here’s an example of using an attribute-like macro: say you have an attribute
 named <code>route</code> that annotates functions when using a web application framework:</p>
 <pre><code class="language-rust ignore">#[route(GET, &quot;/&quot;)]
-fn index() {
-</code></pre>
+fn index() {</code></pre>
 <p>This <code>#[route]</code> attribute would be defined by the framework as a procedural
 macro. The signature of the macro definition function would look like this:</p>
 <pre><code class="language-rust ignore">#[proc_macro_attribute]
-pub fn route(attr: TokenStream, item: TokenStream) -&gt; TokenStream {
-</code></pre>
+pub fn route(attr: TokenStream, item: TokenStream) -&gt; TokenStream {</code></pre>
 <p>Here, we have two parameters of type <code>TokenStream</code>. The first is for the
 contents of the attribute: the <code>GET, &quot;/&quot;</code> part. The second is the body of the
 item the attribute is attached to: in this case, <code>fn index() {}</code> and the rest
@@ -589,14 +584,12 @@ Metaprogramming”</a><!-- ignore --> earlier. Function-like macros take a
 <code>TokenStream</code> parameter and their definition manipulates that <code>TokenStream</code>
 using Rust code as the other two types of procedural macros do. An example of a
 function-like macro is an <code>sql!</code> macro that might be called like so:</p>
-<pre><code class="language-rust ignore">let sql = sql!(SELECT * FROM posts WHERE id=1);
-</code></pre>
+<pre><code class="language-rust ignore">let sql = sql!(SELECT * FROM posts WHERE id=1);</code></pre>
 <p>This macro would parse the SQL statement inside it and check that it’s
 syntactically correct, which is much more complex processing than a
 <code>macro_rules!</code> macro can do. The <code>sql!</code> macro would be defined like this:</p>
 <pre><code class="language-rust ignore">#[proc_macro]
-pub fn sql(input: TokenStream) -&gt; TokenStream {
-</code></pre>
+pub fn sql(input: TokenStream) -&gt; TokenStream {</code></pre>
 <p>This definition is similar to the custom derive macro’s signature: we receive
 the tokens that are inside the parentheses and return the code we wanted to
 generate.</p>
@@ -618,9 +611,11 @@ and do one more project!</p>
                             <a rel="prev" href="ch19-05-advanced-functions-and-closures.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch20-00-final-project-a-web-server.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -630,6 +625,7 @@ and do one more project!</p>
                     <a rel="prev" href="ch19-05-advanced-functions-and-closures.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch20-00-final-project-a-web-server.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -637,34 +633,29 @@ and do one more project!</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Refactoring to Improve Modularity and Error Handling - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -226,8 +234,7 @@ fn parse_config(args: &amp;[String]) -&gt; (&amp;str, &amp;str) {
     let file_path = &amp;args[2];
 
     (query, file_path)
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 12-5: Extracting a <code>parse_config</code> function from
 <code>main</code></span></p>
 <p>We’re still collecting the command line arguments into a vector, but instead of
@@ -287,8 +294,7 @@ fn parse_config(args: &amp;[String]) -&gt; Config {
     let file_path = args[2].clone();
 
     Config { query, file_path }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 12-6: Refactoring <code>parse_config</code> to return an
 instance of a <code>Config</code> struct</span></p>
 <p>We’ve added a struct named <code>Config</code> defined to have fields named <code>query</code> and
@@ -376,8 +382,7 @@ shows the changes we need to make.</p>
 
         Config { query, file_path }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 12-7: Changing <code>parse_config</code> into
 <code>Config::new</code></span></p>
 <p>We’ve updated <code>main</code> where we were calling <code>parse_config</code> to instead call
@@ -439,8 +444,7 @@ enough, the program panics and displays a better error message.</p>
 </span><span class="boring">
 </span><span class="boring">        Config { query, file_path }
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 12-8: Adding a check for the number of
 arguments</span></p>
 <p>This code is similar to <a href="ch09-03-to-panic-or-not-to-panic.html#creating-custom-types-for-validation">the <code>Guess::new</code> function we wrote in Listing
@@ -514,8 +518,7 @@ well, which we’ll do in the next listing.</p>
 
         Ok(Config { query, file_path })
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 12-9: Returning a <code>Result</code> from
 <code>Config::build</code></span></p>
 <p>Our <code>build</code> function returns a <code>Result</code> with a <code>Config</code> instance in the success
@@ -577,8 +580,7 @@ fn main() {
 </span><span class="boring">
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 12-10: Exiting with an error code if building a
 <code>Config</code> fails</span></p>
 <p>In this listing, we’ve used a method we haven’t covered in detail yet:
@@ -665,8 +667,7 @@ fn run(config: Config) {
 </span><span class="boring">
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 12-11: Extracting a <code>run</code> function containing the
 rest of the program logic</span></p>
 <p>The <code>run</code> function now contains all the remaining logic from <code>main</code>, starting
@@ -727,8 +728,7 @@ signature and body of <code>run</code>.</p>
 </span><span class="boring">
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 12-12: Changing the <code>run</code> function to return
 <code>Result</code></span></p>
 <p>We’ve made three significant changes here. First, we changed the return type of
@@ -838,8 +838,7 @@ with <code>Config::build</code> in Listing 12-10, but with a slight difference:<
 </span><span class="boring">
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>We use <code>if let</code> rather than <code>unwrap_or_else</code> to check whether <code>run</code> returns an
 <code>Err</code> value and call <code>process::exit(1)</code> if it does. The <code>run</code> function doesn’t
 return a value that we want to <code>unwrap</code> in the same way that <code>Config::build</code>
@@ -893,8 +892,7 @@ pub fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
 </span><span class="boring">    println!(&quot;With text:\n{contents}&quot;);
 </span><span class="boring">
 </span><span class="boring">    Ok(())
-</span>}
-</code></pre>
+</span>}</code></pre>
 <p><span class="caption">Listing 12-13: Moving <code>Config</code> and <code>run</code> into
 <em>src/lib.rs</em></span></p>
 <p>We’ve made liberal use of the <code>pub</code> keyword: on <code>Config</code>, on its fields and its
@@ -925,8 +923,7 @@ fn main() {
 <span class="boring">        println!(&quot;Application error: {e}&quot;);
 </span><span class="boring">        process::exit(1);
 </span>    }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 12-14: Using the <code>minigrep</code> library crate in
 <em>src/main.rs</em></span></p>
 <p>We add a <code>use minigrep::Config</code> line to bring the <code>Config</code> type from the
@@ -948,9 +945,11 @@ write some tests!</p>
                             <a rel="prev" href="ch12-02-reading-a-file.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch12-04-testing-the-librarys-functionality.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -960,6 +959,7 @@ write some tests!</p>
                     <a rel="prev" href="ch12-02-reading-a-file.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch12-04-testing-the-librarys-functionality.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -967,34 +967,29 @@ write some tests!</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

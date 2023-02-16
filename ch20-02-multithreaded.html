@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Turning Our Single-Threaded Server into a Multithreaded Server - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -198,8 +206,7 @@ fn handle_connection(mut stream: TcpStream) {
 </span><span class="boring">        format!(&quot;{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}&quot;);
 </span><span class="boring">
 </span><span class="boring">    stream.write_all(response.as_bytes()).unwrap();
-</span>}
-</code></pre></pre>
+</span>}</code></pre></pre>
 <p><span class="caption">Listing 20-10: Simulating a slow request by sleeping for
 5 seconds</span></p>
 <p>We switched from <code>if</code> to <code>match</code> now that we have three cases. We need to
@@ -310,8 +317,7 @@ to handle each stream within the <code>for</code> loop.</p>
 </span><span class="boring">        format!(&quot;{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}&quot;);
 </span><span class="boring">
 </span><span class="boring">    stream.write_all(response.as_bytes()).unwrap();
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 20-11: Spawning a new thread for each
 stream</span></p>
 <p>As you learned in Chapter 16, <code>thread::spawn</code> will create a new thread and then
@@ -369,8 +375,7 @@ struct we want to use instead of <code>thread::spawn</code>.</p>
 </span><span class="boring">        format!(&quot;{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}&quot;);
 </span><span class="boring">
 </span><span class="boring">    stream.write_all(response.as_bytes()).unwrap();
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 20-12: Our ideal <code>ThreadPool</code> interface</span></p>
 <p>We use <code>ThreadPool::new</code> to create a new thread pool with a configurable number
 of threads, in this case four. Then, in the <code>for</code> loop, <code>pool.execute</code> has a
@@ -405,8 +410,7 @@ web requests.</p>
 <p>Create a <em>src/lib.rs</em> that contains the following, which is the simplest
 definition of a <code>ThreadPool</code> struct that we can have for now:</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
-<pre><code class="language-rust noplayground">pub struct ThreadPool;
-</code></pre>
+<pre><code class="language-rust noplayground">pub struct ThreadPool;</code></pre>
 <p>Then edit <em>main.rs</em> file to bring <code>ThreadPool</code> into scope from the library
 crate by adding the following code to the top of <em>src/main.rs</em>:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
@@ -452,8 +456,7 @@ crate by adding the following code to the top of <em>src/main.rs</em>:</p>
 </span><span class="boring">        format!(&quot;{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}&quot;);
 </span><span class="boring">
 </span><span class="boring">    stream.write_all(response.as_bytes()).unwrap();
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p>This code still won’t work, but let’s check it again to get the next error that
 we need to address:</p>
 <pre><code class="language-console">$ cargo check
@@ -479,8 +482,7 @@ impl ThreadPool {
     pub fn new(size: usize) -&gt; ThreadPool {
         ThreadPool
     }
-}
-</code></pre>
+}</code></pre>
 <p>We chose <code>usize</code> as the type of the <code>size</code> parameter, because we know that a
 negative number of threads doesn’t make any sense. We also know we’ll use this
 4 as the number of elements in a collection of threads, which is what the
@@ -516,8 +518,7 @@ has on its parameter. The documentation shows us the following:</p>
     where
         F: FnOnce() -&gt; T,
         F: Send + 'static,
-        T: Send + 'static,
-</code></pre>
+        T: Send + 'static,</code></pre>
 <p>The <code>F</code> type parameter is the one we’re concerned with here; the <code>T</code> type
 parameter is related to the return value, and we’re not concerned with that. We
 can see that <code>spawn</code> uses <code>FnOnce</code> as the trait bound on <code>F</code>. This is probably
@@ -544,8 +545,7 @@ the thread will take to execute. Let’s create an <code>execute</code> method o
         F: FnOnce() + Send + 'static,
     {
     }
-}
-</code></pre>
+}</code></pre>
 <p>We still use the <code>()</code> after <code>FnOnce</code> because this <code>FnOnce</code> represents a closure
 that takes no parameters and returns the unit type <code>()</code>. Just like function
 definitions, the return type can be omitted from the signature, but even if we
@@ -600,8 +600,7 @@ zero by using the <code>assert!</code> macro, as shown in Listing 20-13.</p>
 </span><span class="boring">        F: FnOnce() + Send + 'static,
 </span><span class="boring">    {
 </span><span class="boring">    }
-</span>}
-</code></pre>
+</span>}</code></pre>
 <p><span class="caption">Listing 20-13: Implementing <code>ThreadPool::new</code> to panic if
 <code>size</code> is zero</span></p>
 <p>We’ve also added some documentation for our <code>ThreadPool</code> with doc comments.
@@ -615,8 +614,7 @@ project in Listing 12-9. But we’ve decided in this case that trying to create 
 thread pool without any threads should be an unrecoverable error. If you’re
 feeling ambitious, try to write a function named <code>build</code> with the following
 signature to compare with the <code>new</code> function:</p>
-<pre><code class="language-rust ignore">pub fn build(size: usize) -&gt; Result&lt;ThreadPool, PoolCreationError&gt; {
-</code></pre>
+<pre><code class="language-rust ignore">pub fn build(size: usize) -&gt; Result&lt;ThreadPool, PoolCreationError&gt; {</code></pre>
 <h4 id="creating-space-to-store-the-threads"><a class="header" href="#creating-space-to-store-the-threads">Creating Space to Store the Threads</a></h4>
 <p>Now that we have a way to know we have a valid number of threads to store in
 the pool, we can create those threads and store them in the <code>ThreadPool</code> struct
@@ -626,8 +624,7 @@ look at the <code>thread::spawn</code> signature:</p>
     where
         F: FnOnce() -&gt; T,
         F: Send + 'static,
-        T: Send + 'static,
-</code></pre>
+        T: Send + 'static,</code></pre>
 <p>The <code>spawn</code> function returns a <code>JoinHandle&lt;T&gt;</code>, where <code>T</code> is the type that the
 closure returns. Let’s try using <code>JoinHandle</code> too and see what happens. In our
 case, the closures we’re passing to the thread pool will handle the connection
@@ -671,8 +668,7 @@ impl ThreadPool {
 </span><span class="boring">        F: FnOnce() + Send + 'static,
 </span><span class="boring">    {
 </span><span class="boring">    }
-</span>}
-</code></pre>
+</span>}</code></pre>
 <p><span class="caption">Listing 20-14: Creating a vector for <code>ThreadPool</code> to hold
 the threads</span></p>
 <p>We’ve brought <code>std::thread</code> into scope in the library crate, because we’re
@@ -769,8 +765,7 @@ impl Worker {
 
         Worker { id, thread }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 20-15: Modifying <code>ThreadPool</code> to hold <code>Worker</code>
 instances instead of holding threads directly</span></p>
 <p>We’ve changed the name of the field on <code>ThreadPool</code> from <code>threads</code> to <code>workers</code>
@@ -871,8 +866,7 @@ impl ThreadPool {
 </span><span class="boring">
 </span><span class="boring">        Worker { id, thread }
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 20-16: Modifying <code>ThreadPool</code> to store the
 sender of a channel that transmits <code>Job</code> instances</span></p>
 <p>In <code>ThreadPool::new</code>, we create our new channel and have the pool hold the
@@ -938,8 +932,7 @@ code in Listing 20-17 won’t quite compile yet.</p>
 
         Worker { id, thread }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 20-17: Passing the receiver to the workers</span></p>
 <p>We’ve made some small and straightforward changes: we pass the receiver into
 <code>Worker::new</code>, and then we use it inside the closure.</p>
@@ -1036,8 +1029,7 @@ receiver at a time. Listing 20-18 shows the changes we need to make.</p>
 </span><span class="boring">
 </span><span class="boring">        Worker { id, thread }
 </span>    }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 20-18: Sharing the receiver among the workers
 using <code>Arc</code> and <code>Mutex</code></span></p>
 <p>In <code>ThreadPool::new</code>, we put the receiver in an <code>Arc</code> and a <code>Mutex</code>. For each
@@ -1116,8 +1108,7 @@ impl ThreadPool {
 </span><span class="boring">
 </span><span class="boring">        Worker { id, thread }
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 20-19: Creating a <code>Job</code> type alias for a <code>Box</code>
 that holds each closure and then sending the job down the channel</span></p>
 <p>After creating a new <code>Job</code> instance using the closure we get in <code>execute</code>, we
@@ -1199,8 +1190,7 @@ impl Worker {
 
         Worker { id, thread }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 20-20: Receiving and executing the jobs in the
 worker’s thread</span></p>
 <p>Here, we first call <code>lock</code> on the <code>receiver</code> to acquire the mutex, and then we
@@ -1339,8 +1329,7 @@ impl Worker {
 
         Worker { id, thread }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 20-21: An alternative implementation of
 <code>Worker::new</code> using <code>while let</code></span></p>
 <p>This code compiles and runs but doesn’t result in the desired threading
@@ -1366,9 +1355,11 @@ of the call to <code>job()</code>, meaning other workers cannot receive jobs.</p
                             <a rel="prev" href="ch20-01-single-threaded.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch20-03-graceful-shutdown-and-cleanup.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -1378,6 +1369,7 @@ of the call to <code>job()</code>, meaning other workers cannot receive jobs.</p
                     <a rel="prev" href="ch20-01-single-threaded.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch20-03-graceful-shutdown-and-cleanup.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -1385,34 +1377,29 @@ of the call to <code>job()</code>, meaning other workers cannot receive jobs.</p
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>

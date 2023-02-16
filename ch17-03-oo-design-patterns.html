@@ -4,8 +4,10 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Implementing an Object-Oriented Design Pattern - The Rust Programming Language</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -29,16 +33,18 @@
         <link rel="stylesheet" href="theme/2018-edition.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -54,7 +60,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -66,7 +72,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -87,7 +93,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -97,7 +103,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -117,6 +123,7 @@
                         <a href="https://github.com/cognitive-engineering-lab/rust-book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -130,8 +137,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -190,8 +198,7 @@ fn main() {
 
     post.approve();
     assert_eq!(&quot;I ate a salad for lunch today&quot;, post.content());
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-11: Code that demonstrates the desired
 behavior we want our <code>blog</code> crate to have</span></p>
 <p>We want to allow the user to create a new draft blog post with <code>Post::new</code>. We
@@ -242,8 +249,7 @@ trait State {}
 
 struct Draft {}
 
-impl State for Draft {}
-</code></pre>
+impl State for Draft {}</code></pre>
 <p><span class="caption">Listing 17-12: Definition of a <code>Post</code> struct and a <code>new</code>
 function that creates a new <code>Post</code> instance, a <code>State</code> trait, and a <code>Draft</code>
 struct</span></p>
@@ -289,8 +295,7 @@ straightforward, so let’s add the implementation in Listing 17-13 to the <code
 </span><span class="boring">
 </span><span class="boring">struct Draft {}
 </span><span class="boring">
-</span><span class="boring">impl State for Draft {}
-</span></code></pre>
+</span><span class="boring">impl State for Draft {}</span></code></pre>
 <p><span class="caption">Listing 17-13: Implementing the <code>add_text</code> method to add
 text to a post’s <code>content</code></span></p>
 <p>The <code>add_text</code> method takes a mutable reference to <code>self</code>, because we’re
@@ -337,8 +342,7 @@ be empty. Listing 17-14 shows this placeholder implementation:</p>
 </span><span class="boring">
 </span><span class="boring">struct Draft {}
 </span><span class="boring">
-</span><span class="boring">impl State for Draft {}
-</span></code></pre>
+</span><span class="boring">impl State for Draft {}</span></code></pre>
 <p><span class="caption">Listing 17-14: Adding a placeholder implementation for
 the <code>content</code> method on <code>Post</code> that always returns an empty string slice</span></p>
 <p>With this added <code>content</code> method, everything in Listing 17-11 up to line 7
@@ -394,8 +398,7 @@ impl State for PendingReview {
     fn request_review(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {
         self
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-15: Implementing <code>request_review</code> methods on
 <code>Post</code> and the <code>State</code> trait</span></p>
 <p>We give <code>Post</code> a public method named <code>request_review</code> that will take a mutable
@@ -516,8 +519,7 @@ impl State for Published {
     fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {
         self
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-16: Implementing the <code>approve</code> method on
 <code>Post</code> and the <code>State</code> trait</span></p>
 <p>We add the <code>approve</code> method to the <code>State</code> trait and add a new struct that
@@ -609,8 +611,7 @@ as shown in Listing 17-17:</p>
 </span><span class="boring">    fn approve(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {
 </span><span class="boring">        self
 </span><span class="boring">    }
-</span><span class="boring">}
-</span></code></pre>
+</span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 17-17: Updating the <code>content</code> method on <code>Post</code> to
 delegate to a <code>content</code> method on <code>State</code></span></p>
 <p>Because the goal is to keep all these rules inside the structs that implement
@@ -720,8 +721,7 @@ impl State for Published {
 </span>    fn content&lt;'a&gt;(&amp;self, post: &amp;'a Post) -&gt; &amp;'a str {
         &amp;post.content
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-18: Adding the <code>content</code> method to the <code>State</code>
 trait</span></p>
 <p>We add a default implementation for the <code>content</code> method that returns an empty
@@ -816,8 +816,7 @@ draft posts where only published posts are allowed by issuing a compiler error.<
 </span><span class="boring">
 </span><span class="boring">    post.approve();
 </span><span class="boring">    assert_eq!(&quot;I ate a salad for lunch today&quot;, post.content());
-</span>}
-</code></pre>
+</span>}</code></pre>
 <p>We still enable the creation of new posts in the draft state using <code>Post::new</code>
 and the ability to add text to the post’s content. But instead of having a
 <code>content</code> method on a draft post that returns an empty string, we’ll make it so
@@ -852,8 +851,7 @@ impl DraftPost {
     pub fn add_text(&amp;mut self, text: &amp;str) {
         self.content.push_str(text);
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-19: A <code>Post</code> with a <code>content</code> method and a
 <code>DraftPost</code> without a <code>content</code> method</span></p>
 <p>Both the <code>Post</code> and <code>DraftPost</code> structs have a private <code>content</code> field that
@@ -922,8 +920,7 @@ impl PendingReviewPost {
             content: self.content,
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-20: A <code>PendingReviewPost</code> that gets created by
 calling <code>request_review</code> on <code>DraftPost</code> and an <code>approve</code> method that turns a
 <code>PendingReviewPost</code> into a published <code>Post</code></span></p>
@@ -958,8 +955,7 @@ fn main() {
     let post = post.approve();
 
     assert_eq!(&quot;I ate a salad for lunch today&quot;, post.content());
-}
-</code></pre>
+}</code></pre>
 <p><span class="caption">Listing 17-21: Modifications to <code>main</code> to use the new
 implementation of the blog post workflow</span></p>
 <p>The changes we needed to make to <code>main</code> to reassign <code>post</code> mean that this
@@ -1003,9 +999,11 @@ haven’t seen their full capability yet. Let’s go!</p>
                             <a rel="prev" href="ch17-02-trait-objects.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
+
                             <a rel="next" href="ch17-04-inventory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -1015,6 +1013,7 @@ haven’t seen their full capability yet. Let’s go!</p>
                     <a rel="prev" href="ch17-02-trait-objects.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
+
                     <a rel="next" href="ch17-04-inventory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -1022,34 +1021,29 @@ haven’t seen their full capability yet. Let’s go!</p>
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://0.0.0.0:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
 
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
-        <script type="text/javascript">
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="ferris.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/telemetry/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/consent-form/dist/index.js"></script>
-        <script type="text/javascript" src="js-extensions/packages/feedback/dist/index.js"></script>
+        <script src="ferris.js"></script>
+        <script src="js-extensions/packages/telemetry/dist/index.js"></script>
+        <script src="js-extensions/packages/consent-form/dist/index.js"></script>
+        <script src="js-extensions/packages/feedback/dist/index.js"></script>
+
+
+    </div>
     </body>
 </html>
