@@ -89,7 +89,7 @@ rustc x.y.z (abcabcabc yyyy-mm-dd)
 ```
 
 If you see this information, you have installed Rust successfully! If you don’t
-see this information, check that Rust is in your `%PATH%`
+see this information, check that Rust is in your `PATH`
 system variable as follows.
 
 In Windows CMD, use:
@@ -107,7 +107,7 @@ In PowerShell, use:
 In Linux and macOS, use:
 
 ```console
-echo $PATH
+$ echo $PATH
 ```
 
 If that’s all correct and Rust still isn’t working, there are a number of
