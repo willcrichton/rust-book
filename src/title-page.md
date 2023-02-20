@@ -6,7 +6,7 @@
 
 This version of the text assumes you’re using Rust 1.62 (released 2022-06-30)
 or later. See the [“Installation” section of Chapter 1][install]<!-- ignore -->
-to install or update Rust.
+to install or update Rust. Run `rustc --version` to see your Rust version.
 
 The HTML format is available online at
 [https://doc.rust-lang.org/stable/book/](https://doc.rust-lang.org/stable/book/)
