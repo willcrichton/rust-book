@@ -315,9 +315,9 @@ The variable `c` has a different lifetime in each branch of the if-statement. In
 However, in the else-block, `c` is not used. Therefore `*v` immediately regains write permissions on entry to the else-block.
 
 
-### Data Must Outlives All Of Its References
+### Data Must Outlive All Of Its References
 
-One final safety property for references is that **data must outlives its references.** For example, consider this function that adds a reference to a vector of references:
+One final safety property for references is that **data must outlive its references.** For example, consider this function that adds a reference to a vector of references:
 
 ```rust,ignore,does_not_compile
 fn add_ref(v: &mut Vec<&i32>, n: i32) {
