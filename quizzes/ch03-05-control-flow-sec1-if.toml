@@ -11,7 +11,7 @@ let x = if cond { 1 } else { 2 };
 
 Snippet 2:
 ```
-let x;
+let mut x = 0;
 if cond {
   x = 1;
 } else {
