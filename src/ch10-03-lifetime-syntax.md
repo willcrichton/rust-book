@@ -464,7 +464,7 @@ These rules apply to `fn` definitions as well as `impl` blocks.
 The first rule is that the compiler assigns a different lifetime parameter to each lifetime in each input type. References like `&'_ i32` needs a lifetime parameter, and structures like `ImportantExcerpt<'_>` need a lifetime parameter. For example:
 * The function `fn foo(x: &i32)` would get one lifetime parameter and become `fn foo<'a>(x: &'a i32)`. 
 * The function `fn foo(x: &i32, y: &i32)` would get two lifetime parameters and become `fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`.
-* The function `fn foo(x: &ImportantExcerpt)` would get two lifetime parameters and become `fn foo<'a, 'b>(&'a ImportantExcerpt<'b>)`.
+* The function `fn foo(x: &ImportantExcerpt)` would get two lifetime parameters and become `fn foo<'a, 'b>(x: &'a ImportantExcerpt<'b>)`.
 <!-- END INTERVENTION -->
 
 The second rule is that, if there is exactly one input lifetime parameter, that
