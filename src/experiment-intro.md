@@ -33,10 +33,6 @@ You can use highlights to save information for yourself. You can also use highli
 
 The book's content may change as you go through the experiment. We will update this page as we add new features. Here's the changelog:
 
-**Upcoming changes:**
-  * We are designing a new ownership chapter that provides a more visual approach to explaining ownership.
-
-**Past changes:**
 * February 16, 2023
   * A new chapter on ownership has replaced the previous Chapter 4.
 * January 18, 2023
@@ -51,3 +47,7 @@ The book's content may change as you go through the experiment. We will update t
   * Many questions have been updated based on your feedback. Keep it coming!
 
 _Interested in participating in other experiments about making Rust easier to learn? Please sign up here:_ <https://forms.gle/U3jEUkb2fGXykp1DA>
+
+## 4. Acknowledgments
+
+Niko Matsakis and Amazon Web Services provided funding for this experiment. Carol Nichols and the Rust Foundation helped publicize the experiment. TRPL is the product of many peoples' hard work before we started this experiment.

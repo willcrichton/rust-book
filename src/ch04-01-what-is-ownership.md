@@ -38,7 +38,7 @@ fn main() {
 
 This second program is unsafe because `read(x)` expects `x` to have a value of type `bool`, but `x` doesn't have a value yet.
 
-When programs are executed by an interpreter, reading `x` before it's defined would usually raise an exception such as Python's [`NameError`] or Javascript's [`ReferenceError`]. But these safeguards come at a cost. Each time an interpreted program reads a variable, then the interpreter must check whether that variable is defined.
+When a program like this is executed by an interpreter, then reading `x` before it's defined would raise an exception such as Python's [`NameError`] or Javascript's [`ReferenceError`]. But exceptions come at a cost. Each time an interpreted program reads a variable, then the interpreter must check whether that variable is defined.
 
 Rust's goal is to compile programs into efficient binaries that require as few runtime checks as possible. Therefore Rust does not check at *runtime* whether a variable is defined before being used. Instead, Rust checks at *compile-time*. If you try to compile the unsafe program, you will get this error:
 
@@ -273,7 +273,7 @@ This program is more involved, so make sure you follow each step:
 
 1. At L1, the string "Ferris" has been allocated on the heap. It is owned by `first`.
 2. At L2, the function `add_suffix(first)` has been called. This moves ownership of the string from `first` to `name`. The string data is not copied, but the pointer to the data is copied.
-3. At L3, the function `name.push_str(" Jr.")` resizes the string's heap allocation. This does three things. First, it frees the original heap memory. Second, it creates a new larger allocation. Third, it writes "Ferris Jr." into the new allocation. `first` now points to deallocated memory.
+3. At L3, the function `name.push_str(" Jr.")` resizes the string's heap allocation. This does three things. First, it creates a new larger allocation. Second, it writes "Ferris Jr." into the new allocation. Third, it frees the original heap memory. `first` now points to deallocated memory.
 4. At L4, the frame for `add_suffix` is gone. This function returned `name`, transferring ownership of the string to `full`.
 
 
