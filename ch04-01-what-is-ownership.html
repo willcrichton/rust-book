@@ -177,7 +177,7 @@ fn main() {
 <p><em>Note</em>: in this chapter, we will use many code examples that do not compile. Make sure to look for the question mark crab if you are not sure whether a program should compile or not.</p>
 </blockquote>
 <p>This second program is unsafe because <code>read(x)</code> expects <code>x</code> to have a value of type <code>bool</code>, but <code>x</code> doesn't have a value yet.</p>
-<p>When programs are executed by an interpreter, reading <code>x</code> before it's defined would usually raise an exception such as Python's <a href="https://docs.python.org/3/library/exceptions.html#NameError"><code>NameError</code></a> or Javascript's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError"><code>ReferenceError</code></a>. But these safeguards come at a cost. Each time an interpreted program reads a variable, then the interpreter must check whether that variable is defined.</p>
+<p>When a program like this is executed by an interpreter, then reading <code>x</code> before it's defined would raise an exception such as Python's <a href="https://docs.python.org/3/library/exceptions.html#NameError"><code>NameError</code></a> or Javascript's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError"><code>ReferenceError</code></a>. But exceptions come at a cost. Each time an interpreted program reads a variable, then the interpreter must check whether that variable is defined.</p>
 <p>Rust's goal is to compile programs into efficient binaries that require as few runtime checks as possible. Therefore Rust does not check at <em>runtime</em> whether a variable is defined before being used. Instead, Rust checks at <em>compile-time</em>. If you try to compile the unsafe program, you will get this error:</p>
 <pre><code class="language-text">error[E0425]: cannot find value `x` in this scope
  --&gt; src/main.rs:8:10
@@ -296,7 +296,7 @@ let b = a;
 <ol>
 <li>At L1, the string &quot;Ferris&quot; has been allocated on the heap. It is owned by <code>first</code>.</li>
 <li>At L2, the function <code>add_suffix(first)</code> has been called. This moves ownership of the string from <code>first</code> to <code>name</code>. The string data is not copied, but the pointer to the data is copied.</li>
-<li>At L3, the function <code>name.push_str(&quot; Jr.&quot;)</code> resizes the string's heap allocation. This does three things. First, it frees the original heap memory. Second, it creates a new larger allocation. Third, it writes &quot;Ferris Jr.&quot; into the new allocation. <code>first</code> now points to deallocated memory.</li>
+<li>At L3, the function <code>name.push_str(&quot; Jr.&quot;)</code> resizes the string's heap allocation. This does three things. First, it creates a new larger allocation. Second, it writes &quot;Ferris Jr.&quot; into the new allocation. Third, it frees the original heap memory. <code>first</code> now points to deallocated memory.</li>
 <li>At L4, the frame for <code>add_suffix</code> is gone. This function returned <code>name</code>, transferring ownership of the string to <code>full</code>.</li>
 </ol>
 <h3 id="variables-cannot-be-used-after-being-moved"><a class="header" href="#variables-cannot-be-used-after-being-moved">Variables Cannot Be Used After Being Moved</a></h3>
