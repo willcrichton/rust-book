@@ -365,7 +365,7 @@ However, in the else-block, `c` is not used. `*v` immediately regains the @Perm{
 
 ### Data Must Outlive All Of Its References
 
-As a part of the *Pointer Safety Principle*, the borrow checker enforces that **data must outlive any references to it.** Rust enforces this property in two ways. The first way deals with references that are created and dropped within the scope of a single function. Then the borrow checker uses the permissions we've already discussed. For example:
+As a part of the *Pointer Safety Principle*, the borrow checker enforces that **data must outlive any references to it.** Rust enforces this property in two ways. The first way deals with references that are created and dropped within the scope of a single function. For example, say we tried to drop string while holding a reference to it:
 
 ```aquascope,permissions,stepper,boundaries,shouldFail
 #fn main() {
@@ -376,7 +376,7 @@ println!("{}", s_ref);
 #}
 ```
 
-Rust does not allow you to drop the string `s` while a reference `s_ref` is in use. The enforcement mechanism is that the borrow `&s` removes the @Perm{own} permission from `s`, while `drop` expects the @Perm{own} permission, leading to a permission mis-match.
+To catch these kinds of errors, Rust uses the permissions we've already discussed. The borrow `&s` removes the @Perm{own} permission from `s`. However, `drop` expects the @Perm{own} permission, leading to a permission mismatch.
 
 The key idea is that in this example, Rust knows how long `s_ref` lives. But Rust needs a different enforcement mechanism when it doesn't know how long a reference lives. Specifically, when references are either input to a function, or output from a function. For example, here is a safe function that returns a reference to the first element in a vector:
 
@@ -387,9 +387,9 @@ fn first(strings: &Vec<String>) -> &String {
 }
 ```
 
-This snippet introduces a new kind of permission, the flow permission @Perm{flow}. The @Perm{flow} permission is expected whenever an expression uses an input reference (e.g. `&strings[0]`), or returns an output reference (e.g. `return s_ref`). 
+This snippet introduces a new kind of permission, the flow permission @Perm{flow}. The @Perm{flow} permission is expected whenever an expression uses an input reference (like `&strings[0]`), or returns an output reference (like `return s_ref`). 
 
-Unlike the @Perm{read}@Perm{write}@Perm{own} permissions, @Perm{flow} does not change throughout the body of a function. A reference has the @Perm{flow} permission if it's allowed to be used (to flow) in a particular expression. For example, let's say we change `first` to include a `default` parameter:
+Unlike the @Perm{read}@Perm{write}@Perm{own} permissions, @Perm{flow} does not change throughout the body of a function. A reference has the @Perm{flow} permission if it's allowed to be used (that is, to *flow*) in a particular expression. For example, let's say we change `first` to a new function `first_or` that includes a `default` parameter:
 
 ```aquascope,permissions,boundaries,showFlows,shouldFail
 fn first_or(strings: &Vec<String>, default: &String) -> &String {
@@ -401,7 +401,7 @@ fn first_or(strings: &Vec<String>, default: &String) -> &String {
 }
 ```
 
-This function no longer compiles, because the expressions `&strings[0]` and `default` lack the necessary @Perm{flow} permission to be returned. Rust gives the following error:
+This function no longer compiles, because the expressions `&strings[0]` and `default` lack the necessary @Perm{flow} permission to be returned. But why? Rust gives the following error:
 
 ```text
 error[E0106]: missing lifetime specifier
@@ -417,19 +417,19 @@ The message "missing lifetime specifier" is a bit mysterious, but the help messa
 
 ```rust,ignore
 fn main() {
-    let strings = vec![String::from("A")];
-    let default = String::from("B");
+    let strings = vec![];
+    let default = String::from("default");
     let s = first_or(&strings, &default);
     drop(default);
     println!("{}", s);
 }
 ```
 
-Rust can only verify this program as safe if `first_or` is guaranteed not to return a reference to `default`. Otherwise, the `drop(default)` could invalidate `s`. In other words, the body of `first_or` cannot allow `default` to flow into the return value. Therefore, `first_or` cannot return `default` unless function explicitly says in its signature that `default` can be returned.
+This program is unsafe if `first_or` allows `default` to *flow* into the return value. Like the previous example, `drop` could invalidate `s`. Rust would only allow this program to compile if it was *certain* that `default` cannot flow into the return value.
 
-To specify that `default` can be returned, you would have to use *lifetime parameters*. We will explain that feature later in Chapter 10.3, ["Validating References with Lifetimes"](ch10-03-lifetime-syntax.html). For now, it's enough to know that: (a) input/output references are treated differently than references within a function body, and (b) Rust uses a different mechanism, the @Perm{flow} permission, to check the safety of those references.
+To specify whether `default` can be returned, Rust provides a mechanism called *lifetime parameters*. We will explain that feature later in Chapter 10.3, ["Validating References with Lifetimes"](ch10-03-lifetime-syntax.html). For now, it's enough to know that: (1) input/output references are treated differently than references within a function body, and (2) Rust uses a different mechanism, the @Perm{flow} permission, to check the safety of those references.
 
-For example, say you tried to return a reference to a variable on the stack like this:
+To see the @Perm{flow} permission in another context, say you tried to return a reference to a variable on the stack like this:
 
 ```aquascope,permissions,boundaries,showFlows,shouldFail
 fn return_a_string() -> &String {
