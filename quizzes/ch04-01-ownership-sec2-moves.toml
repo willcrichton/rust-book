@@ -1,4 +1,5 @@
 [[questions]]
+id = "889ca9ac-0f4b-4abf-82c4-be9cd4d4f7ad"
 type = "MultipleChoice"
 prompt.prompt = "Which of the following is NOT a kind of undefined behavior?"
 answer.answer = "Having a pointer to freed memory in a stack frame"

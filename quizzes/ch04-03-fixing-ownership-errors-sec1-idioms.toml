@@ -152,3 +152,9 @@ fn round_in_place(v: &Vec<f32>) {
 ```
 """,
 ]
+context = """
+Because this function is supposed to round a vector in-place, it would not be
+idiomatic to return a new copy of the same vector (`-> Vec<f32>`) or to consume
+ownership of the vector (`mut v: Vec<32>`). The best solution is to change 
+the type signature from `&Vec<f32>` to `&mut Vec<f32>`.
+"""

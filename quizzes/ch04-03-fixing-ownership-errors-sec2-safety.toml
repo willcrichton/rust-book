@@ -15,6 +15,29 @@ a value owns data on the heap, then copying it creates an alias, and so it is mo
 """
 
 [[questions]]
+id = "512e1ec0-cd7b-4a90-949b-d7b08b4009a8"
+type = "MultipleChoice"
+prompt.prompt = """
+The following code snippet does not compile:
+
+```rust
+let s = String::from("Hello world");
+let s_ref = &s;
+let s2 = *s_ref;
+println!("{s2}");
+```
+
+Which of the following best describes the undefined behavior that could occur if this program were allowed to execute?
+"""
+answer.answer = "The string is freed twice at the end of the program"
+prompt.distractors = [
+  "The read of `s2` in `println` is a use of freed memory",
+  "The dereference `*s_ref` is a use of freed memory",
+  "There is no undefined behavior in this program"
+]
+
+
+[[questions]]
 id = "4df75888-2cd5-4259-8629-46a307429fd0"
 type = "MultipleChoice"
 prompt.prompt = """
@@ -76,7 +99,8 @@ context = """
 The statement `let mut name = *name` makes `name` take ownership the input string.
 However, the caller also still retains ownership of the string. Therefore after `award_phd`
 finishes, the string is deallocated. Therefore every program above has undefined behavior, 
-because `name` will eventually be deallocated a second time.
+because `name` will eventually be deallocated a second time. It does not matter whether `name`
+or a reference to `name` is read after calling `award_phd`.
 """
 
 [[questions]]

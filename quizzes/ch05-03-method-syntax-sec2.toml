@@ -1,4 +1,32 @@
 [[questions]]
+id = "97781ca8-ad58-449c-9769-e20b9d2e42a6"
+type = "MultipleChoice"
+prompt.prompt = """
+Say you have a variable `v` of type `&mut Vec<i32>`, and you want to call the `len` method with the
+following signature:
+
+```
+impl<T> Vec<T> {
+  fn len(&self) -> usize {
+    /* ... */
+  }
+}
+```
+
+If you try to compile the expression `v.len()`, which of the following statements best describes what happens?
+"""
+answer.answer = "It compiles, because the `&mut` reference is implicitly reborrowed as an `&` reference"
+prompt.distractors = [
+  "It does not compile, because `&mut Vec<i32>` is not the same type as `&Vec<i32>`",
+  "It does not compile, `v` is not explicitly dereferenced",
+  "It compiles, because `&self` can take any kind of reference"
+]
+context = """
+The expression `v.len()` desugars to `Vec::len(&*v)`, which is a valid re-borrow of `v`, so this expression compiles.
+You cannot, however, pass `v` directly to `Vec::len`, since `&self` specifically refers to immutable references.
+"""
+
+[[questions]]
 id = "35a75881-eb08-486c-92b3-413ab512138a"
 type = "MultipleChoice"
 prompt.prompt = """
