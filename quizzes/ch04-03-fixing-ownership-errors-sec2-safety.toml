@@ -11,7 +11,8 @@ prompt.distractors = [
     "A `String` can be placed on the heap, while an `i32` can only be placed on the stack"
 ]
 context = """
-a value owns data on the heap, then copying it creates an alias, and so it is moved-on-copy.
+If a `String` could be copied without a move, then two variables could think they own
+the same string, leading to a double-free.
 """
 
 [[questions]]
@@ -35,6 +36,43 @@ prompt.distractors = [
   "The dereference `*s_ref` is a use of freed memory",
   "There is no undefined behavior in this program"
 ]
+context = """
+The `println` is technically safe, since the string won't be deallocated until the end
+of the current scope. But then undefined behavior occurs, when the string is freed twice
+on behalf of `s` and `s2`.
+"""
+
+[[questions]]
+id = "1e31e163-5bd4-4385-b222-33c19058bf6a"
+type = "MultipleChoice"
+prompt.prompt = """
+The following program does not compile:
+
+```rust
+fn pass_along(v: &mut Vec<i32>, i: usize) {
+  let n = &mut v[i];
+  *n = v[i - 1];
+}
+fn main() {
+  let mut v = vec![1, 2, 3];
+  pass_along(&mut v, 1);
+}
+```
+
+Which of the following best describes the undefined behavior that could occur if this program were allowed to execute?
+"""
+answer.answer = "There is no undefined behavior in this program"
+prompt.distractors = [
+  "The assignment `*n` is a use of freed memory",
+  "The borrow `&mut v[i]` creates a pointer to freed memory",
+  "The read of `v[i - 1]` is a use of freed memory"
+]
+context = """
+This program is safe. No undefined behavior could occur if it were executed. (If `i` was outside
+the bounds of `v`, then Rust will panic at runtime rather than cause undefined behavior.)
+
+The issue is that Rust doesn't know for sure that `v[i]` and `v[i - 1]` are referring to different elements.
+"""
 
 
 [[questions]]
