@@ -188,7 +188,7 @@ assert!(b[0] == 0);`[]`
 #}
 ```
 
-> *Note:* you may wonder how we are executing this Rust program that doesn't compile. We use [special tools](https://github.com/cognitive-engineering-lab/aquascope) to simulate Rust as if the borrow checker were disabled, for educational purposes. That way we can answer what-if questions, like: what if Rust let this unsafe program compile?
+> *Note:* you may wonder how we are executing this Rust program that doesn't compile. We use [special tools](REDACTED URL) to simulate Rust as if the borrow checker were disabled, for educational purposes. That way we can answer what-if questions, like: what if Rust let this unsafe program compile?
 
 Here, we allocate an array on the heap. Then we call `free(b)`, which deallocates the heap memory of `b`. Therefore the value of `b` is a pointer to invalid memory, which we represent as the "⦻" icon. No undefined behavior has happened yet! The program is still safe at L2. It's not necessarily a problem to have an invalid pointer.
 
