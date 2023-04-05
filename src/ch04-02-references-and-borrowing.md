@@ -205,7 +205,7 @@ Let's walk through each line:
 2. After `let num = &vec[2]`, the data in `vec` has been **borrowed** by `num` (indicated by <i class="fa fa-arrow-right"></i>). Three things happen:
    - The borrow removes @Perm[lost]{write}@Perm[lost]{own} permissions from `vec` (the slash indicates loss). `vec` cannot be written or owned, but it can still be read.
    - The variable `num` has gained @Perm{read}@Perm{own} permissions. `num` is not writable (the missing @Perm{write} permission is shown as a dash <span class="perm write">‒</span>) because it was not marked `let mut`.
-   - The **path** `*num` has gained @Perm{read}@Perm{own} permissions.
+   - The **path** `*num` has gained the @Perm{read} permission.
 3. After `println!(...)`, then `num` is no longer in use, so `vec` is no longer borrowed. Therefore:
    - `vec` regains its @Perm{write}@Perm{own} permissions (indicated by <i class="fa fa-rotate-left"></i>).
    - `num` and `*num` have lost all of their permissions (indicated by <i class="fa fa-level-down"></i>).
@@ -222,8 +222,6 @@ let mut x_ref = &x;
 ```
 
 Notice that `x_ref` has the @Perm{write} permission, while `*x_ref` does not. That means we can assign `x_ref` to a different reference (e.g. `x_ref = &y`), but we cannot mutate the pointed data (e.g. `*x_ref += 1`).
-
-> *Note:* you might wonder why `*num` and `*x_ref` have the @Perm{own} permission, since references are non-owning pointers. That's because the vector contains numbers of type `i32`, and `i32` is a *copyable* type. We will discuss this difference more next section in ["Copying vs. Moving Out of a Collection"](ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-copying-vs-moving-out-of-a-collection).
 
 More generally, permissions are defined on **paths** and not just variables. A path is anything you can put on the left-hand side of an assignment. Paths include:
 
