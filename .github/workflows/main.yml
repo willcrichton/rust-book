@@ -21,10 +21,13 @@ jobs:
       with:
         node-version: 16
 
-    - name: Install graco
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 6.7.0
+
+    - name: Install Node binaries
       run: |
-        npm install -g pnpm spellchecker
-        npm install -g graco
+        npm install -g spellchecker graco        
         echo "NODE_PATH=$(npm config get prefix)/lib/node_modules:$NODE_PATH" >> $GITHUB_ENV
         echo "NODE_LOG=debug" >> $GITHUB_ENV
     
