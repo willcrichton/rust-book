@@ -672,7 +672,7 @@ These rules apply to <code>fn</code> definitions as well as <code>impl</code> bl
 <ul>
 <li>The function <code>fn foo(x: &amp;i32)</code> would get one lifetime parameter and become <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>. </li>
 <li>The function <code>fn foo(x: &amp;i32, y: &amp;i32)</code> would get two lifetime parameters and become <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>.</li>
-<li>The function <code>fn foo(x: &amp;ImportantExcerpt)</code> would get two lifetime parameters and become <code>fn foo&lt;'a, 'b&gt;(&amp;'a ImportantExcerpt&lt;'b&gt;)</code>.</li>
+<li>The function <code>fn foo(x: &amp;ImportantExcerpt)</code> would get two lifetime parameters and become <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a ImportantExcerpt&lt;'b&gt;)</code>.</li>
 </ul>
 <!-- END INTERVENTION -->
 <p>The second rule is that, if there is exactly one input lifetime parameter, that
