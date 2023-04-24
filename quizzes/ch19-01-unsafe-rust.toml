@@ -45,8 +45,8 @@ if the capacity were 3, then `n` would point to deallocated memory.
 id = "015941ed-d375-4070-a8dc-2f368584b302"
 type = "MultipleChoice"
 prompt.prompt = """
-Which of the following are situations where using `unsafe` code is a reasonable 
-method for working around the borrow checker?
+Which of the following are situations where using `unsafe` code (or a safe wrapper around `unsafe` code) 
+is an idiomatic method for working around the borrow checker?
 """
 answer.answer = [    
     "Getting two mutable references to disjoint indices in an array",

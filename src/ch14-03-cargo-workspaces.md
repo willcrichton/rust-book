@@ -273,6 +273,13 @@ crate in every package in the workspace using the `rand` package will be using
 the same version, saving us space and ensuring that the crates in the workspace
 will be compatible with each other.
 
+Note that Cargo only ensures compatibility within the rules of [Semantic Versioning].
+For example, say a workspace has one crate that depends on `rand` 0.8.0, and another crate
+that depends on `rand` 0.8.1. The semver rules say that 0.8.1 is compatible with 0.8.0,
+so both crates will depend on 0.8.1 (or potentially a more recent patch, like 0.8.2). But if
+one crate depends on `rand` 0.7.0 and another on `rand` 0.8.0, those versions are semver-incompatible.
+Therefore, Cargo will use a different version of `rand` for each crate.
+
 #### Adding a Test to a Workspace
 
 For another enhancement, let’s add a test of the `add_one::add_one` function
@@ -369,3 +376,5 @@ the crates in a workspace can make coordination between crates easier if they
 are often changed at the same time.
 
 {{#quiz ../quizzes/ch14-03-cargo-workspaces.toml}}
+
+[Semantic Versioning]: https://semver.org/

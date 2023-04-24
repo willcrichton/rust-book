@@ -97,7 +97,7 @@ answer.answer = [
 prompt.distractors = [
     "`Trait` is defined in the local crate and `T` is defined in an external crate",
     "`Trait` is defined in an external crate and `T` is defined in the local crate",
-    "`Trait` is defined in the local crate and `T` is defined in the local crate crate",
+    "`Trait` is defined in the local crate and `T` is defined in the local crate",
 ]
 context = """
 The orphan rule dictates that a trait cannot be implemented for a type if both are

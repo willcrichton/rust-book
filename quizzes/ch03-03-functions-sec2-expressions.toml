@@ -2,7 +2,7 @@
 id = "e816708d-b0eb-4506-8c33-6ea0df69f14f"
 type = "MultipleChoice"
 prompt.prompt = """
-In Rust, a curly-brace block (like `{ /* ... */ }`) is:
+In Rust, a curly-brace block like `{ /* ... */ }` is:
 1. An expression
 2. A statement
 3. A syntactic scope

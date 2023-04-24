@@ -18,6 +18,8 @@ if cond {
   x = 2;
 }
 ```
+
+(Note: both of these snippets compile!)
 """
 answer.answer = "True"
 prompt.distractors = [ "False" ]

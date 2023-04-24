@@ -28,5 +28,5 @@ answer.doesCompile = true
 answer.stdout = "4"
 context = """
 The syntax `[x; y]` declares an array with `y` copies of the value `x`. The syntax `(a, _)` destructures `t` and binds `a` to `[1; 2]`. 
-The syntax `t.1` refers to the 1-th element of `t`, which is `[3; 4]`.
+The syntax `t.1` refers to the second element of `t`, which is `[3; 4]`.
 """

@@ -28,7 +28,7 @@ foobar
         └── alt.rs
 ```
 
-How many crates does this package contain?
+How many crates does this package contain? Write your answer as a digit, e.g. 0, 1, and so on.
 """
 answer.answer = "3"
 context = """ 

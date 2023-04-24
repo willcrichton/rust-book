@@ -20,11 +20,19 @@ Assuming `mystery` uses no unsafe code, then the value of `y` must be :
 """
 answer.answer = "3"
 context = """
-The only possible function (without unsafe code) that has the signature `T -> T` is the identity function. The function could of course panic or print, 
-but the return value can only be the input because there is no other way for `mystery` to generate or mutate a value of `T`.
+The only possible function (without unsafe code) that has the signature `T -> T` is the identity function:
+
+```
+fn mystery<T>(x: T) -> T {
+  x
+}
+```
+
+The function could of course panic or print, but the return value can only be the input. `mystery` does not know
+what type `T` is, so there is no way for `mystery` to generate or mutate a value of `T`.
 See [Theorems for free!](https://dl.acm.org/doi/pdf/10.1145/99370.99404) for more examples of this idea.
 
-**3 really is the correct answer! Please stop submitting bug reports if you disagree with the answer!**
+**3 really is the correct answer! If you disagree with the answer, please don't submit a bug report!**
 """
 
 [[questions]]

@@ -34,7 +34,7 @@ impl Api {
 }
 ```
 
-Say the count is represented as a `usize`. What is the most appropriate wrapper type
+Say the count is represented as a `usize`. Which of the following would be the most appropriate wrapper type
 to use for this situation?
 """
 answer.answer = "`RefCell<usize>`"
@@ -45,7 +45,8 @@ prompt.distractors = [
 ]
 context = """
 Here a `RefCell` is useful to mutate an internal field even though `some_method` takes
-an immutable reference as input.
+an immutable reference as input. If the internal field is just an integer, an even better choice of type
+would be `Cell<usize>` or `AtomicUsize`.
 """
 
 [[questions]]

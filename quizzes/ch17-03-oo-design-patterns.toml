@@ -43,7 +43,7 @@ a client cannot add a new branch to the enum. Moreover, all `match` expressions 
 when a state is added.
 
 A `match` is not likely to be slower than dynamic dispatch. A match is a simple branch based on
-an enum's tag, while dynamic dispatch requires layers of indirection through a trait
+an enum's tag, while dynamic dispatch requires a layer of indirection through a trait
 object's virtual table with non-inlined function calls.
 
 An API client cannot add a new *method* for existing states in the struct/trait approach, they 
@@ -61,5 +61,5 @@ impl<S: State> StateExt for S {
 }
 ```
 
-But these extensions cannot read the internal data of the states.
+But these extensions cannot read the private data of the states.
 """

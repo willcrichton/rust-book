@@ -29,13 +29,13 @@ fn is_equal<T: Eq>(t1: &T, t2: &T) -> bool {
 }
 
 fn main() {
-  println!("{:?}", is_equal("Hello", "world"));
+  println!("{}", is_equal("Hello", "world"));
 }
 
 """
 answer.doesCompile = false
 answer.lineNumber = 6
 context = """
-Unless `T` is marked as `?Sized`, then the type `&str` cannot be passed to `is_equal` 
-as `str` is not `Sized`.
+The call to `is_equal` passes values of type `&str`. That means `T = str`. However, `str`
+is only allowed to be used in such a generic function if `T` is marked as `?Sized`.
 """

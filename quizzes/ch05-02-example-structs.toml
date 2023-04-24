@@ -15,7 +15,7 @@ fn main() {
   };
 
   let a = area(rect1);
-  println!("{:?} {}", rect1, a);
+  println!("{} * {} = {}", rect1.width, rect1.height, a);
 }
 
 fn area(rectangle: Rectangle) -> u32 {
