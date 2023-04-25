@@ -363,7 +363,7 @@ However, in the else-block, `c` is not used. `*v` immediately regains the @Perm{
 
 ### Data Must Outlive All Of Its References
 
-As a part of the *Pointer Safety Principle*, the borrow checker enforces that **data must outlive any references to it.** Rust enforces this property in two ways. The first way deals with references that are created and dropped within the scope of a single function. For example, say we tried to drop string while holding a reference to it:
+As a part of the *Pointer Safety Principle*, the borrow checker enforces that **data must outlive any references to it.** Rust enforces this property in two ways. The first way deals with references that are created and dropped within the scope of a single function. For example, say we tried to drop a string while holding a reference to it:
 
 ```aquascope,permissions,stepper,boundaries,shouldFail
 #fn main() {
