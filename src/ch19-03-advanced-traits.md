@@ -312,7 +312,7 @@ that we want to call the `baby_name` function from the `Animal` trait as
 implemented on `Dog`</span>
 
 We’re providing Rust with a type annotation within the angle brackets, which
-indicates we want to call the `baby_name` method from the `Animal` trait as
+indicates we want to call the `baby_name` function from the `Animal` trait as
 implemented on `Dog` by saying that we want to treat the `Dog` type as an
 `Animal` for this function call. This code will now print what we want:
 
