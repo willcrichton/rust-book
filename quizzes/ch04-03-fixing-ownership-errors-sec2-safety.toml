@@ -134,7 +134,7 @@ prompt.distractors = [
   "None of these programs"
 ]
 context = """
-The statement `let mut name = *name` makes `name` take ownership the input string.
+The statement `let mut name = *name` makes `name` take ownership of the input string.
 However, the caller also still retains ownership of the string. Therefore after `award_phd`
 finishes, the string is deallocated. Therefore every program above has undefined behavior, 
 because `name` will eventually be deallocated a second time. It does not matter whether `name`
