@@ -793,8 +793,8 @@ the closure that we get in <code>execute</code>. Let’s look at how to do that 
 absolutely nothing. Currently, we get the closure we want to execute in the
 <code>execute</code> method. But we need to give <code>thread::spawn</code> a closure to run when we
 create each <code>Worker</code> during the creation of the <code>ThreadPool</code>.</p>
-<p>We want the <code>Worker</code> structs that we just created to fetch the code to run from
-a queue held in the <code>ThreadPool</code> and send that code to its thread to run.</p>
+<p>We want each <code>Worker</code> struct that we just created to fetch the code to run from
+a queue held in the <code>ThreadPool</code> and send that code to the worker's thread to run.</p>
 <p>The channels we learned about in Chapter 16—a simple way to communicate between
 two threads—would be perfect for this use case. We’ll use a channel to function
 as the queue of jobs, and <code>execute</code> will send a job from the <code>ThreadPool</code> to
@@ -871,7 +871,7 @@ sender of a channel that transmits <code>Job</code> instances</span></p>
 <p>In <code>ThreadPool::new</code>, we create our new channel and have the pool hold the
 sender. This will successfully compile.</p>
 <p>Let’s try passing a receiver of the channel into each worker as the thread pool
-creates the channel. We know we want to use the receiver in the thread that the
+creates the worker. We know we want to use the receiver in the thread that the
 workers spawn, so we’ll reference the <code>receiver</code> parameter in the closure. The
 code in Listing 20-17 won’t quite compile yet.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>

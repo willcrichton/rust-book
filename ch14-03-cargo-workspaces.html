@@ -371,6 +371,12 @@ additional copies of <code>rand</code> will be downloaded. Cargo has ensured tha
 crate in every package in the workspace using the <code>rand</code> package will be using
 the same version, saving us space and ensuring that the crates in the workspace
 will be compatible with each other.</p>
+<p>Note that Cargo only ensures compatibility within the rules of <a href="https://semver.org/">Semantic Versioning</a>.
+For example, say a workspace has one crate that depends on <code>rand</code> 0.8.0, and another crate
+that depends on <code>rand</code> 0.8.1. The semver rules say that 0.8.1 is compatible with 0.8.0,
+so both crates will depend on 0.8.1 (or potentially a more recent patch, like 0.8.2). But if
+one crate depends on <code>rand</code> 0.7.0 and another on <code>rand</code> 0.8.0, those versions are semver-incompatible.
+Therefore, Cargo will use a different version of <code>rand</code> for each crate.</p>
 <h4 id="adding-a-test-to-a-workspace"><a class="header" href="#adding-a-test-to-a-workspace">Adding a Test to a Workspace</a></h4>
 <p>For another enhancement, let’s add a test of the <code>add_one::add_one</code> function
 within the <code>add_one</code> crate:</p>

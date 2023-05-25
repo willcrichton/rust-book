@@ -375,7 +375,7 @@ example, the following code doesn’t work:</p>
 and Rust requires that <code>guess</code> have only one type. So what does <code>continue</code>
 return? How were we allowed to return a <code>u32</code> from one arm and have another arm
 that ends with <code>continue</code> in Listing 19-26?</p>
-<p>As you might have guessed, <code>continue</code> has a <code>!</code> value. That is, when Rust
+<p>As you might have guessed, a <code>continue</code> expression has the type <code>!</code>. That is, when Rust
 computes the type of <code>guess</code>, it looks at both match arms, the former with a
 value of <code>u32</code> and the latter with a <code>!</code> value. Because <code>!</code> can never have a
 value, Rust decides that the type of <code>guess</code> is <code>u32</code>.</p>
@@ -415,7 +415,7 @@ returning a value from <code>unwrap</code>, so this code is valid.</p>
         print!(&quot;and ever &quot;);
     }
 <span class="boring">}</span></code></pre>
-<p>Here, the loop never ends, so <code>!</code> is the value of the expression. However, this
+<p>Here, the loop never ends, so <code>!</code> is the type of the expression. However, this
 wouldn’t be true if we included a <code>break</code>, because the loop would terminate
 when it got to the <code>break</code>.</p>
 <h3 id="dynamically-sized-types-and-the-sized-trait"><a class="header" href="#dynamically-sized-types-and-the-sized-trait">Dynamically Sized Types and the <code>Sized</code> Trait</a></h3>
@@ -486,7 +486,7 @@ compile time. The <code>?Trait</code> syntax with this meaning is only available
 Because the type might not be <code>Sized</code>, we need to use it behind some kind of
 pointer. In this case, we’ve chosen a reference.</p>
 <p>Next, we’ll talk about functions and closures!</p>
-<div class="quiz-placeholder" data-quiz-name="ch19-04-advanced-types"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The `!` type is not an appropriate return type for this function because it only panics\nsome of the time, not all of the time.\n&quot;,&quot;id&quot;:&quot;d3d9197f-8baf-4ec5-9988-282c67636d3c&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn expect_none(x: Option&lt;i32&gt;) -&gt; ! {\n    match x {\n        Some(n) =&gt; panic!(\&quot;Expected none, found Some({n})\&quot;),\n        None =&gt; ()\n    }\n}\n\nfn main() {\n    println!(\&quot;{:?}\&quot;, expect_none(None));\n}\n&quot;}},{&quot;context&quot;:&quot;Unless `T` is marked as `?Sized`, then the type `&amp;str` cannot be passed to `is_equal` \nas `str` is not `Sized`.\n&quot;,&quot;id&quot;:&quot;5c5cb765-a561-459f-8223-9e72e824c5da&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn is_equal&lt;T: Eq&gt;(t1: &amp;T, t2: &amp;T) -&gt; bool {\n  t1 == t2\n}\n\nfn main() {\n  println!(\&quot;{:?}\&quot;, is_equal(\&quot;Hello\&quot;, \&quot;world\&quot;));\n}\n\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
+<div class="quiz-placeholder" data-quiz-name="ch19-04-advanced-types"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The `!` type is not an appropriate return type for this function because it only panics\nsome of the time, not all of the time.\n&quot;,&quot;id&quot;:&quot;d3d9197f-8baf-4ec5-9988-282c67636d3c&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn expect_none(x: Option&lt;i32&gt;) -&gt; ! {\n    match x {\n        Some(n) =&gt; panic!(\&quot;Expected none, found Some({n})\&quot;),\n        None =&gt; ()\n    }\n}\n\nfn main() {\n    println!(\&quot;{:?}\&quot;, expect_none(None));\n}\n&quot;}},{&quot;context&quot;:&quot;The call to `is_equal` passes values of type `&amp;str`. That means `T = str`. However, `str`\nis only allowed to be used in such a generic function if `T` is marked as `?Sized`.\n&quot;,&quot;id&quot;:&quot;5c5cb765-a561-459f-8223-9e72e824c5da&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn is_equal&lt;T: Eq&gt;(t1: &amp;T, t2: &amp;T) -&gt; bool {\n  t1 == t2\n}\n\nfn main() {\n  println!(\&quot;{}\&quot;, is_equal(\&quot;Hello\&quot;, \&quot;world\&quot;));\n}\n\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <script type="text/javascript" src="quiz/lib.js"></script><link rel="stylesheet" type="text/css" href="quiz/lib.css">
                     </main>
 
