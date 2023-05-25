@@ -325,7 +325,7 @@ trait on the `Published` struct.
 
 If we were to create an alternative implementation that didn’t use the state
 pattern, we might instead use `match` expressions in the methods on `Post` or
-even in the `main` code that checks the state of the post and changes behavior
+even in the `main` code that check the state of the post and change behavior
 in those places. That would mean we would have to look in several places to
 understand all the implications of a post being in the published state! This
 would only increase the more states we added: each of those `match` expressions

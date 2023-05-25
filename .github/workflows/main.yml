@@ -60,7 +60,7 @@ jobs:
         cargo make install-mdbook
         
     - name: Install mdbook-quiz
-      run: cargo install --git https://github.com/cognitive-engineering-lab/mdbook-quiz --debug --features rust-editor --features aquascope
+      run: cargo install --git https://github.com/cognitive-engineering-lab/mdbook-quiz --locked --debug --features rust-editor --features aquascope
 
     - name: Install js-extensions
       run: |

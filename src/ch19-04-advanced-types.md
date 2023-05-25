@@ -168,7 +168,7 @@ and Rust requires that `guess` have only one type. So what does `continue`
 return? How were we allowed to return a `u32` from one arm and have another arm
 that ends with `continue` in Listing 19-26?
 
-As you might have guessed, `continue` has a `!` value. That is, when Rust
+As you might have guessed, a `continue` expression has the type `!`. That is, when Rust
 computes the type of `guess`, it looks at both match arms, the former with a
 value of `u32` and the latter with a `!` value. Because `!` can never have a
 value, Rust decides that the type of `guess` is `u32`.
@@ -199,7 +199,7 @@ One final expression that has the type `!` is a `loop`:
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-10-loop-returns-never/src/main.rs:here}}
 ```
 
-Here, the loop never ends, so `!` is the value of the expression. However, this
+Here, the loop never ends, so `!` is the type of the expression. However, this
 wouldn’t be true if we included a `break`, because the loop would terminate
 when it got to the `break`.
 

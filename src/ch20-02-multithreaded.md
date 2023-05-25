@@ -452,8 +452,8 @@ absolutely nothing. Currently, we get the closure we want to execute in the
 `execute` method. But we need to give `thread::spawn` a closure to run when we
 create each `Worker` during the creation of the `ThreadPool`.
 
-We want the `Worker` structs that we just created to fetch the code to run from
-a queue held in the `ThreadPool` and send that code to its thread to run.
+We want each `Worker` struct that we just created to fetch the code to run from
+a queue held in the `ThreadPool` and send that code to the worker's thread to run.
 
 The channels we learned about in Chapter 16—a simple way to communicate between
 two threads—would be perfect for this use case. We’ll use a channel to function
@@ -487,7 +487,7 @@ In `ThreadPool::new`, we create our new channel and have the pool hold the
 sender. This will successfully compile.
 
 Let’s try passing a receiver of the channel into each worker as the thread pool
-creates the channel. We know we want to use the receiver in the thread that the
+creates the worker. We know we want to use the receiver in the thread that the
 workers spawn, so we’ll reference the `receiver` parameter in the closure. The
 code in Listing 20-17 won’t quite compile yet.
 
