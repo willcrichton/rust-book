@@ -487,7 +487,7 @@ In `ThreadPool::new`, we create our new channel and have the pool hold the
 sender. This will successfully compile.
 
 Let’s try passing a receiver of the channel into each worker as the thread pool
-creates the channel. We know we want to use the receiver in the thread that the
+creates the workers. We know we want to use the receiver in the thread that the
 workers spawn, so we’ll reference the `receiver` parameter in the closure. The
 code in Listing 20-17 won’t quite compile yet.
 
