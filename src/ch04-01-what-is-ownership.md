@@ -169,7 +169,7 @@ let b = a;`[]`
 #}
 ```
 
-Observe that now, there is only ever a single array at a time. At L1, the value of `a` is a pointer (represented by dot with an arrow) to the array inside the heap. The statement `let b = a` copies the pointer from `a` into `b`, but the pointed-to data is not copied.
+Observe that now, there is only ever a single array at a time. At L1, the value of `a` is a pointer (represented by dot with an arrow) to the array inside the heap. The statement `let b = a` copies the pointer from `a` into `b`, but the pointed-to data is not copied. Note that `a` is now grayed out because it has been *moved* &mdash; we will see what that means in a moment.
 
 {{#quiz ../quizzes/ch04-01-ownership-sec1-stackheap.toml}}
 
@@ -233,22 +233,6 @@ To avoid this situation, we finally arrive at ownership. When `a` is bound to `B
 > **Box deallocation principle (fully correct):** If a variable owns a box, when Rust deallocates the variable's frame, then Rust deallocates the box's heap memory.
 
 In the example above, `b` owns the boxed array. Therefore when the scope ends, Rust deallocates the box only once on behalf of `b`, not `a`.
-
-
-### At Runtime, A Move is Just a Copy
-
-A common misconception is that a "move" actually moves data around in memory. But that is not true! A move is just a copy. For example, let's look again at what happens when we move a boxed array from `a` to `b`:
-
-```aquascope,interpreter,horizontal
-#fn main() {
-let a = Box::new([0; 1_000_000]);`[]`
-let b = a;`[]`
-#}
-```
-
-An exceedingly common question from readers is: if `a` is moved at L2, why is it still in the diagram? Shouldn't `a` disappear, or gray out, or otherwise "move" somewhere?
-
-No! **At runtime, nothing happens to `a` when it is moved.** There is no "ownership bit" that gets flipped in memory. There is no "has-been-moved" flag that gets turned on. Ownership only exists at compile-time. The diagram does not show how the compiler "thinks" about the program. It shows how the program actually executes at runtime. At runtime, a move is just a copy. At compile-time, a move is a transfer of ownership.
 
 
 ### Collections Use Boxes
