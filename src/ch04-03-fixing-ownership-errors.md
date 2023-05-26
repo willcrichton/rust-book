@@ -28,7 +28,7 @@ fn return_a_string() -> String {
 }
 ```
 
-Another possibility is to return a string literal, which lives forever (indicated by `'static`). This solution applies if we never intend to change the string, and the string can be written directly in the program source code:
+Another possibility is to return a string literal, which lives forever (indicated by `'static`). This solution applies if we never intend to change the string, and then a heap allocation is unnecessary:
 
 ```rust
 fn return_a_string() -> &'static str {
@@ -36,7 +36,7 @@ fn return_a_string() -> &'static str {
 }
 ```
 
-Another possibility is to defer lifetime-checking to runtime by using garbage collection. For example, you can use a [reference-counted pointer][rc]:
+Another possibility is to defer borrow-checking to runtime by using garbage collection. For example, you can use a [reference-counted pointer][rc]:
 
 ```rust
 use std::rc::Rc;
@@ -91,7 +91,9 @@ fn main() {
 }
 ```
 
-So how do we fix this program? One straightforward solution is to change the type of name from `&Vec<String>` to `&mut Vec<String>`:
+In this example, a reference `first` to `name[0]` is created before calling `stringify_name_with_title`. The function `name.push(..)` reallocates the contents of `name`, which invalidates `first`, causing the `println` to read deallocated memory.
+
+So how do we fix this API? One straightforward solution is to change the type of name from `&Vec<String>` to `&mut Vec<String>`:
 
 ```rust,ignore
 fn stringify_name_with_title(name: &mut Vec<String>) -> String {
@@ -101,7 +103,7 @@ fn stringify_name_with_title(name: &mut Vec<String>) -> String {
 }
 ```
 
-But this is not a good solution! **Functions should not mutate their inputs if the caller would not expect it.** A person calling `stringify_name_with_title` probably does not expect their vector to be modified by this function. Another function like `add_title_to_name` might be expected to mutate a name, but not this one.
+But this is not a good solution! **Functions should not mutate their inputs if the caller would not expect it.** A person calling `stringify_name_with_title` probably does not expect their vector to be modified by this function. Another function like `add_title_to_name` might be expected to mutate its input, but not our function.
 
 Another option is to take ownership of the name, by changing `&Vec<String>` to `Vec<String>`:
 
@@ -136,7 +138,7 @@ fn stringify_name_with_title(name: &Vec<String>) -> String {
 }
 ```
 
-In general, writing Rust functions is a careful balance of asking for the *right* level of permissions. For this example, it's most idiomatic to only expect read permission.
+In general, writing Rust functions is a careful balance of asking for the *right* level of permissions. For this example, it's most idiomatic to only expect the read permission on `name`.
 
 {{#quiz ../quizzes/ch04-03-fixing-ownership-errors-sec1-idioms.toml}}
 
@@ -145,7 +147,7 @@ In general, writing Rust functions is a careful balance of asking for the *right
 Another unsafe operation is using a reference to heap data that gets deallocated by another alias. For example, here's a function that gets a reference to the largest string in a vector, and then uses it while mutating the vector:
 
 ```aquascope,permissions,stepper,boundaries,shouldFail
-fn add_big_strings(dst: &mut Vec<String>, src: &[String]) {
+fn add_big_strings(dst: &mut Vec<String>, src: &[String]) {`(focus,paths:*dst)`
     let largest: &String = 
       dst.iter().max_by_key(|s| s.len()).unwrap();`(focus,paths:*dst)`
     for s in src {
@@ -188,8 +190,8 @@ fn add_big_strings(dst: &mut Vec<String>, src: &[String]) {
 
 However, this also causes a performance hit for allocating the vector `to_add`.
 
-A final possibility is to copy out the length, since we don't need the contents of `largest`, just its length. 
-This solution is arguably the most idiomatic and the most performant.
+A final possibility is to copy out the length of `largest`, since we don't actually need the contents of `largest`, just its length. 
+This solution is arguably the most idiomatic and the most performant:
 
 ```rust
 fn add_big_strings(dst: &mut Vec<String>, src: &[String]) {
@@ -258,7 +260,7 @@ drop(v);`[]`
 
 What happens here is a **double-free.** After executing `let s = *s_ref`, both `v` and `s` think they own "Hello world". After `s` is dropped, "Hello world" is deallocated. Then `v` is dropped, and undefined behavior happens when the string is freed a second time.
 
-> *Note:* we don't even have to *use* `v` or `s` to cause undefined behavior through the double-free. After we move the string out from `s_ref`, undefined behavior will happen once the elements are dropped.
+> *Note:* after executing `s = *s_ref`, we don't even have to use `v` or `s` to cause undefined behavior through the double-free. As soon as we move the string out from `s_ref`, undefined behavior will happen once the elements are dropped.
 
 However, this undefined behavior does not happen when the vector contains `i32` elements. The difference is that copying a `String` copies a pointer to heap data. Copying an `i32` does not.
 In technical terms, Rust says that the type `i32` implements the `Copy` trait, while `String` does not implement `Copy` (we will discuss traits in a later chapter).

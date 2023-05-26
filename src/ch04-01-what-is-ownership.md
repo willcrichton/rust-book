@@ -252,7 +252,6 @@ fn add_suffix(mut name: String) -> String {
 }
 ```
 
-
 This program is more involved, so make sure you follow each step:
 
 1. At L1, the string "Ferris" has been allocated on the heap. It is owned by `first`.
