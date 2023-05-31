@@ -1,0 +1,226 @@
+[[questions]]
+id = "1ec0098c-c5dc-46de-a889-b6659c0af757"
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are writing a function with the following spec:
+
+> `round_all` takes as input a list of floating point numbers, and it rounds each number in-place to the nearest integer.
+
+Which of the following is the most appropriate type signature for a function implementing this spec?
+"""
+answer.answer = """
+```
+fn round_all(v: &mut Vec<f32>);
+```
+"""
+prompt.distractors = [
+"""
+```
+fn round_all(v: &Vec<f32>) -> Vec<f32>;
+```
+""",
+"""
+```
+fn round_all(v: Vec<f32>);
+```
+""",
+"""
+```
+fn round_all(v: &Vec<f32>);
+```
+"""
+]
+context = """
+The spec calls for the input to be mutated in-place, therefore the most appropriate type signature accepts a mutable reference to the input.
+An immutable reference or an owned vector are both inappropriate for this spec.
+"""
+
+[[questions]]
+id = "f8ca5ab2-0e5d-4c0d-bca2-99e6763ba9c5"
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are writing a function with the following spec:
+
+> `find_contains` takes as input a collection of strings and a target substring. 
+> It returns a list of all the strings in the collection that contain the target substring.
+
+Which of the following is the most appropriate type signature for a function implementing this spec?
+"""
+answer.answer = """
+```
+fn find_contains(haystack: &[String], needle: &str) -> Vec<&String>;
+```
+"""
+prompt.distractors = [
+"""
+```
+fn find_contains(haystack: &Vec<String>, needle: String) -> Vec<String>;
+```
+""",
+"""
+```
+fn find_contains(haystack: &[String], needle: &str) -> Vec<String>;
+```
+""",
+"""
+```
+fn find_contains(haystack: &Vec<String>, needle: &str) -> &[String];
+```
+"""
+]
+context = """
+For `haystack`, the slice type `&[String]` can accept more inputs than `&Vec<String>`, so it is preferred.
+For `needle`, the target substring does not need to be heap-allocated, so `&str` is preferred to `String`.
+For the return type, `Vec<String>` is not desirable because it would require cloning the input strings.
+`&[String]` is not desirable because it can only return a contiguous subsequence of the input.
+`Vec<&String>` is the most preferable because it only incurs the cost of allocating the vector, not the strings themselves.
+"""
+
+[[questions]]
+id = "868a4edf-16f0-4191-8aed-835c812b8b25"
+type = "MultipleChoice"
+prompt.prompt = """
+Rust normally disallows multiple mutable accesses to the same array, even when those accesses are disjoint. 
+For example, this function does not compile:
+
+```
+fn main() {
+  let mut v = vec![0, 1, 2, 3];
+  let (r0, r1) = (&mut v[0..2], &mut v[2..4]);
+  r0[0] += 1;
+  r1[0] += 1;  
+}
+```
+
+However, the Rust standard library has a function `slice::split_at_mut` that does permit this functionality:
+
+```
+fn main() {
+  let mut v = vec![0, 1, 2, 3];
+  let (r0, r1) = v.split_at_mut(2);
+  r0[0] += 1;
+  r1[0] += 1;  
+}
+```
+
+Which of the following best describes how it's possible to implement `split_at_mut`?
+"""
+answer.answer = "`split_at_mut` uses unsafe code to circumvent the borrow checker with raw pointers"
+prompt.distractors = [
+"`split_at_mut` is a special compiler primitive that cannot be implemented within the language",
+"`split_at_mut` uses unsafe code to disable the borrow checker from checking the safety of mutable references",
+"`split_at_mut` calls into a C library that can't be analyzed by Rust"
+]
+context = """
+As discussed in [Chapter 4.3 "Fixing a Safe Program: Mutating Different Array Elements"](ch04-03-fixing-ownership-errors.html#fixing-a-safe-program-mutating-different-array-elements), functions like `split_at_mut` are implemented with the `unsafe` feature.
+This feature doesn't completely disable the borrow checker, but rather enables the use of specific unsafe features like raw pointers.
+"""
+
+
+[[questions]]
+id = "ba32e57a-e5f2-42e4-8cfd-eb265990c690"
+type = "MultipleChoice"
+prompt.prompt = """
+Consider the permissions in the following program:
+
+```aquascope,permissions,boundaries,stepper
+#fn main() {
+let s = String::new();
+let s_ref = &s;`(focus,paths:*s_ref)`
+#println!("{s_ref}");
+#}
+```
+
+Which of the following best explains why `*s_ref` does not have the @Perm{own} (own) permission?
+"""
+answer.answer = "Ownership permits moving, and moving out of a reference can cause a double-free"
+prompt.distractors = [
+  "Ownership permits borrowing, and reborrowing `*s_ref` can cause a double-free",
+  "Ownership permits mutation, and mutating `*s_ref` can cause a use-after-free",
+  "Ownership permits reading, and reading `*s_ref` can cause a use-after-free"
+]
+context = """
+The @Perm{own} permission represents ownership of an object. There can only exist one owner of an object, so it is important
+that references cannot transfer ownership.
+"""
+
+[[questions]]
+id = "3a5f5de5-23a9-49fb-bdb4-acc9c3fbb4a6"
+type = "MultipleChoice"
+prompt.prompt = """
+Consider the set of Rust programs that contain no `unsafe` code. 
+Select each of the following statements that is true about the kinds of programs accepted and rejected by the borrow checker:
+"""
+answer.answer = [
+  "The borrow checker always rejects programs with undefined behavior",
+  "The borrow checker sometimes rejects programs without undefined behavior",
+]
+prompt.distractors = [
+  "The borrow checker always accepts programs without undefined behavior",  
+  "The borrow checker sometimes accepts programs with undefined behavior"
+]
+context = """
+The borrow checker always rejects programs with undefined behavior, but may sometimes reject programs without undefined behavior (i.e., are perfectly safe).
+In technical terms, the borrow checker is a sound and incomplete analysis.
+"""
+
+
+[[questions]]
+id = "208e0e38-a706-4d96-9809-f0e12f574136"
+type = "MultipleChoice"
+prompt.prompt = """
+The function `extract` is rejected by the borrow checker:
+
+```rust
+fn extract(b: &Box<i32>) -> i32 {
+    let b2: Box<i32> = *b;
+    *b2
+}
+```
+
+Imagine that the borrow checker did not reject this function. 
+Determine whether there exists an input such that the function would cause undefined behavior if executed on that input.
+"""
+answer.answer = "This function COULD cause undefined behavior"
+prompt.distractors = ["This function could NOT cause undefined behavior"]
+context = """
+This function would cause a double-free on any input.
+"""
+
+
+[[questions]]
+id = "dcfd54f8-7fe6-4483-aefd-ea95ba5b5eb0"
+type = "MultipleChoice"
+prompt.prompt = """
+The function `transfer_string` is rejected by the borrow checker:
+
+```rust
+fn get_first(strs: &mut (String, String)) -> &mut String {
+    &mut strs.0
+}
+
+fn get_second(strs: &mut (String, String)) -> &mut String {
+    &mut strs.1
+}
+
+fn transfer_string(strs: &mut (String, String)) {
+    let fst = get_first(strs);
+    let snd = get_second(strs);
+    fst.push_str(snd);
+    snd.clear();
+}
+```
+
+Imagine that the borrow checker did not reject this function. 
+Determine whether there exists an input such that the function would cause undefined behavior if executed on that input.
+"""
+answer.answer = "This function could NOT cause undefined behavior"
+prompt.distractors = ["This function COULD cause undefined behavior"]
+context = """
+The borrow checker rejects this function because it assumes that `get_first` and `get_second` could return a mutable
+reference to either component of the tuple, and so `fst` and `snd` could possibly point to the same value. But they are
+always distinct in this program, so this function is actually safe.
+"""
+
+
+

@@ -26,6 +26,7 @@
     - [References and Borrowing](ch04-02-references-and-borrowing.md)
     - [Fixing Ownership Errors](ch04-03-fixing-ownership-errors.md)
     - [The Slice Type](ch04-04-slices.md)
+    - [Ownership Recap](ch04-05-ownership-recap.md)
 
 - [Using Structs to Structure Related Data](ch05-00-structs.md)
     - [Defining and Instantiating Structs](ch05-01-defining-structs.md)

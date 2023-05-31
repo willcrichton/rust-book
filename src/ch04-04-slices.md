@@ -360,15 +360,10 @@ detail when we talk about vectors in Chapter 8.
 
 ## Summary
 
-The concepts of ownership, borrowing, and slices ensure memory safety in Rust
-programs at compile time. The Rust language gives you control over your memory
-usage in the same way as other systems programming languages, but having the
-owner of data automatically clean up that data when the owner goes out of scope
-means you don’t have to write and debug extra code to get this control.
-
-Ownership affects how lots of other parts of Rust work, so we’ll talk about
-these concepts further throughout the rest of the book. Let’s move on to
-Chapter 5 and look at grouping pieces of data together in a `struct`.
+Slices are a special kind of reference that refer to sub-ranges of a sequence, like a 
+string or a vector. At runtime, a slice is represented as a "fat pointers" which contains
+a pointer to the beginning of the range, and a length of the range. One advantage of slices
+over index-based ranges is that the slice cannot be invalidated while it's being used.
 
 [ch13]: ch13-02-iterators.html
 [ch6]: ch06-02-match.html#patterns-that-bind-to-values

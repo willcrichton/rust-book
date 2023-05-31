@@ -73,7 +73,7 @@ println!("{}", v1[0]);`[]`
 #}
 ```
 
-Which of the following best describes how undefined behavior occurs in this program?
+Which of the following best describes the point at which undefined behavior occurs in this program?
 """
 answer.answer = "`v1[0]` reads `v1`, which points to deallocated memory"
 prompt.distractors = [
