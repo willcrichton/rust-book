@@ -71,7 +71,7 @@ This Rust API differs from the Python API in a few key ways:
 
 * The function `get_words` returns an explicit immutable reference to strings within the document. The only way to create a new document from this word vector is to deep-copy its contents, like this:
 
-```rust
+```rust,ignore
 fn main() {
     let words = vec!["hello".to_string()];
     let d = new_document(words);
