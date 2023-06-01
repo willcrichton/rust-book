@@ -68,8 +68,8 @@ id = "e8da8773-8df2-4279-8c27-b7e9eda1dddd"
 type = "Tracing"
 prompt.program = """
 fn main() {
-  let mut v = vec![1, 2, 3];
-  let mut v2 = Vec::new();
+  let mut v: Vec<i32> = vec![1, 2, 3];
+  let mut v2: Vec<&mut i32> = Vec::new();
   for i in &mut v {
     v2.push(i);
   }

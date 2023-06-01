@@ -1,12 +1,12 @@
 ## Ownership Recap
 
 This chapter introduced a lot of new concepts like ownership, borrowing, and slices.
-If you aren't familiar with systems programming, this chapter *also* introduced new concepts like memory allocation, the stack vs. the heap, pointers, and undefined behavior. Before we move on to the rest of Rust, let's first stop and take a breath. Then we'll review and practice with the key concepts from this chapter.
+If you aren't familiar with systems programming, this chapter also introduced new concepts like memory allocation, the stack vs. the heap, pointers, and undefined behavior. Before we move on to the rest of Rust, let's first stop and take a breath. We'll review and practice with the key concepts from this chapter.
 
 ### Ownership versus Garbage Collection
 
 To put ownership into context, we should talk about **garbage collection**.
-Most programming languages use a garbage collector to manage memory, such as in Python, Java, and Javascript. A garbage collector works at runtime adjacent to a running program. The collector scans through memory to find data that's no longer used &mdash; that is, the running program can no longer reach that data from a function-local variable. Then the collector deallocates the unused memory for later use.
+Most programming languages use a garbage collector to manage memory, such as in Python, Javascript, Java, and Go. A garbage collector works at runtime adjacent to a running program (a tracing collector, at least). The collector scans through memory to find data that's no longer used &mdash; that is, the running program can no longer reach that data from a function-local variable. Then the collector deallocates the unused memory for later use.
 
 The key benefit of a garbage collector is that it avoids undefined behavior (such as using freed memory), as can happen in C or C++. Garbage collection also avoids the need for a complex type system to check for undefined behavior, like in Rust. However, there are a few drawbacks to garbage collection. One obvious drawback is performance, as garbage collection incurs either frequent small overheads (for reference-counting, like in Python and Swift) or infrequent large overheads (for tracing, like in all other GC'd languages). 
 
@@ -30,7 +30,7 @@ class Document:
 Here's one way we could use this `Document` class that creates a document `d`, copies it into a new document `d2`, and then mutates `d2`.
 
 ```python
-words = ["hello"]
+words = ["Hello"]
 d = Document(words)
 
 d2 = Document(d.get_words())
@@ -39,11 +39,13 @@ d2.add_word("world")
 
 Consider two key questions about this example:
 
-1. **When is the word array deallocated?** This program has created three pointers to the same array. The variables `words`, `d`, and `d2` all contain a pointer to the word list allocated on the heap. Therefore the Python garbage collector will only deallocate the word array when all three variables are out of scope. More generally, it's often difficult to predict where data will be garbage-collected just looking at the source code.
+1. **When is the word array deallocated?** 
+This program has created three pointers to the same array. The variables `words`, `d`, and `d2` all contain a pointer to the word list allocated on the heap. Therefore Python will only deallocate the word array when all three variables are out of scope. More generally, it's often difficult to predict where data will be garbage-collected just by reading the source code.
 
-2. **What are the contents of the document `d`?** Because `d2` contains a pointer to the same words array as `d`, then `d2.add_word("world")` also mutates the document `d`. Therefore in this example, the words in `d` are `["hello", "world"]`. This happens because `d.get_words()` returns a mutable reference to the words array in `d`. Pervasive, implicit mutable references can easily lead to unpredictable bugs when data structures can leak their internals[^ownership-originally]. Here, it is probably not intended behavior that a change to `d2` can change `d`.
+2. **What are the contents of the document `d`?** 
+Because `d2` contains a pointer to the same words array as `d`, then `d2.add_word("world")` also mutates the document `d`. Therefore in this example, the words in `d` are `["Hello", "world"]`. This happens because `d.get_words()` returns a mutable reference to the words array in `d`. Pervasive, implicit mutable references can easily lead to unpredictable bugs when data structures can leak their internals[^ownership-originally]. Here, it is probably not intended behavior that a change to `d2` can change `d`.
 
-This problem is not unique to Python &mdash; you can encounter similar behavior in C#, Java, Javascript, and so on. Most programming languages actually have a concept of pointers. It's just a question of how the language exposes pointers to the programmer. Garbage collection makes it difficult to see which variable points to which data. For example, it wasn't obvious that `d.getWords()` produced a pointer to data within `d`. 
+This problem is not unique to Python &mdash; you can encounter similar behavior in C#, Java, Javascript, and so on. In fact, most programming languages actually have a concept of pointers. It's just a question of how the language exposes pointers to the programmer. Garbage collection makes it difficult to see which variable points to which data. For example, it wasn't obvious that `d.get_words()` produced a pointer to data within `d`. 
 
 By contrast, Rust's ownership model puts pointers front-and-center. We can see that by translating the `Document` type into a Rust data structure. Normally we would use a `struct`, but we haven't covered those yet, so we'll just use a type alias:
 
@@ -90,16 +92,16 @@ The point of this example is to say: if Rust is not your first language, then yo
 
 ### The Concepts of Ownership
 
-Next, let's review the concepts of ownership. This review will be quick &mdash; the goal is to remind you of the relevant concepts. If you realize you forgot or didn't understand an important concept, then we will link you to the relevant chapters which you can review.
+Next, let's review the concepts of ownership. This review will be quick &mdash; the goal is to remind you of the relevant concepts. If you realize you forgot or didn't understand a concept, then we will link you to the relevant chapters which you can review.
 
 #### Ownership at Runtime
 
 We'll start by reviewing how Rust uses memory at runtime: 
-* Rust allocates local variables in stack frames, which are deallocated when a function call ends. 
+* Rust allocates local variables in stack frames, which are allocated when a function is called and deallocated when the call ends. 
 * Local variables can hold either data (like numbers, booleans, tuples, etc.) or pointers. 
 * Pointers can be created either through boxes (pointers owning data on the heap) or references (non-owning pointers).
 
-This diagram illustrates how each component looks at runtime:
+This diagram illustrates how each concept looks at runtime:
 
 ```aquascope,interpreter,horizontal
 fn main() {
@@ -149,7 +151,7 @@ fn main() {
 }
 ```
 
-A variabler's permissions can be changed if it is **moved** or **borrowed**. A move of a variable with a non-copyable type (like `Box<T>` or `String`) requires the @Perm{read}@Perm{own} permissions, and the move eliminates all permissions on the variable. That rule prevents the use of moved variables:
+A variable's permissions can be changed if it is **moved** or **borrowed**. A move of a variable with a non-copyable type (like `Box<T>` or `String`) requires the @Perm{read}@Perm{own} permissions, and the move eliminates all permissions on the variable. That rule prevents the use of moved variables:
 
 ```aquascope,permissions,stepper,boundaries,shouldFail
 fn main() {
@@ -165,7 +167,7 @@ fn consume_a_string(_s: String) {
 
 If you want to review how moves work, re-read [Chapter 4.1][ch04-01].
 
-Borrowing a variable (creating a reference to it) temporarily removes some of the variable's permissions. An immutable borrow creates an immutable reference, and also disables the borrowed data from being mutated. For example, printing an immutable reference is ok:
+Borrowing a variable (creating a reference to it) temporarily removes some of the variable's permissions. An immutable borrow creates an immutable reference, and also disables the borrowed data from being mutated or moved. For example, printing an immutable reference is ok:
 
 ```aquascope,permissions,stepper,boundaries
 #fn main() {
@@ -187,7 +189,6 @@ s_ref.push_str(" world");
 
 And mutating the immutably borrowed data is not ok:
 
-
 ```aquascope,permissions,stepper,boundaries,shouldFail
 #fn main() {
 let mut s = String::from("Hello");`(focus)`
@@ -207,7 +208,7 @@ let s2 = *s_ref;
 #}
 ```
 
-A mutable borrow creates an immutable reference, which disables the borrowed data from being read or written. For example, mutating a mutable reference is ok:
+A mutable borrow creates a mutable reference, which disables the borrowed data from being read, written, or moved. For example, mutating a mutable reference is ok:
 
 ```aquascope,permissions,stepper,boundaries
 #fn main() {
@@ -229,11 +230,11 @@ s_ref.push_str(" world");
 #}
 ```
 
-If you want to review permissions and references, re-read [Chapter 4.1][ch04-01].
+If you want to review permissions and references, re-read [Chapter 4.2][ch04-02].
 
 #### Connecting Ownership between Compile-time and Runtime
 
-Rust's permissions are designed to prevent undefined behavior. For example, one kind of undefined behavior is a **use-after-free** where freed memory is read or written. Immutable borrows remove the write permission to avoid use-after-free, like in this case:
+Rust's permissions are designed to prevent undefined behavior. For example, one kind of undefined behavior is a **use-after-free** where freed memory is read or written. Immutable borrows remove the @Perm{write} permission to avoid use-after-free, like in this case:
 
 ```aquascope,interpreter,shouldFail,horizontal
 #fn main() {
@@ -244,7 +245,7 @@ println!("{n}");`[]`
 #}
 ```
 
-Another kind of undefined behavior is a **double-free** where memory is freed twice. Non-copyable data cannot be moved out of a reference to avoid double-frees, like in this case:
+Another kind of undefined behavior is a **double-free** where memory is freed twice. Dereferences of references to non-copyable data do not have the @Perm{own} permission to avoid double-frees, like in this case:
 
 ```aquascope,interpreter,shouldFail,horizontal
 #fn main() {
@@ -261,9 +262,9 @@ If you want to review undefined behavior, re-read [Chapter 4.1][ch04-01] and [Ch
 
 ### The Rest of Ownership
 
-As we introduce additional features (like structs, enums, and traits), those features will have specific interactions with ownership. But this chapter provides the essential foundations &mdash; the concepts of memory, pointers, undefined behavior, and permissions will help us talk about the more advanced parts of Rust in future chapters.
+As we introduce additional features like structs, enums, and traits, those features will have specific interactions with ownership. This chapter provides the essential foundation for understanding those interactions &mdash; the concepts of memory, pointers, undefined behavior, and permissions will help us talk about the more advanced parts of Rust in future chapters.
 
-And don't forget to take the quizzes if you want to interactively check your understanding!
+And don't forget to take the quizzes if you want to check your understanding!
 
 {{#quiz ../quizzes/ch04-05-ownership-recap.toml}}
 

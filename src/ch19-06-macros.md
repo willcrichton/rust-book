@@ -104,11 +104,15 @@ is the only pattern in this macro, there is only one valid way to match; any
 other pattern will result in an error. More complex macros will have more than
 one arm.
 
+<!-- BEGIN INTERVENTION: f4f664ef-4b0b-43ac-ba90-5051a4ef89fb -->
 Valid pattern syntax in macro definitions is different than the pattern syntax
 covered in Chapter 18 because macro patterns are matched against Rust code
-structure rather than values. Let’s walk through what the pattern pieces in
+structure rather than values. For example, declarative macros can match against expressions (`expr`), types (`ty`), and even entire items (`item`).
+Let's walk through what the pattern pieces in
 Listing 19-28 mean; for the full macro pattern syntax, see the [Rust
 Reference][ref].
+<!-- END INTERVENTION: f4f664ef-4b0b-43ac-ba90-5051a4ef89fb -->
+
 
 First, we use a set of parentheses to encompass the whole pattern. We use a
 dollar sign (`$`) to declare a variable in the macro system that will contain
@@ -148,6 +152,7 @@ generate code to create a vector containing the specified elements.
 To learn more about how to write macros, consult the online documentation or
 other resources, such as [“The Little Book of Rust Macros”][tlborm] started by
 Daniel Keep and continued by Lukas Wirth.
+
 
 ### Procedural Macros for Generating Code from Attributes
 

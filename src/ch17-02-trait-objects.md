@@ -168,6 +168,8 @@ If someone using our library decides to implement a `SelectBox` struct that has
 <span class="caption">Listing 17-8: Another crate using `gui` and implementing
 the `Draw` trait on a `SelectBox` struct</span>
 
+### Using the Trait
+
 Our library’s user can now write their `main` function to create a `Screen`
 instance. To the `Screen` instance, they can add a `SelectBox` and a `Button`
 by putting each in a `Box<T>` to become a trait object. They can then call the
@@ -226,6 +228,93 @@ We’ll get this error because `String` doesn’t implement the `Draw` trait:
 This error lets us know that either we’re passing something to `Screen` we
 didn’t mean to pass and so should pass a different type or we should implement
 `Draw` on `String` so that `Screen` is able to call `draw` on it.
+
+<!-- BEGIN INTERVENTION: cce62358-5291-4eb3-84d6-fbc570873ee3 -->
+
+### Trait Objects and Type Inference
+
+One downside to using trait objects is how they interact with type inference. 
+For example, consider type inference for `Vec<T>`. When `T` is not a trait object,
+Rust just needs to know the type of a single element in the vector to infer `T`. So
+an empty vector causes a type inference error:
+
+```rust,ignore,does_not_compile
+#fn main() {
+let v = vec![];
+// error[E0282]: type annotations needed for `Vec<T>`
+#}
+```
+
+But adding an element enables Rust to infer the type of the vector:
+
+```rust,ignore
+#fn main() {
+let v = vec!["Hello world"];
+// ok, v : Vec<&str>
+#}
+```
+
+Type inference is trickier for trait objects. For example, say we tried to factor 
+the `components` array in Listing 17-9 into a separate variable, like this:
+
+```rust,ignore,does_not_compile
+fn main() {
+    let components = vec![
+        Box::new(SelectBox { /* .. */ }),
+        Box::new(Button { /* .. */ }),
+    ];
+    let screen = Screen { components };
+    screen.run();
+}
+```
+
+<span class="caption">Listing 17-11: Factoring the components array causes a type error</span>
+
+This refactor causes the program to no longer compile! The compiler rejects this program with
+the following error:
+
+```text
+error[E0308]: mismatched types
+   --> test.rs:55:14
+    |
+55  |       Box::new(Button {
+    |  _____--------_^
+    | |     |
+    | |     arguments to this function are incorrect
+56  | |       width: 50,
+57  | |       height: 10,
+58  | |       label: String::from("OK"),
+59  | |     }),
+    | |_____^ expected `SelectBox`, found `Button`
+```
+
+In Listing 17-09, the compiler understands that the `components` vector must have the type
+`Vec<Box<dyn Draw>>` because that's specified in the `Screen` struct definition. But in Listing 17-11,
+the compiler loses that information at the point where `components` is defined. To fix the issue, you
+have to give a hint to the type inference algorithm. That can either be via an explicit cast on
+any element of the vector, like this:
+
+```rust,ignore
+  let components = vec![
+        Box::new(SelectBox { /* .. */ }) as Box<dyn Draw>,
+        Box::new(Button { /* .. */ }),
+  ];
+```
+
+Or it can be via a type annotation on the let-binding, like this:
+
+```rust,ignore
+  let components: Vec<Box<dyn Draw>> = vec![
+        Box::new(SelectBox { /* .. */ }),
+        Box::new(Button { /* .. */ }),
+  ];
+```
+
+In general, it is good to be aware that using trait objects can cause a worse developer experience for
+API clients in the case of type inference.
+
+<!-- END INTERVENTION: cce62358-5291-4eb3-84d6-fbc570873ee3 -->
+
 
 ### Trait Objects Perform Dynamic Dispatch
 

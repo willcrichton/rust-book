@@ -36,7 +36,7 @@ fn main() {
 
 Which of the following are valid operations to fill in the underscore that would cause `s` to be dropped?
 """
-answer.answer = ["`drop(s);`", "`(|_| ())(s);`", "`s;`"]
+answer.answer = ["`drop(s);`", "`(|_| ())(s);`", "`{ s };`"]
 prompt.distractors = [
     "`s.drop();`",    
 ]
