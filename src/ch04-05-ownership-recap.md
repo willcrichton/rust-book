@@ -80,7 +80,7 @@ fn main() {
 
     // .to_vec() converts &[String] to Vec<String> by cloning each string
     let words_copy = get_words(&d).to_vec();
-    let mut d2 = make_document(words_copy);
+    let mut d2 = new_document(words_copy);
     add_word(&mut d2, "world".to_string());
 
     // The modification to `d2` does not affect `d`
