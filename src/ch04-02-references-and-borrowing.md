@@ -165,7 +165,7 @@ println!("Third element is {}", *num);`[]`
 #}
 ```
 
-Initially, `vec` points to an array with 3 elements on the heap. Then `num` is created as a reference to the third element, as seen at L1. However, the operation `v.push(4)` resizes `vec`. The resize will deallocate the previous array and allocate a new, bigger array. In the process, `num` is left pointing to invalid memory. Therefore at L3, dereferencing `*num` reads invalid memory, causing undefined behavior.
+Initially, `vec` points to an array with 3 elements on the heap. Then `num` is created as a reference to the third element, as seen at L1. However, the operation `vec.push(4)` resizes `vec`. The resize will deallocate the previous array and allocate a new, bigger array. In the process, `num` is left pointing to invalid memory. Therefore at L3, dereferencing `*num` reads invalid memory, causing undefined behavior.
 
 In more abstract terms, the issue is that the vector `vec` is both aliased (by the reference `num`) and mutated (by the operation `vec.push(4)`). So to avoid these kinds of issues, Rust follows a basic principle:
 
