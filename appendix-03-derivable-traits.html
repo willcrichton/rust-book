@@ -248,8 +248,7 @@ slice. The slice doesn’t own the type instances it contains, but the vector
 returned from <code>to_vec</code> will need to own its instances, so <code>to_vec</code> calls
 <code>clone</code> on each item. Thus, the type stored in the slice must implement <code>Clone</code>.</p>
 <p>The <code>Copy</code> trait allows you to duplicate a value by only copying bits stored on
-the stack; no arbitrary code is necessary. See the <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">“Stack-Only Data:
-Copy”</a><!-- ignore --> section in Chapter 4 for more
+the stack; no arbitrary code is necessary. See the <a href="ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-copying-vs-moving-out-of-a-collection">“Copying vs. Moving Out of a Collection”</a><!-- ignore --> section in Chapter 4 for more
 information on <code>Copy</code>.</p>
 <p>The <code>Copy</code> trait doesn’t define any methods to prevent programmers from
 overloading those methods and violating the assumption that no arbitrary code
