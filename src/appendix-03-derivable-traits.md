@@ -125,8 +125,7 @@ returned from `to_vec` will need to own its instances, so `to_vec` calls
 `clone` on each item. Thus, the type stored in the slice must implement `Clone`.
 
 The `Copy` trait allows you to duplicate a value by only copying bits stored on
-the stack; no arbitrary code is necessary. See the [“Stack-Only Data:
-Copy”][stack-only-data-copy]<!-- ignore --> section in Chapter 4 for more
+the stack; no arbitrary code is necessary. See the [“Copying vs. Moving Out of a Collection”][stack-only-data-copy]<!-- ignore --> section in Chapter 4 for more
 information on `Copy`.
 
 The `Copy` trait doesn’t define any methods to prevent programmers from
@@ -181,7 +180,7 @@ The `Default` trait is required when you use the method `unwrap_or_default` on
 [creating-instances-from-other-instances-with-struct-update-syntax]:
 ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax
 [stack-only-data-copy]:
-ch04-01-what-is-ownership.html#stack-only-data-copy
+ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-copying-vs-moving-out-of-a-collection
 [ways-variables-and-data-interact-clone]:
 ch04-01-what-is-ownership.html#ways-variables-and-data-interact-clone
 [macros]: ch19-06-macros.html#macros
