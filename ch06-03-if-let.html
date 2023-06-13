@@ -151,8 +151,9 @@
                         <h2 id="concise-control-flow-with-if-let"><a class="header" href="#concise-control-flow-with-if-let">Concise Control Flow with <code>if let</code></a></h2>
 <p>The <code>if let</code> syntax lets you combine <code>if</code> and <code>let</code> into a less verbose way to
 handle values that match one pattern while ignoring the rest. Consider the
-program in Listing 6-6 that matches on an <code>Option&lt;u8&gt;</code> value in the <code>config_max</code>
-variable but only wants to execute code if the value is the <code>Some</code> variant.</p>
+program in Listing 6-6 that matches on an <code>Option&lt;u8&gt;</code> value in the
+<code>config_max</code> variable but only wants to execute code if the value is the <code>Some</code>
+variant.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let config_max = Some(3u8);
     match config_max {
@@ -178,7 +179,7 @@ code behaves the same as the <code>match</code> in Listing 6-6:</p>
 sign. It works the same way as a <code>match</code>, where the expression is given to the
 <code>match</code> and the pattern is its first arm. In this case, the pattern is
 <code>Some(max)</code>, and the <code>max</code> binds to the value inside the <code>Some</code>. We can then
-use <code>max</code> in the body of the <code>if let</code> block in the same way as we used <code>max</code> in
+use <code>max</code> in the body of the <code>if let</code> block in the same way we used <code>max</code> in
 the corresponding <code>match</code> arm. The code in the <code>if let</code> block isn’t run if the
 value doesn’t match the pattern.</p>
 <p>Using <code>if let</code> means less typing, less indentation, and less boilerplate code.
@@ -194,7 +195,7 @@ runs code when the value matches one pattern and then ignores all other values.<
 <code>Coin</code> enum definition in Listing 6-4, where the <code>Quarter</code> variant also held a
 <code>UsState</code> value. If we wanted to count all non-quarter coins we see while also
 announcing the state of the quarters, we could do that with a <code>match</code>
-expression like this:</p>
+expression, like this:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#[derive(Debug)]
 </span><span class="boring">enum UsState {
 </span><span class="boring">    Alabama,
@@ -217,7 +218,7 @@ expression like this:</p>
         _ =&gt; count += 1,
     }
 <span class="boring">}</span></code></pre></pre>
-<p>Or we could use an <code>if let</code> and <code>else</code> expression like this:</p>
+<p>Or we could use an <code>if let</code> and <code>else</code> expression, like this:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#[derive(Debug)]
 </span><span class="boring">enum UsState {
 </span><span class="boring">    Alabama,
@@ -252,7 +253,7 @@ data inside them, you can use <code>match</code> or <code>if let</code> to extra
 values, depending on how many cases you need to handle.</p>
 <p>Your Rust programs can now express concepts in your domain using structs and
 enums. Creating custom types to use in your API ensures type safety: the
-compiler will make certain your functions get only values of the type each
+compiler will make certain your functions only get values of the type each
 function expects.</p>
 <p>In order to provide a well-organized API to your users that is straightforward
 to use and only exposes exactly what your users will need, let’s now turn to

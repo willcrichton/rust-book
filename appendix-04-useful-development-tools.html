@@ -232,14 +232,15 @@ mathematical constant, such as pi, as this program does:</p>
     println!(&quot;the area of the circle is {}&quot;, x * r * r);
 }</code></pre></pre>
 <p>Running <code>cargo clippy</code> on this project results in this error:</p>
-<pre><code class="language-text">error: approximate value of `f{32, 64}::consts::PI` found. Consider using it directly
+<pre><code class="language-text">error: approximate value of `f{32, 64}::consts::PI` found
  --&gt; src/main.rs:2:13
   |
 2 |     let x = 3.1415;
   |             ^^^^^^
   |
-  = note: #[deny(clippy::approx_constant)] on by default
-  = help: for further information visit https://rust-lang-nursery.github.io/rust-clippy/master/index.html#approx_constant
+  = note: `#[deny(clippy::approx_constant)]` on by default
+  = help: consider using the constant directly
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#approx_constant
 </code></pre>
 <p>This error lets you know that Rust already has a more precise <code>PI</code> constant
 defined, and that your program would be more correct if you used the constant
@@ -259,10 +260,10 @@ compiler-centric utilities that speaks the <a href="http://langserver.org/">Lang
 ignore -->, which is a specification for IDEs and programming languages to
 communicate with each other. Different clients can use <code>rust-analyzer</code>, such as
 <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">the Rust analyzer plug-in for Visual Studio Code</a>.</p>
-<p>Visit the <code>rust-analyzer</code> project’s <a href="https://rust-analyzer.github.io">home page</a> for installation
-instructions, then install the language server support in your particular IDE.
-Your IDE will gain abilities such as autocompletion, jump to definition, and
-inline errors.</p>
+<p>Visit the <code>rust-analyzer</code> project’s <a href="https://rust-analyzer.github.io">home page</a><!-- ignore -->
+for installation instructions, then install the language server support in your
+particular IDE. Your IDE will gain abilities such as autocompletion, jump to
+definition, and inline errors.</p>
 
                     </main>
 

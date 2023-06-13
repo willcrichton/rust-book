@@ -255,7 +255,7 @@ parameter. For example, in the code in Listing 8-16, we want to be able to use
 </span>    let mut s1 = String::from(&quot;foo&quot;);
     let s2 = &quot;bar&quot;;
     s1.push_str(s2);
-    println!(&quot;s2 is {}&quot;, s2);
+    println!(&quot;s2 is {s2}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-16: Using a string slice after appending its
 contents to a <code>String</code></span></p>
@@ -333,7 +333,7 @@ combining, we can instead use the <code>format!</code> macro:</p>
     let s2 = String::from(&quot;tac&quot;);
     let s3 = String::from(&quot;toe&quot;);
 
-    let s = format!(&quot;{}-{}-{}&quot;, s1, s2, s3);
+    let s = format!(&quot;{s1}-{s2}-{s3}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p>This code also sets <code>s</code> to <code>tic-tac-toe</code>. The <code>format!</code> macro works like
 <code>println!</code>, but instead of printing the output to the screen, it returns a
@@ -369,7 +369,6 @@ error[E0277]: the type `String` cannot be indexed by `{integer}`
             &lt;String as Index&lt;RangeTo&lt;usize&gt;&gt;&gt;
             &lt;String as Index&lt;RangeToInclusive&lt;usize&gt;&gt;&gt;
             &lt;String as Index&lt;std::ops::Range&lt;usize&gt;&gt;&gt;
-            &lt;str as Index&lt;I&gt;&gt;
 
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `collections` due to previous error
@@ -479,7 +478,7 @@ index were accessed in a vector:</p>
    Compiling collections v0.1.0 (file:///projects/collections)
     Finished dev [unoptimized + debuginfo] target(s) in 0.43s
      Running `target/debug/collections`
-thread 'main' panicked at 'byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`', library/core/src/str/mod.rs:127:5
+thread 'main' panicked at 'byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`', src/main.rs:4:14
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
 <p>You should use ranges to create string slices with caution, because doing so
@@ -492,7 +491,7 @@ of type <code>char</code>, and you can iterate over the result to access each el
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for c in &quot;Зд&quot;.chars() {
-    println!(&quot;{}&quot;, c);
+    println!(&quot;{c}&quot;);
 }
 <span class="boring">}</span></code></pre></pre>
 <p>This code will print the following:</p>
@@ -504,7 +503,7 @@ appropriate for your domain:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for b in &quot;Зд&quot;.bytes() {
-    println!(&quot;{}&quot;, b);
+    println!(&quot;{b}&quot;);
 }
 <span class="boring">}</span></code></pre></pre>
 <p>This code will print the four bytes that make up this string:</p>

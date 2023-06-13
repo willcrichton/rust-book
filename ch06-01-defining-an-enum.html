@@ -162,7 +162,7 @@ IP address that our program will come across, we can <em>enumerate</em> all poss
 variants, which is where enumeration gets its name.</p>
 <p>Any IP address can be either a version four or a version six address, but not
 both at the same time. That property of IP addresses makes the enum data
-structure appropriate, because an enum value can only be one of its variants.
+structure appropriate because an enum value can only be one of its variants.
 Both version four and version six addresses are still fundamentally IP
 addresses, so they should be treated as the same type when the code is handling
 situations that apply to any kind of IP address.</p>
@@ -255,14 +255,14 @@ variant. This new definition of the <code>IpAddr</code> enum says that both <cod
 variants will have associated <code>String</code> values:</p>
 <div class="aquascope-embed" data-code="&quot;fn main() {    \nenum IpAddr {\n    V4(String),\n    V6(String),\n}\n\nlet home = IpAddr::V4(String::from(\&quot;127.0.0.1\&quot;));\n\nlet loopback = IpAddr::V6(String::from(\&quot;::1\&quot;));\n}&quot;"  data-annotations="{&quot;hidden_lines&quot;:[1,10],&quot;interp&quot;:{&quot;state_locations&quot;:[163]},&quot;stepper&quot;:{&quot;focused_lines&quot;:[],&quot;focused_paths&quot;:{}},&quot;boundaries&quot;:{&quot;focused_lines&quot;:[]}}"  data-operations="[&quot;interpreter&quot;]"  data-responses="{&quot;interpreter&quot;:{&quot;Ok&quot;:{&quot;result&quot;:{&quot;type&quot;:&quot;Success&quot;},&quot;steps&quot;:[{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:165,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[],&quot;location&quot;:{&quot;end&quot;:9,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[{&quot;type&quot;:&quot;Array&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;All&quot;,&quot;value&quot;:[{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:49},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:50},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:55},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:46},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:48},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:46},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:48},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:46},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:49}]}}]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:165,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;home&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:{&quot;type&quot;:&quot;String&quot;,&quot;value&quot;:{&quot;len&quot;:9}},&quot;fields&quot;:[[&quot;vec&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;buf&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;ptr&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;pointer&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;pointer&quot;,{&quot;type&quot;:&quot;Pointer&quot;,&quot;value&quot;:{&quot;path&quot;:{&quot;parts&quot;:[{&quot;type&quot;:&quot;Index&quot;,&quot;value&quot;:0}],&quot;segment&quot;:{&quot;type&quot;:&quot;Heap&quot;,&quot;value&quot;:{&quot;index&quot;:0}}},&quot;range&quot;:null}}]],&quot;name&quot;:&quot;NonNull&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;Unique&quot;,&quot;variant&quot;:null}}],[&quot;cap&quot;,{&quot;type&quot;:&quot;Uint&quot;,&quot;value&quot;:9}]],&quot;name&quot;:&quot;RawVec&quot;,&quot;variant&quot;:null}}],[&quot;len&quot;,{&quot;type&quot;:&quot;Uint&quot;,&quot;value&quot;:9}]],&quot;name&quot;:&quot;Vec&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;String&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;IpAddr&quot;,&quot;variant&quot;:&quot;V4&quot;}}}],&quot;location&quot;:{&quot;end&quot;:114,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:65},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[{&quot;type&quot;:&quot;Array&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;All&quot;,&quot;value&quot;:[{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:49},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:50},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:55},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:46},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:48},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:46},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:48},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:46},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:49}]}},{&quot;type&quot;:&quot;Array&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;All&quot;,&quot;value&quot;:[{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:58},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:58},{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:49}]}}]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:165,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;home&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:{&quot;type&quot;:&quot;String&quot;,&quot;value&quot;:{&quot;len&quot;:9}},&quot;fields&quot;:[[&quot;vec&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;buf&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;ptr&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;pointer&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;pointer&quot;,{&quot;type&quot;:&quot;Pointer&quot;,&quot;value&quot;:{&quot;path&quot;:{&quot;parts&quot;:[{&quot;type&quot;:&quot;Index&quot;,&quot;value&quot;:0}],&quot;segment&quot;:{&quot;type&quot;:&quot;Heap&quot;,&quot;value&quot;:{&quot;index&quot;:0}}},&quot;range&quot;:null}}]],&quot;name&quot;:&quot;NonNull&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;Unique&quot;,&quot;variant&quot;:null}}],[&quot;cap&quot;,{&quot;type&quot;:&quot;Uint&quot;,&quot;value&quot;:9}]],&quot;name&quot;:&quot;RawVec&quot;,&quot;variant&quot;:null}}],[&quot;len&quot;,{&quot;type&quot;:&quot;Uint&quot;,&quot;value&quot;:9}]],&quot;name&quot;:&quot;Vec&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;String&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;IpAddr&quot;,&quot;variant&quot;:&quot;V4&quot;}}},{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;loopback&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:{&quot;type&quot;:&quot;String&quot;,&quot;value&quot;:{&quot;len&quot;:3}},&quot;fields&quot;:[[&quot;vec&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;buf&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;ptr&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;pointer&quot;,{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;pointer&quot;,{&quot;type&quot;:&quot;Pointer&quot;,&quot;value&quot;:{&quot;path&quot;:{&quot;parts&quot;:[{&quot;type&quot;:&quot;Index&quot;,&quot;value&quot;:0}],&quot;segment&quot;:{&quot;type&quot;:&quot;Heap&quot;,&quot;value&quot;:{&quot;index&quot;:1}}},&quot;range&quot;:null}}]],&quot;name&quot;:&quot;NonNull&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;Unique&quot;,&quot;variant&quot;:null}}],[&quot;cap&quot;,{&quot;type&quot;:&quot;Uint&quot;,&quot;value&quot;:3}]],&quot;name&quot;:&quot;RawVec&quot;,&quot;variant&quot;:null}}],[&quot;len&quot;,{&quot;type&quot;:&quot;Uint&quot;,&quot;value&quot;:3}]],&quot;name&quot;:&quot;Vec&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;String&quot;,&quot;variant&quot;:null}}]],&quot;name&quot;:&quot;IpAddr&quot;,&quot;variant&quot;:&quot;V6&quot;}}}],&quot;location&quot;:{&quot;end&quot;:163,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:116},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:165,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[],&quot;location&quot;:{&quot;end&quot;:165,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:164},&quot;name&quot;:&quot;main&quot;}]}}]}}}"  data-config="{}"  data-no-interact="true" ></div>
 <p>We attach data to each variant of the enum directly, so there is no need for an
-extra struct. Here it’s also easier to see another detail of how enums work:
+extra struct. Here, it’s also easier to see another detail of how enums work:
 the name of each enum variant that we define also becomes a function that
 constructs an instance of the enum. That is, <code>IpAddr::V4()</code> is a function call
 that takes a <code>String</code> argument and returns an instance of the <code>IpAddr</code> type. We
 automatically get this constructor function defined as a result of defining the
 enum.</p>
 <p>There’s another advantage to using an enum rather than a struct: each variant
-can have different types and amounts of associated data. Version four type IP
+can have different types and amounts of associated data. Version four IP
 addresses will always have four numeric components that will have values
 between 0 and 255. If we wanted to store <code>V4</code> addresses as four <code>u8</code> values but
 still express <code>V6</code> addresses as one <code>String</code> value, we wouldn’t be able to with
@@ -314,7 +314,7 @@ different amounts and types of values</span></p>
 <p>This enum has four variants with different types:</p>
 <ul>
 <li><code>Quit</code> has no data associated with it at all.</li>
-<li><code>Move</code> has named fields like a struct does.</li>
+<li><code>Move</code> has named fields, like a struct does.</li>
 <li><code>Write</code> includes a single <code>String</code>.</li>
 <li><code>ChangeColor</code> includes three <code>i32</code> values.</li>
 </ul>
@@ -332,7 +332,7 @@ struct WriteMessage(String); // tuple struct
 struct ChangeColorMessage(i32, i32, i32); // tuple struct
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre></pre>
-<p>But if we used the different structs, which each have their own type, we
+<p>But if we used the different structs, each of which has its own type, we
 couldn’t as easily define a function to take any of these kinds of messages as
 we could with the <code>Message</code> enum defined in Listing 6-2, which is a single type.</p>
 <p>There is one more similarity between enums and structs: just as we’re able to
@@ -365,8 +365,8 @@ useful: <code>Option</code>.</p>
 <p>This section explores a case study of <code>Option</code>, which is another enum defined
 by the standard library. The <code>Option</code> type encodes the very common scenario in
 which a value could be something or it could be nothing.</p>
-<p>For example, if you request the first of a list containing items, you would get
-a value. If you request the first item of an empty list, you would get nothing.
+<p>For example, if you request the first item in a non-empty list, you would get
+a value. If you request the first item in an empty list, you would get nothing.
 Expressing this concept in terms of the type system means the compiler can
 check whether you’ve handled all the cases you should be handling; this
 functionality can prevent bugs that are extremely common in other programming
@@ -412,11 +412,11 @@ prefix. The <code>Option&lt;T&gt;</code> enum is still just a regular enum, and 
 <code>None</code> are still variants of type <code>Option&lt;T&gt;</code>.</p>
 <p>The <code>&lt;T&gt;</code> syntax is a feature of Rust we haven’t talked about yet. It’s a
 generic type parameter, and we’ll cover generics in more detail in Chapter 10.
-For now, all you need to know is that <code>&lt;T&gt;</code> means the <code>Some</code> variant of the
-<code>Option</code> enum can hold one piece of data of any type, and that each concrete
-type that gets used in place of <code>T</code> makes the overall <code>Option&lt;T&gt;</code> type a
-different type. Here are some examples of using <code>Option</code> values to hold number
-types and string types:</p>
+For now, all you need to know is that <code>&lt;T&gt;</code> means that the <code>Some</code> variant of
+the <code>Option</code> enum can hold one piece of data of any type, and that each
+concrete type that gets used in place of <code>T</code> makes the overall <code>Option&lt;T&gt;</code> type
+a different type. Here are some examples of using <code>Option</code> values to hold
+number types and string types:</p>
 <div class="aquascope-embed" data-code="&quot;fn main() {\nlet some_number = Some(5);\nlet some_char = Some('e');\n\nlet absent_number: Option&lt;i32&gt; = None;\n}&quot;"  data-annotations="{&quot;hidden_lines&quot;:[1,6],&quot;interp&quot;:{&quot;state_locations&quot;:[105]},&quot;stepper&quot;:{&quot;focused_lines&quot;:[],&quot;focused_paths&quot;:{}},&quot;boundaries&quot;:{&quot;focused_lines&quot;:[]}}"  data-operations="[&quot;interpreter&quot;]"  data-responses="{&quot;interpreter&quot;:{&quot;Ok&quot;:{&quot;result&quot;:{&quot;type&quot;:&quot;Success&quot;},&quot;steps&quot;:[{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:107,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[],&quot;location&quot;:{&quot;end&quot;:9,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:107,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;some_number&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Int&quot;,&quot;value&quot;:5}]],&quot;name&quot;:&quot;Option&quot;,&quot;variant&quot;:&quot;Some&quot;}}}],&quot;location&quot;:{&quot;end&quot;:38,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:12},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:107,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;some_number&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Int&quot;,&quot;value&quot;:5}]],&quot;name&quot;:&quot;Option&quot;,&quot;variant&quot;:&quot;Some&quot;}}},{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;some_char&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:101}]],&quot;name&quot;:&quot;Option&quot;,&quot;variant&quot;:&quot;Some&quot;}}}],&quot;location&quot;:{&quot;end&quot;:65,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:39},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:107,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;some_number&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Int&quot;,&quot;value&quot;:5}]],&quot;name&quot;:&quot;Option&quot;,&quot;variant&quot;:&quot;Some&quot;}}},{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;some_char&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[[&quot;0&quot;,{&quot;type&quot;:&quot;Char&quot;,&quot;value&quot;:101}]],&quot;name&quot;:&quot;Option&quot;,&quot;variant&quot;:&quot;Some&quot;}}},{&quot;moved_paths&quot;:[],&quot;name&quot;:&quot;absent_number&quot;,&quot;value&quot;:{&quot;type&quot;:&quot;Adt&quot;,&quot;value&quot;:{&quot;alloc_kind&quot;:null,&quot;fields&quot;:[],&quot;name&quot;:&quot;Option&quot;,&quot;variant&quot;:&quot;None&quot;}}}],&quot;location&quot;:{&quot;end&quot;:105,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:67},&quot;name&quot;:&quot;main&quot;}]}},{&quot;heap&quot;:{&quot;locations&quot;:[]},&quot;stack&quot;:{&quot;frames&quot;:[{&quot;body_span&quot;:{&quot;end&quot;:107,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:0},&quot;locals&quot;:[],&quot;location&quot;:{&quot;end&quot;:107,&quot;filename&quot;:{&quot;private&quot;:0},&quot;start&quot;:106},&quot;name&quot;:&quot;main&quot;}]}}]}}}"  data-config="{}"  data-no-interact="true" ></div>
 <p>The type of <code>some_number</code> is <code>Option&lt;i32&gt;</code>. The type of <code>some_char</code> is
 <code>Option&lt;char&gt;</code>, which is a different type. Rust can infer these types because
@@ -426,12 +426,12 @@ type that the corresponding <code>Some</code> variant will hold by looking only 
 <code>None</code> value. Here, we tell Rust that we mean for <code>absent_number</code> to be of type
 <code>Option&lt;i32&gt;</code>.</p>
 <p>When we have a <code>Some</code> value, we know that a value is present and the value is
-held within the <code>Some</code>. When we have a <code>None</code> value, in some sense, it means
-the same thing as null: we don’t have a valid value. So why is having
-<code>Option&lt;T&gt;</code> any better than having null?</p>
+held within the <code>Some</code>. When we have a <code>None</code> value, in some sense it means the
+same thing as null: we don’t have a valid value. So why is having <code>Option&lt;T&gt;</code>
+any better than having null?</p>
 <p>In short, because <code>Option&lt;T&gt;</code> and <code>T</code> (where <code>T</code> can be any type) are different
 types, the compiler won’t let us use an <code>Option&lt;T&gt;</code> value as if it were
-definitely a valid value. For example, this code won’t compile because it’s
+definitely a valid value. For example, this code won’t compile, because it’s
 trying to add an <code>i8</code> to an <code>Option&lt;i8&gt;</code>:</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let x: i8 = 5;
@@ -439,7 +439,7 @@ trying to add an <code>i8</code> to an <code>Option&lt;i8&gt;</code>:</p>
 
     let sum = x + y;
 <span class="boring">}</span></code></pre>
-<p>If we run this code, we get an error message like this:</p>
+<p>If we run this code, we get an error message like this one:</p>
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
 error[E0277]: cannot add `Option&lt;i8&gt;` to `i8`
@@ -450,15 +450,10 @@ error[E0277]: cannot add `Option&lt;i8&gt;` to `i8`
   |
   = help: the trait `Add&lt;Option&lt;i8&gt;&gt;` is not implemented for `i8`
   = help: the following other types implement trait `Add&lt;Rhs&gt;`:
-            &lt;&amp;'a f32 as Add&lt;f32&gt;&gt;
-            &lt;&amp;'a f64 as Add&lt;f64&gt;&gt;
-            &lt;&amp;'a i128 as Add&lt;i128&gt;&gt;
-            &lt;&amp;'a i16 as Add&lt;i16&gt;&gt;
-            &lt;&amp;'a i32 as Add&lt;i32&gt;&gt;
-            &lt;&amp;'a i64 as Add&lt;i64&gt;&gt;
             &lt;&amp;'a i8 as Add&lt;i8&gt;&gt;
-            &lt;&amp;'a isize as Add&lt;isize&gt;&gt;
-          and 48 others
+            &lt;&amp;i8 as Add&lt;&amp;i8&gt;&gt;
+            &lt;i8 as Add&lt;&amp;i8&gt;&gt;
+            &lt;i8 as Add&gt;
 
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `enums` due to previous error
@@ -473,8 +468,7 @@ not having a value, and the compiler will make sure we handle that case before
 using the value.</p>
 <p>In other words, you have to convert an <code>Option&lt;T&gt;</code> to a <code>T</code> before you can
 perform <code>T</code> operations with it. Generally, this helps catch one of the most
-common issues with null: assuming that something isn’t null when it actually
-is.</p>
+common issues with null: assuming that something isn’t null when it actually is.</p>
 <p>Eliminating the risk of incorrectly assuming a not-null value helps you to be
 more confident in your code. In order to have a value that can possibly be
 null, you must explicitly opt in by making the type of that value <code>Option&lt;T&gt;</code>.
@@ -483,19 +477,20 @@ when the value is null. Everywhere that a value has a type that isn’t an
 <code>Option&lt;T&gt;</code>, you <em>can</em> safely assume that the value isn’t null. This was a
 deliberate design decision for Rust to limit null’s pervasiveness and increase
 the safety of Rust code.</p>
-<p>So, how do you get the <code>T</code> value out of a <code>Some</code> variant when you have a value
-of type <code>Option&lt;T&gt;</code> so you can use that value? The <code>Option&lt;T&gt;</code> enum has a large
-number of methods that are useful in a variety of situations; you can check
-them out in <a href="https://doc.rust-lang.org/std/option/enum.Option.html">its documentation</a><!-- ignore -->. Becoming familiar with
-the methods on <code>Option&lt;T&gt;</code> will be extremely useful in your journey with Rust.</p>
+<p>So how do you get the <code>T</code> value out of a <code>Some</code> variant when you have a value
+of type <code>Option&lt;T&gt;</code> so that you can use that value? The <code>Option&lt;T&gt;</code> enum has a
+large number of methods that are useful in a variety of situations; you can
+check them out in <a href="https://doc.rust-lang.org/std/option/enum.Option.html">its documentation</a><!-- ignore -->. Becoming familiar
+with the methods on <code>Option&lt;T&gt;</code> will be extremely useful in your journey with
+Rust.</p>
 <p>In general, in order to use an <code>Option&lt;T&gt;</code> value, you want to have code that
 will handle each variant. You want some code that will run only when you have a
 <code>Some(T)</code> value, and this code is allowed to use the inner <code>T</code>. You want some
-other code to run if you have a <code>None</code> value, and that code doesn’t have a <code>T</code>
-value available. The <code>match</code> expression is a control flow construct that does
-just this when used with enums: it will run different code depending on which
-variant of the enum it has, and that code can use the data inside the matching
-value.</p>
+other code to run only if you have a <code>None</code> value, and that code doesn’t have a
+<code>T</code> value available. The <code>match</code> expression is a control flow construct that
+does just this when used with enums: it will run different code depending on
+which variant of the enum it has, and that code can use the data inside the
+matching value.</p>
 <div class="quiz-placeholder" data-quiz-name="ch06-01-defining-an-enum"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nRust does not have null pointers, so the `null` keyword does not exist. An Option type should be used to represent the possibility of an object being null.\n&quot;,&quot;id&quot;:&quot;770f09d3-110d-4505-b41a-2af422198d59&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn foo(x: &amp;i32) { \n  println!(\&quot;{x}\&quot;);\n}\n\nfn main() {\n  let x = null;\n  foo(x);\n}\n&quot;}},{&quot;context&quot;:&quot;It's perfectly fine to have structs contain `Option` types as fields. But if your data structure has invariants like \&quot;exactly one of two optional fields should be `Some`\&quot;,\nthen that invariant is better ensured by use of an enum.\n&quot;,&quot;id&quot;:&quot;6226be11-31c3-4cac-b97c-515514a70af2&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;The struct contains `Option` types, which are only intended to wrap structs&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;The struct uses more space in memory at runtime than the enum&quot;,&quot;The struct could have `ok` and `err` both be `None`, while the enum must have at least one of them&quot;,&quot;The struct is more syntactically verbose to construct than the enum&quot;],&quot;prompt&quot;:&quot;Consider these two representations of a `Result` type that contains a value `T` if a computation succeeds, or an error `E` if it fails.\n\n```\nstruct Result1&lt;T, E&gt; {\n  ok: Option&lt;T&gt;,\n  err: Option&lt;E&gt;,\n}\n\nenum Result2&lt;T, E&gt; {\n  Ok(T),\n  Err(E)\n}\n```\n\nThe enum `Result2` is considered more idiomatic than the struct `Result1` in Rust. \nWhich statement below is **NOT** a valid reason why?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <script type="text/javascript" src="aquascope/lib.js"></script><link rel="stylesheet" type="text/css" href="aquascope/lib.css">
 <script type="text/javascript" src="quiz/lib.js"></script><link rel="stylesheet" type="text/css" href="quiz/lib.css">

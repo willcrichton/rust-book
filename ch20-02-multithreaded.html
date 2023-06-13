@@ -695,7 +695,7 @@ this data structure <em>Worker</em>, which is a common term in pooling
 implementations. The Worker picks up code that needs to be run and runs the
 code in the Worker’s thread. Think of people working in the kitchen at a
 restaurant: the workers wait until orders come in from customers, and then
-they’re responsible for taking those orders and filling them.</p>
+they’re responsible for taking those orders and fulfilling them.</p>
 <p>Instead of storing a vector of <code>JoinHandle&lt;()&gt;</code> instances in the thread pool,
 we’ll store instances of the <code>Worker</code> struct. Each <code>Worker</code> will store a single
 <code>JoinHandle&lt;()&gt;</code> instance. Then we’ll implement a method on <code>Worker</code> that will

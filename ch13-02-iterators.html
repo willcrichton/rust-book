@@ -282,7 +282,7 @@ ownership of the iterator we call it on.</p>
 <p><em>Iterator adaptors</em> are methods defined on the <code>Iterator</code> trait that don’t
 consume the iterator. Instead, they produce different iterators by changing
 some aspect of the original iterator.</p>
-<p>Listing 13-17 shows an example of calling the iterator adaptor method <code>map</code>,
+<p>Listing 13-14 shows an example of calling the iterator adaptor method <code>map</code>,
 which takes a closure to call on each item as the items are iterated through.
 The <code>map</code> method returns a new iterator that produces the modified items. The
 closure here creates a new iterator in which each item from the vector will be
@@ -302,10 +302,10 @@ warning: unused `Map` that must be used
  --&gt; src/main.rs:4:5
   |
 4 |     v1.iter().map(|x| x + 1);
-  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^
   |
-  = note: `#[warn(unused_must_use)]` on by default
   = note: iterators are lazy and do nothing unless consumed
+  = note: `#[warn(unused_must_use)]` on by default
 
 warning: `iterators` (bin &quot;iterators&quot;) generated 1 warning
     Finished dev [unoptimized + debuginfo] target(s) in 0.47s

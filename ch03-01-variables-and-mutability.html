@@ -150,18 +150,17 @@
                     <main>
                         <h2 id="variables-and-mutability"><a class="header" href="#variables-and-mutability">Variables and Mutability</a></h2>
 <p>As mentioned in the <a href="ch02-00-guessing-game-tutorial.html#storing-values-with-variables">“Storing Values with
-Variables”</a><!-- ignore --> section, by default
+Variables”</a><!-- ignore --> section, by default,
 variables are immutable. This is one of many nudges Rust gives you to write
 your code in a way that takes advantage of the safety and easy concurrency that
 Rust offers. However, you still have the option to make your variables mutable.
 Let’s explore how and why Rust encourages you to favor immutability and why
 sometimes you might want to opt out.</p>
 <p>When a variable is immutable, once a value is bound to a name, you can’t change
-that value. To illustrate this, let’s generate a new project called <em>variables</em>
-in your <em>projects</em> directory by using <code>cargo new variables</code>.</p>
+that value. To illustrate this, generate a new project called <em>variables</em> in
+your <em>projects</em> directory by using <code>cargo new variables</code>.</p>
 <p>Then, in your new <em>variables</em> directory, open <em>src/main.rs</em> and replace its
-code with the following code. This code won’t compile just yet, we’ll first
-examine the immutability error.</p>
+code with the following code, which won’t compile just yet:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = 5;
@@ -169,8 +168,8 @@ examine the immutability error.</p>
     x = 6;
     println!(&quot;The value of x is: {x}&quot;);
 }</code></pre>
-<p>Save and run the program using <code>cargo run</code>. You should receive an error
-message, as shown in this output:</p>
+<p>Save and run the program using <code>cargo run</code>. You should receive an error message
+regarding an immutability error, as shown in this output:</p>
 <pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
 error[E0384]: cannot assign twice to immutable variable `x`
@@ -192,8 +191,7 @@ error: could not compile `variables` due to previous error
 Compiler errors can be frustrating, but really they only mean your program
 isn’t safely doing what you want it to do yet; they do <em>not</em> mean that you’re
 not a good programmer! Experienced Rustaceans still get compiler errors.</p>
-<p>The error message indicates that the cause of the error is that you <code>cannot assign twice to immutable variable `x`</code>, because you tried to assign a second
-value to the immutable <code>x</code> variable.</p>
+<p>You received the error message <code>cannot assign twice to immutable variable `x`</code> because you tried to assign a second value to the immutable <code>x</code> variable.</p>
 <p>It’s important that we get compile-time errors when we attempt to change a
 value that’s designated as immutable because this very situation can lead to
 bugs. If one part of our code operates on the assumption that a value will
@@ -201,14 +199,15 @@ never change and another part of our code changes that value, it’s possible
 that the first part of the code won’t do what it was designed to do. The cause
 of this kind of bug can be difficult to track down after the fact, especially
 when the second piece of code changes the value only <em>sometimes</em>. The Rust
-compiler guarantees that when you state a value won’t change, it really won’t
-change, so you don’t have to keep track of it yourself. Your code is thus
+compiler guarantees that when you state that a value won’t change, it really
+won’t change, so you don’t have to keep track of it yourself. Your code is thus
 easier to reason through.</p>
-<p>But mutability can be very useful, and can make code more convenient to write. 
-Although variables are immutable by default, you can make them mutable by adding 
-<code>mut</code> in front of the variable name as you did in Chapter 2. Adding <code>mut</code> also
-conveys intent to future readers of the code by indicating that other parts of
-the code will be changing this variable’s value.</p>
+<p>But mutability can be very useful, and can make code more convenient to write.
+Although variables are immutable by default, you can make them mutable by
+adding <code>mut</code> in front of the variable name as you did in <a href="ch02-00-guessing-game-tutorial.html#storing-values-with-variables">Chapter
+2</a><!-- ignore -->. Adding <code>mut</code> also conveys
+intent to future readers of the code by indicating that other parts of the code
+will be changing this variable’s value.</p>
 <p>For example, let’s change <em>src/main.rs</em> to the following:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
@@ -225,8 +224,8 @@ the code will be changing this variable’s value.</p>
 The value of x is: 5
 The value of x is: 6
 </code></pre>
-<p>We’re allowed to change the value bound to <code>x</code> from <code>5</code> to <code>6</code> when <code>mut</code>
-is used. Ultimately, deciding whether to use mutability or not is up to you and
+<p>We’re allowed to change the value bound to <code>x</code> from <code>5</code> to <code>6</code> when <code>mut</code> is
+used. Ultimately, deciding whether to use mutability or not is up to you and
 depends on what you think is clearest in that particular situation.</p>
 <div class="quiz-placeholder" data-quiz-name="ch03-01-variables-and-mutability-sec1-variables"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Immutable means \&quot;not mutable\&quot;, or not changeable.\n&quot;,&quot;id&quot;:&quot;8bd8d8bc-e61e-48c7-ba78-0c89339e5995&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`x` cannot be changed after being assigned a value.&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`x` is stored in the immutable region of memory.&quot;,&quot;After being defined, `x` can be changed at most once.&quot;,&quot;You cannot create a reference to `x`.&quot;],&quot;prompt&quot;:&quot;Which statement best describes what it means if a variable `x` is immutable?&quot;}},{&quot;context&quot;:&quot;For example, you can make a mutable variable `x` by writing: `let mut x = 1`.\n&quot;,&quot;id&quot;:&quot;dcf53c67-b3c9-4c54-8da0-90749cc669e8&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;mut&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the keyword used after `let` to indicate that a variable can be mutated?&quot;}},{&quot;context&quot;:&quot;This is a compiler error because line 4 tries to mutate `x` when `x` is not marked as `mut`.\n&quot;,&quot;id&quot;:&quot;77f9f143-45a6-4f08-bd87-72bc50c00693&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let x = 1;\n  println!(\&quot;{x}\&quot;);\n  x += 1;\n  println!(\&quot;{x}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h3 id="constants"><a class="header" href="#constants">Constants</a></h3>
@@ -236,9 +235,9 @@ and variables.</p>
 <p>First, you aren’t allowed to use <code>mut</code> with constants. Constants aren’t just
 immutable by default—they’re always immutable. You declare constants using the
 <code>const</code> keyword instead of the <code>let</code> keyword, and the type of the value <em>must</em>
-be annotated. We’re about to cover types and type annotations in the next
-section, <a href="ch03-02-data-types.html#data-types">“Data Types,”</a><!-- ignore --> so don’t worry about the
-details right now. Just know that you must always annotate the type.</p>
+be annotated. We’ll cover types and type annotations in the next section,
+<a href="ch03-02-data-types.html#data-types">“Data Types”</a><!-- ignore -->, so don’t worry about the details
+right now. Just know that you must always annotate the type.</p>
 <p>Constants can be declared in any scope, including the global scope, which makes
 them useful for values that many parts of code need to know about.</p>
 <p>The last difference is that constants may be set only to a constant expression,
@@ -258,11 +257,11 @@ way that’s easier to understand and verify, rather than setting this constant
 to the value 10,800. See the <a href="https://doc.rust-lang.org/reference/const_eval.html">Rust Reference’s section on constant
 evaluation</a> for more information on what operations can be used
 when declaring constants.</p>
-<p>Constants are valid for the entire time a program runs, within the scope they
-were declared in. This property makes constants useful for values in your
-application domain that multiple parts of the program might need to know about,
-such as the maximum number of points any player of a game is allowed to earn or
-the speed of light.</p>
+<p>Constants are valid for the entire time a program runs, within the scope in
+which they were declared. This property makes constants useful for values in
+your application domain that multiple parts of the program might need to know
+about, such as the maximum number of points any player of a game is allowed to
+earn, or the speed of light.</p>
 <p>Naming hardcoded values used throughout your program as constants is useful in
 conveying the meaning of that value to future maintainers of the code. It also
 helps to have only one place in your code you would need to change if the
@@ -305,7 +304,7 @@ When we run this program, it will output the following:</p>
 The value of x in the inner scope is: 12
 The value of x is: 6
 </code></pre>
-<p>Shadowing is different from marking a variable as <code>mut</code>, because we’ll get a
+<p>Shadowing is different from marking a variable as <code>mut</code> because we’ll get a
 compile-time error if we accidentally try to reassign to this variable without
 using the <code>let</code> keyword. By using <code>let</code>, we can perform a few transformations
 on a value but have the variable be immutable after those transformations have

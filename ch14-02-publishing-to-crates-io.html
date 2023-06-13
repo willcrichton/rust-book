@@ -584,15 +584,19 @@ previously published, run <code>cargo yank</code> and specify which version you 
 yank. For example, if we've published a crate named <code>guessing_game</code> version
 1.0.1 and we want to yank it, in the project directory for <code>guessing_game</code> we'd
 run:</p>
+<!-- manual-regeneration:
+cargo yank carol-test --version 2.1.0
+cargo yank carol-test --version 2.1.0 --undo
+-->
 <pre><code class="language-console">$ cargo yank --vers 1.0.1
     Updating crates.io index
-        Yank guessing_game:1.0.1
+        Yank guessing_game@1.0.1
 </code></pre>
 <p>By adding <code>--undo</code> to the command, you can also undo a yank and allow projects
 to start depending on a version again:</p>
 <pre><code class="language-console">$ cargo yank --vers 1.0.1 --undo
     Updating crates.io index
-      Unyank guessing_game_:1.0.1
+      Unyank guessing_game@1.0.1
 </code></pre>
 <p>A yank <em>does not</em> delete any code. It cannot, for example, delete accidentally
 uploaded secrets. If that happens, you must reset those secrets immediately.</p>

@@ -154,9 +154,9 @@ Sometimes, when a function fails, it’s for a reason that you can easily
 interpret and respond to. For example, if you try to open a file and that
 operation fails because the file doesn’t exist, you might want to create the
 file instead of terminating the process.</p>
-<p>Recall from <a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-the-result-type">“Handling Potential Failure with the <code>Result</code>
-Type”</a><!-- ignore --> in Chapter 2 that the <code>Result</code> enum is
-defined as having two variants, <code>Ok</code> and <code>Err</code>, as follows:</p>
+<p>Recall from <a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-result">“Handling Potential Failure with <code>Result</code>”</a><!--
+ignore --> in Chapter 2 that the <code>Result</code> enum is defined as having two
+variants, <code>Ok</code> and <code>Err</code>, as follows:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Result&lt;T, E&gt; {
@@ -455,8 +455,7 @@ don't want to include it for rustdoc testing purposes. -->
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::fs::File;
-use std::io;
-use std::io::Read;
+use std::io::{self, Read};
 
 fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
     let mut username_file = File::open(&quot;hello.txt&quot;)?;
@@ -504,8 +503,7 @@ don't want to include it for rustdoc testing purposes. -->
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::fs::File;
-use std::io;
-use std::io::Read;
+use std::io::{self, Read};
 
 fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
     let mut username = String::new();
@@ -575,11 +573,10 @@ message:</p>
 error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
  --&gt; src/main.rs:4:48
   |
-3 | / fn main() {
-4 | |     let greeting_file = File::open(&quot;hello.txt&quot;)?;
-  | |                                                ^ cannot use the `?` operator in a function that returns `()`
-5 | | }
-  | |_- this function should return `Result` or `Option` to accept `?`
+3 | fn main() {
+  | --------- this function should return `Result` or `Option` to accept `?`
+4 |     let greeting_file = File::open(&quot;hello.txt&quot;)?;
+  |                                                ^ cannot use the `?` operator in a function that returns `()`
   |
   = help: the trait `FromResidual&lt;Result&lt;Infallible, std::io::Error&gt;&gt;` is not implemented for `()`
 
@@ -677,7 +674,7 @@ integers when they exit: programs that exit successfully return the integer
 returns integers from executables to be compatible with this convention.</p>
 <p>The <code>main</code> function may return any types that implement <a href="https://doc.rust-lang.org/std/process/trait.Termination.html">the
 <code>std::process::Termination</code> trait</a><!-- ignore -->, which contains
-a function <code>report</code> that returns an <code>ExitCode</code> Consult the standard library
+a function <code>report</code> that returns an <code>ExitCode</code>. Consult the standard library
 documentation for more information on implementing the <code>Termination</code> trait for
 your own types.</p>
 <p>Now that we’ve discussed the details of calling <code>panic!</code> or returning <code>Result</code>,

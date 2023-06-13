@@ -271,7 +271,7 @@ we would remove them in the future. Well, that time is now!</p>
 <p>We needed <code>clone</code> here because we have a slice with <code>String</code> elements in the
 parameter <code>args</code>, but the <code>build</code> function doesn’t own <code>args</code>. To return
 ownership of a <code>Config</code> instance, we had to clone the values from the <code>query</code>
-and <code>filename</code> fields of <code>Config</code> so the <code>Config</code> instance can own its values.</p>
+and <code>file_path</code> fields of <code>Config</code> so the <code>Config</code> instance can own its values.</p>
 <p>With our new knowledge about iterators, we can change the <code>build</code> function to
 take ownership of an iterator as its argument instead of borrowing a slice.
 We’ll use the iterator functionality instead of the code that checks the length
@@ -581,7 +581,7 @@ the program. We want to ignore that and get to the next value, so first we call
 value we want to put in the <code>query</code> field of <code>Config</code>. If <code>next</code> returns a
 <code>Some</code>, we use a <code>match</code> to extract the value. If it returns <code>None</code>, it means
 not enough arguments were given and we return early with an <code>Err</code> value. We do
-the same thing for the <code>filename</code> value.</p>
+the same thing for the <code>file_path</code> value.</p>
 <h3 id="making-code-clearer-with-iterator-adaptors"><a class="header" href="#making-code-clearer-with-iterator-adaptors">Making Code Clearer with Iterator Adaptors</a></h3>
 <p>We can also take advantage of iterators in the <code>search</code> function in our I/O
 project, which is reproduced here in Listing 13-21 as it was in Listing 12-19:</p>

@@ -257,8 +257,8 @@ fn area(rectangle: &amp;Rectangle) -&gt; u32 {
 <p><span class="caption">Listing 5-10: Defining a <code>Rectangle</code> struct</span></p>
 <p>Here we’ve defined a struct and named it <code>Rectangle</code>. Inside the curly
 brackets, we defined the fields as <code>width</code> and <code>height</code>, both of which have
-type <code>u32</code>. Then in <code>main</code>, we created a particular instance of <code>Rectangle</code>
-that has a width of 30 and a height of 50.</p>
+type <code>u32</code>. Then, in <code>main</code>, we created a particular instance of <code>Rectangle</code>
+that has a width of <code>30</code> and a height of <code>50</code>.</p>
 <p>Our <code>area</code> function is now defined with one parameter, which we’ve named
 <code>rectangle</code>, whose type is an immutable borrow of a struct <code>Rectangle</code>
 instance. As mentioned in Chapter 4, we want to borrow the struct rather than
@@ -300,7 +300,7 @@ instance</span></p>
 <p>The <code>println!</code> macro can do many kinds of formatting, and by default, the curly
 brackets tell <code>println!</code> to use formatting known as <code>Display</code>: output intended
 for direct end user consumption. The primitive types we’ve seen so far
-implement <code>Display</code> by default, because there’s only one way you’d want to show
+implement <code>Display</code> by default because there’s only one way you’d want to show
 a <code>1</code> or any other primitive type to a user. But with structs, the way
 <code>println!</code> should format the output is less clear because there are more
 display possibilities: Do you want commas or not? Do you want to print the
@@ -354,8 +354,8 @@ rect1 is Rectangle { width: 30, height: 50 }
 <p>Nice! It’s not the prettiest output, but it shows the values of all the fields
 for this instance, which would definitely help during debugging. When we have
 larger structs, it’s useful to have output that’s a bit easier to read; in
-those cases, we can use <code>{:#?}</code> instead of <code>{:?}</code> in the <code>println!</code> string.
-In this example, using the <code>{:#?}</code> style will output:</p>
+those cases, we can use <code>{:#?}</code> instead of <code>{:?}</code> in the <code>println!</code> string. In
+this example, using the <code>{:#?}</code> style will output the following:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
     Finished dev [unoptimized + debuginfo] target(s) in 0.48s
@@ -367,15 +367,15 @@ rect1 is Rectangle {
 </code></pre>
 <p>Another way to print out a value using the <code>Debug</code> format is to use the <a href="https://doc.rust-lang.org/std/macro.dbg.html"><code>dbg!</code>
 macro</a><!-- ignore -->, which takes ownership of an expression (as opposed
-to <code>println!</code> that takes a reference), prints the file and line number of where
-that <code>dbg!</code> macro call occurs in your code along with the resulting value of
-that expression, and returns ownership of the value.</p>
+to <code>println!</code>, which takes a reference), prints the file and line number of
+where that <code>dbg!</code> macro call occurs in your code along with the resultant value
+of that expression, and returns ownership of the value.</p>
 <blockquote>
 <p>Note: Calling the <code>dbg!</code> macro prints to the standard error console stream
-(<code>stderr</code>), as opposed to <code>println!</code> which prints to the standard output
+(<code>stderr</code>), as opposed to <code>println!</code>, which prints to the standard output
 console stream (<code>stdout</code>). We’ll talk more about <code>stderr</code> and <code>stdout</code> in the
-“<a href="ch12-06-writing-to-stderr-instead-of-stdout.html">“Writing Error Messages to Standard Error Instead of Standard
-Output” section in Chapter 12</a><!-- ignore -->.</p>
+<a href="ch12-06-writing-to-stderr-instead-of-stdout.html">“Writing Error Messages to Standard Error Instead of Standard Output”
+section in Chapter 12</a><!-- ignore -->.</p>
 </blockquote>
 <p>Here’s an example where we’re interested in the value that gets assigned to the
 <code>width</code> field, as well as the value of the whole struct in <code>rect1</code>:</p>
@@ -409,8 +409,8 @@ Here’s what the output of this example looks like:</p>
     height: 50,
 }
 </code></pre>
-<p>We can see the first bit of output came from <em>src/main.rs</em> line 10, where we’re
-debugging the expression <code>30 * scale</code>, and its resulting value is 60 (the
+<p>We can see the first bit of output came from <em>src/main.rs</em> line 10 where we’re
+debugging the expression <code>30 * scale</code>, and its resultant value is <code>60</code> (the
 <code>Debug</code> formatting implemented for integers is to print only their value). The
 <code>dbg!</code> call on line 14 of <em>src/main.rs</em> outputs the value of <code>&amp;rect1</code>, which is
 the <code>Rectangle</code> struct. This output uses the pretty <code>Debug</code> formatting of the
@@ -424,10 +424,10 @@ well as how to create your own traits in Chapter 10. There are also many
 attributes other than <code>derive</code>; for more information, see <a href="https://doc.rust-lang.org/reference/attributes.html">the “Attributes”
 section of the Rust Reference</a>.</p>
 <p>Our <code>area</code> function is very specific: it only computes the area of rectangles.
-It would be helpful to tie this behavior more closely to our <code>Rectangle</code>
-struct, because it won’t work with any other type. Let’s look at how we can
-continue to refactor this code by turning the <code>area</code> function into an <code>area</code>
-<em>method</em> defined on our <code>Rectangle</code> type.</p>
+It would be helpful to tie this behavior more closely to our <code>Rectangle</code> struct
+because it won’t work with any other type. Let’s look at how we can continue to
+refactor this code by turning the <code>area</code> function into an <code>area</code> <em>method</em>
+defined on our <code>Rectangle</code> type.</p>
 <div class="quiz-placeholder" data-quiz-name="ch05-02-example-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nThe `area` function takes ownership of its argument `rectangle`. Calling `area(rect1)` therefore\nmoves `rect1`, meaning it cannot be used on the next line.\n&quot;,&quot;id&quot;:&quot;f0ec64fa-262f-4819-8379-acad7aaf8be2&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:14},&quot;prompt&quot;:{&quot;program&quot;:&quot;#[derive(Debug)]\nstruct Rectangle {\n  width: u32,\n  height: u32,\n}\n\nfn main() {\n  let rect1 = Rectangle {\n    width: 30,\n    height: 50,\n  };\n\n  let a = area(rect1);\n  println!(\&quot;{} * {} = {}\&quot;, rect1.width, rect1.height, a);\n}\n\nfn area(rectangle: Rectangle) -&gt; u32 {\n  rectangle.width * rectangle.height\n}\n&quot;}},{&quot;id&quot;:&quot;9ce4156e-4112-4101-a2c7-51758ceca639&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`Display` is for presenting values to an end-user, while `Debug` is for developers' internal use&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`Display` is for printing values to the console, while `Debug` is for viewing values in a debugger&quot;,&quot;`Display` cannot be implemented for structs, while `Debug` can be implemented for structs&quot;,&quot;There is no difference, `Display` and `Debug` are aliases for the same trait.&quot;],&quot;prompt&quot;:&quot;Which statement best describes a difference between the `Display` and `Debug` traits?&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <script type="text/javascript" src="quiz/lib.js"></script><link rel="stylesheet" type="text/css" href="quiz/lib.css">
                     </main>

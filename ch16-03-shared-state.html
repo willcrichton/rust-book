@@ -331,21 +331,30 @@ a lot.</p>
 <pre><code class="language-console">$ cargo run
    Compiling shared-state v0.1.0 (file:///projects/shared-state)
 error[E0277]: `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
-   --&gt; src/main.rs:11:22
-    |
-11  |           let handle = thread::spawn(move || {
-    |  ______________________^^^^^^^^^^^^^_-
-    | |                      |
-    | |                      `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
-12  | |             let mut num = counter.lock().unwrap();
-13  | |
-14  | |             *num += 1;
-15  | |         });
-    | |_________- within this `[closure@src/main.rs:11:36: 15:10]`
-    |
-    = help: within `[closure@src/main.rs:11:36: 15:10]`, the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`
-    = note: required because it appears within the type `[closure@src/main.rs:11:36: 15:10]`
+  --&gt; src/main.rs:11:36
+   |
+11 |           let handle = thread::spawn(move || {
+   |                        ------------- ^------
+   |                        |             |
+   |  ______________________|_____________within this `[closure@src/main.rs:11:36: 11:43]`
+   | |                      |
+   | |                      required by a bound introduced by this call
+12 | |             let mut num = counter.lock().unwrap();
+13 | |
+14 | |             *num += 1;
+15 | |         });
+   | |_________^ `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
+   |
+   = help: within `[closure@src/main.rs:11:36: 11:43]`, the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`
+note: required because it's used within this closure
+  --&gt; src/main.rs:11:36
+   |
+11 |         let handle = thread::spawn(move || {
+   |                                    ^^^^^^^
 note: required by a bound in `spawn`
+  --&gt; /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/std/src/thread/mod.rs:704:8
+   |
+   = note: required by this bound in `spawn`
 
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `shared-state` due to previous error
@@ -420,9 +429,9 @@ parts, split those parts across threads, and then use a <code>Mutex&lt;T&gt;</co
 thread update the final result with its part.</p>
 <p>Note that if you are doing simple numerical operations, there are types simpler
 than <code>Mutex&lt;T&gt;</code> types provided by the <a href="https://doc.rust-lang.org/std/sync/atomic/index.html"><code>std::sync::atomic</code> module of the
-standard library</a>. These types provide safe, concurrent, atomic access
-to primitive types. We chose to use <code>Mutex&lt;T&gt;</code> with a primitive type for this
-example so we could concentrate on how <code>Mutex&lt;T&gt;</code> works.</p>
+standard library</a><!-- ignore -->. These types provide safe, concurrent,
+atomic access to primitive types. We chose to use <code>Mutex&lt;T&gt;</code> with a primitive
+type for this example so we could concentrate on how <code>Mutex&lt;T&gt;</code> works.</p>
 <h3 id="similarities-between-refcelltrct-and-mutextarct"><a class="header" href="#similarities-between-refcelltrct-and-mutextarct">Similarities Between <code>RefCell&lt;T&gt;</code>/<code>Rc&lt;T&gt;</code> and <code>Mutex&lt;T&gt;</code>/<code>Arc&lt;T&gt;</code></a></h3>
 <p>You might have noticed that <code>counter</code> is immutable but we could get a mutable
 reference to the value inside it; this means <code>Mutex&lt;T&gt;</code> provides interior

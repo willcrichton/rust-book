@@ -329,9 +329,11 @@ into three cases: points that lie directly on the <code>x</code> axis (which is 
     let p = Point { x: 0, y: 7 };
 
     match p {
-        Point { x, y: 0 } =&gt; println!(&quot;On the x axis at {}&quot;, x),
-        Point { x: 0, y } =&gt; println!(&quot;On the y axis at {}&quot;, y),
-        Point { x, y } =&gt; println!(&quot;On neither axis: ({}, {})&quot;, x, y),
+        Point { x, y: 0 } =&gt; println!(&quot;On the x axis at {x}&quot;),
+        Point { x: 0, y } =&gt; println!(&quot;On the y axis at {y}&quot;),
+        Point { x, y } =&gt; {
+            println!(&quot;On neither axis: ({x}, {y})&quot;);
+        }
     }
 }</code></pre></pre>
 <p><span class="caption">Listing 18-14: Destructuring and matching literal values
@@ -367,19 +369,17 @@ fn main() {
 
     match msg {
         Message::Quit =&gt; {
-            println!(&quot;The Quit variant has no data to destructure.&quot;)
+            println!(&quot;The Quit variant has no data to destructure.&quot;);
         }
         Message::Move { x, y } =&gt; {
-            println!(
-                &quot;Move in the x direction {} and in the y direction {}&quot;,
-                x, y
-            );
+            println!(&quot;Move in the x direction {x} and in the y direction {y}&quot;);
         }
-        Message::Write(text) =&gt; println!(&quot;Text message: {}&quot;, text),
-        Message::ChangeColor(r, g, b) =&gt; println!(
-            &quot;Change the color to red {}, green {}, and blue {}&quot;,
-            r, g, b
-        ),
+        Message::Write(text) =&gt; {
+            println!(&quot;Text message: {text}&quot;);
+        }
+        Message::ChangeColor(r, g, b) =&gt; {
+            println!(&quot;Change the color to red {r}, green {g}, and blue {b}&quot;,)
+        }
     }
 }</code></pre></pre>
 <p><span class="caption">Listing 18-15: Destructuring enum variants that hold
@@ -420,14 +420,12 @@ fn main() {
     let msg = Message::ChangeColor(Color::Hsv(0, 160, 255));
 
     match msg {
-        Message::ChangeColor(Color::Rgb(r, g, b)) =&gt; println!(
-            &quot;Change the color to red {}, green {}, and blue {}&quot;,
-            r, g, b
-        ),
-        Message::ChangeColor(Color::Hsv(h, s, v)) =&gt; println!(
-            &quot;Change the color to hue {}, saturation {}, and value {}&quot;,
-            h, s, v
-        ),
+        Message::ChangeColor(Color::Rgb(r, g, b)) =&gt; {
+            println!(&quot;Change color to red {r}, green {g}, and blue {b}&quot;);
+        }
+        Message::ChangeColor(Color::Hsv(h, s, v)) =&gt; {
+            println!(&quot;Change color to hue {h}, saturation {s}, value {v}&quot;)
+        }
         _ =&gt; (),
     }
 }</code></pre></pre>

@@ -279,7 +279,7 @@ pointing to each other</span></p>
 <p>If you uncomment the last <code>println!</code> and run the program, Rust will try to
 print this cycle with <code>a</code> pointing to <code>b</code> pointing to <code>a</code> and so forth until it
 overflows the stack.</p>
-<p>Compared to a real-world program, the consequences creating a reference cycle
+<p>Compared to a real-world program, the consequences of creating a reference cycle
 in this example aren’t very dire: right after we create the reference cycle,
 the program ends. However, if a more complex program allocated lots of memory
 in a cycle and held onto it for a long time, the program would use more memory
@@ -308,7 +308,7 @@ up if its <code>strong_count</code> is 0. You can also create a <em>weak referen
 value within an <code>Rc&lt;T&gt;</code> instance by calling <code>Rc::downgrade</code> and passing a
 reference to the <code>Rc&lt;T&gt;</code>. Strong references are how you can share ownership of
 an <code>Rc&lt;T&gt;</code> instance. Weak references don’t express an ownership relationship,
-and their count doesn't affect when an <code>Rc&lt;T&gt;</code> instance is cleaned up. They
+and their count doesn’t affect when an <code>Rc&lt;T&gt;</code> instance is cleaned up. They
 won’t cause a reference cycle because any cycle involving some weak references
 will be broken once the strong reference count of values involved is 0.</p>
 <p>When you call <code>Rc::downgrade</code>, you get a smart pointer of type <code>Weak&lt;T&gt;</code>.

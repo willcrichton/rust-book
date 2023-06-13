@@ -149,10 +149,10 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="control-flow"><a class="header" href="#control-flow">Control Flow</a></h2>
-<p>The ability to run some code depending on if a condition is true, or run some
-code repeatedly while a condition is true, are basic building blocks in most
-programming languages. The most common constructs that let you control the flow
-of execution of Rust code are <code>if</code> expressions and loops.</p>
+<p>The ability to run some code depending on whether a condition is <code>true</code> and to
+run some code repeatedly while a condition is <code>true</code> are basic building blocks
+in most programming languages. The most common constructs that let you control
+the flow of execution of Rust code are <code>if</code> expressions and loops.</p>
 <h3 id="if-expressions"><a class="header" href="#if-expressions"><code>if</code> Expressions</a></h3>
 <p>An <code>if</code> expression allows you to branch your code depending on conditions. You
 provide a condition and then state, “If this condition is met, run this block
@@ -171,16 +171,16 @@ the <code>if</code> expression. In the <em>src/main.rs</em> file, input the foll
 }</code></pre></pre>
 <p>All <code>if</code> expressions start with the keyword <code>if</code>, followed by a condition. In
 this case, the condition checks whether or not the variable <code>number</code> has a
-value less than 5. We place the block of code to execute if the condition is true
-immediately after the condition inside curly brackets. Blocks of code
+value less than 5. We place the block of code to execute if the condition is
+<code>true</code> immediately after the condition inside curly brackets. Blocks of code
 associated with the conditions in <code>if</code> expressions are sometimes called <em>arms</em>,
 just like the arms in <code>match</code> expressions that we discussed in the <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">“Comparing
 the Guess to the Secret Number”</a><!--
 ignore --> section of Chapter 2.</p>
-<p>Optionally, we can also include an <code>else</code> expression, which we chose
-to do here, to give the program an alternative block of code to execute should
-the condition evaluate to false. If you don’t provide an <code>else</code> expression and
-the condition is false, the program will just skip the <code>if</code> block and move on
+<p>Optionally, we can also include an <code>else</code> expression, which we chose to do
+here, to give the program an alternative block of code to execute should the
+condition evaluate to <code>false</code>. If you don’t provide an <code>else</code> expression and
+the condition is <code>false</code>, the program will just skip the <code>if</code> block and move on
 to the next bit of code.</p>
 <p>Try running this code; you should see the following output:</p>
 <pre><code class="language-console">$ cargo run
@@ -272,11 +272,11 @@ see the following output:</p>
 number is divisible by 3
 </code></pre>
 <p>When this program executes, it checks each <code>if</code> expression in turn and executes
-the first body for which the condition holds true. Note that even though 6 is
-divisible by 2, we don’t see the output <code>number is divisible by 2</code>, nor do we
-see the <code>number is not divisible by 4, 3, or 2</code> text from the <code>else</code> block.
-That’s because Rust only executes the block for the first true condition, and
-once it finds one, it doesn’t even check the rest.</p>
+the first body for which the condition evaluates to <code>true</code>. Note that even
+though 6 is divisible by 2, we don’t see the output <code>number is divisible by 2</code>,
+nor do we see the <code>number is not divisible by 4, 3, or 2</code> text from the <code>else</code>
+block. That’s because Rust only executes the block for the first <code>true</code>
+condition, and once it finds one, it doesn’t even check the rest.</p>
 <p>Using too many <code>else if</code> expressions can clutter your code, so if you have more
 than one, you might want to refactor your code. Chapter 6 describes a powerful
 Rust branching construct called <code>match</code> for these cases.</p>
@@ -343,8 +343,8 @@ if it had to keep track of multiple hypothetical types for any variable.</p>
 <h3 id="repetition-with-loops"><a class="header" href="#repetition-with-loops">Repetition with Loops</a></h3>
 <p>It’s often useful to execute a block of code more than once. For this task,
 Rust provides several <em>loops</em>, which will run through the code inside the loop
-body to the end and then start immediately back at the beginning. To
-experiment with loops, let’s make a new project called <em>loops</em>.</p>
+body to the end and then start immediately back at the beginning. To experiment
+with loops, let’s make a new project called <em>loops</em>.</p>
 <p>Rust has three kinds of loops: <code>loop</code>, <code>while</code>, and <code>for</code>. Let’s try each one.</p>
 <h4 id="repeating-code-with-loop"><a class="header" href="#repeating-code-with-loop">Repeating Code with <code>loop</code></a></h4>
 <p>The <code>loop</code> keyword tells Rust to execute a block of code over and over again
@@ -358,9 +358,9 @@ like this:</p>
     }
 }</code></pre>
 <p>When we run this program, we’ll see <code>again!</code> printed over and over continuously
-until we stop the program manually. Most terminals support the keyboard shortcut
-<span class="keystroke">ctrl-c</span> to interrupt a program that is stuck in
-a continual loop. Give it a try:</p>
+until we stop the program manually. Most terminals support the keyboard
+shortcut <span class="keystroke">ctrl-c</span> to interrupt a program that is
+stuck in a continual loop. Give it a try:</p>
 <!-- manual-regeneration
 cd listings/ch03-common-programming-concepts/no-listing-32-loop
 cargo run
@@ -376,10 +376,10 @@ again!
 again!
 ^Cagain!
 </code></pre>
-<p>The symbol <code>^C</code> represents where you pressed <span class="keystroke">ctrl-c
-</span>. You may or may not see the word <code>again!</code> printed after the <code>^C</code>,
-depending on where the code was in the loop when it received the interrupt
-signal.</p>
+<p>The symbol <code>^C</code> represents where you pressed <span
+class="keystroke">ctrl-c</span>. You may or may not see the word <code>again!</code>
+printed after the <code>^C</code>, depending on where the code was in the loop when it
+received the interrupt signal.</p>
 <p>Fortunately, Rust also provides a way to break out of a loop using code. You
 can place the <code>break</code> keyword within the loop to tell the program when to stop
 executing the loop. Recall that we did this in the guessing game in the
@@ -412,16 +412,16 @@ use it, as shown here:</p>
 <p>Before the loop, we declare a variable named <code>counter</code> and initialize it to
 <code>0</code>. Then we declare a variable named <code>result</code> to hold the value returned from
 the loop. On every iteration of the loop, we add <code>1</code> to the <code>counter</code> variable,
-and then check whether the counter is equal to <code>10</code>. When it is, we use the
+and then check whether the <code>counter</code> is equal to <code>10</code>. When it is, we use the
 <code>break</code> keyword with the value <code>counter * 2</code>. After the loop, we use a
 semicolon to end the statement that assigns the value to <code>result</code>. Finally, we
-print the value in <code>result</code>, which in this case is 20.</p>
+print the value in <code>result</code>, which in this case is <code>20</code>.</p>
 <h4 id="loop-labels-to-disambiguate-between-multiple-loops"><a class="header" href="#loop-labels-to-disambiguate-between-multiple-loops">Loop Labels to Disambiguate Between Multiple Loops</a></h4>
 <p>If you have loops within loops, <code>break</code> and <code>continue</code> apply to the innermost
-loop at that point. You can optionally specify a <em>loop label</em> on a loop that we
-can then use with <code>break</code> or <code>continue</code> to specify that those keywords apply to
-the labeled loop instead of the innermost loop. Loop labels must begin with a
-single quote. Here’s an example with two nested loops:</p>
+loop at that point. You can optionally specify a <em>loop label</em> on a loop that
+you can then use with <code>break</code> or <code>continue</code> to specify that those keywords
+apply to the labeled loop instead of the innermost loop. Loop labels must begin
+with a single quote. Here’s an example with two nested loops:</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let mut count = 0;
     'counting_up: loop {
@@ -462,7 +462,7 @@ End count = 2
 </code></pre>
 <h4 id="conditional-loops-with-while"><a class="header" href="#conditional-loops-with-while">Conditional Loops with <code>while</code></a></h4>
 <p>A program will often need to evaluate a condition within a loop. While the
-condition is true, the loop runs. When the condition ceases to be true, the
+condition is <code>true</code>, the loop runs. When the condition ceases to be <code>true</code>, the
 program calls <code>break</code>, stopping the loop. It’s possible to implement behavior
 like this using a combination of <code>loop</code>, <code>if</code>, <code>else</code>, and <code>break</code>; you could
 try that now in a program, if you’d like. However, this pattern is so common
@@ -484,8 +484,8 @@ time, and then, after the loop, print a message and exit.</p>
 <p><span class="caption">Listing 3-3: Using a <code>while</code> loop to run code while a
 condition holds true</span></p>
 <p>This construct eliminates a lot of nesting that would be necessary if you used
-<code>loop</code>, <code>if</code>, <code>else</code>, and <code>break</code>, and it’s clearer. While a condition holds
-true, the code runs; otherwise, it exits the loop.</p>
+<code>loop</code>, <code>if</code>, <code>else</code>, and <code>break</code>, and it’s clearer. While a condition
+evaluates to <code>true</code>, the code runs; otherwise, it exits the loop.</p>
 <h4 id="looping-through-a-collection-with-for"><a class="header" href="#looping-through-a-collection-with-for">Looping Through a Collection with <code>for</code></a></h4>
 <p>You can choose to use the <code>while</code> construct to loop over the elements of a
 collection, such as an array. For example, the loop in Listing 3-4 prints each
@@ -505,8 +505,8 @@ element in the array <code>a</code>.</p>
 using a <code>while</code> loop</span></p>
 <p>Here, the code counts up through the elements in the array. It starts at index
 <code>0</code>, and then loops until it reaches the final index in the array (that is,
-when <code>index &lt; 5</code> is no longer true). Running this code will print every element
-in the array:</p>
+when <code>index &lt; 5</code> is no longer <code>true</code>). Running this code will print every
+element in the array:</p>
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
     Finished dev [unoptimized + debuginfo] target(s) in 0.32s
@@ -521,8 +521,8 @@ the value is: 50
 will reach a value of <code>5</code> at some point, the loop stops executing before trying
 to fetch a sixth value from the array.</p>
 <p>However, this approach is error prone; we could cause the program to panic if
-the index value or test condition are incorrect. For example, if you changed
-the definition of the <code>a</code> array to have four elements but forgot to update the
+the index value or test condition is incorrect. For example, if you changed the
+definition of the <code>a</code> array to have four elements but forgot to update the
 condition to <code>while index &lt; 4</code>, the code would panic. It’s also slow, because
 the compiler adds runtime code to perform the conditional check of whether the
 index is within the bounds of the array on every iteration through the loop.</p>
@@ -564,13 +564,13 @@ we’ve not yet talked about, <code>rev</code>, to reverse the range:</p>
 <p>This code is a bit nicer, isn’t it?</p>
 <div class="quiz-placeholder" data-quiz-name="ch03-05-control-flow-sec2-loops"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;It will in fact terminate after the first iteration of the loop.\n&quot;,&quot;id&quot;:&quot;c5b27431-c318-4243-9621-cadacb737f5a&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;True&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;False&quot;],&quot;prompt&quot;:&quot;True/false: this code will terminate (that is, it will not loop forever).\n\n```\nfn main() {\n    let mut x = 0;\n    'a: loop {\n        x += 1;\n        'b: loop {\n            if x &gt; 10 {\n                continue 'a;\n            } else {\n                break 'b;\n            }      \n        }\n        break;       \n    }\n}\n```\n&quot;}},{&quot;context&quot;:&quot;The array `a` has the element `5` repeated 10 times, therefore its sum is `50`. The answer is not `15` --- note that the syntax `[5; 10]` is different from `[5, 10]`.\n&quot;,&quot;id&quot;:&quot;46a52842-d4eb-4dc9-8885-f31a2f2f59b4&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;50&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let a = [5; 10];\n    let mut sum = 0;\n    for x in a {\n        sum += x;\n    }\n    println!(\&quot;{sum}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>You made it! That was a sizable chapter: you learned about variables, scalar
-and compound data types, functions, comments, <code>if</code> expressions, and loops!
-To practice with the concepts discussed in this chapter, try building
-programs to do the following:</p>
+<p>You made it! This was a sizable chapter: you learned about variables, scalar
+and compound data types, functions, comments, <code>if</code> expressions, and loops! To
+practice with the concepts discussed in this chapter, try building programs to
+do the following:</p>
 <ul>
 <li>Convert temperatures between Fahrenheit and Celsius.</li>
-<li>Generate the nth Fibonacci number.</li>
+<li>Generate the <em>n</em>th Fibonacci number.</li>
 <li>Print the lyrics to the Christmas carol “The Twelve Days of Christmas,”
 taking advantage of the repetition in the song.</li>
 </ul>

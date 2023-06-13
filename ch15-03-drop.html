@@ -216,7 +216,7 @@ Dropping CustomSmartPointer with data `my stuff`!
 </code></pre>
 <p>Rust automatically called <code>drop</code> for us when our instances went out of scope,
 calling the code we specified. Variables are dropped in the reverse order of
-their creation, so <code>d</code> was dropped before <code>c</code>. This example's purpose is to
+their creation, so <code>d</code> was dropped before <code>c</code>. This example’s purpose is to
 give you a visual guide to how the <code>drop</code> method works; usually you would
 specify the cleanup code that your type needs to run rather than a print
 message.</p>

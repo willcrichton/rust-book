@@ -186,8 +186,8 @@ Hello, world!
 Another function.
 </code></pre>
 <p>The lines execute in the order in which they appear in the <code>main</code> function.
-First, the “Hello, world!” message prints, and then <code>another_function</code> is
-called and its message is printed.</p>
+First the “Hello, world!” message prints, and then <code>another_function</code> is called
+and its message is printed.</p>
 <h3 id="parameters"><a class="header" href="#parameters">Parameters</a></h3>
 <p>We can define functions to have <em>parameters</em>, which are special variables that
 are part of a function’s signature. When a function has parameters, you can
@@ -254,8 +254,11 @@ Rust is an expression-based language, this is an important distinction to
 understand. Other languages don’t have the same distinctions, so let’s look at
 what statements and expressions are and how their differences affect the bodies
 of functions.</p>
-<p><em>Statements</em> are instructions that perform some action and do not return a
-value. <em>Expressions</em> evaluate to a resulting value. Let’s look at some examples.</p>
+<ul>
+<li><strong>Statements</strong> are instructions that perform some action and do not return
+a value.</li>
+<li><strong>Expressions</strong> evaluate to a resultant value. Let’s look at some examples.</li>
+</ul>
 <p>We’ve actually already used statements and expressions. Creating a variable and
 assigning a value to it with the <code>let</code> keyword is a statement. In Listing 3-1,
 <code>let y = 6;</code> is a statement.</p>
@@ -275,6 +278,12 @@ to another variable, as the following code tries to do; you’ll get an error:</
 <p>When you run this program, the error you’ll get looks like this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
+error: expected expression, found `let` statement
+ --&gt; src/main.rs:2:14
+  |
+2 |     let x = (let y = 6);
+  |              ^^^
+
 error: expected expression, found statement (`let`)
  --&gt; src/main.rs:2:14
   |
@@ -302,11 +311,11 @@ help: remove these parentheses
   |
 2 -     let x = (let y = 6);
 2 +     let x = let y = 6;
-  | 
+  |
 
 For more information about this error, try `rustc --explain E0658`.
 warning: `functions` (bin &quot;functions&quot;) generated 1 warning
-error: could not compile `functions` due to 2 previous errors; 1 warning emitted
+error: could not compile `functions` due to 3 previous errors; 1 warning emitted
 </code></pre>
 <p>The <code>let y = 6</code> statement does not return a value, so there isn’t anything for
 <code>x</code> to bind to. This is different from what happens in other languages, such as
@@ -336,10 +345,11 @@ curly brackets is an expression, for example:</p>
 }</code></pre>
 <p>is a block that, in this case, evaluates to <code>4</code>. That value gets bound to <code>y</code>
 as part of the <code>let</code> statement. Note that the <code>x + 1</code> line doesn’t have a
-semicolon at the end, unlike most of the lines you’ve seen so far. Expressions
-do not include ending semicolons. If you add a semicolon to the end of an
-expression, you turn it into a statement, and it will then not return a value.
-Keep this in mind as you explore function return values and expressions next.</p>
+semicolon at the end, which is unlike most of the lines you’ve seen so far.
+Expressions do not include ending semicolons. If you add a semicolon to the end
+of an expression, you turn it into a statement, and it will then not return a
+value. Keep this in mind as you explore function return values and expressions
+next.</p>
 <h3 id="functions-with-return-values"><a class="header" href="#functions-with-return-values">Functions with Return Values</a></h3>
 <p>Functions can return values to the code that calls them. We don’t name return
 values, but we must declare their type after an arrow (<code>-&gt;</code>). In Rust, the
@@ -393,7 +403,7 @@ fn plus_one(x: i32) -&gt; i32 {
 }</code></pre></pre>
 <p>Running this code will print <code>The value of x is: 6</code>. But if we place a
 semicolon at the end of the line containing <code>x + 1</code>, changing it from an
-expression to a statement, we’ll get an error.</p>
+expression to a statement, we’ll get an error:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = plus_one(5);
@@ -415,12 +425,12 @@ error[E0308]: mismatched types
   |    |
   |    implicitly returns `()` as its body has no tail or `return` expression
 8 |     x + 1;
-  |          - help: remove this semicolon
+  |          - help: remove this semicolon to return this value
 
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `functions` due to previous error
 </code></pre>
-<p>The main error message, “mismatched types,” reveals the core issue with this
+<p>The main error message, <code>mismatched types</code>, reveals the core issue with this
 code. The definition of the function <code>plus_one</code> says that it will return an
 <code>i32</code>, but statements don’t evaluate to a value, which is expressed by <code>()</code>,
 the unit type. Therefore, nothing is returned, which contradicts the function

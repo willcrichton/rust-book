@@ -217,7 +217,7 @@ linked list. Its name comes from the <code>cons</code> function (short for “co
 function”) in Lisp that constructs a new pair from its two arguments. By
 calling <code>cons</code> on a pair consisting of a value and another pair, we can
 construct cons lists made up of recursive pairs.</p>
-<p>For example, here's a pseudocode representation of a cons list containing the
+<p>For example, here’s a pseudocode representation of a cons list containing the
 list 1, 2, 3 with each pair in parentheses:</p>
 <pre><code class="language-text">(1, (2, (3, Nil)))
 </code></pre>
@@ -276,34 +276,24 @@ error[E0072]: recursive type `List` has infinite size
  --&gt; src/main.rs:1:1
   |
 1 | enum List {
-  | ^^^^^^^^^ recursive type has infinite size
+  | ^^^^^^^^^
 2 |     Cons(i32, List),
   |               ---- recursive without indirection
   |
-help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to make `List` representable
+help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cycle
   |
 2 |     Cons(i32, Box&lt;List&gt;),
   |               ++++    +
 
-error[E0391]: cycle detected when computing drop-check constraints for `List`
- --&gt; src/main.rs:1:1
-  |
-1 | enum List {
-  | ^^^^^^^^^
-  |
-  = note: ...which immediately requires computing drop-check constraints for `List` again
-  = note: cycle used when computing dropck types for `Canonical { max_universe: U0, variables: [], value: ParamEnvAnd { param_env: ParamEnv { caller_bounds: [], reveal: UserFacing, constness: NotConst }, value: List } }`
-
-Some errors have detailed explanations: E0072, E0391.
-For more information about an error, try `rustc --explain E0072`.
-error: could not compile `cons-list` due to 2 previous errors
+For more information about this error, try `rustc --explain E0072`.
+error: could not compile `cons-list` due to previous error
 </code></pre>
 <p><span class="caption">Listing 15-4: The error we get when attempting to define
 a recursive enum</span></p>
 <p>The error shows this type “has infinite size.” The reason is that we’ve defined
 <code>List</code> with a variant that is recursive: it holds another value of itself
 directly. As a result, Rust can’t figure out how much space it needs to store a
-<code>List</code> value. Let’s break down why we get this error. First, we'll look at how
+<code>List</code> value. Let’s break down why we get this error. First, we’ll look at how
 Rust decides how much space it needs to store a value of a non-recursive type.</p>
 <h4 id="computing-the-size-of-a-non-recursive-type"><a class="header" href="#computing-the-size-of-a-non-recursive-type">Computing the Size of a Non-Recursive Type</a></h4>
 <p>Recall the <code>Message</code> enum we defined in Listing 6-2 when we discussed enum
@@ -342,7 +332,7 @@ after doing automatic regeneration, look at listings/ch15-smart-pointers/listing
 <pre><code class="language-text">help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to make `List` representable
   |
 2 |     Cons(i32, Box&lt;List&gt;),
-  |               ^^^^    ^
+  |               ++++    +
 </code></pre>
 <p>In this suggestion, “indirection” means that instead of storing a value
 directly, we should change the data structure to store the value indirectly by

@@ -319,7 +319,7 @@ test tests::exploration ... ok
 failures:
 
 ---- tests::another stdout ----
-thread 'main' panicked at 'Make this test fail', src/lib.rs:10:9
+thread 'tests::another' panicked at 'Make this test fail', src/lib.rs:10:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -328,7 +328,7 @@ failures:
 
 test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p><span class="caption">Listing 11-4: Test results when one test passes and one
 test fails</span></p>
@@ -568,7 +568,7 @@ test tests::smaller_cannot_hold_larger ... ok
 failures:
 
 ---- tests::larger_can_hold_smaller stdout ----
-thread 'main' panicked at 'assertion failed: larger.can_hold(&amp;smaller)', src/lib.rs:28:9
+thread 'tests::larger_can_hold_smaller' panicked at 'assertion failed: larger.can_hold(&amp;smaller)', src/lib.rs:28:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -577,7 +577,7 @@ failures:
 
 test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>Our tests caught the bug! Because <code>larger.width</code> is 8 and <code>smaller.width</code> is
 5, the comparison of the widths in <code>can_hold</code> now returns <code>false</code>: 8 is not
@@ -658,7 +658,7 @@ test tests::it_adds_two ... FAILED
 failures:
 
 ---- tests::it_adds_two stdout ----
-thread 'main' panicked at 'assertion failed: `(left == right)`
+thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
   left: `4`,
  right: `5`', src/lib.rs:11:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
@@ -669,7 +669,7 @@ failures:
 
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>Our test caught the bug! The <code>it_adds_two</code> test failed, and the message tells
 us that the assertion that fails was <code>assertion failed: `(left == right)`</code>
@@ -765,7 +765,7 @@ test tests::greeting_contains_name ... FAILED
 failures:
 
 ---- tests::greeting_contains_name stdout ----
-thread 'main' panicked at 'assertion failed: result.contains(\&quot;Carol\&quot;)', src/lib.rs:12:9
+thread 'tests::greeting_contains_name' panicked at 'assertion failed: result.contains(\&quot;Carol\&quot;)', src/lib.rs:12:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -774,7 +774,7 @@ failures:
 
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>This result just indicates that the assertion failed and which line the
 assertion is on. A more useful failure message would print the value from the
@@ -811,7 +811,7 @@ test tests::greeting_contains_name ... FAILED
 failures:
 
 ---- tests::greeting_contains_name stdout ----
-thread 'main' panicked at 'Greeting did not contain name, value was `Hello!`', src/lib.rs:12:9
+thread 'tests::greeting_contains_name' panicked at 'Greeting did not contain name, value was `Hello!`', src/lib.rs:12:9
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -820,7 +820,7 @@ failures:
 
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>We can see the value we actually got in the test output, which would help us
 debug what happened instead of what we were expecting to happen.</p>
@@ -929,7 +929,7 @@ failures:
 
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>We don’t get a very helpful message in this case, but when we look at the test
 function, we see that it’s annotated with <code>#[should_panic]</code>. The failure we got
@@ -1033,7 +1033,7 @@ test tests::greater_than_100 - should panic ... FAILED
 failures:
 
 ---- tests::greater_than_100 stdout ----
-thread 'main' panicked at 'Guess value must be greater than or equal to 1, got 200.', src/lib.rs:13:13
+thread 'tests::greater_than_100' panicked at 'Guess value must be greater than or equal to 1, got 200.', src/lib.rs:13:13
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 note: panic did not contain expected string
       panic message: `&quot;Guess value must be greater than or equal to 1, got 200.&quot;`,
@@ -1044,7 +1044,7 @@ failures:
 
 test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-error: test failed, to rerun pass '--lib'
+error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>The failure message indicates that this test did indeed panic as we expected,
 but the panic message did not include the expected string <code>'Guess value must be less than or equal to 100'</code>. The panic message that we did get in this case was

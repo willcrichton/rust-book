@@ -202,12 +202,6 @@ it’s in</span></p>
 <code>customer</code> module:</p>
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
-error[E0433]: failed to resolve: use of undeclared crate or module `hosting`
-  --&gt; src/lib.rs:11:9
-   |
-11 |         hosting::add_to_waitlist();
-   |         ^^^^^^^ use of undeclared crate or module `hosting`
-
 warning: unused import: `crate::front_of_house::hosting`
  --&gt; src/lib.rs:7:5
   |
@@ -215,6 +209,12 @@ warning: unused import: `crate::front_of_house::hosting`
   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   |
   = note: `#[warn(unused_imports)]` on by default
+
+error[E0433]: failed to resolve: use of undeclared crate or module `hosting`
+  --&gt; src/lib.rs:11:9
+   |
+11 |         hosting::add_to_waitlist();
+   |         ^^^^^^^ use of undeclared crate or module `hosting`
 
 For more information about this error, try `rustc --explain E0433`.
 warning: `restaurant` (lib) generated 1 warning
@@ -359,7 +359,7 @@ added this line to <em>Cargo.toml</em>:</p>
 * ch14-03-cargo-workspaces.md
 -->
 <p><span class="filename">Filename: Cargo.toml</span></p>
-<pre><code class="language-toml">rand = &quot;0.8.3&quot;
+<pre><code class="language-toml">rand = &quot;0.8.5&quot;
 </code></pre>
 <p>Adding <code>rand</code> as a dependency in <em>Cargo.toml</em> tells Cargo to download the
 <code>rand</code> package and any dependencies from <a href="https://crates.io/">crates.io</a> and

@@ -149,9 +149,9 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="hello-world"><a class="header" href="#hello-world">Hello, World!</a></h2>
-<p>Now that you’ve installed Rust, let’s write your first Rust program. It’s
-traditional when learning a new language to write a little program that prints
-the text <code>Hello, world!</code> to the screen, so we’ll do the same here!</p>
+<p>Now that you’ve installed Rust, it’s time to write your first Rust program.
+It’s traditional when learning a new language to write a little program that
+prints the text <code>Hello, world!</code> to the screen, so we’ll do the same here!</p>
 <blockquote>
 <p>Note: This book assumes basic familiarity with the command line. Rust makes
 no specific demands about your editing or tooling or where your code lives, so
@@ -159,7 +159,7 @@ if you prefer to use an integrated development environment (IDE) instead of
 the command line, feel free to use your favorite IDE. Many IDEs now have some
 degree of Rust support; check the IDE’s documentation for details. The Rust
 team has been focusing on enabling great IDE support via <code>rust-analyzer</code>. See
-<a href="appendix-04-useful-development-tools.html">Appendix D</a><!-- ignore --> for more details!</p>
+<a href="appendix-04-useful-development-tools.html">Appendix D</a><!-- ignore --> for more details.</p>
 </blockquote>
 <h3 id="creating-a-project-directory"><a class="header" href="#creating-a-project-directory">Creating a Project Directory</a></h3>
 <p>You’ll start by making a directory to store your Rust code. It doesn’t matter
@@ -227,7 +227,7 @@ line as the function declaration, adding one space in between.</p>
 use an automatic formatter tool called <code>rustfmt</code> to format your code in a
 particular style (more on <code>rustfmt</code> in
 <a href="appendix-04-useful-development-tools.html">Appendix D</a><!-- ignore -->). The Rust team has included this tool
-with the standard Rust distribution, like <code>rustc</code>, so it should already be
+with the standard Rust distribution, as <code>rustc</code> is, so it should already be
 installed on your computer!</p>
 </blockquote>
 <p>The body of the <code>main</code> function holds the following code:</p>
@@ -241,7 +241,7 @@ screen. There are four important details to notice here.</p>
 <p>Second, <code>println!</code> calls a Rust macro. If it had called a function instead, it
 would be entered as <code>println</code> (without the <code>!</code>). We’ll discuss Rust macros in
 more detail in Chapter 19. For now, you just need to know that using a <code>!</code>
-means that you’re calling a macro instead of a normal function, and that macros
+means that you’re calling a macro instead of a normal function and that macros
 don’t always follow the same rules as functions.</p>
 <p>Third, you see the <code>&quot;Hello, world!&quot;</code> string. We pass this string as an argument
 to <code>println!</code>, and the string is printed to the screen.</p>
@@ -259,13 +259,13 @@ this:</p>
 <p>If you have a C or C++ background, you’ll notice that this is similar to <code>gcc</code>
 or <code>clang</code>. After compiling successfully, Rust outputs a binary executable.</p>
 <p>On Linux, macOS, and PowerShell on Windows, you can see the executable by
-entering the <code>ls</code> command in your shell. On Linux and macOS, you’ll see two
-files. With PowerShell on Windows, you’ll see the same three files that you
-would see using CMD.</p>
+entering the <code>ls</code> command in your shell:</p>
 <pre><code class="language-console">$ ls
 main  main.rs
 </code></pre>
-<p>With CMD on Windows, you would enter the following:</p>
+<p>On Linux and macOS, you’ll see two files. With PowerShell on Windows, you’ll
+see the same three files that you would see using CMD. With CMD on Windows, you
+would enter the following:</p>
 <pre><code class="language-cmd">&gt; dir /B %= the /B option says to only show the file names =%
 main.exe
 main.pdb

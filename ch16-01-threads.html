@@ -331,7 +331,7 @@ threads run at the same time.</p>
 <p>We'll often use the <code>move</code> keyword with closures passed to <code>thread::spawn</code>
 because the closure will then take ownership of the values it uses from the
 environment, thus transferring ownership of those values from one thread to
-another. In the <a href="ch13-01-closures.html#capturing-the-environment-with-closures">“Capturing the Environment with Closures”</a><!-- ignore
+another. In the <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">“Capturing References or Moving Ownership”</a><!-- ignore
 --> section of Chapter 13, we discussed <code>move</code> in the context of closures. Now,
 we’ll concentrate more on the interaction between <code>move</code> and <code>thread::spawn</code>.</p>
 <p>Notice in Listing 16-1 that the closure we pass to <code>thread::spawn</code> takes no
@@ -453,7 +453,7 @@ error[E0382]: use of moved value: `v`
    |
 4  |     let v = vec![1, 2, 3];
    |         - move occurs because `v` has type `Vec&lt;i32&gt;`, which does not implement the `Copy` trait
-5  | 
+5  |
 6  |     let handle = thread::spawn(move || {
    |                                ------- value moved into closure here
 7  |         println!(&quot;Here's a vector: {:?}&quot;, v);
