@@ -1,8 +1,9103 @@
-(()=>{var Nt=class{constructor(){this.listeners=[],this.unexpectedErrorHandler=function(t){setTimeout(()=>{throw t.stack?re.isErrorNoTelemetry(t)?new re(t.message+`
+(() => {
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/errors.js
+  var ErrorHandler = class {
+    constructor() {
+      this.listeners = [];
+      this.unexpectedErrorHandler = function(e) {
+        setTimeout(() => {
+          if (e.stack) {
+            if (ErrorNoTelemetry.isErrorNoTelemetry(e)) {
+              throw new ErrorNoTelemetry(e.message + "\n\n" + e.stack);
+            }
+            throw new Error(e.message + "\n\n" + e.stack);
+          }
+          throw e;
+        }, 0);
+      };
+    }
+    emit(e) {
+      this.listeners.forEach((listener) => {
+        listener(e);
+      });
+    }
+    onUnexpectedError(e) {
+      this.unexpectedErrorHandler(e);
+      this.emit(e);
+    }
+    // For external errors, we don't want the listeners to be called
+    onUnexpectedExternalError(e) {
+      this.unexpectedErrorHandler(e);
+    }
+  };
+  var errorHandler = new ErrorHandler();
+  function onUnexpectedError(e) {
+    if (!isCancellationError(e)) {
+      errorHandler.onUnexpectedError(e);
+    }
+    return void 0;
+  }
+  function transformErrorForSerialization(error) {
+    if (error instanceof Error) {
+      const { name, message } = error;
+      const stack = error.stacktrace || error.stack;
+      return {
+        $isError: true,
+        name,
+        message,
+        stack,
+        noTelemetry: ErrorNoTelemetry.isErrorNoTelemetry(error)
+      };
+    }
+    return error;
+  }
+  var canceledName = "Canceled";
+  function isCancellationError(error) {
+    if (error instanceof CancellationError) {
+      return true;
+    }
+    return error instanceof Error && error.name === canceledName && error.message === canceledName;
+  }
+  var CancellationError = class extends Error {
+    constructor() {
+      super(canceledName);
+      this.name = this.message;
+    }
+  };
+  var ErrorNoTelemetry = class extends Error {
+    constructor(msg) {
+      super(msg);
+      this.name = "ErrorNoTelemetry";
+    }
+    static fromError(err) {
+      if (err instanceof ErrorNoTelemetry) {
+        return err;
+      }
+      const result = new ErrorNoTelemetry();
+      result.message = err.message;
+      result.stack = err.stack;
+      return result;
+    }
+    static isErrorNoTelemetry(err) {
+      return err.name === "ErrorNoTelemetry";
+    }
+  };
 
-`+t.stack):new Error(t.message+`
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/functional.js
+  function once(fn) {
+    const _this = this;
+    let didCall = false;
+    let result;
+    return function() {
+      if (didCall) {
+        return result;
+      }
+      didCall = true;
+      result = fn.apply(_this, arguments);
+      return result;
+    };
+  }
 
-`+t.stack):t},0)}}emit(t){this.listeners.forEach(r=>{r(t)})}onUnexpectedError(t){this.unexpectedErrorHandler(t),this.emit(t)}onUnexpectedExternalError(t){this.unexpectedErrorHandler(t)}},Kn=new Nt;function h1(e){er(e)||Kn.onUnexpectedError(e)}function yt(e){if(e instanceof Error){let{name:t,message:r}=e,s=e.stacktrace||e.stack;return{$isError:!0,name:t,message:r,stack:s,noTelemetry:re.isErrorNoTelemetry(e)}}return e}var St="Canceled";function er(e){return e instanceof At?!0:e instanceof Error&&e.name===St&&e.message===St}var At=class extends Error{constructor(){super(St),this.name=this.message}};var re=class extends Error{constructor(t){super(t),this.name="ErrorNoTelemetry"}static fromError(t){if(t instanceof re)return t;let r=new re;return r.message=t.message,r.stack=t.stack,r}static isErrorNoTelemetry(t){return t.name==="ErrorNoTelemetry"}};function d1(e){let t=this,r=!1,s;return function(){return r||(r=!0,s=e.apply(t,arguments)),s}}var Ne;(function(e){function t(L){return L&&typeof L=="object"&&typeof L[Symbol.iterator]=="function"}e.is=t;let r=Object.freeze([]);function s(){return r}e.empty=s;function*i(L){yield L}e.single=i;function o(L){return L||r}e.from=o;function a(L){return!L||L[Symbol.iterator]().next().done===!0}e.isEmpty=a;function l(L){return L[Symbol.iterator]().next().value}e.first=l;function c(L,v){for(let y of L)if(v(y))return!0;return!1}e.some=c;function u(L,v){for(let y of L)if(v(y))return y}e.find=u;function*h(L,v){for(let y of L)v(y)&&(yield y)}e.filter=h;function*f(L,v){let y=0;for(let p of L)yield v(p,y++)}e.map=f;function*d(...L){for(let v of L)for(let y of v)yield y}e.concat=d;function*C(L){for(let v of L)for(let y of v)yield y}e.concatNested=C;function x(L,v,y){let p=y;for(let m of L)p=v(p,m);return p}e.reduce=x;function N(L,v){let y=0;for(let p of L)v(p,y++)}e.forEach=N;function*A(L,v,y=L.length){for(v<0&&(v+=L.length),y<0?y+=L.length:y>L.length&&(y=L.length);v<y;v++)yield L[v]}e.slice=A;function F(L,v=Number.POSITIVE_INFINITY){let y=[];if(v===0)return[y,L];let p=L[Symbol.iterator]();for(let m=0;m<v;m++){let g=p.next();if(g.done)return[y,e.empty()];y.push(g.value)}return[y,{[Symbol.iterator](){return p}}]}e.consume=F;function k(L){return F(L)[0]}e.collect=k;function S(L,v,y=(p,m)=>p===m){let p=L[Symbol.iterator](),m=v[Symbol.iterator]();for(;;){let g=p.next(),w=m.next();if(g.done!==w.done)return!1;if(g.done)return!0;if(!y(g.value,w.value))return!1}}e.equals=S})(Ne||(Ne={}));var tr=!1,j=null;function nr(e){j=e}if(tr){let e="__is_disposable_tracked__";nr(new class{trackDisposable(t){let r=new Error("Potentially leaked disposable").stack;setTimeout(()=>{t[e]||console.log(r)},3e3)}setParent(t,r){if(t&&t!==ee.None)try{t[e]=!0}catch{}}markAsDisposed(t){if(t&&t!==ee.None)try{t[e]=!0}catch{}}markAsSingleton(t){}})}function ze(e){return j?.trackDisposable(e),e}function $e(e){j?.markAsDisposed(e)}function m1(e,t){j?.setParent(e,t)}function rr(e,t){if(!!j)for(let r of e)j.setParent(r,t)}var Mt=class extends Error{constructor(t){super(`Encountered errors while disposing of store. Errors: [${t.join(", ")}]`),this.errors=t}};function g1(e){if(Ne.is(e)){let t=[];for(let r of e)if(r)try{r.dispose()}catch(s){t.push(s)}if(t.length===1)throw t[0];if(t.length>1)throw new Mt(t);return Array.isArray(e)?[]:e}else if(e)return e.dispose(),e}function p1(...e){let t=Se(()=>g1(e));return rr(e,t),t}function Se(e){let t=ze({dispose:d1(()=>{$e(t),e()})});return t}var K=class{constructor(){this._toDispose=new Set,this._isDisposed=!1,ze(this)}dispose(){this._isDisposed||($e(this),this._isDisposed=!0,this.clear())}get isDisposed(){return this._isDisposed}clear(){try{g1(this._toDispose.values())}finally{this._toDispose.clear()}}add(t){if(!t)return t;if(t===this)throw new Error("Cannot register a disposable on itself!");return m1(t,this),this._isDisposed?K.DISABLE_DISPOSED_WARNING||console.warn(new Error("Trying to add a disposable to a DisposableStore that has already been disposed of. The added object will be leaked!").stack):this._toDispose.add(t),t}};K.DISABLE_DISPOSED_WARNING=!1;var ee=class{constructor(){this._store=new K,ze(this),m1(this._store,this)}dispose(){$e(this),this._store.dispose()}_register(t){if(t===this)throw new Error("Cannot register a disposable on itself!");return this._store.add(t)}};ee.None=Object.freeze({dispose(){}});var Oe=class{constructor(){this.dispose=()=>{},this.unset=()=>{},this.isset=()=>!1,ze(this)}set(t){let r=t;return this.unset=()=>r=void 0,this.isset=()=>r!==void 0,this.dispose=()=>{r&&(r(),r=void 0,$e(this))},this}};var P=class{constructor(t){this.element=t,this.next=P.Undefined,this.prev=P.Undefined}};P.Undefined=new P(void 0);var se=class{constructor(){this._first=P.Undefined,this._last=P.Undefined,this._size=0}get size(){return this._size}isEmpty(){return this._first===P.Undefined}clear(){let t=this._first;for(;t!==P.Undefined;){let r=t.next;t.prev=P.Undefined,t.next=P.Undefined,t=r}this._first=P.Undefined,this._last=P.Undefined,this._size=0}unshift(t){return this._insert(t,!1)}push(t){return this._insert(t,!0)}_insert(t,r){let s=new P(t);if(this._first===P.Undefined)this._first=s,this._last=s;else if(r){let o=this._last;this._last=s,s.prev=o,o.next=s}else{let o=this._first;this._first=s,s.next=o,o.prev=s}this._size+=1;let i=!1;return()=>{i||(i=!0,this._remove(s))}}shift(){if(this._first!==P.Undefined){let t=this._first.element;return this._remove(this._first),t}}pop(){if(this._last!==P.Undefined){let t=this._last.element;return this._remove(this._last),t}}_remove(t){if(t.prev!==P.Undefined&&t.next!==P.Undefined){let r=t.prev;r.next=t.next,t.next.prev=r}else t.prev===P.Undefined&&t.next===P.Undefined?(this._first=P.Undefined,this._last=P.Undefined):t.next===P.Undefined?(this._last=this._last.prev,this._last.next=P.Undefined):t.prev===P.Undefined&&(this._first=this._first.next,this._first.prev=P.Undefined);this._size-=1}*[Symbol.iterator](){let t=this._first;for(;t!==P.Undefined;)yield t.element,t=t.next}};var sr=typeof document<"u"&&document.location&&document.location.hash.indexOf("pseudo=true")>=0;function ir(e,t){let r;return t.length===0?r=e:r=e.replace(/\{(\d+)\}/g,(s,i)=>{let o=i[0],a=t[o],l=s;return typeof a=="string"?l=a:(typeof a=="number"||typeof a=="boolean"||a===void 0||a===null)&&(l=String(a)),l}),sr&&(r="\uFF3B"+r.replace(/[aouei]/g,"$&$&")+"\uFF3D"),r}function b1(e,t,...r){return ir(t,r)}var Ft,De="en",Ye=!1,Ze=!1,je=!1,ar=!1,lr=!1,w1=!1,ur=!1,cr=!1,fr=!1,Ge,kt=De,hr,ie,B=typeof self=="object"?self:typeof global=="object"?global:{},W;typeof B.vscode<"u"&&typeof B.vscode.process<"u"?W=B.vscode.process:typeof process<"u"&&(W=process);var _1=typeof((Ft=W?.versions)===null||Ft===void 0?void 0:Ft.electron)=="string",dr=_1&&W?.type==="renderer";if(typeof navigator=="object"&&!dr)ie=navigator.userAgent,Ye=ie.indexOf("Windows")>=0,Ze=ie.indexOf("Macintosh")>=0,cr=(ie.indexOf("Macintosh")>=0||ie.indexOf("iPad")>=0||ie.indexOf("iPhone")>=0)&&!!navigator.maxTouchPoints&&navigator.maxTouchPoints>0,je=ie.indexOf("Linux")>=0,w1=!0,Ge=(b1({key:"ensureLoaderPluginIsLoaded",comment:["{Locked}"]},"_"),void 0)||De,kt=Ge;else if(typeof W=="object"){Ye=W.platform==="win32",Ze=W.platform==="darwin",je=W.platform==="linux",ar=je&&!!W.env.SNAP&&!!W.env.SNAP_REVISION,ur=_1,fr=!!W.env.CI||!!W.env.BUILD_ARTIFACTSTAGINGDIRECTORY,Ge=De,kt=De;let e=W.env.VSCODE_NLS_CONFIG;if(e)try{let t=JSON.parse(e),r=t.availableLanguages["*"];Ge=t.locale,kt=r||De,hr=t._translationsConfigFile}catch{}lr=!0}else console.error("Unable to resolve platform.");var Et=0;Ze?Et=1:Ye?Et=3:je&&(Et=2);var be=Ye,C1=Ze;var ds=w1&&typeof B.importScripts=="function";var te=ie;var mr=typeof B.postMessage=="function"&&!B.importScripts,ms=(()=>{if(mr){let e=[];B.addEventListener("message",r=>{if(r.data&&r.data.vscodeScheduleAsyncWork)for(let s=0,i=e.length;s<i;s++){let o=e[s];if(o.id===r.data.vscodeScheduleAsyncWork){e.splice(s,1),o.callback();return}}});let t=0;return r=>{let s=++t;e.push({id:s,callback:r}),B.postMessage({vscodeScheduleAsyncWork:s},"*")}}return e=>setTimeout(e)})();var gr=!!(te&&te.indexOf("Chrome")>=0),gs=!!(te&&te.indexOf("Firefox")>=0),ps=!!(!gr&&te&&te.indexOf("Safari")>=0),bs=!!(te&&te.indexOf("Edg/")>=0),ws=!!(te&&te.indexOf("Android")>=0);var pr=B.performance&&typeof B.performance.now=="function",oe=class{constructor(t){this._highResolution=pr&&t,this._startTime=this._now(),this._stopTime=-1}static create(t=!0){return new oe(t)}stop(){this._stopTime=this._now()}elapsed(){return this._stopTime!==-1?this._stopTime-this._startTime:this._now()-this._startTime}_now(){return this._highResolution?B.performance.now():Date.now()}};var L1=!1,br=!1,Qe;(function(e){e.None=()=>ee.None;function t(p){if(br){let{onListenerDidAdd:m}=p,g=we.create(),w=0;p.onListenerDidAdd=()=>{++w===2&&(console.warn("snapshotted emitter LIKELY used public and SHOULD HAVE BEEN created with DisposableStore. snapshotted here"),g.print()),m?.()}}}function r(p){return(m,g=null,w)=>{let _=!1,b;return b=p(D=>{if(!_)return b?b.dispose():_=!0,m.call(g,D)},null,w),_&&b.dispose(),b}}e.once=r;function s(p,m,g){return u((w,_=null,b)=>p(D=>w.call(_,m(D)),null,b),g)}e.map=s;function i(p,m,g){return u((w,_=null,b)=>p(D=>{m(D),w.call(_,D)},null,b),g)}e.forEach=i;function o(p,m,g){return u((w,_=null,b)=>p(D=>m(D)&&w.call(_,D),null,b),g)}e.filter=o;function a(p){return p}e.signal=a;function l(...p){return(m,g=null,w)=>p1(...p.map(_=>_(b=>m.call(g,b),null,w)))}e.any=l;function c(p,m,g,w){let _=g;return s(p,b=>(_=m(_,b),_),w)}e.reduce=c;function u(p,m){let g,w={onFirstListenerAdd(){g=p(_.fire,_)},onLastListenerRemove(){g?.dispose()}};m||t(w);let _=new q(w);return m?.add(_),_.event}function h(p,m,g=100,w=!1,_,b){let D,T,qe,vt=0,f1={leakWarningThreshold:_,onFirstListenerAdd(){D=p(Jn=>{vt++,T=m(T,Jn),w&&!qe&&(He.fire(T),T=void 0),clearTimeout(qe),qe=setTimeout(()=>{let Xn=T;T=void 0,qe=void 0,(!w||vt>1)&&He.fire(Xn),vt=0},g)})},onLastListenerRemove(){D.dispose()}};b||t(f1);let He=new q(f1);return b?.add(He),He.event}e.debounce=h;function f(p,m=(w,_)=>w===_,g){let w=!0,_;return o(p,b=>{let D=w||!m(b,_);return w=!1,_=b,D},g)}e.latch=f;function d(p,m,g){return[e.filter(p,m,g),e.filter(p,w=>!m(w),g)]}e.split=d;function C(p,m=!1,g=[]){let w=g.slice(),_=p(T=>{w?w.push(T):D.fire(T)}),b=()=>{w?.forEach(T=>D.fire(T)),w=null},D=new q({onFirstListenerAdd(){_||(_=p(T=>D.fire(T)))},onFirstListenerDidAdd(){w&&(m?setTimeout(b):b())},onLastListenerRemove(){_&&_.dispose(),_=null}});return D.event}e.buffer=C;class x{constructor(m){this.event=m,this.disposables=new K}map(m){return new x(s(this.event,m,this.disposables))}forEach(m){return new x(i(this.event,m,this.disposables))}filter(m){return new x(o(this.event,m,this.disposables))}reduce(m,g){return new x(c(this.event,m,g,this.disposables))}latch(){return new x(f(this.event,void 0,this.disposables))}debounce(m,g=100,w=!1,_){return new x(h(this.event,m,g,w,_,this.disposables))}on(m,g,w){return this.event(m,g,w)}once(m,g,w){return r(this.event)(m,g,w)}dispose(){this.disposables.dispose()}}function N(p){return new x(p)}e.chain=N;function A(p,m,g=w=>w){let w=(...T)=>D.fire(g(...T)),_=()=>p.on(m,w),b=()=>p.removeListener(m,w),D=new q({onFirstListenerAdd:_,onLastListenerRemove:b});return D.event}e.fromNodeEventEmitter=A;function F(p,m,g=w=>w){let w=(...T)=>D.fire(g(...T)),_=()=>p.addEventListener(m,w),b=()=>p.removeEventListener(m,w),D=new q({onFirstListenerAdd:_,onLastListenerRemove:b});return D.event}e.fromDOMEventEmitter=F;function k(p){return new Promise(m=>r(p)(m))}e.toPromise=k;function S(p,m){return m(void 0),p(g=>m(g))}e.runAndSubscribe=S;function L(p,m){let g=null;function w(b){g?.dispose(),g=new K,m(b,g)}w(void 0);let _=p(b=>w(b));return Se(()=>{_.dispose(),g?.dispose()})}e.runAndSubscribeWithStore=L;class v{constructor(m,g){this.obs=m,this._counter=0,this._hasChanged=!1;let w={onFirstListenerAdd:()=>{m.addObserver(this)},onLastListenerRemove:()=>{m.removeObserver(this)}};g||t(w),this.emitter=new q(w),g&&g.add(this.emitter)}beginUpdate(m){this._counter++}handleChange(m,g){this._hasChanged=!0}endUpdate(m){--this._counter===0&&this._hasChanged&&(this._hasChanged=!1,this.emitter.fire(this.obs.get()))}}function y(p,m){return new v(p,m).emitter.event}e.fromObservable=y})(Qe||(Qe={}));var Ae=class{constructor(t){this._listenerCount=0,this._invocationCount=0,this._elapsedOverall=0,this._name=`${t}_${Ae._idPool++}`}start(t){this._stopWatch=new oe(!0),this._listenerCount=t}stop(){if(this._stopWatch){let t=this._stopWatch.elapsed();this._elapsedOverall+=t,this._invocationCount+=1,console.info(`did FIRE ${this._name}: elapsed_ms: ${t.toFixed(5)}, listener: ${this._listenerCount} (elapsed_overall: ${this._elapsedOverall.toFixed(2)}, invocations: ${this._invocationCount})`),this._stopWatch=void 0}}};Ae._idPool=0;var x1=-1,Dt=class{constructor(t,r=Math.random().toString(18).slice(2,5)){this.customThreshold=t,this.name=r,this._warnCountdown=0}dispose(){this._stacks&&this._stacks.clear()}check(t,r){let s=x1;if(typeof this.customThreshold=="number"&&(s=this.customThreshold),s<=0||r<s)return;this._stacks||(this._stacks=new Map);let i=this._stacks.get(t.value)||0;if(this._stacks.set(t.value,i+1),this._warnCountdown-=1,this._warnCountdown<=0){this._warnCountdown=s*.5;let o,a=0;for(let[l,c]of this._stacks)(!o||a<c)&&(o=l,a=c);console.warn(`[${this.name}] potential listener LEAK detected, having ${r} listeners already. MOST frequent listener (${a}):`),console.warn(o)}return()=>{let o=this._stacks.get(t.value)||0;this._stacks.set(t.value,o-1)}}},we=class{constructor(t){this.value=t}static create(){var t;return new we((t=new Error().stack)!==null&&t!==void 0?t:"")}print(){console.warn(this.value.split(`
-`).slice(2).join(`
-`))}},Pt=class{constructor(t,r,s){this.callback=t,this.callbackThis=r,this.stack=s,this.subscription=new Oe}invoke(t){this.callback.call(this.callbackThis,t)}},q=class{constructor(t){var r,s;this._disposed=!1,this._options=t,this._leakageMon=x1>0?new Dt(this._options&&this._options.leakWarningThreshold):void 0,this._perfMon=!((r=this._options)===null||r===void 0)&&r._profName?new Ae(this._options._profName):void 0,this._deliveryQueue=(s=this._options)===null||s===void 0?void 0:s.deliveryQueue}dispose(){var t,r,s,i;if(!this._disposed){if(this._disposed=!0,this._listeners){if(L1){let o=Array.from(this._listeners);queueMicrotask(()=>{var a;for(let l of o)l.subscription.isset()&&(l.subscription.unset(),(a=l.stack)===null||a===void 0||a.print())})}this._listeners.clear()}(t=this._deliveryQueue)===null||t===void 0||t.clear(this),(s=(r=this._options)===null||r===void 0?void 0:r.onLastListenerRemove)===null||s===void 0||s.call(r),(i=this._leakageMon)===null||i===void 0||i.dispose()}}get event(){return this._event||(this._event=(t,r,s)=>{var i,o,a;this._listeners||(this._listeners=new se);let l=this._listeners.isEmpty();l&&(!((i=this._options)===null||i===void 0)&&i.onFirstListenerAdd)&&this._options.onFirstListenerAdd(this);let c,u;this._leakageMon&&this._listeners.size>=30&&(u=we.create(),c=this._leakageMon.check(u,this._listeners.size+1)),L1&&(u=u??we.create());let h=new Pt(t,r,u),f=this._listeners.push(h);l&&(!((o=this._options)===null||o===void 0)&&o.onFirstListenerDidAdd)&&this._options.onFirstListenerDidAdd(this),!((a=this._options)===null||a===void 0)&&a.onListenerDidAdd&&this._options.onListenerDidAdd(this,t,r);let d=h.subscription.set(()=>{c?.(),this._disposed||(f(),this._options&&this._options.onLastListenerRemove&&(this._listeners&&!this._listeners.isEmpty()||this._options.onLastListenerRemove(this)))});return s instanceof K?s.add(d):Array.isArray(s)&&s.push(d),d}),this._event}fire(t){var r,s;if(this._listeners){this._deliveryQueue||(this._deliveryQueue=new Vt);for(let i of this._listeners)this._deliveryQueue.push(this,i,t);(r=this._perfMon)===null||r===void 0||r.start(this._deliveryQueue.size),this._deliveryQueue.deliver(),(s=this._perfMon)===null||s===void 0||s.stop()}}},Rt=class{constructor(){this._queue=new se}get size(){return this._queue.size}push(t,r,s){this._queue.push(new It(t,r,s))}clear(t){let r=new se;for(let s of this._queue)s.emitter!==t&&r.push(s);this._queue=r}deliver(){for(;this._queue.size>0;){let t=this._queue.shift();try{t.listener.invoke(t.event)}catch(r){h1(r)}}}},Vt=class extends Rt{clear(t){this._queue.clear()}},It=class{constructor(t,r,s){this.emitter=t,this.listener=r,this.event=s}};function wr(e){let t=[],r=Object.getPrototypeOf(e);for(;Object.prototype!==r;)t=t.concat(Object.getOwnPropertyNames(r)),r=Object.getPrototypeOf(r);return t}function Pe(e){let t=[];for(let r of wr(e))typeof e[r]=="function"&&t.push(r);return t}function v1(e,t){let r=i=>function(){let o=Array.prototype.slice.call(arguments,0);return t(i,o)},s={};for(let i of e)s[i]=r(i);return s}function N1(e,t="Unreachable"){throw new Error(t)}var Je=class{constructor(t){this.fn=t,this.lastCache=void 0,this.lastArgKey=void 0}get(t){let r=JSON.stringify(t);return this.lastArgKey!==r&&(this.lastArgKey=r,this.lastCache=this.fn(t)),this.lastCache}};var Re=class{constructor(t){this.executor=t,this._didRun=!1}hasValue(){return this._didRun}getValue(){if(!this._didRun)try{this._value=this.executor()}catch(t){this._error=t}finally{this._didRun=!0}if(this._error)throw this._error;return this._value}get rawValue(){return this._value}};var A1;function y1(e){return e.replace(/[\\\{\}\*\+\?\|\^\$\.\[\]\(\)]/g,"\\$&")}function M1(e){return e.split(/\r\n|\r|\n/)}function F1(e){for(let t=0,r=e.length;t<r;t++){let s=e.charCodeAt(t);if(s!==32&&s!==9)return t}return-1}function k1(e,t=e.length-1){for(let r=t;r>=0;r--){let s=e.charCodeAt(r);if(s!==32&&s!==9)return r}return-1}function Bt(e){return e>=65&&e<=90}function ye(e){return 55296<=e&&e<=56319}function Xe(e){return 56320<=e&&e<=57343}function Ut(e,t){return(e-55296<<10)+(t-56320)+65536}function E1(e,t,r){let s=e.charCodeAt(r);if(ye(s)&&r+1<t){let i=e.charCodeAt(r+1);if(Xe(i))return Ut(s,i)}return s}var _r=/^[\t\n\r\x20-\x7E]*$/;function D1(e){return _r.test(e)}var Es=String.fromCharCode(65279);var ae=class{constructor(){this._data=Cr()}static getInstance(){return ae._INSTANCE||(ae._INSTANCE=new ae),ae._INSTANCE}getGraphemeBreakType(t){if(t<32)return t===10?3:t===13?2:4;if(t<127)return 0;let r=this._data,s=r.length/3,i=1;for(;i<=s;)if(t<r[3*i])i=2*i;else if(t>r[3*i+1])i=2*i+1;else return r[3*i+2];return 0}};ae._INSTANCE=null;function Cr(){return JSON.parse("[0,0,0,51229,51255,12,44061,44087,12,127462,127487,6,7083,7085,5,47645,47671,12,54813,54839,12,128678,128678,14,3270,3270,5,9919,9923,14,45853,45879,12,49437,49463,12,53021,53047,12,71216,71218,7,128398,128399,14,129360,129374,14,2519,2519,5,4448,4519,9,9742,9742,14,12336,12336,14,44957,44983,12,46749,46775,12,48541,48567,12,50333,50359,12,52125,52151,12,53917,53943,12,69888,69890,5,73018,73018,5,127990,127990,14,128558,128559,14,128759,128760,14,129653,129655,14,2027,2035,5,2891,2892,7,3761,3761,5,6683,6683,5,8293,8293,4,9825,9826,14,9999,9999,14,43452,43453,5,44509,44535,12,45405,45431,12,46301,46327,12,47197,47223,12,48093,48119,12,48989,49015,12,49885,49911,12,50781,50807,12,51677,51703,12,52573,52599,12,53469,53495,12,54365,54391,12,65279,65279,4,70471,70472,7,72145,72147,7,119173,119179,5,127799,127818,14,128240,128244,14,128512,128512,14,128652,128652,14,128721,128722,14,129292,129292,14,129445,129450,14,129734,129743,14,1476,1477,5,2366,2368,7,2750,2752,7,3076,3076,5,3415,3415,5,4141,4144,5,6109,6109,5,6964,6964,5,7394,7400,5,9197,9198,14,9770,9770,14,9877,9877,14,9968,9969,14,10084,10084,14,43052,43052,5,43713,43713,5,44285,44311,12,44733,44759,12,45181,45207,12,45629,45655,12,46077,46103,12,46525,46551,12,46973,46999,12,47421,47447,12,47869,47895,12,48317,48343,12,48765,48791,12,49213,49239,12,49661,49687,12,50109,50135,12,50557,50583,12,51005,51031,12,51453,51479,12,51901,51927,12,52349,52375,12,52797,52823,12,53245,53271,12,53693,53719,12,54141,54167,12,54589,54615,12,55037,55063,12,69506,69509,5,70191,70193,5,70841,70841,7,71463,71467,5,72330,72342,5,94031,94031,5,123628,123631,5,127763,127765,14,127941,127941,14,128043,128062,14,128302,128317,14,128465,128467,14,128539,128539,14,128640,128640,14,128662,128662,14,128703,128703,14,128745,128745,14,129004,129007,14,129329,129330,14,129402,129402,14,129483,129483,14,129686,129704,14,130048,131069,14,173,173,4,1757,1757,1,2200,2207,5,2434,2435,7,2631,2632,5,2817,2817,5,3008,3008,5,3201,3201,5,3387,3388,5,3542,3542,5,3902,3903,7,4190,4192,5,6002,6003,5,6439,6440,5,6765,6770,7,7019,7027,5,7154,7155,7,8205,8205,13,8505,8505,14,9654,9654,14,9757,9757,14,9792,9792,14,9852,9853,14,9890,9894,14,9937,9937,14,9981,9981,14,10035,10036,14,11035,11036,14,42654,42655,5,43346,43347,7,43587,43587,5,44006,44007,7,44173,44199,12,44397,44423,12,44621,44647,12,44845,44871,12,45069,45095,12,45293,45319,12,45517,45543,12,45741,45767,12,45965,45991,12,46189,46215,12,46413,46439,12,46637,46663,12,46861,46887,12,47085,47111,12,47309,47335,12,47533,47559,12,47757,47783,12,47981,48007,12,48205,48231,12,48429,48455,12,48653,48679,12,48877,48903,12,49101,49127,12,49325,49351,12,49549,49575,12,49773,49799,12,49997,50023,12,50221,50247,12,50445,50471,12,50669,50695,12,50893,50919,12,51117,51143,12,51341,51367,12,51565,51591,12,51789,51815,12,52013,52039,12,52237,52263,12,52461,52487,12,52685,52711,12,52909,52935,12,53133,53159,12,53357,53383,12,53581,53607,12,53805,53831,12,54029,54055,12,54253,54279,12,54477,54503,12,54701,54727,12,54925,54951,12,55149,55175,12,68101,68102,5,69762,69762,7,70067,70069,7,70371,70378,5,70720,70721,7,71087,71087,5,71341,71341,5,71995,71996,5,72249,72249,7,72850,72871,5,73109,73109,5,118576,118598,5,121505,121519,5,127245,127247,14,127568,127569,14,127777,127777,14,127872,127891,14,127956,127967,14,128015,128016,14,128110,128172,14,128259,128259,14,128367,128368,14,128424,128424,14,128488,128488,14,128530,128532,14,128550,128551,14,128566,128566,14,128647,128647,14,128656,128656,14,128667,128673,14,128691,128693,14,128715,128715,14,128728,128732,14,128752,128752,14,128765,128767,14,129096,129103,14,129311,129311,14,129344,129349,14,129394,129394,14,129413,129425,14,129466,129471,14,129511,129535,14,129664,129666,14,129719,129722,14,129760,129767,14,917536,917631,5,13,13,2,1160,1161,5,1564,1564,4,1807,1807,1,2085,2087,5,2307,2307,7,2382,2383,7,2497,2500,5,2563,2563,7,2677,2677,5,2763,2764,7,2879,2879,5,2914,2915,5,3021,3021,5,3142,3144,5,3263,3263,5,3285,3286,5,3398,3400,7,3530,3530,5,3633,3633,5,3864,3865,5,3974,3975,5,4155,4156,7,4229,4230,5,5909,5909,7,6078,6085,7,6277,6278,5,6451,6456,7,6744,6750,5,6846,6846,5,6972,6972,5,7074,7077,5,7146,7148,7,7222,7223,5,7416,7417,5,8234,8238,4,8417,8417,5,9000,9000,14,9203,9203,14,9730,9731,14,9748,9749,14,9762,9763,14,9776,9783,14,9800,9811,14,9831,9831,14,9872,9873,14,9882,9882,14,9900,9903,14,9929,9933,14,9941,9960,14,9974,9974,14,9989,9989,14,10006,10006,14,10062,10062,14,10160,10160,14,11647,11647,5,12953,12953,14,43019,43019,5,43232,43249,5,43443,43443,5,43567,43568,7,43696,43696,5,43765,43765,7,44013,44013,5,44117,44143,12,44229,44255,12,44341,44367,12,44453,44479,12,44565,44591,12,44677,44703,12,44789,44815,12,44901,44927,12,45013,45039,12,45125,45151,12,45237,45263,12,45349,45375,12,45461,45487,12,45573,45599,12,45685,45711,12,45797,45823,12,45909,45935,12,46021,46047,12,46133,46159,12,46245,46271,12,46357,46383,12,46469,46495,12,46581,46607,12,46693,46719,12,46805,46831,12,46917,46943,12,47029,47055,12,47141,47167,12,47253,47279,12,47365,47391,12,47477,47503,12,47589,47615,12,47701,47727,12,47813,47839,12,47925,47951,12,48037,48063,12,48149,48175,12,48261,48287,12,48373,48399,12,48485,48511,12,48597,48623,12,48709,48735,12,48821,48847,12,48933,48959,12,49045,49071,12,49157,49183,12,49269,49295,12,49381,49407,12,49493,49519,12,49605,49631,12,49717,49743,12,49829,49855,12,49941,49967,12,50053,50079,12,50165,50191,12,50277,50303,12,50389,50415,12,50501,50527,12,50613,50639,12,50725,50751,12,50837,50863,12,50949,50975,12,51061,51087,12,51173,51199,12,51285,51311,12,51397,51423,12,51509,51535,12,51621,51647,12,51733,51759,12,51845,51871,12,51957,51983,12,52069,52095,12,52181,52207,12,52293,52319,12,52405,52431,12,52517,52543,12,52629,52655,12,52741,52767,12,52853,52879,12,52965,52991,12,53077,53103,12,53189,53215,12,53301,53327,12,53413,53439,12,53525,53551,12,53637,53663,12,53749,53775,12,53861,53887,12,53973,53999,12,54085,54111,12,54197,54223,12,54309,54335,12,54421,54447,12,54533,54559,12,54645,54671,12,54757,54783,12,54869,54895,12,54981,55007,12,55093,55119,12,55243,55291,10,66045,66045,5,68325,68326,5,69688,69702,5,69817,69818,5,69957,69958,7,70089,70092,5,70198,70199,5,70462,70462,5,70502,70508,5,70750,70750,5,70846,70846,7,71100,71101,5,71230,71230,7,71351,71351,5,71737,71738,5,72000,72000,7,72160,72160,5,72273,72278,5,72752,72758,5,72882,72883,5,73031,73031,5,73461,73462,7,94192,94193,7,119149,119149,7,121403,121452,5,122915,122916,5,126980,126980,14,127358,127359,14,127535,127535,14,127759,127759,14,127771,127771,14,127792,127793,14,127825,127867,14,127897,127899,14,127945,127945,14,127985,127986,14,128000,128007,14,128021,128021,14,128066,128100,14,128184,128235,14,128249,128252,14,128266,128276,14,128335,128335,14,128379,128390,14,128407,128419,14,128444,128444,14,128481,128481,14,128499,128499,14,128526,128526,14,128536,128536,14,128543,128543,14,128556,128556,14,128564,128564,14,128577,128580,14,128643,128645,14,128649,128649,14,128654,128654,14,128660,128660,14,128664,128664,14,128675,128675,14,128686,128689,14,128695,128696,14,128705,128709,14,128717,128719,14,128725,128725,14,128736,128741,14,128747,128748,14,128755,128755,14,128762,128762,14,128981,128991,14,129009,129023,14,129160,129167,14,129296,129304,14,129320,129327,14,129340,129342,14,129356,129356,14,129388,129392,14,129399,129400,14,129404,129407,14,129432,129442,14,129454,129455,14,129473,129474,14,129485,129487,14,129648,129651,14,129659,129660,14,129671,129679,14,129709,129711,14,129728,129730,14,129751,129753,14,129776,129782,14,917505,917505,4,917760,917999,5,10,10,3,127,159,4,768,879,5,1471,1471,5,1536,1541,1,1648,1648,5,1767,1768,5,1840,1866,5,2070,2073,5,2137,2139,5,2274,2274,1,2363,2363,7,2377,2380,7,2402,2403,5,2494,2494,5,2507,2508,7,2558,2558,5,2622,2624,7,2641,2641,5,2691,2691,7,2759,2760,5,2786,2787,5,2876,2876,5,2881,2884,5,2901,2902,5,3006,3006,5,3014,3016,7,3072,3072,5,3134,3136,5,3157,3158,5,3260,3260,5,3266,3266,5,3274,3275,7,3328,3329,5,3391,3392,7,3405,3405,5,3457,3457,5,3536,3537,7,3551,3551,5,3636,3642,5,3764,3772,5,3895,3895,5,3967,3967,7,3993,4028,5,4146,4151,5,4182,4183,7,4226,4226,5,4253,4253,5,4957,4959,5,5940,5940,7,6070,6070,7,6087,6088,7,6158,6158,4,6432,6434,5,6448,6449,7,6679,6680,5,6742,6742,5,6754,6754,5,6783,6783,5,6912,6915,5,6966,6970,5,6978,6978,5,7042,7042,7,7080,7081,5,7143,7143,7,7150,7150,7,7212,7219,5,7380,7392,5,7412,7412,5,8203,8203,4,8232,8232,4,8265,8265,14,8400,8412,5,8421,8432,5,8617,8618,14,9167,9167,14,9200,9200,14,9410,9410,14,9723,9726,14,9733,9733,14,9745,9745,14,9752,9752,14,9760,9760,14,9766,9766,14,9774,9774,14,9786,9786,14,9794,9794,14,9823,9823,14,9828,9828,14,9833,9850,14,9855,9855,14,9875,9875,14,9880,9880,14,9885,9887,14,9896,9897,14,9906,9916,14,9926,9927,14,9935,9935,14,9939,9939,14,9962,9962,14,9972,9972,14,9978,9978,14,9986,9986,14,9997,9997,14,10002,10002,14,10017,10017,14,10055,10055,14,10071,10071,14,10133,10135,14,10548,10549,14,11093,11093,14,12330,12333,5,12441,12442,5,42608,42610,5,43010,43010,5,43045,43046,5,43188,43203,7,43302,43309,5,43392,43394,5,43446,43449,5,43493,43493,5,43571,43572,7,43597,43597,7,43703,43704,5,43756,43757,5,44003,44004,7,44009,44010,7,44033,44059,12,44089,44115,12,44145,44171,12,44201,44227,12,44257,44283,12,44313,44339,12,44369,44395,12,44425,44451,12,44481,44507,12,44537,44563,12,44593,44619,12,44649,44675,12,44705,44731,12,44761,44787,12,44817,44843,12,44873,44899,12,44929,44955,12,44985,45011,12,45041,45067,12,45097,45123,12,45153,45179,12,45209,45235,12,45265,45291,12,45321,45347,12,45377,45403,12,45433,45459,12,45489,45515,12,45545,45571,12,45601,45627,12,45657,45683,12,45713,45739,12,45769,45795,12,45825,45851,12,45881,45907,12,45937,45963,12,45993,46019,12,46049,46075,12,46105,46131,12,46161,46187,12,46217,46243,12,46273,46299,12,46329,46355,12,46385,46411,12,46441,46467,12,46497,46523,12,46553,46579,12,46609,46635,12,46665,46691,12,46721,46747,12,46777,46803,12,46833,46859,12,46889,46915,12,46945,46971,12,47001,47027,12,47057,47083,12,47113,47139,12,47169,47195,12,47225,47251,12,47281,47307,12,47337,47363,12,47393,47419,12,47449,47475,12,47505,47531,12,47561,47587,12,47617,47643,12,47673,47699,12,47729,47755,12,47785,47811,12,47841,47867,12,47897,47923,12,47953,47979,12,48009,48035,12,48065,48091,12,48121,48147,12,48177,48203,12,48233,48259,12,48289,48315,12,48345,48371,12,48401,48427,12,48457,48483,12,48513,48539,12,48569,48595,12,48625,48651,12,48681,48707,12,48737,48763,12,48793,48819,12,48849,48875,12,48905,48931,12,48961,48987,12,49017,49043,12,49073,49099,12,49129,49155,12,49185,49211,12,49241,49267,12,49297,49323,12,49353,49379,12,49409,49435,12,49465,49491,12,49521,49547,12,49577,49603,12,49633,49659,12,49689,49715,12,49745,49771,12,49801,49827,12,49857,49883,12,49913,49939,12,49969,49995,12,50025,50051,12,50081,50107,12,50137,50163,12,50193,50219,12,50249,50275,12,50305,50331,12,50361,50387,12,50417,50443,12,50473,50499,12,50529,50555,12,50585,50611,12,50641,50667,12,50697,50723,12,50753,50779,12,50809,50835,12,50865,50891,12,50921,50947,12,50977,51003,12,51033,51059,12,51089,51115,12,51145,51171,12,51201,51227,12,51257,51283,12,51313,51339,12,51369,51395,12,51425,51451,12,51481,51507,12,51537,51563,12,51593,51619,12,51649,51675,12,51705,51731,12,51761,51787,12,51817,51843,12,51873,51899,12,51929,51955,12,51985,52011,12,52041,52067,12,52097,52123,12,52153,52179,12,52209,52235,12,52265,52291,12,52321,52347,12,52377,52403,12,52433,52459,12,52489,52515,12,52545,52571,12,52601,52627,12,52657,52683,12,52713,52739,12,52769,52795,12,52825,52851,12,52881,52907,12,52937,52963,12,52993,53019,12,53049,53075,12,53105,53131,12,53161,53187,12,53217,53243,12,53273,53299,12,53329,53355,12,53385,53411,12,53441,53467,12,53497,53523,12,53553,53579,12,53609,53635,12,53665,53691,12,53721,53747,12,53777,53803,12,53833,53859,12,53889,53915,12,53945,53971,12,54001,54027,12,54057,54083,12,54113,54139,12,54169,54195,12,54225,54251,12,54281,54307,12,54337,54363,12,54393,54419,12,54449,54475,12,54505,54531,12,54561,54587,12,54617,54643,12,54673,54699,12,54729,54755,12,54785,54811,12,54841,54867,12,54897,54923,12,54953,54979,12,55009,55035,12,55065,55091,12,55121,55147,12,55177,55203,12,65024,65039,5,65520,65528,4,66422,66426,5,68152,68154,5,69291,69292,5,69633,69633,5,69747,69748,5,69811,69814,5,69826,69826,5,69932,69932,7,70016,70017,5,70079,70080,7,70095,70095,5,70196,70196,5,70367,70367,5,70402,70403,7,70464,70464,5,70487,70487,5,70709,70711,7,70725,70725,7,70833,70834,7,70843,70844,7,70849,70849,7,71090,71093,5,71103,71104,5,71227,71228,7,71339,71339,5,71344,71349,5,71458,71461,5,71727,71735,5,71985,71989,7,71998,71998,5,72002,72002,7,72154,72155,5,72193,72202,5,72251,72254,5,72281,72283,5,72344,72345,5,72766,72766,7,72874,72880,5,72885,72886,5,73023,73029,5,73104,73105,5,73111,73111,5,92912,92916,5,94095,94098,5,113824,113827,4,119142,119142,7,119155,119162,4,119362,119364,5,121476,121476,5,122888,122904,5,123184,123190,5,125252,125258,5,127183,127183,14,127340,127343,14,127377,127386,14,127491,127503,14,127548,127551,14,127744,127756,14,127761,127761,14,127769,127769,14,127773,127774,14,127780,127788,14,127796,127797,14,127820,127823,14,127869,127869,14,127894,127895,14,127902,127903,14,127943,127943,14,127947,127950,14,127972,127972,14,127988,127988,14,127992,127994,14,128009,128011,14,128019,128019,14,128023,128041,14,128064,128064,14,128102,128107,14,128174,128181,14,128238,128238,14,128246,128247,14,128254,128254,14,128264,128264,14,128278,128299,14,128329,128330,14,128348,128359,14,128371,128377,14,128392,128393,14,128401,128404,14,128421,128421,14,128433,128434,14,128450,128452,14,128476,128478,14,128483,128483,14,128495,128495,14,128506,128506,14,128519,128520,14,128528,128528,14,128534,128534,14,128538,128538,14,128540,128542,14,128544,128549,14,128552,128555,14,128557,128557,14,128560,128563,14,128565,128565,14,128567,128576,14,128581,128591,14,128641,128642,14,128646,128646,14,128648,128648,14,128650,128651,14,128653,128653,14,128655,128655,14,128657,128659,14,128661,128661,14,128663,128663,14,128665,128666,14,128674,128674,14,128676,128677,14,128679,128685,14,128690,128690,14,128694,128694,14,128697,128702,14,128704,128704,14,128710,128714,14,128716,128716,14,128720,128720,14,128723,128724,14,128726,128727,14,128733,128735,14,128742,128744,14,128746,128746,14,128749,128751,14,128753,128754,14,128756,128758,14,128761,128761,14,128763,128764,14,128884,128895,14,128992,129003,14,129008,129008,14,129036,129039,14,129114,129119,14,129198,129279,14,129293,129295,14,129305,129310,14,129312,129319,14,129328,129328,14,129331,129338,14,129343,129343,14,129351,129355,14,129357,129359,14,129375,129387,14,129393,129393,14,129395,129398,14,129401,129401,14,129403,129403,14,129408,129412,14,129426,129431,14,129443,129444,14,129451,129453,14,129456,129465,14,129472,129472,14,129475,129482,14,129484,129484,14,129488,129510,14,129536,129647,14,129652,129652,14,129656,129658,14,129661,129663,14,129667,129670,14,129680,129685,14,129705,129708,14,129712,129718,14,129723,129727,14,129731,129733,14,129744,129750,14,129754,129759,14,129768,129775,14,129783,129791,14,917504,917504,4,917506,917535,4,917632,917759,4,918000,921599,4,0,9,4,11,12,4,14,31,4,169,169,14,174,174,14,1155,1159,5,1425,1469,5,1473,1474,5,1479,1479,5,1552,1562,5,1611,1631,5,1750,1756,5,1759,1764,5,1770,1773,5,1809,1809,5,1958,1968,5,2045,2045,5,2075,2083,5,2089,2093,5,2192,2193,1,2250,2273,5,2275,2306,5,2362,2362,5,2364,2364,5,2369,2376,5,2381,2381,5,2385,2391,5,2433,2433,5,2492,2492,5,2495,2496,7,2503,2504,7,2509,2509,5,2530,2531,5,2561,2562,5,2620,2620,5,2625,2626,5,2635,2637,5,2672,2673,5,2689,2690,5,2748,2748,5,2753,2757,5,2761,2761,7,2765,2765,5,2810,2815,5,2818,2819,7,2878,2878,5,2880,2880,7,2887,2888,7,2893,2893,5,2903,2903,5,2946,2946,5,3007,3007,7,3009,3010,7,3018,3020,7,3031,3031,5,3073,3075,7,3132,3132,5,3137,3140,7,3146,3149,5,3170,3171,5,3202,3203,7,3262,3262,7,3264,3265,7,3267,3268,7,3271,3272,7,3276,3277,5,3298,3299,5,3330,3331,7,3390,3390,5,3393,3396,5,3402,3404,7,3406,3406,1,3426,3427,5,3458,3459,7,3535,3535,5,3538,3540,5,3544,3550,7,3570,3571,7,3635,3635,7,3655,3662,5,3763,3763,7,3784,3789,5,3893,3893,5,3897,3897,5,3953,3966,5,3968,3972,5,3981,3991,5,4038,4038,5,4145,4145,7,4153,4154,5,4157,4158,5,4184,4185,5,4209,4212,5,4228,4228,7,4237,4237,5,4352,4447,8,4520,4607,10,5906,5908,5,5938,5939,5,5970,5971,5,6068,6069,5,6071,6077,5,6086,6086,5,6089,6099,5,6155,6157,5,6159,6159,5,6313,6313,5,6435,6438,7,6441,6443,7,6450,6450,5,6457,6459,5,6681,6682,7,6741,6741,7,6743,6743,7,6752,6752,5,6757,6764,5,6771,6780,5,6832,6845,5,6847,6862,5,6916,6916,7,6965,6965,5,6971,6971,7,6973,6977,7,6979,6980,7,7040,7041,5,7073,7073,7,7078,7079,7,7082,7082,7,7142,7142,5,7144,7145,5,7149,7149,5,7151,7153,5,7204,7211,7,7220,7221,7,7376,7378,5,7393,7393,7,7405,7405,5,7415,7415,7,7616,7679,5,8204,8204,5,8206,8207,4,8233,8233,4,8252,8252,14,8288,8292,4,8294,8303,4,8413,8416,5,8418,8420,5,8482,8482,14,8596,8601,14,8986,8987,14,9096,9096,14,9193,9196,14,9199,9199,14,9201,9202,14,9208,9210,14,9642,9643,14,9664,9664,14,9728,9729,14,9732,9732,14,9735,9741,14,9743,9744,14,9746,9746,14,9750,9751,14,9753,9756,14,9758,9759,14,9761,9761,14,9764,9765,14,9767,9769,14,9771,9773,14,9775,9775,14,9784,9785,14,9787,9791,14,9793,9793,14,9795,9799,14,9812,9822,14,9824,9824,14,9827,9827,14,9829,9830,14,9832,9832,14,9851,9851,14,9854,9854,14,9856,9861,14,9874,9874,14,9876,9876,14,9878,9879,14,9881,9881,14,9883,9884,14,9888,9889,14,9895,9895,14,9898,9899,14,9904,9905,14,9917,9918,14,9924,9925,14,9928,9928,14,9934,9934,14,9936,9936,14,9938,9938,14,9940,9940,14,9961,9961,14,9963,9967,14,9970,9971,14,9973,9973,14,9975,9977,14,9979,9980,14,9982,9985,14,9987,9988,14,9992,9996,14,9998,9998,14,10000,10001,14,10004,10004,14,10013,10013,14,10024,10024,14,10052,10052,14,10060,10060,14,10067,10069,14,10083,10083,14,10085,10087,14,10145,10145,14,10175,10175,14,11013,11015,14,11088,11088,14,11503,11505,5,11744,11775,5,12334,12335,5,12349,12349,14,12951,12951,14,42607,42607,5,42612,42621,5,42736,42737,5,43014,43014,5,43043,43044,7,43047,43047,7,43136,43137,7,43204,43205,5,43263,43263,5,43335,43345,5,43360,43388,8,43395,43395,7,43444,43445,7,43450,43451,7,43454,43456,7,43561,43566,5,43569,43570,5,43573,43574,5,43596,43596,5,43644,43644,5,43698,43700,5,43710,43711,5,43755,43755,7,43758,43759,7,43766,43766,5,44005,44005,5,44008,44008,5,44012,44012,7,44032,44032,11,44060,44060,11,44088,44088,11,44116,44116,11,44144,44144,11,44172,44172,11,44200,44200,11,44228,44228,11,44256,44256,11,44284,44284,11,44312,44312,11,44340,44340,11,44368,44368,11,44396,44396,11,44424,44424,11,44452,44452,11,44480,44480,11,44508,44508,11,44536,44536,11,44564,44564,11,44592,44592,11,44620,44620,11,44648,44648,11,44676,44676,11,44704,44704,11,44732,44732,11,44760,44760,11,44788,44788,11,44816,44816,11,44844,44844,11,44872,44872,11,44900,44900,11,44928,44928,11,44956,44956,11,44984,44984,11,45012,45012,11,45040,45040,11,45068,45068,11,45096,45096,11,45124,45124,11,45152,45152,11,45180,45180,11,45208,45208,11,45236,45236,11,45264,45264,11,45292,45292,11,45320,45320,11,45348,45348,11,45376,45376,11,45404,45404,11,45432,45432,11,45460,45460,11,45488,45488,11,45516,45516,11,45544,45544,11,45572,45572,11,45600,45600,11,45628,45628,11,45656,45656,11,45684,45684,11,45712,45712,11,45740,45740,11,45768,45768,11,45796,45796,11,45824,45824,11,45852,45852,11,45880,45880,11,45908,45908,11,45936,45936,11,45964,45964,11,45992,45992,11,46020,46020,11,46048,46048,11,46076,46076,11,46104,46104,11,46132,46132,11,46160,46160,11,46188,46188,11,46216,46216,11,46244,46244,11,46272,46272,11,46300,46300,11,46328,46328,11,46356,46356,11,46384,46384,11,46412,46412,11,46440,46440,11,46468,46468,11,46496,46496,11,46524,46524,11,46552,46552,11,46580,46580,11,46608,46608,11,46636,46636,11,46664,46664,11,46692,46692,11,46720,46720,11,46748,46748,11,46776,46776,11,46804,46804,11,46832,46832,11,46860,46860,11,46888,46888,11,46916,46916,11,46944,46944,11,46972,46972,11,47000,47000,11,47028,47028,11,47056,47056,11,47084,47084,11,47112,47112,11,47140,47140,11,47168,47168,11,47196,47196,11,47224,47224,11,47252,47252,11,47280,47280,11,47308,47308,11,47336,47336,11,47364,47364,11,47392,47392,11,47420,47420,11,47448,47448,11,47476,47476,11,47504,47504,11,47532,47532,11,47560,47560,11,47588,47588,11,47616,47616,11,47644,47644,11,47672,47672,11,47700,47700,11,47728,47728,11,47756,47756,11,47784,47784,11,47812,47812,11,47840,47840,11,47868,47868,11,47896,47896,11,47924,47924,11,47952,47952,11,47980,47980,11,48008,48008,11,48036,48036,11,48064,48064,11,48092,48092,11,48120,48120,11,48148,48148,11,48176,48176,11,48204,48204,11,48232,48232,11,48260,48260,11,48288,48288,11,48316,48316,11,48344,48344,11,48372,48372,11,48400,48400,11,48428,48428,11,48456,48456,11,48484,48484,11,48512,48512,11,48540,48540,11,48568,48568,11,48596,48596,11,48624,48624,11,48652,48652,11,48680,48680,11,48708,48708,11,48736,48736,11,48764,48764,11,48792,48792,11,48820,48820,11,48848,48848,11,48876,48876,11,48904,48904,11,48932,48932,11,48960,48960,11,48988,48988,11,49016,49016,11,49044,49044,11,49072,49072,11,49100,49100,11,49128,49128,11,49156,49156,11,49184,49184,11,49212,49212,11,49240,49240,11,49268,49268,11,49296,49296,11,49324,49324,11,49352,49352,11,49380,49380,11,49408,49408,11,49436,49436,11,49464,49464,11,49492,49492,11,49520,49520,11,49548,49548,11,49576,49576,11,49604,49604,11,49632,49632,11,49660,49660,11,49688,49688,11,49716,49716,11,49744,49744,11,49772,49772,11,49800,49800,11,49828,49828,11,49856,49856,11,49884,49884,11,49912,49912,11,49940,49940,11,49968,49968,11,49996,49996,11,50024,50024,11,50052,50052,11,50080,50080,11,50108,50108,11,50136,50136,11,50164,50164,11,50192,50192,11,50220,50220,11,50248,50248,11,50276,50276,11,50304,50304,11,50332,50332,11,50360,50360,11,50388,50388,11,50416,50416,11,50444,50444,11,50472,50472,11,50500,50500,11,50528,50528,11,50556,50556,11,50584,50584,11,50612,50612,11,50640,50640,11,50668,50668,11,50696,50696,11,50724,50724,11,50752,50752,11,50780,50780,11,50808,50808,11,50836,50836,11,50864,50864,11,50892,50892,11,50920,50920,11,50948,50948,11,50976,50976,11,51004,51004,11,51032,51032,11,51060,51060,11,51088,51088,11,51116,51116,11,51144,51144,11,51172,51172,11,51200,51200,11,51228,51228,11,51256,51256,11,51284,51284,11,51312,51312,11,51340,51340,11,51368,51368,11,51396,51396,11,51424,51424,11,51452,51452,11,51480,51480,11,51508,51508,11,51536,51536,11,51564,51564,11,51592,51592,11,51620,51620,11,51648,51648,11,51676,51676,11,51704,51704,11,51732,51732,11,51760,51760,11,51788,51788,11,51816,51816,11,51844,51844,11,51872,51872,11,51900,51900,11,51928,51928,11,51956,51956,11,51984,51984,11,52012,52012,11,52040,52040,11,52068,52068,11,52096,52096,11,52124,52124,11,52152,52152,11,52180,52180,11,52208,52208,11,52236,52236,11,52264,52264,11,52292,52292,11,52320,52320,11,52348,52348,11,52376,52376,11,52404,52404,11,52432,52432,11,52460,52460,11,52488,52488,11,52516,52516,11,52544,52544,11,52572,52572,11,52600,52600,11,52628,52628,11,52656,52656,11,52684,52684,11,52712,52712,11,52740,52740,11,52768,52768,11,52796,52796,11,52824,52824,11,52852,52852,11,52880,52880,11,52908,52908,11,52936,52936,11,52964,52964,11,52992,52992,11,53020,53020,11,53048,53048,11,53076,53076,11,53104,53104,11,53132,53132,11,53160,53160,11,53188,53188,11,53216,53216,11,53244,53244,11,53272,53272,11,53300,53300,11,53328,53328,11,53356,53356,11,53384,53384,11,53412,53412,11,53440,53440,11,53468,53468,11,53496,53496,11,53524,53524,11,53552,53552,11,53580,53580,11,53608,53608,11,53636,53636,11,53664,53664,11,53692,53692,11,53720,53720,11,53748,53748,11,53776,53776,11,53804,53804,11,53832,53832,11,53860,53860,11,53888,53888,11,53916,53916,11,53944,53944,11,53972,53972,11,54000,54000,11,54028,54028,11,54056,54056,11,54084,54084,11,54112,54112,11,54140,54140,11,54168,54168,11,54196,54196,11,54224,54224,11,54252,54252,11,54280,54280,11,54308,54308,11,54336,54336,11,54364,54364,11,54392,54392,11,54420,54420,11,54448,54448,11,54476,54476,11,54504,54504,11,54532,54532,11,54560,54560,11,54588,54588,11,54616,54616,11,54644,54644,11,54672,54672,11,54700,54700,11,54728,54728,11,54756,54756,11,54784,54784,11,54812,54812,11,54840,54840,11,54868,54868,11,54896,54896,11,54924,54924,11,54952,54952,11,54980,54980,11,55008,55008,11,55036,55036,11,55064,55064,11,55092,55092,11,55120,55120,11,55148,55148,11,55176,55176,11,55216,55238,9,64286,64286,5,65056,65071,5,65438,65439,5,65529,65531,4,66272,66272,5,68097,68099,5,68108,68111,5,68159,68159,5,68900,68903,5,69446,69456,5,69632,69632,7,69634,69634,7,69744,69744,5,69759,69761,5,69808,69810,7,69815,69816,7,69821,69821,1,69837,69837,1,69927,69931,5,69933,69940,5,70003,70003,5,70018,70018,7,70070,70078,5,70082,70083,1,70094,70094,7,70188,70190,7,70194,70195,7,70197,70197,7,70206,70206,5,70368,70370,7,70400,70401,5,70459,70460,5,70463,70463,7,70465,70468,7,70475,70477,7,70498,70499,7,70512,70516,5,70712,70719,5,70722,70724,5,70726,70726,5,70832,70832,5,70835,70840,5,70842,70842,5,70845,70845,5,70847,70848,5,70850,70851,5,71088,71089,7,71096,71099,7,71102,71102,7,71132,71133,5,71219,71226,5,71229,71229,5,71231,71232,5,71340,71340,7,71342,71343,7,71350,71350,7,71453,71455,5,71462,71462,7,71724,71726,7,71736,71736,7,71984,71984,5,71991,71992,7,71997,71997,7,71999,71999,1,72001,72001,1,72003,72003,5,72148,72151,5,72156,72159,7,72164,72164,7,72243,72248,5,72250,72250,1,72263,72263,5,72279,72280,7,72324,72329,1,72343,72343,7,72751,72751,7,72760,72765,5,72767,72767,5,72873,72873,7,72881,72881,7,72884,72884,7,73009,73014,5,73020,73021,5,73030,73030,1,73098,73102,7,73107,73108,7,73110,73110,7,73459,73460,5,78896,78904,4,92976,92982,5,94033,94087,7,94180,94180,5,113821,113822,5,118528,118573,5,119141,119141,5,119143,119145,5,119150,119154,5,119163,119170,5,119210,119213,5,121344,121398,5,121461,121461,5,121499,121503,5,122880,122886,5,122907,122913,5,122918,122922,5,123566,123566,5,125136,125142,5,126976,126979,14,126981,127182,14,127184,127231,14,127279,127279,14,127344,127345,14,127374,127374,14,127405,127461,14,127489,127490,14,127514,127514,14,127538,127546,14,127561,127567,14,127570,127743,14,127757,127758,14,127760,127760,14,127762,127762,14,127766,127768,14,127770,127770,14,127772,127772,14,127775,127776,14,127778,127779,14,127789,127791,14,127794,127795,14,127798,127798,14,127819,127819,14,127824,127824,14,127868,127868,14,127870,127871,14,127892,127893,14,127896,127896,14,127900,127901,14,127904,127940,14,127942,127942,14,127944,127944,14,127946,127946,14,127951,127955,14,127968,127971,14,127973,127984,14,127987,127987,14,127989,127989,14,127991,127991,14,127995,127999,5,128008,128008,14,128012,128014,14,128017,128018,14,128020,128020,14,128022,128022,14,128042,128042,14,128063,128063,14,128065,128065,14,128101,128101,14,128108,128109,14,128173,128173,14,128182,128183,14,128236,128237,14,128239,128239,14,128245,128245,14,128248,128248,14,128253,128253,14,128255,128258,14,128260,128263,14,128265,128265,14,128277,128277,14,128300,128301,14,128326,128328,14,128331,128334,14,128336,128347,14,128360,128366,14,128369,128370,14,128378,128378,14,128391,128391,14,128394,128397,14,128400,128400,14,128405,128406,14,128420,128420,14,128422,128423,14,128425,128432,14,128435,128443,14,128445,128449,14,128453,128464,14,128468,128475,14,128479,128480,14,128482,128482,14,128484,128487,14,128489,128494,14,128496,128498,14,128500,128505,14,128507,128511,14,128513,128518,14,128521,128525,14,128527,128527,14,128529,128529,14,128533,128533,14,128535,128535,14,128537,128537,14]")}var z=class{constructor(t){this.confusableDictionary=t}static getInstance(t){return z.cache.get(Array.from(t))}static getLocales(){return z._locales.getValue()}isAmbiguous(t){return this.confusableDictionary.has(t)}getPrimaryConfusable(t){return this.confusableDictionary.get(t)}getConfusableCodePoints(){return new Set(this.confusableDictionary.keys())}};A1=z;z.ambiguousCharacterData=new Re(()=>JSON.parse('{"_common":[8232,32,8233,32,5760,32,8192,32,8193,32,8194,32,8195,32,8196,32,8197,32,8198,32,8200,32,8201,32,8202,32,8287,32,8199,32,8239,32,2042,95,65101,95,65102,95,65103,95,8208,45,8209,45,8210,45,65112,45,1748,45,8259,45,727,45,8722,45,10134,45,11450,45,1549,44,1643,44,8218,44,184,44,42233,44,894,59,2307,58,2691,58,1417,58,1795,58,1796,58,5868,58,65072,58,6147,58,6153,58,8282,58,1475,58,760,58,42889,58,8758,58,720,58,42237,58,451,33,11601,33,660,63,577,63,2429,63,5038,63,42731,63,119149,46,8228,46,1793,46,1794,46,42510,46,68176,46,1632,46,1776,46,42232,46,1373,96,65287,96,8219,96,8242,96,1370,96,1523,96,8175,96,65344,96,900,96,8189,96,8125,96,8127,96,8190,96,697,96,884,96,712,96,714,96,715,96,756,96,699,96,701,96,700,96,702,96,42892,96,1497,96,2036,96,2037,96,5194,96,5836,96,94033,96,94034,96,65339,91,10088,40,10098,40,12308,40,64830,40,65341,93,10089,41,10099,41,12309,41,64831,41,10100,123,119060,123,10101,125,65342,94,8270,42,1645,42,8727,42,66335,42,5941,47,8257,47,8725,47,8260,47,9585,47,10187,47,10744,47,119354,47,12755,47,12339,47,11462,47,20031,47,12035,47,65340,92,65128,92,8726,92,10189,92,10741,92,10745,92,119311,92,119355,92,12756,92,20022,92,12034,92,42872,38,708,94,710,94,5869,43,10133,43,66203,43,8249,60,10094,60,706,60,119350,60,5176,60,5810,60,5120,61,11840,61,12448,61,42239,61,8250,62,10095,62,707,62,119351,62,5171,62,94015,62,8275,126,732,126,8128,126,8764,126,65372,124,65293,45,120784,50,120794,50,120804,50,120814,50,120824,50,130034,50,42842,50,423,50,1000,50,42564,50,5311,50,42735,50,119302,51,120785,51,120795,51,120805,51,120815,51,120825,51,130035,51,42923,51,540,51,439,51,42858,51,11468,51,1248,51,94011,51,71882,51,120786,52,120796,52,120806,52,120816,52,120826,52,130036,52,5070,52,71855,52,120787,53,120797,53,120807,53,120817,53,120827,53,130037,53,444,53,71867,53,120788,54,120798,54,120808,54,120818,54,120828,54,130038,54,11474,54,5102,54,71893,54,119314,55,120789,55,120799,55,120809,55,120819,55,120829,55,130039,55,66770,55,71878,55,2819,56,2538,56,2666,56,125131,56,120790,56,120800,56,120810,56,120820,56,120830,56,130040,56,547,56,546,56,66330,56,2663,57,2920,57,2541,57,3437,57,120791,57,120801,57,120811,57,120821,57,120831,57,130041,57,42862,57,11466,57,71884,57,71852,57,71894,57,9082,97,65345,97,119834,97,119886,97,119938,97,119990,97,120042,97,120094,97,120146,97,120198,97,120250,97,120302,97,120354,97,120406,97,120458,97,593,97,945,97,120514,97,120572,97,120630,97,120688,97,120746,97,65313,65,119808,65,119860,65,119912,65,119964,65,120016,65,120068,65,120120,65,120172,65,120224,65,120276,65,120328,65,120380,65,120432,65,913,65,120488,65,120546,65,120604,65,120662,65,120720,65,5034,65,5573,65,42222,65,94016,65,66208,65,119835,98,119887,98,119939,98,119991,98,120043,98,120095,98,120147,98,120199,98,120251,98,120303,98,120355,98,120407,98,120459,98,388,98,5071,98,5234,98,5551,98,65314,66,8492,66,119809,66,119861,66,119913,66,120017,66,120069,66,120121,66,120173,66,120225,66,120277,66,120329,66,120381,66,120433,66,42932,66,914,66,120489,66,120547,66,120605,66,120663,66,120721,66,5108,66,5623,66,42192,66,66178,66,66209,66,66305,66,65347,99,8573,99,119836,99,119888,99,119940,99,119992,99,120044,99,120096,99,120148,99,120200,99,120252,99,120304,99,120356,99,120408,99,120460,99,7428,99,1010,99,11429,99,43951,99,66621,99,128844,67,71922,67,71913,67,65315,67,8557,67,8450,67,8493,67,119810,67,119862,67,119914,67,119966,67,120018,67,120174,67,120226,67,120278,67,120330,67,120382,67,120434,67,1017,67,11428,67,5087,67,42202,67,66210,67,66306,67,66581,67,66844,67,8574,100,8518,100,119837,100,119889,100,119941,100,119993,100,120045,100,120097,100,120149,100,120201,100,120253,100,120305,100,120357,100,120409,100,120461,100,1281,100,5095,100,5231,100,42194,100,8558,68,8517,68,119811,68,119863,68,119915,68,119967,68,120019,68,120071,68,120123,68,120175,68,120227,68,120279,68,120331,68,120383,68,120435,68,5024,68,5598,68,5610,68,42195,68,8494,101,65349,101,8495,101,8519,101,119838,101,119890,101,119942,101,120046,101,120098,101,120150,101,120202,101,120254,101,120306,101,120358,101,120410,101,120462,101,43826,101,1213,101,8959,69,65317,69,8496,69,119812,69,119864,69,119916,69,120020,69,120072,69,120124,69,120176,69,120228,69,120280,69,120332,69,120384,69,120436,69,917,69,120492,69,120550,69,120608,69,120666,69,120724,69,11577,69,5036,69,42224,69,71846,69,71854,69,66182,69,119839,102,119891,102,119943,102,119995,102,120047,102,120099,102,120151,102,120203,102,120255,102,120307,102,120359,102,120411,102,120463,102,43829,102,42905,102,383,102,7837,102,1412,102,119315,70,8497,70,119813,70,119865,70,119917,70,120021,70,120073,70,120125,70,120177,70,120229,70,120281,70,120333,70,120385,70,120437,70,42904,70,988,70,120778,70,5556,70,42205,70,71874,70,71842,70,66183,70,66213,70,66853,70,65351,103,8458,103,119840,103,119892,103,119944,103,120048,103,120100,103,120152,103,120204,103,120256,103,120308,103,120360,103,120412,103,120464,103,609,103,7555,103,397,103,1409,103,119814,71,119866,71,119918,71,119970,71,120022,71,120074,71,120126,71,120178,71,120230,71,120282,71,120334,71,120386,71,120438,71,1292,71,5056,71,5107,71,42198,71,65352,104,8462,104,119841,104,119945,104,119997,104,120049,104,120101,104,120153,104,120205,104,120257,104,120309,104,120361,104,120413,104,120465,104,1211,104,1392,104,5058,104,65320,72,8459,72,8460,72,8461,72,119815,72,119867,72,119919,72,120023,72,120179,72,120231,72,120283,72,120335,72,120387,72,120439,72,919,72,120494,72,120552,72,120610,72,120668,72,120726,72,11406,72,5051,72,5500,72,42215,72,66255,72,731,105,9075,105,65353,105,8560,105,8505,105,8520,105,119842,105,119894,105,119946,105,119998,105,120050,105,120102,105,120154,105,120206,105,120258,105,120310,105,120362,105,120414,105,120466,105,120484,105,618,105,617,105,953,105,8126,105,890,105,120522,105,120580,105,120638,105,120696,105,120754,105,1110,105,42567,105,1231,105,43893,105,5029,105,71875,105,65354,106,8521,106,119843,106,119895,106,119947,106,119999,106,120051,106,120103,106,120155,106,120207,106,120259,106,120311,106,120363,106,120415,106,120467,106,1011,106,1112,106,65322,74,119817,74,119869,74,119921,74,119973,74,120025,74,120077,74,120129,74,120181,74,120233,74,120285,74,120337,74,120389,74,120441,74,42930,74,895,74,1032,74,5035,74,5261,74,42201,74,119844,107,119896,107,119948,107,120000,107,120052,107,120104,107,120156,107,120208,107,120260,107,120312,107,120364,107,120416,107,120468,107,8490,75,65323,75,119818,75,119870,75,119922,75,119974,75,120026,75,120078,75,120130,75,120182,75,120234,75,120286,75,120338,75,120390,75,120442,75,922,75,120497,75,120555,75,120613,75,120671,75,120729,75,11412,75,5094,75,5845,75,42199,75,66840,75,1472,108,8739,73,9213,73,65512,73,1633,108,1777,73,66336,108,125127,108,120783,73,120793,73,120803,73,120813,73,120823,73,130033,73,65321,73,8544,73,8464,73,8465,73,119816,73,119868,73,119920,73,120024,73,120128,73,120180,73,120232,73,120284,73,120336,73,120388,73,120440,73,65356,108,8572,73,8467,108,119845,108,119897,108,119949,108,120001,108,120053,108,120105,73,120157,73,120209,73,120261,73,120313,73,120365,73,120417,73,120469,73,448,73,120496,73,120554,73,120612,73,120670,73,120728,73,11410,73,1030,73,1216,73,1493,108,1503,108,1575,108,126464,108,126592,108,65166,108,65165,108,1994,108,11599,73,5825,73,42226,73,93992,73,66186,124,66313,124,119338,76,8556,76,8466,76,119819,76,119871,76,119923,76,120027,76,120079,76,120131,76,120183,76,120235,76,120287,76,120339,76,120391,76,120443,76,11472,76,5086,76,5290,76,42209,76,93974,76,71843,76,71858,76,66587,76,66854,76,65325,77,8559,77,8499,77,119820,77,119872,77,119924,77,120028,77,120080,77,120132,77,120184,77,120236,77,120288,77,120340,77,120392,77,120444,77,924,77,120499,77,120557,77,120615,77,120673,77,120731,77,1018,77,11416,77,5047,77,5616,77,5846,77,42207,77,66224,77,66321,77,119847,110,119899,110,119951,110,120003,110,120055,110,120107,110,120159,110,120211,110,120263,110,120315,110,120367,110,120419,110,120471,110,1400,110,1404,110,65326,78,8469,78,119821,78,119873,78,119925,78,119977,78,120029,78,120081,78,120185,78,120237,78,120289,78,120341,78,120393,78,120445,78,925,78,120500,78,120558,78,120616,78,120674,78,120732,78,11418,78,42208,78,66835,78,3074,111,3202,111,3330,111,3458,111,2406,111,2662,111,2790,111,3046,111,3174,111,3302,111,3430,111,3664,111,3792,111,4160,111,1637,111,1781,111,65359,111,8500,111,119848,111,119900,111,119952,111,120056,111,120108,111,120160,111,120212,111,120264,111,120316,111,120368,111,120420,111,120472,111,7439,111,7441,111,43837,111,959,111,120528,111,120586,111,120644,111,120702,111,120760,111,963,111,120532,111,120590,111,120648,111,120706,111,120764,111,11423,111,4351,111,1413,111,1505,111,1607,111,126500,111,126564,111,126596,111,65259,111,65260,111,65258,111,65257,111,1726,111,64428,111,64429,111,64427,111,64426,111,1729,111,64424,111,64425,111,64423,111,64422,111,1749,111,3360,111,4125,111,66794,111,71880,111,71895,111,66604,111,1984,79,2534,79,2918,79,12295,79,70864,79,71904,79,120782,79,120792,79,120802,79,120812,79,120822,79,130032,79,65327,79,119822,79,119874,79,119926,79,119978,79,120030,79,120082,79,120134,79,120186,79,120238,79,120290,79,120342,79,120394,79,120446,79,927,79,120502,79,120560,79,120618,79,120676,79,120734,79,11422,79,1365,79,11604,79,4816,79,2848,79,66754,79,42227,79,71861,79,66194,79,66219,79,66564,79,66838,79,9076,112,65360,112,119849,112,119901,112,119953,112,120005,112,120057,112,120109,112,120161,112,120213,112,120265,112,120317,112,120369,112,120421,112,120473,112,961,112,120530,112,120544,112,120588,112,120602,112,120646,112,120660,112,120704,112,120718,112,120762,112,120776,112,11427,112,65328,80,8473,80,119823,80,119875,80,119927,80,119979,80,120031,80,120083,80,120187,80,120239,80,120291,80,120343,80,120395,80,120447,80,929,80,120504,80,120562,80,120620,80,120678,80,120736,80,11426,80,5090,80,5229,80,42193,80,66197,80,119850,113,119902,113,119954,113,120006,113,120058,113,120110,113,120162,113,120214,113,120266,113,120318,113,120370,113,120422,113,120474,113,1307,113,1379,113,1382,113,8474,81,119824,81,119876,81,119928,81,119980,81,120032,81,120084,81,120188,81,120240,81,120292,81,120344,81,120396,81,120448,81,11605,81,119851,114,119903,114,119955,114,120007,114,120059,114,120111,114,120163,114,120215,114,120267,114,120319,114,120371,114,120423,114,120475,114,43847,114,43848,114,7462,114,11397,114,43905,114,119318,82,8475,82,8476,82,8477,82,119825,82,119877,82,119929,82,120033,82,120189,82,120241,82,120293,82,120345,82,120397,82,120449,82,422,82,5025,82,5074,82,66740,82,5511,82,42211,82,94005,82,65363,115,119852,115,119904,115,119956,115,120008,115,120060,115,120112,115,120164,115,120216,115,120268,115,120320,115,120372,115,120424,115,120476,115,42801,115,445,115,1109,115,43946,115,71873,115,66632,115,65331,83,119826,83,119878,83,119930,83,119982,83,120034,83,120086,83,120138,83,120190,83,120242,83,120294,83,120346,83,120398,83,120450,83,1029,83,1359,83,5077,83,5082,83,42210,83,94010,83,66198,83,66592,83,119853,116,119905,116,119957,116,120009,116,120061,116,120113,116,120165,116,120217,116,120269,116,120321,116,120373,116,120425,116,120477,116,8868,84,10201,84,128872,84,65332,84,119827,84,119879,84,119931,84,119983,84,120035,84,120087,84,120139,84,120191,84,120243,84,120295,84,120347,84,120399,84,120451,84,932,84,120507,84,120565,84,120623,84,120681,84,120739,84,11430,84,5026,84,42196,84,93962,84,71868,84,66199,84,66225,84,66325,84,119854,117,119906,117,119958,117,120010,117,120062,117,120114,117,120166,117,120218,117,120270,117,120322,117,120374,117,120426,117,120478,117,42911,117,7452,117,43854,117,43858,117,651,117,965,117,120534,117,120592,117,120650,117,120708,117,120766,117,1405,117,66806,117,71896,117,8746,85,8899,85,119828,85,119880,85,119932,85,119984,85,120036,85,120088,85,120140,85,120192,85,120244,85,120296,85,120348,85,120400,85,120452,85,1357,85,4608,85,66766,85,5196,85,42228,85,94018,85,71864,85,8744,118,8897,118,65366,118,8564,118,119855,118,119907,118,119959,118,120011,118,120063,118,120115,118,120167,118,120219,118,120271,118,120323,118,120375,118,120427,118,120479,118,7456,118,957,118,120526,118,120584,118,120642,118,120700,118,120758,118,1141,118,1496,118,71430,118,43945,118,71872,118,119309,86,1639,86,1783,86,8548,86,119829,86,119881,86,119933,86,119985,86,120037,86,120089,86,120141,86,120193,86,120245,86,120297,86,120349,86,120401,86,120453,86,1140,86,11576,86,5081,86,5167,86,42719,86,42214,86,93960,86,71840,86,66845,86,623,119,119856,119,119908,119,119960,119,120012,119,120064,119,120116,119,120168,119,120220,119,120272,119,120324,119,120376,119,120428,119,120480,119,7457,119,1121,119,1309,119,1377,119,71434,119,71438,119,71439,119,43907,119,71919,87,71910,87,119830,87,119882,87,119934,87,119986,87,120038,87,120090,87,120142,87,120194,87,120246,87,120298,87,120350,87,120402,87,120454,87,1308,87,5043,87,5076,87,42218,87,5742,120,10539,120,10540,120,10799,120,65368,120,8569,120,119857,120,119909,120,119961,120,120013,120,120065,120,120117,120,120169,120,120221,120,120273,120,120325,120,120377,120,120429,120,120481,120,5441,120,5501,120,5741,88,9587,88,66338,88,71916,88,65336,88,8553,88,119831,88,119883,88,119935,88,119987,88,120039,88,120091,88,120143,88,120195,88,120247,88,120299,88,120351,88,120403,88,120455,88,42931,88,935,88,120510,88,120568,88,120626,88,120684,88,120742,88,11436,88,11613,88,5815,88,42219,88,66192,88,66228,88,66327,88,66855,88,611,121,7564,121,65369,121,119858,121,119910,121,119962,121,120014,121,120066,121,120118,121,120170,121,120222,121,120274,121,120326,121,120378,121,120430,121,120482,121,655,121,7935,121,43866,121,947,121,8509,121,120516,121,120574,121,120632,121,120690,121,120748,121,1199,121,4327,121,71900,121,65337,89,119832,89,119884,89,119936,89,119988,89,120040,89,120092,89,120144,89,120196,89,120248,89,120300,89,120352,89,120404,89,120456,89,933,89,978,89,120508,89,120566,89,120624,89,120682,89,120740,89,11432,89,1198,89,5033,89,5053,89,42220,89,94019,89,71844,89,66226,89,119859,122,119911,122,119963,122,120015,122,120067,122,120119,122,120171,122,120223,122,120275,122,120327,122,120379,122,120431,122,120483,122,7458,122,43923,122,71876,122,66293,90,71909,90,65338,90,8484,90,8488,90,119833,90,119885,90,119937,90,119989,90,120041,90,120197,90,120249,90,120301,90,120353,90,120405,90,120457,90,918,90,120493,90,120551,90,120609,90,120667,90,120725,90,5059,90,42204,90,71849,90,65282,34,65284,36,65285,37,65286,38,65290,42,65291,43,65294,46,65295,47,65296,48,65297,49,65298,50,65299,51,65300,52,65301,53,65302,54,65303,55,65304,56,65305,57,65308,60,65309,61,65310,62,65312,64,65316,68,65318,70,65319,71,65324,76,65329,81,65330,82,65333,85,65334,86,65335,87,65343,95,65346,98,65348,100,65350,102,65355,107,65357,109,65358,110,65361,113,65362,114,65364,116,65365,117,65367,119,65370,122,65371,123,65373,125],"_default":[160,32,8211,45,65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"cs":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"de":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"es":[8211,45,65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"fr":[65374,126,65306,58,65281,33,8216,96,8245,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"it":[160,32,8211,45,65374,126,65306,58,65281,33,8216,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"ja":[8211,45,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65292,44,65307,59],"ko":[8211,45,65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"pl":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"pt-BR":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"qps-ploc":[160,32,8211,45,65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"ru":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,305,105,921,73,1009,112,215,120,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"tr":[160,32,8211,45,65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"zh-hans":[65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65288,40,65289,41],"zh-hant":[8211,45,65374,126,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65307,59]}'));z.cache=new Je(e=>{function t(u){let h=new Map;for(let f=0;f<u.length;f+=2)h.set(u[f],u[f+1]);return h}function r(u,h){let f=new Map(u);for(let[d,C]of h)f.set(d,C);return f}function s(u,h){if(!u)return h;let f=new Map;for(let[d,C]of u)h.has(d)&&f.set(d,C);return f}let i=A1.ambiguousCharacterData.getValue(),o=e.filter(u=>!u.startsWith("_")&&u in i);o.length===0&&(o=["_default"]);let a;for(let u of o){let h=t(i[u]);a=s(a,h)}let l=t(i._common),c=r(l,a);return new z(c)});z._locales=new Re(()=>Object.keys(z.ambiguousCharacterData.getValue()).filter(e=>!e.startsWith("_")));var Z=class{static getRawData(){return JSON.parse("[9,10,11,12,13,32,127,160,173,847,1564,4447,4448,6068,6069,6155,6156,6157,6158,7355,7356,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8203,8204,8205,8206,8207,8234,8235,8236,8237,8238,8239,8287,8288,8289,8290,8291,8292,8293,8294,8295,8296,8297,8298,8299,8300,8301,8302,8303,10240,12288,12644,65024,65025,65026,65027,65028,65029,65030,65031,65032,65033,65034,65035,65036,65037,65038,65039,65279,65440,65520,65521,65522,65523,65524,65525,65526,65527,65528,65532,78844,119155,119156,119157,119158,119159,119160,119161,119162,917504,917505,917506,917507,917508,917509,917510,917511,917512,917513,917514,917515,917516,917517,917518,917519,917520,917521,917522,917523,917524,917525,917526,917527,917528,917529,917530,917531,917532,917533,917534,917535,917536,917537,917538,917539,917540,917541,917542,917543,917544,917545,917546,917547,917548,917549,917550,917551,917552,917553,917554,917555,917556,917557,917558,917559,917560,917561,917562,917563,917564,917565,917566,917567,917568,917569,917570,917571,917572,917573,917574,917575,917576,917577,917578,917579,917580,917581,917582,917583,917584,917585,917586,917587,917588,917589,917590,917591,917592,917593,917594,917595,917596,917597,917598,917599,917600,917601,917602,917603,917604,917605,917606,917607,917608,917609,917610,917611,917612,917613,917614,917615,917616,917617,917618,917619,917620,917621,917622,917623,917624,917625,917626,917627,917628,917629,917630,917631,917760,917761,917762,917763,917764,917765,917766,917767,917768,917769,917770,917771,917772,917773,917774,917775,917776,917777,917778,917779,917780,917781,917782,917783,917784,917785,917786,917787,917788,917789,917790,917791,917792,917793,917794,917795,917796,917797,917798,917799,917800,917801,917802,917803,917804,917805,917806,917807,917808,917809,917810,917811,917812,917813,917814,917815,917816,917817,917818,917819,917820,917821,917822,917823,917824,917825,917826,917827,917828,917829,917830,917831,917832,917833,917834,917835,917836,917837,917838,917839,917840,917841,917842,917843,917844,917845,917846,917847,917848,917849,917850,917851,917852,917853,917854,917855,917856,917857,917858,917859,917860,917861,917862,917863,917864,917865,917866,917867,917868,917869,917870,917871,917872,917873,917874,917875,917876,917877,917878,917879,917880,917881,917882,917883,917884,917885,917886,917887,917888,917889,917890,917891,917892,917893,917894,917895,917896,917897,917898,917899,917900,917901,917902,917903,917904,917905,917906,917907,917908,917909,917910,917911,917912,917913,917914,917915,917916,917917,917918,917919,917920,917921,917922,917923,917924,917925,917926,917927,917928,917929,917930,917931,917932,917933,917934,917935,917936,917937,917938,917939,917940,917941,917942,917943,917944,917945,917946,917947,917948,917949,917950,917951,917952,917953,917954,917955,917956,917957,917958,917959,917960,917961,917962,917963,917964,917965,917966,917967,917968,917969,917970,917971,917972,917973,917974,917975,917976,917977,917978,917979,917980,917981,917982,917983,917984,917985,917986,917987,917988,917989,917990,917991,917992,917993,917994,917995,917996,917997,917998,917999]")}static getData(){return this._data||(this._data=new Set(Z.getRawData())),this._data}static isInvisibleCharacter(t){return Z.getData().has(t)}static get codePoints(){return Z.getData()}};Z._data=void 0;var Lr="$initialize";var Tt=class{constructor(t,r,s,i){this.vsWorker=t,this.req=r,this.method=s,this.args=i,this.type=0}},Ke=class{constructor(t,r,s,i){this.vsWorker=t,this.seq=r,this.res=s,this.err=i,this.type=1}},Wt=class{constructor(t,r,s,i){this.vsWorker=t,this.req=r,this.eventName=s,this.arg=i,this.type=2}},qt=class{constructor(t,r,s){this.vsWorker=t,this.req=r,this.event=s,this.type=3}},Ht=class{constructor(t,r){this.vsWorker=t,this.req=r,this.type=4}},Ot=class{constructor(t){this._workerId=-1,this._handler=t,this._lastSentReq=0,this._pendingReplies=Object.create(null),this._pendingEmitters=new Map,this._pendingEvents=new Map}setWorkerId(t){this._workerId=t}sendMessage(t,r){let s=String(++this._lastSentReq);return new Promise((i,o)=>{this._pendingReplies[s]={resolve:i,reject:o},this._send(new Tt(this._workerId,s,t,r))})}listen(t,r){let s=null,i=new q({onFirstListenerAdd:()=>{s=String(++this._lastSentReq),this._pendingEmitters.set(s,i),this._send(new Wt(this._workerId,s,t,r))},onLastListenerRemove:()=>{this._pendingEmitters.delete(s),this._send(new Ht(this._workerId,s)),s=null}});return i.event}handleMessage(t){!t||!t.vsWorker||this._workerId!==-1&&t.vsWorker!==this._workerId||this._handleMessage(t)}_handleMessage(t){switch(t.type){case 1:return this._handleReplyMessage(t);case 0:return this._handleRequestMessage(t);case 2:return this._handleSubscribeEventMessage(t);case 3:return this._handleEventMessage(t);case 4:return this._handleUnsubscribeEventMessage(t)}}_handleReplyMessage(t){if(!this._pendingReplies[t.seq]){console.warn("Got reply to unknown seq");return}let r=this._pendingReplies[t.seq];if(delete this._pendingReplies[t.seq],t.err){let s=t.err;t.err.$isError&&(s=new Error,s.name=t.err.name,s.message=t.err.message,s.stack=t.err.stack),r.reject(s);return}r.resolve(t.res)}_handleRequestMessage(t){let r=t.req;this._handler.handleMessage(t.method,t.args).then(i=>{this._send(new Ke(this._workerId,r,i,void 0))},i=>{i.detail instanceof Error&&(i.detail=yt(i.detail)),this._send(new Ke(this._workerId,r,void 0,yt(i)))})}_handleSubscribeEventMessage(t){let r=t.req,s=this._handler.handleEvent(t.eventName,t.arg)(i=>{this._send(new qt(this._workerId,r,i))});this._pendingEvents.set(r,s)}_handleEventMessage(t){if(!this._pendingEmitters.has(t.req)){console.warn("Got event for unknown req");return}this._pendingEmitters.get(t.req).fire(t.event)}_handleUnsubscribeEventMessage(t){if(!this._pendingEvents.has(t.req)){console.warn("Got unsubscribe for unknown req");return}this._pendingEvents.get(t.req).dispose(),this._pendingEvents.delete(t.req)}_send(t){let r=[];if(t.type===0)for(let s=0;s<t.args.length;s++)t.args[s]instanceof ArrayBuffer&&r.push(t.args[s]);else t.type===1&&t.res instanceof ArrayBuffer&&r.push(t.res);this._handler.sendMessage(t,r)}};function P1(e){return e[0]==="o"&&e[1]==="n"&&Bt(e.charCodeAt(2))}function R1(e){return/^onDynamic/.test(e)&&Bt(e.charCodeAt(9))}function xr(e,t,r){let s=a=>function(){let l=Array.prototype.slice.call(arguments,0);return t(a,l)},i=a=>function(l){return r(a,l)},o={};for(let a of e){if(R1(a)){o[a]=i(a);continue}if(P1(a)){o[a]=r(a,void 0);continue}o[a]=s(a)}return o}var et=class{constructor(t,r){this._requestHandlerFactory=r,this._requestHandler=null,this._protocol=new Ot({sendMessage:(s,i)=>{t(s,i)},handleMessage:(s,i)=>this._handleMessage(s,i),handleEvent:(s,i)=>this._handleEvent(s,i)})}onmessage(t){this._protocol.handleMessage(t)}_handleMessage(t,r){if(t===Lr)return this.initialize(r[0],r[1],r[2],r[3]);if(!this._requestHandler||typeof this._requestHandler[t]!="function")return Promise.reject(new Error("Missing requestHandler or method: "+t));try{return Promise.resolve(this._requestHandler[t].apply(this._requestHandler,r))}catch(s){return Promise.reject(s)}}_handleEvent(t,r){if(!this._requestHandler)throw new Error("Missing requestHandler");if(R1(t)){let s=this._requestHandler[t].call(this._requestHandler,r);if(typeof s!="function")throw new Error(`Missing dynamic event ${t} on request handler.`);return s}if(P1(t)){let s=this._requestHandler[t];if(typeof s!="function")throw new Error(`Missing event ${t} on request handler.`);return s}throw new Error(`Malformed event name ${t}`)}initialize(t,r,s,i){this._protocol.setWorkerId(t);let l=xr(i,(c,u)=>this._protocol.sendMessage(c,u),(c,u)=>this._protocol.listen(c,u));return this._requestHandlerFactory?(this._requestHandler=this._requestHandlerFactory(l),Promise.resolve(Pe(this._requestHandler))):(r&&(typeof r.baseUrl<"u"&&delete r.baseUrl,typeof r.paths<"u"&&typeof r.paths.vs<"u"&&delete r.paths.vs,typeof r.trustedTypesPolicy!==void 0&&delete r.trustedTypesPolicy,r.catchError=!0,B.require.config(r)),new Promise((c,u)=>{let h=B.require;h([s],f=>{if(this._requestHandler=f.create(l),!this._requestHandler){u(new Error("No RequestHandler!"));return}c(Pe(this._requestHandler))},u)}))}};var Q=class{constructor(t,r,s,i){this.originalStart=t,this.originalLength=r,this.modifiedStart=s,this.modifiedLength=i}getOriginalEnd(){return this.originalStart+this.originalLength}getModifiedEnd(){return this.modifiedStart+this.modifiedLength}};function V1(e,t){return(t<<5)-t+e|0}function B1(e,t){t=V1(149417,t);for(let r=0,s=e.length;r<s;r++)t=V1(e.charCodeAt(r),t);return t}function zt(e,t,r=32){let s=r-t,i=~((1<<s)-1);return(e<<t|(i&e)>>>s)>>>0}function I1(e,t=0,r=e.byteLength,s=0){for(let i=0;i<r;i++)e[t+i]=s}function vr(e,t,r="0"){for(;e.length<t;)e=r+e;return e}function Ie(e,t=32){return e instanceof ArrayBuffer?Array.from(new Uint8Array(e)).map(r=>r.toString(16).padStart(2,"0")).join(""):vr((e>>>0).toString(16),t/4)}var Be=class{constructor(){this._h0=1732584193,this._h1=4023233417,this._h2=2562383102,this._h3=271733878,this._h4=3285377520,this._buff=new Uint8Array(64+3),this._buffDV=new DataView(this._buff.buffer),this._buffLen=0,this._totalLen=0,this._leftoverHighSurrogate=0,this._finished=!1}update(t){let r=t.length;if(r===0)return;let s=this._buff,i=this._buffLen,o=this._leftoverHighSurrogate,a,l;for(o!==0?(a=o,l=-1,o=0):(a=t.charCodeAt(0),l=0);;){let c=a;if(ye(a))if(l+1<r){let u=t.charCodeAt(l+1);Xe(u)?(l++,c=Ut(a,u)):c=65533}else{o=a;break}else Xe(a)&&(c=65533);if(i=this._push(s,i,c),l++,l<r)a=t.charCodeAt(l);else break}this._buffLen=i,this._leftoverHighSurrogate=o}_push(t,r,s){return s<128?t[r++]=s:s<2048?(t[r++]=192|(s&1984)>>>6,t[r++]=128|(s&63)>>>0):s<65536?(t[r++]=224|(s&61440)>>>12,t[r++]=128|(s&4032)>>>6,t[r++]=128|(s&63)>>>0):(t[r++]=240|(s&1835008)>>>18,t[r++]=128|(s&258048)>>>12,t[r++]=128|(s&4032)>>>6,t[r++]=128|(s&63)>>>0),r>=64&&(this._step(),r-=64,this._totalLen+=64,t[0]=t[64+0],t[1]=t[64+1],t[2]=t[64+2]),r}digest(){return this._finished||(this._finished=!0,this._leftoverHighSurrogate&&(this._leftoverHighSurrogate=0,this._buffLen=this._push(this._buff,this._buffLen,65533)),this._totalLen+=this._buffLen,this._wrapUp()),Ie(this._h0)+Ie(this._h1)+Ie(this._h2)+Ie(this._h3)+Ie(this._h4)}_wrapUp(){this._buff[this._buffLen++]=128,I1(this._buff,this._buffLen),this._buffLen>56&&(this._step(),I1(this._buff));let t=8*this._totalLen;this._buffDV.setUint32(56,Math.floor(t/4294967296),!1),this._buffDV.setUint32(60,t%4294967296,!1),this._step()}_step(){let t=Be._bigBlock32,r=this._buffDV;for(let f=0;f<64;f+=4)t.setUint32(f,r.getUint32(f,!1),!1);for(let f=64;f<320;f+=4)t.setUint32(f,zt(t.getUint32(f-12,!1)^t.getUint32(f-32,!1)^t.getUint32(f-56,!1)^t.getUint32(f-64,!1),1),!1);let s=this._h0,i=this._h1,o=this._h2,a=this._h3,l=this._h4,c,u,h;for(let f=0;f<80;f++)f<20?(c=i&o|~i&a,u=1518500249):f<40?(c=i^o^a,u=1859775393):f<60?(c=i&o|i&a|o&a,u=2400959708):(c=i^o^a,u=3395469782),h=zt(s,5)+c+l+u+t.getUint32(f*4,!1)&4294967295,l=a,a=o,o=zt(i,30),i=s,s=h;this._h0=this._h0+s&4294967295,this._h1=this._h1+i&4294967295,this._h2=this._h2+o&4294967295,this._h3=this._h3+a&4294967295,this._h4=this._h4+l&4294967295}};Be._bigBlock32=new DataView(new ArrayBuffer(320));var tt=class{constructor(t){this.source=t}getElements(){let t=this.source,r=new Int32Array(t.length);for(let s=0,i=t.length;s<i;s++)r[s]=t.charCodeAt(s);return r}};function U1(e,t,r){return new J(new tt(e),new tt(t)).ComputeDiff(r).changes}var le=class{static Assert(t,r){if(!t)throw new Error(r)}},ue=class{static Copy(t,r,s,i,o){for(let a=0;a<o;a++)s[i+a]=t[r+a]}static Copy2(t,r,s,i,o){for(let a=0;a<o;a++)s[i+a]=t[r+a]}},nt=class{constructor(){this.m_changes=[],this.m_originalStart=1073741824,this.m_modifiedStart=1073741824,this.m_originalCount=0,this.m_modifiedCount=0}MarkNextChange(){(this.m_originalCount>0||this.m_modifiedCount>0)&&this.m_changes.push(new Q(this.m_originalStart,this.m_originalCount,this.m_modifiedStart,this.m_modifiedCount)),this.m_originalCount=0,this.m_modifiedCount=0,this.m_originalStart=1073741824,this.m_modifiedStart=1073741824}AddOriginalElement(t,r){this.m_originalStart=Math.min(this.m_originalStart,t),this.m_modifiedStart=Math.min(this.m_modifiedStart,r),this.m_originalCount++}AddModifiedElement(t,r){this.m_originalStart=Math.min(this.m_originalStart,t),this.m_modifiedStart=Math.min(this.m_modifiedStart,r),this.m_modifiedCount++}getChanges(){return(this.m_originalCount>0||this.m_modifiedCount>0)&&this.MarkNextChange(),this.m_changes}getReverseChanges(){return(this.m_originalCount>0||this.m_modifiedCount>0)&&this.MarkNextChange(),this.m_changes.reverse(),this.m_changes}},J=class{constructor(t,r,s=null){this.ContinueProcessingPredicate=s,this._originalSequence=t,this._modifiedSequence=r;let[i,o,a]=J._getElements(t),[l,c,u]=J._getElements(r);this._hasStrings=a&&u,this._originalStringElements=i,this._originalElementsOrHash=o,this._modifiedStringElements=l,this._modifiedElementsOrHash=c,this.m_forwardHistory=[],this.m_reverseHistory=[]}static _isStringArray(t){return t.length>0&&typeof t[0]=="string"}static _getElements(t){let r=t.getElements();if(J._isStringArray(r)){let s=new Int32Array(r.length);for(let i=0,o=r.length;i<o;i++)s[i]=B1(r[i],0);return[r,s,!0]}return r instanceof Int32Array?[[],r,!1]:[[],new Int32Array(r),!1]}ElementsAreEqual(t,r){return this._originalElementsOrHash[t]!==this._modifiedElementsOrHash[r]?!1:this._hasStrings?this._originalStringElements[t]===this._modifiedStringElements[r]:!0}ElementsAreStrictEqual(t,r){if(!this.ElementsAreEqual(t,r))return!1;let s=J._getStrictElement(this._originalSequence,t),i=J._getStrictElement(this._modifiedSequence,r);return s===i}static _getStrictElement(t,r){return typeof t.getStrictElement=="function"?t.getStrictElement(r):null}OriginalElementsAreEqual(t,r){return this._originalElementsOrHash[t]!==this._originalElementsOrHash[r]?!1:this._hasStrings?this._originalStringElements[t]===this._originalStringElements[r]:!0}ModifiedElementsAreEqual(t,r){return this._modifiedElementsOrHash[t]!==this._modifiedElementsOrHash[r]?!1:this._hasStrings?this._modifiedStringElements[t]===this._modifiedStringElements[r]:!0}ComputeDiff(t){return this._ComputeDiff(0,this._originalElementsOrHash.length-1,0,this._modifiedElementsOrHash.length-1,t)}_ComputeDiff(t,r,s,i,o){let a=[!1],l=this.ComputeDiffRecursive(t,r,s,i,a);return o&&(l=this.PrettifyChanges(l)),{quitEarly:a[0],changes:l}}ComputeDiffRecursive(t,r,s,i,o){for(o[0]=!1;t<=r&&s<=i&&this.ElementsAreEqual(t,s);)t++,s++;for(;r>=t&&i>=s&&this.ElementsAreEqual(r,i);)r--,i--;if(t>r||s>i){let f;return s<=i?(le.Assert(t===r+1,"originalStart should only be one more than originalEnd"),f=[new Q(t,0,s,i-s+1)]):t<=r?(le.Assert(s===i+1,"modifiedStart should only be one more than modifiedEnd"),f=[new Q(t,r-t+1,s,0)]):(le.Assert(t===r+1,"originalStart should only be one more than originalEnd"),le.Assert(s===i+1,"modifiedStart should only be one more than modifiedEnd"),f=[]),f}let a=[0],l=[0],c=this.ComputeRecursionPoint(t,r,s,i,a,l,o),u=a[0],h=l[0];if(c!==null)return c;if(!o[0]){let f=this.ComputeDiffRecursive(t,u,s,h,o),d=[];return o[0]?d=[new Q(u+1,r-(u+1)+1,h+1,i-(h+1)+1)]:d=this.ComputeDiffRecursive(u+1,r,h+1,i,o),this.ConcatenateChanges(f,d)}return[new Q(t,r-t+1,s,i-s+1)]}WALKTRACE(t,r,s,i,o,a,l,c,u,h,f,d,C,x,N,A,F,k){let S=null,L=null,v=new nt,y=r,p=s,m=C[0]-A[0]-i,g=-1073741824,w=this.m_forwardHistory.length-1;do{let _=m+t;_===y||_<p&&u[_-1]<u[_+1]?(f=u[_+1],x=f-m-i,f<g&&v.MarkNextChange(),g=f,v.AddModifiedElement(f+1,x),m=_+1-t):(f=u[_-1]+1,x=f-m-i,f<g&&v.MarkNextChange(),g=f-1,v.AddOriginalElement(f,x+1),m=_-1-t),w>=0&&(u=this.m_forwardHistory[w],t=u[0],y=1,p=u.length-1)}while(--w>=-1);if(S=v.getReverseChanges(),k[0]){let _=C[0]+1,b=A[0]+1;if(S!==null&&S.length>0){let D=S[S.length-1];_=Math.max(_,D.getOriginalEnd()),b=Math.max(b,D.getModifiedEnd())}L=[new Q(_,d-_+1,b,N-b+1)]}else{v=new nt,y=a,p=l,m=C[0]-A[0]-c,g=1073741824,w=F?this.m_reverseHistory.length-1:this.m_reverseHistory.length-2;do{let _=m+o;_===y||_<p&&h[_-1]>=h[_+1]?(f=h[_+1]-1,x=f-m-c,f>g&&v.MarkNextChange(),g=f+1,v.AddOriginalElement(f+1,x+1),m=_+1-o):(f=h[_-1],x=f-m-c,f>g&&v.MarkNextChange(),g=f,v.AddModifiedElement(f+1,x+1),m=_-1-o),w>=0&&(h=this.m_reverseHistory[w],o=h[0],y=1,p=h.length-1)}while(--w>=-1);L=v.getChanges()}return this.ConcatenateChanges(S,L)}ComputeRecursionPoint(t,r,s,i,o,a,l){let c=0,u=0,h=0,f=0,d=0,C=0;t--,s--,o[0]=0,a[0]=0,this.m_forwardHistory=[],this.m_reverseHistory=[];let x=r-t+(i-s),N=x+1,A=new Int32Array(N),F=new Int32Array(N),k=i-s,S=r-t,L=t-s,v=r-i,p=(S-k)%2===0;A[k]=t,F[S]=r,l[0]=!1;for(let m=1;m<=x/2+1;m++){let g=0,w=0;h=this.ClipDiagonalBound(k-m,m,k,N),f=this.ClipDiagonalBound(k+m,m,k,N);for(let b=h;b<=f;b+=2){b===h||b<f&&A[b-1]<A[b+1]?c=A[b+1]:c=A[b-1]+1,u=c-(b-k)-L;let D=c;for(;c<r&&u<i&&this.ElementsAreEqual(c+1,u+1);)c++,u++;if(A[b]=c,c+u>g+w&&(g=c,w=u),!p&&Math.abs(b-S)<=m-1&&c>=F[b])return o[0]=c,a[0]=u,D<=F[b]&&1447>0&&m<=1447+1?this.WALKTRACE(k,h,f,L,S,d,C,v,A,F,c,r,o,u,i,a,p,l):null}let _=(g-t+(w-s)-m)/2;if(this.ContinueProcessingPredicate!==null&&!this.ContinueProcessingPredicate(g,_))return l[0]=!0,o[0]=g,a[0]=w,_>0&&1447>0&&m<=1447+1?this.WALKTRACE(k,h,f,L,S,d,C,v,A,F,c,r,o,u,i,a,p,l):(t++,s++,[new Q(t,r-t+1,s,i-s+1)]);d=this.ClipDiagonalBound(S-m,m,S,N),C=this.ClipDiagonalBound(S+m,m,S,N);for(let b=d;b<=C;b+=2){b===d||b<C&&F[b-1]>=F[b+1]?c=F[b+1]-1:c=F[b-1],u=c-(b-S)-v;let D=c;for(;c>t&&u>s&&this.ElementsAreEqual(c,u);)c--,u--;if(F[b]=c,p&&Math.abs(b-k)<=m&&c<=A[b])return o[0]=c,a[0]=u,D>=A[b]&&1447>0&&m<=1447+1?this.WALKTRACE(k,h,f,L,S,d,C,v,A,F,c,r,o,u,i,a,p,l):null}if(m<=1447){let b=new Int32Array(f-h+2);b[0]=k-h+1,ue.Copy2(A,h,b,1,f-h+1),this.m_forwardHistory.push(b),b=new Int32Array(C-d+2),b[0]=S-d+1,ue.Copy2(F,d,b,1,C-d+1),this.m_reverseHistory.push(b)}}return this.WALKTRACE(k,h,f,L,S,d,C,v,A,F,c,r,o,u,i,a,p,l)}PrettifyChanges(t){for(let r=0;r<t.length;r++){let s=t[r],i=r<t.length-1?t[r+1].originalStart:this._originalElementsOrHash.length,o=r<t.length-1?t[r+1].modifiedStart:this._modifiedElementsOrHash.length,a=s.originalLength>0,l=s.modifiedLength>0;for(;s.originalStart+s.originalLength<i&&s.modifiedStart+s.modifiedLength<o&&(!a||this.OriginalElementsAreEqual(s.originalStart,s.originalStart+s.originalLength))&&(!l||this.ModifiedElementsAreEqual(s.modifiedStart,s.modifiedStart+s.modifiedLength));){let u=this.ElementsAreStrictEqual(s.originalStart,s.modifiedStart);if(this.ElementsAreStrictEqual(s.originalStart+s.originalLength,s.modifiedStart+s.modifiedLength)&&!u)break;s.originalStart++,s.modifiedStart++}let c=[null];if(r<t.length-1&&this.ChangesOverlap(t[r],t[r+1],c)){t[r]=c[0],t.splice(r+1,1),r--;continue}}for(let r=t.length-1;r>=0;r--){let s=t[r],i=0,o=0;if(r>0){let f=t[r-1];i=f.originalStart+f.originalLength,o=f.modifiedStart+f.modifiedLength}let a=s.originalLength>0,l=s.modifiedLength>0,c=0,u=this._boundaryScore(s.originalStart,s.originalLength,s.modifiedStart,s.modifiedLength);for(let f=1;;f++){let d=s.originalStart-f,C=s.modifiedStart-f;if(d<i||C<o||a&&!this.OriginalElementsAreEqual(d,d+s.originalLength)||l&&!this.ModifiedElementsAreEqual(C,C+s.modifiedLength))break;let N=(d===i&&C===o?5:0)+this._boundaryScore(d,s.originalLength,C,s.modifiedLength);N>u&&(u=N,c=f)}s.originalStart-=c,s.modifiedStart-=c;let h=[null];if(r>0&&this.ChangesOverlap(t[r-1],t[r],h)){t[r-1]=h[0],t.splice(r,1),r++;continue}}if(this._hasStrings)for(let r=1,s=t.length;r<s;r++){let i=t[r-1],o=t[r],a=o.originalStart-i.originalStart-i.originalLength,l=i.originalStart,c=o.originalStart+o.originalLength,u=c-l,h=i.modifiedStart,f=o.modifiedStart+o.modifiedLength,d=f-h;if(a<5&&u<20&&d<20){let C=this._findBetterContiguousSequence(l,u,h,d,a);if(C){let[x,N]=C;(x!==i.originalStart+i.originalLength||N!==i.modifiedStart+i.modifiedLength)&&(i.originalLength=x-i.originalStart,i.modifiedLength=N-i.modifiedStart,o.originalStart=x+a,o.modifiedStart=N+a,o.originalLength=c-o.originalStart,o.modifiedLength=f-o.modifiedStart)}}}return t}_findBetterContiguousSequence(t,r,s,i,o){if(r<o||i<o)return null;let a=t+r-o+1,l=s+i-o+1,c=0,u=0,h=0;for(let f=t;f<a;f++)for(let d=s;d<l;d++){let C=this._contiguousSequenceScore(f,d,o);C>0&&C>c&&(c=C,u=f,h=d)}return c>0?[u,h]:null}_contiguousSequenceScore(t,r,s){let i=0;for(let o=0;o<s;o++){if(!this.ElementsAreEqual(t+o,r+o))return 0;i+=this._originalStringElements[t+o].length}return i}_OriginalIsBoundary(t){return t<=0||t>=this._originalElementsOrHash.length-1?!0:this._hasStrings&&/^\s*$/.test(this._originalStringElements[t])}_OriginalRegionIsBoundary(t,r){if(this._OriginalIsBoundary(t)||this._OriginalIsBoundary(t-1))return!0;if(r>0){let s=t+r;if(this._OriginalIsBoundary(s-1)||this._OriginalIsBoundary(s))return!0}return!1}_ModifiedIsBoundary(t){return t<=0||t>=this._modifiedElementsOrHash.length-1?!0:this._hasStrings&&/^\s*$/.test(this._modifiedStringElements[t])}_ModifiedRegionIsBoundary(t,r){if(this._ModifiedIsBoundary(t)||this._ModifiedIsBoundary(t-1))return!0;if(r>0){let s=t+r;if(this._ModifiedIsBoundary(s-1)||this._ModifiedIsBoundary(s))return!0}return!1}_boundaryScore(t,r,s,i){let o=this._OriginalRegionIsBoundary(t,r)?1:0,a=this._ModifiedRegionIsBoundary(s,i)?1:0;return o+a}ConcatenateChanges(t,r){let s=[];if(t.length===0||r.length===0)return r.length>0?r:t;if(this.ChangesOverlap(t[t.length-1],r[0],s)){let i=new Array(t.length+r.length-1);return ue.Copy(t,0,i,0,t.length-1),i[t.length-1]=s[0],ue.Copy(r,1,i,t.length,r.length-1),i}else{let i=new Array(t.length+r.length);return ue.Copy(t,0,i,0,t.length),ue.Copy(r,0,i,t.length,r.length),i}}ChangesOverlap(t,r,s){if(le.Assert(t.originalStart<=r.originalStart,"Left change is not less than or equal to right change"),le.Assert(t.modifiedStart<=r.modifiedStart,"Left change is not less than or equal to right change"),t.originalStart+t.originalLength>=r.originalStart||t.modifiedStart+t.modifiedLength>=r.modifiedStart){let i=t.originalStart,o=t.originalLength,a=t.modifiedStart,l=t.modifiedLength;return t.originalStart+t.originalLength>=r.originalStart&&(o=r.originalStart+r.originalLength-t.originalStart),t.modifiedStart+t.modifiedLength>=r.modifiedStart&&(l=r.modifiedStart+r.modifiedLength-t.modifiedStart),s[0]=new Q(i,o,a,l),!0}else return s[0]=null,!1}ClipDiagonalBound(t,r,s,i){if(t>=0&&t<i)return t;let o=s,a=i-s-1,l=r%2===0;if(t<0){let c=o%2===0;return l===c?0:1}else{let c=a%2===0;return l===c?i-1:i-2}}};var Me;if(typeof B.vscode<"u"&&typeof B.vscode.process<"u"){let e=B.vscode.process;Me={get platform(){return e.platform},get arch(){return e.arch},get env(){return e.env},cwd(){return e.cwd()}}}else typeof process<"u"?Me={get platform(){return process.platform},get arch(){return process.arch},get env(){return process.env},cwd(){return process.env.VSCODE_CWD||process.cwd()}}:Me={get platform(){return be?"win32":C1?"darwin":"linux"},get arch(){},get env(){return{}},cwd(){return"/"}};var rt=Me.cwd,T1=Me.env,ce=Me.platform;var Sr=65,Ar=97,yr=90,Mr=122,de=46,U=47,G=92,fe=58,Fr=63,st=class extends Error{constructor(t,r,s){let i;typeof r=="string"&&r.indexOf("not ")===0?(i="must not be",r=r.replace(/^not /,"")):i="must be";let o=t.indexOf(".")!==-1?"property":"argument",a=`The "${t}" ${o} ${i} of type ${r}`;a+=`. Received type ${typeof s}`,super(a),this.code="ERR_INVALID_ARG_TYPE"}};function V(e,t){if(typeof e!="string")throw new st(t,"string",e)}function M(e){return e===U||e===G}function $t(e){return e===U}function he(e){return e>=Sr&&e<=yr||e>=Ar&&e<=Mr}function it(e,t,r,s){let i="",o=0,a=-1,l=0,c=0;for(let u=0;u<=e.length;++u){if(u<e.length)c=e.charCodeAt(u);else{if(s(c))break;c=U}if(s(c)){if(!(a===u-1||l===1))if(l===2){if(i.length<2||o!==2||i.charCodeAt(i.length-1)!==de||i.charCodeAt(i.length-2)!==de){if(i.length>2){let h=i.lastIndexOf(r);h===-1?(i="",o=0):(i=i.slice(0,h),o=i.length-1-i.lastIndexOf(r)),a=u,l=0;continue}else if(i.length!==0){i="",o=0,a=u,l=0;continue}}t&&(i+=i.length>0?`${r}..`:"..",o=2)}else i.length>0?i+=`${r}${e.slice(a+1,u)}`:i=e.slice(a+1,u),o=u-a-1;a=u,l=0}else c===de&&l!==-1?++l:l=-1}return i}function W1(e,t){if(t===null||typeof t!="object")throw new st("pathObject","Object",t);let r=t.dir||t.root,s=t.base||`${t.name||""}${t.ext||""}`;return r?r===t.root?`${r}${s}`:`${r}${e}${s}`:s}var H={resolve(...e){let t="",r="",s=!1;for(let i=e.length-1;i>=-1;i--){let o;if(i>=0){if(o=e[i],V(o,"path"),o.length===0)continue}else t.length===0?o=rt():(o=T1[`=${t}`]||rt(),(o===void 0||o.slice(0,2).toLowerCase()!==t.toLowerCase()&&o.charCodeAt(2)===G)&&(o=`${t}\\`));let a=o.length,l=0,c="",u=!1,h=o.charCodeAt(0);if(a===1)M(h)&&(l=1,u=!0);else if(M(h))if(u=!0,M(o.charCodeAt(1))){let f=2,d=f;for(;f<a&&!M(o.charCodeAt(f));)f++;if(f<a&&f!==d){let C=o.slice(d,f);for(d=f;f<a&&M(o.charCodeAt(f));)f++;if(f<a&&f!==d){for(d=f;f<a&&!M(o.charCodeAt(f));)f++;(f===a||f!==d)&&(c=`\\\\${C}\\${o.slice(d,f)}`,l=f)}}}else l=1;else he(h)&&o.charCodeAt(1)===fe&&(c=o.slice(0,2),l=2,a>2&&M(o.charCodeAt(2))&&(u=!0,l=3));if(c.length>0)if(t.length>0){if(c.toLowerCase()!==t.toLowerCase())continue}else t=c;if(s){if(t.length>0)break}else if(r=`${o.slice(l)}\\${r}`,s=u,u&&t.length>0)break}return r=it(r,!s,"\\",M),s?`${t}\\${r}`:`${t}${r}`||"."},normalize(e){V(e,"path");let t=e.length;if(t===0)return".";let r=0,s,i=!1,o=e.charCodeAt(0);if(t===1)return $t(o)?"\\":e;if(M(o))if(i=!0,M(e.charCodeAt(1))){let l=2,c=l;for(;l<t&&!M(e.charCodeAt(l));)l++;if(l<t&&l!==c){let u=e.slice(c,l);for(c=l;l<t&&M(e.charCodeAt(l));)l++;if(l<t&&l!==c){for(c=l;l<t&&!M(e.charCodeAt(l));)l++;if(l===t)return`\\\\${u}\\${e.slice(c)}\\`;l!==c&&(s=`\\\\${u}\\${e.slice(c,l)}`,r=l)}}}else r=1;else he(o)&&e.charCodeAt(1)===fe&&(s=e.slice(0,2),r=2,t>2&&M(e.charCodeAt(2))&&(i=!0,r=3));let a=r<t?it(e.slice(r),!i,"\\",M):"";return a.length===0&&!i&&(a="."),a.length>0&&M(e.charCodeAt(t-1))&&(a+="\\"),s===void 0?i?`\\${a}`:a:i?`${s}\\${a}`:`${s}${a}`},isAbsolute(e){V(e,"path");let t=e.length;if(t===0)return!1;let r=e.charCodeAt(0);return M(r)||t>2&&he(r)&&e.charCodeAt(1)===fe&&M(e.charCodeAt(2))},join(...e){if(e.length===0)return".";let t,r;for(let o=0;o<e.length;++o){let a=e[o];V(a,"path"),a.length>0&&(t===void 0?t=r=a:t+=`\\${a}`)}if(t===void 0)return".";let s=!0,i=0;if(typeof r=="string"&&M(r.charCodeAt(0))){++i;let o=r.length;o>1&&M(r.charCodeAt(1))&&(++i,o>2&&(M(r.charCodeAt(2))?++i:s=!1))}if(s){for(;i<t.length&&M(t.charCodeAt(i));)i++;i>=2&&(t=`\\${t.slice(i)}`)}return H.normalize(t)},relative(e,t){if(V(e,"from"),V(t,"to"),e===t)return"";let r=H.resolve(e),s=H.resolve(t);if(r===s||(e=r.toLowerCase(),t=s.toLowerCase(),e===t))return"";let i=0;for(;i<e.length&&e.charCodeAt(i)===G;)i++;let o=e.length;for(;o-1>i&&e.charCodeAt(o-1)===G;)o--;let a=o-i,l=0;for(;l<t.length&&t.charCodeAt(l)===G;)l++;let c=t.length;for(;c-1>l&&t.charCodeAt(c-1)===G;)c--;let u=c-l,h=a<u?a:u,f=-1,d=0;for(;d<h;d++){let x=e.charCodeAt(i+d);if(x!==t.charCodeAt(l+d))break;x===G&&(f=d)}if(d!==h){if(f===-1)return s}else{if(u>h){if(t.charCodeAt(l+d)===G)return s.slice(l+d+1);if(d===2)return s.slice(l+d)}a>h&&(e.charCodeAt(i+d)===G?f=d:d===2&&(f=3)),f===-1&&(f=0)}let C="";for(d=i+f+1;d<=o;++d)(d===o||e.charCodeAt(d)===G)&&(C+=C.length===0?"..":"\\..");return l+=f,C.length>0?`${C}${s.slice(l,c)}`:(s.charCodeAt(l)===G&&++l,s.slice(l,c))},toNamespacedPath(e){if(typeof e!="string")return e;if(e.length===0)return"";let t=H.resolve(e);if(t.length<=2)return e;if(t.charCodeAt(0)===G){if(t.charCodeAt(1)===G){let r=t.charCodeAt(2);if(r!==Fr&&r!==de)return`\\\\?\\UNC\\${t.slice(2)}`}}else if(he(t.charCodeAt(0))&&t.charCodeAt(1)===fe&&t.charCodeAt(2)===G)return`\\\\?\\${t}`;return e},dirname(e){V(e,"path");let t=e.length;if(t===0)return".";let r=-1,s=0,i=e.charCodeAt(0);if(t===1)return M(i)?e:".";if(M(i)){if(r=s=1,M(e.charCodeAt(1))){let l=2,c=l;for(;l<t&&!M(e.charCodeAt(l));)l++;if(l<t&&l!==c){for(c=l;l<t&&M(e.charCodeAt(l));)l++;if(l<t&&l!==c){for(c=l;l<t&&!M(e.charCodeAt(l));)l++;if(l===t)return e;l!==c&&(r=s=l+1)}}}}else he(i)&&e.charCodeAt(1)===fe&&(r=t>2&&M(e.charCodeAt(2))?3:2,s=r);let o=-1,a=!0;for(let l=t-1;l>=s;--l)if(M(e.charCodeAt(l))){if(!a){o=l;break}}else a=!1;if(o===-1){if(r===-1)return".";o=r}return e.slice(0,o)},basename(e,t){t!==void 0&&V(t,"ext"),V(e,"path");let r=0,s=-1,i=!0,o;if(e.length>=2&&he(e.charCodeAt(0))&&e.charCodeAt(1)===fe&&(r=2),t!==void 0&&t.length>0&&t.length<=e.length){if(t===e)return"";let a=t.length-1,l=-1;for(o=e.length-1;o>=r;--o){let c=e.charCodeAt(o);if(M(c)){if(!i){r=o+1;break}}else l===-1&&(i=!1,l=o+1),a>=0&&(c===t.charCodeAt(a)?--a===-1&&(s=o):(a=-1,s=l))}return r===s?s=l:s===-1&&(s=e.length),e.slice(r,s)}for(o=e.length-1;o>=r;--o)if(M(e.charCodeAt(o))){if(!i){r=o+1;break}}else s===-1&&(i=!1,s=o+1);return s===-1?"":e.slice(r,s)},extname(e){V(e,"path");let t=0,r=-1,s=0,i=-1,o=!0,a=0;e.length>=2&&e.charCodeAt(1)===fe&&he(e.charCodeAt(0))&&(t=s=2);for(let l=e.length-1;l>=t;--l){let c=e.charCodeAt(l);if(M(c)){if(!o){s=l+1;break}continue}i===-1&&(o=!1,i=l+1),c===de?r===-1?r=l:a!==1&&(a=1):r!==-1&&(a=-1)}return r===-1||i===-1||a===0||a===1&&r===i-1&&r===s+1?"":e.slice(r,i)},format:W1.bind(null,"\\"),parse(e){V(e,"path");let t={root:"",dir:"",base:"",ext:"",name:""};if(e.length===0)return t;let r=e.length,s=0,i=e.charCodeAt(0);if(r===1)return M(i)?(t.root=t.dir=e,t):(t.base=t.name=e,t);if(M(i)){if(s=1,M(e.charCodeAt(1))){let f=2,d=f;for(;f<r&&!M(e.charCodeAt(f));)f++;if(f<r&&f!==d){for(d=f;f<r&&M(e.charCodeAt(f));)f++;if(f<r&&f!==d){for(d=f;f<r&&!M(e.charCodeAt(f));)f++;f===r?s=f:f!==d&&(s=f+1)}}}}else if(he(i)&&e.charCodeAt(1)===fe){if(r<=2)return t.root=t.dir=e,t;if(s=2,M(e.charCodeAt(2))){if(r===3)return t.root=t.dir=e,t;s=3}}s>0&&(t.root=e.slice(0,s));let o=-1,a=s,l=-1,c=!0,u=e.length-1,h=0;for(;u>=s;--u){if(i=e.charCodeAt(u),M(i)){if(!c){a=u+1;break}continue}l===-1&&(c=!1,l=u+1),i===de?o===-1?o=u:h!==1&&(h=1):o!==-1&&(h=-1)}return l!==-1&&(o===-1||h===0||h===1&&o===l-1&&o===a+1?t.base=t.name=e.slice(a,l):(t.name=e.slice(a,o),t.base=e.slice(a,l),t.ext=e.slice(o,l))),a>0&&a!==s?t.dir=e.slice(0,a-1):t.dir=t.root,t},sep:"\\",delimiter:";",win32:null,posix:null},$={resolve(...e){let t="",r=!1;for(let s=e.length-1;s>=-1&&!r;s--){let i=s>=0?e[s]:rt();V(i,"path"),i.length!==0&&(t=`${i}/${t}`,r=i.charCodeAt(0)===U)}return t=it(t,!r,"/",$t),r?`/${t}`:t.length>0?t:"."},normalize(e){if(V(e,"path"),e.length===0)return".";let t=e.charCodeAt(0)===U,r=e.charCodeAt(e.length-1)===U;return e=it(e,!t,"/",$t),e.length===0?t?"/":r?"./":".":(r&&(e+="/"),t?`/${e}`:e)},isAbsolute(e){return V(e,"path"),e.length>0&&e.charCodeAt(0)===U},join(...e){if(e.length===0)return".";let t;for(let r=0;r<e.length;++r){let s=e[r];V(s,"path"),s.length>0&&(t===void 0?t=s:t+=`/${s}`)}return t===void 0?".":$.normalize(t)},relative(e,t){if(V(e,"from"),V(t,"to"),e===t||(e=$.resolve(e),t=$.resolve(t),e===t))return"";let r=1,s=e.length,i=s-r,o=1,a=t.length-o,l=i<a?i:a,c=-1,u=0;for(;u<l;u++){let f=e.charCodeAt(r+u);if(f!==t.charCodeAt(o+u))break;f===U&&(c=u)}if(u===l)if(a>l){if(t.charCodeAt(o+u)===U)return t.slice(o+u+1);if(u===0)return t.slice(o+u)}else i>l&&(e.charCodeAt(r+u)===U?c=u:u===0&&(c=0));let h="";for(u=r+c+1;u<=s;++u)(u===s||e.charCodeAt(u)===U)&&(h+=h.length===0?"..":"/..");return`${h}${t.slice(o+c)}`},toNamespacedPath(e){return e},dirname(e){if(V(e,"path"),e.length===0)return".";let t=e.charCodeAt(0)===U,r=-1,s=!0;for(let i=e.length-1;i>=1;--i)if(e.charCodeAt(i)===U){if(!s){r=i;break}}else s=!1;return r===-1?t?"/":".":t&&r===1?"//":e.slice(0,r)},basename(e,t){t!==void 0&&V(t,"ext"),V(e,"path");let r=0,s=-1,i=!0,o;if(t!==void 0&&t.length>0&&t.length<=e.length){if(t===e)return"";let a=t.length-1,l=-1;for(o=e.length-1;o>=0;--o){let c=e.charCodeAt(o);if(c===U){if(!i){r=o+1;break}}else l===-1&&(i=!1,l=o+1),a>=0&&(c===t.charCodeAt(a)?--a===-1&&(s=o):(a=-1,s=l))}return r===s?s=l:s===-1&&(s=e.length),e.slice(r,s)}for(o=e.length-1;o>=0;--o)if(e.charCodeAt(o)===U){if(!i){r=o+1;break}}else s===-1&&(i=!1,s=o+1);return s===-1?"":e.slice(r,s)},extname(e){V(e,"path");let t=-1,r=0,s=-1,i=!0,o=0;for(let a=e.length-1;a>=0;--a){let l=e.charCodeAt(a);if(l===U){if(!i){r=a+1;break}continue}s===-1&&(i=!1,s=a+1),l===de?t===-1?t=a:o!==1&&(o=1):t!==-1&&(o=-1)}return t===-1||s===-1||o===0||o===1&&t===s-1&&t===r+1?"":e.slice(t,s)},format:W1.bind(null,"/"),parse(e){V(e,"path");let t={root:"",dir:"",base:"",ext:"",name:""};if(e.length===0)return t;let r=e.charCodeAt(0)===U,s;r?(t.root="/",s=1):s=0;let i=-1,o=0,a=-1,l=!0,c=e.length-1,u=0;for(;c>=s;--c){let h=e.charCodeAt(c);if(h===U){if(!l){o=c+1;break}continue}a===-1&&(l=!1,a=c+1),h===de?i===-1?i=c:u!==1&&(u=1):i!==-1&&(u=-1)}if(a!==-1){let h=o===0&&r?1:o;i===-1||u===0||u===1&&i===a-1&&i===o+1?t.base=t.name=e.slice(h,a):(t.name=e.slice(h,i),t.base=e.slice(h,a),t.ext=e.slice(i,a))}return o>0?t.dir=e.slice(0,o-1):r&&(t.dir="/"),t},sep:"/",delimiter:":",win32:null,posix:null};$.win32=H.win32=H;$.posix=H.posix=$;var zs=ce==="win32"?H.normalize:$.normalize,$s=ce==="win32"?H.resolve:$.resolve,Gs=ce==="win32"?H.relative:$.relative,js=ce==="win32"?H.dirname:$.dirname,Ys=ce==="win32"?H.basename:$.basename,Zs=ce==="win32"?H.extname:$.extname,Qs=ce==="win32"?H.sep:$.sep;var Er=/^\w[\w\d+.-]*$/,Dr=/^\//,Pr=/^\/\//;function q1(e,t){if(!e.scheme&&t)throw new Error(`[UriError]: Scheme is missing: {scheme: "", authority: "${e.authority}", path: "${e.path}", query: "${e.query}", fragment: "${e.fragment}"}`);if(e.scheme&&!Er.test(e.scheme))throw new Error("[UriError]: Scheme contains illegal characters.");if(e.path){if(e.authority){if(!Dr.test(e.path))throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character')}else if(Pr.test(e.path))throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")')}}function Rr(e,t){return!e&&!t?"file":e}function Vr(e,t){switch(e){case"https":case"http":case"file":t?t[0]!==X&&(t=X+t):t=X;break}return t}var R="",X="/",Ir=/^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/,Y=class{constructor(t,r,s,i,o,a=!1){typeof t=="object"?(this.scheme=t.scheme||R,this.authority=t.authority||R,this.path=t.path||R,this.query=t.query||R,this.fragment=t.fragment||R):(this.scheme=Rr(t,a),this.authority=r||R,this.path=Vr(this.scheme,s||R),this.query=i||R,this.fragment=o||R,q1(this,a))}static isUri(t){return t instanceof Y?!0:t?typeof t.authority=="string"&&typeof t.fragment=="string"&&typeof t.path=="string"&&typeof t.query=="string"&&typeof t.scheme=="string"&&typeof t.fsPath=="string"&&typeof t.with=="function"&&typeof t.toString=="function":!1}get fsPath(){return Gt(this,!1)}with(t){if(!t)return this;let{scheme:r,authority:s,path:i,query:o,fragment:a}=t;return r===void 0?r=this.scheme:r===null&&(r=R),s===void 0?s=this.authority:s===null&&(s=R),i===void 0?i=this.path:i===null&&(i=R),o===void 0?o=this.query:o===null&&(o=R),a===void 0?a=this.fragment:a===null&&(a=R),r===this.scheme&&s===this.authority&&i===this.path&&o===this.query&&a===this.fragment?this:new me(r,s,i,o,a)}static parse(t,r=!1){let s=Ir.exec(t);return s?new me(s[2]||R,ot(s[4]||R),ot(s[5]||R),ot(s[7]||R),ot(s[9]||R),r):new me(R,R,R,R,R)}static file(t){let r=R;if(be&&(t=t.replace(/\\/g,X)),t[0]===X&&t[1]===X){let s=t.indexOf(X,2);s===-1?(r=t.substring(2),t=X):(r=t.substring(2,s),t=t.substring(s)||X)}return new me("file",r,t,R,R)}static from(t){let r=new me(t.scheme,t.authority,t.path,t.query,t.fragment);return q1(r,!0),r}static joinPath(t,...r){if(!t.path)throw new Error("[UriError]: cannot call joinPath on URI without path");let s;return be&&t.scheme==="file"?s=Y.file(H.join(Gt(t,!0),...r)).path:s=$.join(t.path,...r),t.with({path:s})}toString(t=!1){return jt(this,t)}toJSON(){return this}static revive(t){if(t){if(t instanceof Y)return t;{let r=new me(t);return r._formatted=t.external,r._fsPath=t._sep===z1?t.fsPath:null,r}}else return t}},z1=be?1:void 0,me=class extends Y{constructor(){super(...arguments),this._formatted=null,this._fsPath=null}get fsPath(){return this._fsPath||(this._fsPath=Gt(this,!1)),this._fsPath}toString(t=!1){return t?jt(this,!0):(this._formatted||(this._formatted=jt(this,!1)),this._formatted)}toJSON(){let t={$mid:1};return this._fsPath&&(t.fsPath=this._fsPath,t._sep=z1),this._formatted&&(t.external=this._formatted),this.path&&(t.path=this.path),this.scheme&&(t.scheme=this.scheme),this.authority&&(t.authority=this.authority),this.query&&(t.query=this.query),this.fragment&&(t.fragment=this.fragment),t}},$1={[58]:"%3A",[47]:"%2F",[63]:"%3F",[35]:"%23",[91]:"%5B",[93]:"%5D",[64]:"%40",[33]:"%21",[36]:"%24",[38]:"%26",[39]:"%27",[40]:"%28",[41]:"%29",[42]:"%2A",[43]:"%2B",[44]:"%2C",[59]:"%3B",[61]:"%3D",[32]:"%20"};function H1(e,t){let r,s=-1;for(let i=0;i<e.length;i++){let o=e.charCodeAt(i);if(o>=97&&o<=122||o>=65&&o<=90||o>=48&&o<=57||o===45||o===46||o===95||o===126||t&&o===47)s!==-1&&(r+=encodeURIComponent(e.substring(s,i)),s=-1),r!==void 0&&(r+=e.charAt(i));else{r===void 0&&(r=e.substr(0,i));let a=$1[o];a!==void 0?(s!==-1&&(r+=encodeURIComponent(e.substring(s,i)),s=-1),r+=a):s===-1&&(s=i)}}return s!==-1&&(r+=encodeURIComponent(e.substring(s))),r!==void 0?r:e}function Br(e){let t;for(let r=0;r<e.length;r++){let s=e.charCodeAt(r);s===35||s===63?(t===void 0&&(t=e.substr(0,r)),t+=$1[s]):t!==void 0&&(t+=e[r])}return t!==void 0?t:e}function Gt(e,t){let r;return e.authority&&e.path.length>1&&e.scheme==="file"?r=`//${e.authority}${e.path}`:e.path.charCodeAt(0)===47&&(e.path.charCodeAt(1)>=65&&e.path.charCodeAt(1)<=90||e.path.charCodeAt(1)>=97&&e.path.charCodeAt(1)<=122)&&e.path.charCodeAt(2)===58?t?r=e.path.substr(1):r=e.path[1].toLowerCase()+e.path.substr(2):r=e.path,be&&(r=r.replace(/\//g,"\\")),r}function jt(e,t){let r=t?Br:H1,s="",{scheme:i,authority:o,path:a,query:l,fragment:c}=e;if(i&&(s+=i,s+=":"),(o||i==="file")&&(s+=X,s+=X),o){let u=o.indexOf("@");if(u!==-1){let h=o.substr(0,u);o=o.substr(u+1),u=h.indexOf(":"),u===-1?s+=r(h,!1):(s+=r(h.substr(0,u),!1),s+=":",s+=r(h.substr(u+1),!1)),s+="@"}o=o.toLowerCase(),u=o.indexOf(":"),u===-1?s+=r(o,!1):(s+=r(o.substr(0,u),!1),s+=o.substr(u))}if(a){if(a.length>=3&&a.charCodeAt(0)===47&&a.charCodeAt(2)===58){let u=a.charCodeAt(1);u>=65&&u<=90&&(a=`/${String.fromCharCode(u+32)}:${a.substr(3)}`)}else if(a.length>=2&&a.charCodeAt(1)===58){let u=a.charCodeAt(0);u>=65&&u<=90&&(a=`${String.fromCharCode(u+32)}:${a.substr(2)}`)}s+=r(a,!0)}return l&&(s+="?",s+=r(l,!1)),c&&(s+="#",s+=t?c:H1(c,!1)),s}function G1(e){try{return decodeURIComponent(e)}catch{return e.length>3?e.substr(0,3)+G1(e.substr(3)):e}}var O1=/(%[0-9A-Za-z][0-9A-Za-z])+/g;function ot(e){return e.match(O1)?e.replace(O1,t=>G1(t)):e}var I=class{constructor(t,r){this.lineNumber=t,this.column=r}with(t=this.lineNumber,r=this.column){return t===this.lineNumber&&r===this.column?this:new I(t,r)}delta(t=0,r=0){return this.with(this.lineNumber+t,this.column+r)}equals(t){return I.equals(this,t)}static equals(t,r){return!t&&!r?!0:!!t&&!!r&&t.lineNumber===r.lineNumber&&t.column===r.column}isBefore(t){return I.isBefore(this,t)}static isBefore(t,r){return t.lineNumber<r.lineNumber?!0:r.lineNumber<t.lineNumber?!1:t.column<r.column}isBeforeOrEqual(t){return I.isBeforeOrEqual(this,t)}static isBeforeOrEqual(t,r){return t.lineNumber<r.lineNumber?!0:r.lineNumber<t.lineNumber?!1:t.column<=r.column}static compare(t,r){let s=t.lineNumber|0,i=r.lineNumber|0;if(s===i){let o=t.column|0,a=r.column|0;return o-a}return s-i}clone(){return new I(this.lineNumber,this.column)}toString(){return"("+this.lineNumber+","+this.column+")"}static lift(t){return new I(t.lineNumber,t.column)}static isIPosition(t){return t&&typeof t.lineNumber=="number"&&typeof t.column=="number"}};var E=class{constructor(t,r,s,i){t>s||t===s&&r>i?(this.startLineNumber=s,this.startColumn=i,this.endLineNumber=t,this.endColumn=r):(this.startLineNumber=t,this.startColumn=r,this.endLineNumber=s,this.endColumn=i)}isEmpty(){return E.isEmpty(this)}static isEmpty(t){return t.startLineNumber===t.endLineNumber&&t.startColumn===t.endColumn}containsPosition(t){return E.containsPosition(this,t)}static containsPosition(t,r){return!(r.lineNumber<t.startLineNumber||r.lineNumber>t.endLineNumber||r.lineNumber===t.startLineNumber&&r.column<t.startColumn||r.lineNumber===t.endLineNumber&&r.column>t.endColumn)}static strictContainsPosition(t,r){return!(r.lineNumber<t.startLineNumber||r.lineNumber>t.endLineNumber||r.lineNumber===t.startLineNumber&&r.column<=t.startColumn||r.lineNumber===t.endLineNumber&&r.column>=t.endColumn)}containsRange(t){return E.containsRange(this,t)}static containsRange(t,r){return!(r.startLineNumber<t.startLineNumber||r.endLineNumber<t.startLineNumber||r.startLineNumber>t.endLineNumber||r.endLineNumber>t.endLineNumber||r.startLineNumber===t.startLineNumber&&r.startColumn<t.startColumn||r.endLineNumber===t.endLineNumber&&r.endColumn>t.endColumn)}strictContainsRange(t){return E.strictContainsRange(this,t)}static strictContainsRange(t,r){return!(r.startLineNumber<t.startLineNumber||r.endLineNumber<t.startLineNumber||r.startLineNumber>t.endLineNumber||r.endLineNumber>t.endLineNumber||r.startLineNumber===t.startLineNumber&&r.startColumn<=t.startColumn||r.endLineNumber===t.endLineNumber&&r.endColumn>=t.endColumn)}plusRange(t){return E.plusRange(this,t)}static plusRange(t,r){let s,i,o,a;return r.startLineNumber<t.startLineNumber?(s=r.startLineNumber,i=r.startColumn):r.startLineNumber===t.startLineNumber?(s=r.startLineNumber,i=Math.min(r.startColumn,t.startColumn)):(s=t.startLineNumber,i=t.startColumn),r.endLineNumber>t.endLineNumber?(o=r.endLineNumber,a=r.endColumn):r.endLineNumber===t.endLineNumber?(o=r.endLineNumber,a=Math.max(r.endColumn,t.endColumn)):(o=t.endLineNumber,a=t.endColumn),new E(s,i,o,a)}intersectRanges(t){return E.intersectRanges(this,t)}static intersectRanges(t,r){let s=t.startLineNumber,i=t.startColumn,o=t.endLineNumber,a=t.endColumn,l=r.startLineNumber,c=r.startColumn,u=r.endLineNumber,h=r.endColumn;return s<l?(s=l,i=c):s===l&&(i=Math.max(i,c)),o>u?(o=u,a=h):o===u&&(a=Math.min(a,h)),s>o||s===o&&i>a?null:new E(s,i,o,a)}equalsRange(t){return E.equalsRange(this,t)}static equalsRange(t,r){return!!t&&!!r&&t.startLineNumber===r.startLineNumber&&t.startColumn===r.startColumn&&t.endLineNumber===r.endLineNumber&&t.endColumn===r.endColumn}getEndPosition(){return E.getEndPosition(this)}static getEndPosition(t){return new I(t.endLineNumber,t.endColumn)}getStartPosition(){return E.getStartPosition(this)}static getStartPosition(t){return new I(t.startLineNumber,t.startColumn)}toString(){return"["+this.startLineNumber+","+this.startColumn+" -> "+this.endLineNumber+","+this.endColumn+"]"}setEndPosition(t,r){return new E(this.startLineNumber,this.startColumn,t,r)}setStartPosition(t,r){return new E(t,r,this.endLineNumber,this.endColumn)}collapseToStart(){return E.collapseToStart(this)}static collapseToStart(t){return new E(t.startLineNumber,t.startColumn,t.startLineNumber,t.startColumn)}static fromPositions(t,r=t){return new E(t.lineNumber,t.column,r.lineNumber,r.column)}static lift(t){return t?new E(t.startLineNumber,t.startColumn,t.endLineNumber,t.endColumn):null}static isIRange(t){return t&&typeof t.startLineNumber=="number"&&typeof t.startColumn=="number"&&typeof t.endLineNumber=="number"&&typeof t.endColumn=="number"}static areIntersectingOrTouching(t,r){return!(t.endLineNumber<r.startLineNumber||t.endLineNumber===r.startLineNumber&&t.endColumn<r.startColumn||r.endLineNumber<t.startLineNumber||r.endLineNumber===t.startLineNumber&&r.endColumn<t.startColumn)}static areIntersecting(t,r){return!(t.endLineNumber<r.startLineNumber||t.endLineNumber===r.startLineNumber&&t.endColumn<=r.startColumn||r.endLineNumber<t.startLineNumber||r.endLineNumber===t.startLineNumber&&r.endColumn<=t.startColumn)}static compareRangesUsingStarts(t,r){if(t&&r){let o=t.startLineNumber|0,a=r.startLineNumber|0;if(o===a){let l=t.startColumn|0,c=r.startColumn|0;if(l===c){let u=t.endLineNumber|0,h=r.endLineNumber|0;if(u===h){let f=t.endColumn|0,d=r.endColumn|0;return f-d}return u-h}return l-c}return o-a}return(t?1:0)-(r?1:0)}static compareRangesUsingEnds(t,r){return t.endLineNumber===r.endLineNumber?t.endColumn===r.endColumn?t.startLineNumber===r.startLineNumber?t.startColumn-r.startColumn:t.startLineNumber-r.startLineNumber:t.endColumn-r.endColumn:t.endLineNumber-r.endLineNumber}static spansMultipleLines(t){return t.endLineNumber>t.startLineNumber}toJSON(){return this}};var Ur=3;function Y1(e,t,r,s){return new J(e,t,r).ComputeDiff(s)}var at=class{constructor(t){let r=[],s=[];for(let i=0,o=t.length;i<o;i++)r[i]=Zt(t[i],1),s[i]=Qt(t[i],1);this.lines=t,this._startColumns=r,this._endColumns=s}getElements(){let t=[];for(let r=0,s=this.lines.length;r<s;r++)t[r]=this.lines[r].substring(this._startColumns[r]-1,this._endColumns[r]-1);return t}getStrictElement(t){return this.lines[t]}getStartLineNumber(t){return t+1}getEndLineNumber(t){return t+1}createCharSequence(t,r,s){let i=[],o=[],a=[],l=0;for(let c=r;c<=s;c++){let u=this.lines[c],h=t?this._startColumns[c]:1,f=t?this._endColumns[c]:u.length+1;for(let d=h;d<f;d++)i[l]=u.charCodeAt(d-1),o[l]=c+1,a[l]=d,l++;!t&&c<s&&(i[l]=10,o[l]=c+1,a[l]=u.length+1,l++)}return new Yt(i,o,a)}},Yt=class{constructor(t,r,s){this._charCodes=t,this._lineNumbers=r,this._columns=s}toString(){return"["+this._charCodes.map((t,r)=>(t===10?"\\n":String.fromCharCode(t))+`-(${this._lineNumbers[r]},${this._columns[r]})`).join(", ")+"]"}_assertIndex(t,r){if(t<0||t>=r.length)throw new Error("Illegal index")}getElements(){return this._charCodes}getStartLineNumber(t){return t>0&&t===this._lineNumbers.length?this.getEndLineNumber(t-1):(this._assertIndex(t,this._lineNumbers),this._lineNumbers[t])}getEndLineNumber(t){return t===-1?this.getStartLineNumber(t+1):(this._assertIndex(t,this._lineNumbers),this._charCodes[t]===10?this._lineNumbers[t]+1:this._lineNumbers[t])}getStartColumn(t){return t>0&&t===this._columns.length?this.getEndColumn(t-1):(this._assertIndex(t,this._columns),this._columns[t])}getEndColumn(t){return t===-1?this.getStartColumn(t+1):(this._assertIndex(t,this._columns),this._charCodes[t]===10?1:this._columns[t]+1)}},Ce=class{constructor(t,r,s,i,o,a,l,c){this.originalStartLineNumber=t,this.originalStartColumn=r,this.originalEndLineNumber=s,this.originalEndColumn=i,this.modifiedStartLineNumber=o,this.modifiedStartColumn=a,this.modifiedEndLineNumber=l,this.modifiedEndColumn=c}static createFromDiffChange(t,r,s){let i=r.getStartLineNumber(t.originalStart),o=r.getStartColumn(t.originalStart),a=r.getEndLineNumber(t.originalStart+t.originalLength-1),l=r.getEndColumn(t.originalStart+t.originalLength-1),c=s.getStartLineNumber(t.modifiedStart),u=s.getStartColumn(t.modifiedStart),h=s.getEndLineNumber(t.modifiedStart+t.modifiedLength-1),f=s.getEndColumn(t.modifiedStart+t.modifiedLength-1);return new Ce(i,o,a,l,c,u,h,f)}};function Tr(e){if(e.length<=1)return e;let t=[e[0]],r=t[0];for(let s=1,i=e.length;s<i;s++){let o=e[s],a=o.originalStart-(r.originalStart+r.originalLength),l=o.modifiedStart-(r.modifiedStart+r.modifiedLength);Math.min(a,l)<Ur?(r.originalLength=o.originalStart+o.originalLength-r.originalStart,r.modifiedLength=o.modifiedStart+o.modifiedLength-r.modifiedStart):(t.push(o),r=o)}return t}var _e=class{constructor(t,r,s,i,o){this.originalStartLineNumber=t,this.originalEndLineNumber=r,this.modifiedStartLineNumber=s,this.modifiedEndLineNumber=i,this.charChanges=o}static createFromDiffResult(t,r,s,i,o,a,l){let c,u,h,f,d;if(r.originalLength===0?(c=s.getStartLineNumber(r.originalStart)-1,u=0):(c=s.getStartLineNumber(r.originalStart),u=s.getEndLineNumber(r.originalStart+r.originalLength-1)),r.modifiedLength===0?(h=i.getStartLineNumber(r.modifiedStart)-1,f=0):(h=i.getStartLineNumber(r.modifiedStart),f=i.getEndLineNumber(r.modifiedStart+r.modifiedLength-1)),a&&r.originalLength>0&&r.originalLength<20&&r.modifiedLength>0&&r.modifiedLength<20&&o()){let C=s.createCharSequence(t,r.originalStart,r.originalStart+r.originalLength-1),x=i.createCharSequence(t,r.modifiedStart,r.modifiedStart+r.modifiedLength-1);if(C.getElements().length>0&&x.getElements().length>0){let N=Y1(C,x,o,!0).changes;l&&(N=Tr(N)),d=[];for(let A=0,F=N.length;A<F;A++)d.push(Ce.createFromDiffChange(N[A],C,x))}}return new _e(c,u,h,f,d)}},lt=class{constructor(t,r,s){this.shouldComputeCharChanges=s.shouldComputeCharChanges,this.shouldPostProcessCharChanges=s.shouldPostProcessCharChanges,this.shouldIgnoreTrimWhitespace=s.shouldIgnoreTrimWhitespace,this.shouldMakePrettyDiff=s.shouldMakePrettyDiff,this.originalLines=t,this.modifiedLines=r,this.original=new at(t),this.modified=new at(r),this.continueLineDiff=j1(s.maxComputationTime),this.continueCharDiff=j1(s.maxComputationTime===0?0:Math.min(s.maxComputationTime,5e3))}computeDiff(){if(this.original.lines.length===1&&this.original.lines[0].length===0)return this.modified.lines.length===1&&this.modified.lines[0].length===0?{quitEarly:!1,changes:[]}:{quitEarly:!1,changes:[{originalStartLineNumber:1,originalEndLineNumber:1,modifiedStartLineNumber:1,modifiedEndLineNumber:this.modified.lines.length,charChanges:[{modifiedEndColumn:0,modifiedEndLineNumber:0,modifiedStartColumn:0,modifiedStartLineNumber:0,originalEndColumn:0,originalEndLineNumber:0,originalStartColumn:0,originalStartLineNumber:0}]}]};if(this.modified.lines.length===1&&this.modified.lines[0].length===0)return{quitEarly:!1,changes:[{originalStartLineNumber:1,originalEndLineNumber:this.original.lines.length,modifiedStartLineNumber:1,modifiedEndLineNumber:1,charChanges:[{modifiedEndColumn:0,modifiedEndLineNumber:0,modifiedStartColumn:0,modifiedStartLineNumber:0,originalEndColumn:0,originalEndLineNumber:0,originalStartColumn:0,originalStartLineNumber:0}]}]};let t=Y1(this.original,this.modified,this.continueLineDiff,this.shouldMakePrettyDiff),r=t.changes,s=t.quitEarly;if(this.shouldIgnoreTrimWhitespace){let l=[];for(let c=0,u=r.length;c<u;c++)l.push(_e.createFromDiffResult(this.shouldIgnoreTrimWhitespace,r[c],this.original,this.modified,this.continueCharDiff,this.shouldComputeCharChanges,this.shouldPostProcessCharChanges));return{quitEarly:s,changes:l}}let i=[],o=0,a=0;for(let l=-1,c=r.length;l<c;l++){let u=l+1<c?r[l+1]:null,h=u?u.originalStart:this.originalLines.length,f=u?u.modifiedStart:this.modifiedLines.length;for(;o<h&&a<f;){let d=this.originalLines[o],C=this.modifiedLines[a];if(d!==C){{let x=Zt(d,1),N=Zt(C,1);for(;x>1&&N>1;){let A=d.charCodeAt(x-2),F=C.charCodeAt(N-2);if(A!==F)break;x--,N--}(x>1||N>1)&&this._pushTrimWhitespaceCharChange(i,o+1,1,x,a+1,1,N)}{let x=Qt(d,1),N=Qt(C,1),A=d.length+1,F=C.length+1;for(;x<A&&N<F;){let k=d.charCodeAt(x-1),S=d.charCodeAt(N-1);if(k!==S)break;x++,N++}(x<A||N<F)&&this._pushTrimWhitespaceCharChange(i,o+1,x,A,a+1,N,F)}}o++,a++}u&&(i.push(_e.createFromDiffResult(this.shouldIgnoreTrimWhitespace,u,this.original,this.modified,this.continueCharDiff,this.shouldComputeCharChanges,this.shouldPostProcessCharChanges)),o+=u.originalLength,a+=u.modifiedLength)}return{quitEarly:s,changes:i}}_pushTrimWhitespaceCharChange(t,r,s,i,o,a,l){if(this._mergeTrimWhitespaceCharChange(t,r,s,i,o,a,l))return;let c;this.shouldComputeCharChanges&&(c=[new Ce(r,s,r,i,o,a,o,l)]),t.push(new _e(r,r,o,o,c))}_mergeTrimWhitespaceCharChange(t,r,s,i,o,a,l){let c=t.length;if(c===0)return!1;let u=t[c-1];return u.originalEndLineNumber===0||u.modifiedEndLineNumber===0?!1:u.originalEndLineNumber+1===r&&u.modifiedEndLineNumber+1===o?(u.originalEndLineNumber=r,u.modifiedEndLineNumber=o,this.shouldComputeCharChanges&&u.charChanges&&u.charChanges.push(new Ce(r,s,r,i,o,a,o,l)),!0):!1}};function Zt(e,t){let r=F1(e);return r===-1?t:r+1}function Qt(e,t){let r=k1(e);return r===-1?t:r+2}function j1(e){if(e===0)return()=>!0;let t=Date.now();return()=>Date.now()-t<e}var Z1;(function(e){function t(i){return i<0}e.isLessThan=t;function r(i){return i>0}e.isGreaterThan=r;function s(i){return i===0}e.isNeitherLessOrGreaterThan=s,e.greaterThan=1,e.lessThan=-1,e.neitherLessOrGreaterThan=0})(Z1||(Z1={}));function Jt(e){return e<0?0:e>255?255:e|0}function Le(e){return e<0?0:e>4294967295?4294967295:e|0}var ut=class{constructor(t){this.values=t,this.prefixSum=new Uint32Array(t.length),this.prefixSumValidIndex=new Int32Array(1),this.prefixSumValidIndex[0]=-1}insertValues(t,r){t=Le(t);let s=this.values,i=this.prefixSum,o=r.length;return o===0?!1:(this.values=new Uint32Array(s.length+o),this.values.set(s.subarray(0,t),0),this.values.set(s.subarray(t),t+o),this.values.set(r,t),t-1<this.prefixSumValidIndex[0]&&(this.prefixSumValidIndex[0]=t-1),this.prefixSum=new Uint32Array(this.values.length),this.prefixSumValidIndex[0]>=0&&this.prefixSum.set(i.subarray(0,this.prefixSumValidIndex[0]+1)),!0)}setValue(t,r){return t=Le(t),r=Le(r),this.values[t]===r?!1:(this.values[t]=r,t-1<this.prefixSumValidIndex[0]&&(this.prefixSumValidIndex[0]=t-1),!0)}removeValues(t,r){t=Le(t),r=Le(r);let s=this.values,i=this.prefixSum;if(t>=s.length)return!1;let o=s.length-t;return r>=o&&(r=o),r===0?!1:(this.values=new Uint32Array(s.length-r),this.values.set(s.subarray(0,t),0),this.values.set(s.subarray(t+r),t),this.prefixSum=new Uint32Array(this.values.length),t-1<this.prefixSumValidIndex[0]&&(this.prefixSumValidIndex[0]=t-1),this.prefixSumValidIndex[0]>=0&&this.prefixSum.set(i.subarray(0,this.prefixSumValidIndex[0]+1)),!0)}getTotalSum(){return this.values.length===0?0:this._getPrefixSum(this.values.length-1)}getPrefixSum(t){return t<0?0:(t=Le(t),this._getPrefixSum(t))}_getPrefixSum(t){if(t<=this.prefixSumValidIndex[0])return this.prefixSum[t];let r=this.prefixSumValidIndex[0]+1;r===0&&(this.prefixSum[0]=this.values[0],r++),t>=this.values.length&&(t=this.values.length-1);for(let s=r;s<=t;s++)this.prefixSum[s]=this.prefixSum[s-1]+this.values[s];return this.prefixSumValidIndex[0]=Math.max(this.prefixSumValidIndex[0],t),this.prefixSum[t]}getIndexOf(t){t=Math.floor(t),this.getTotalSum();let r=0,s=this.values.length-1,i=0,o=0,a=0;for(;r<=s;)if(i=r+(s-r)/2|0,o=this.prefixSum[i],a=o-this.values[i],t<a)s=i-1;else if(t>=o)r=i+1;else break;return new Xt(i,t-a)}};var Xt=class{constructor(t,r){this.index=t,this.remainder=r,this._prefixSumIndexOfResultBrand=void 0,this.index=t,this.remainder=r}};var ct=class{constructor(t,r,s,i){this._uri=t,this._lines=r,this._eol=s,this._versionId=i,this._lineStarts=null,this._cachedTextValue=null}dispose(){this._lines.length=0}get version(){return this._versionId}getText(){return this._cachedTextValue===null&&(this._cachedTextValue=this._lines.join(this._eol)),this._cachedTextValue}onEvents(t){t.eol&&t.eol!==this._eol&&(this._eol=t.eol,this._lineStarts=null);let r=t.changes;for(let s of r)this._acceptDeleteRange(s.range),this._acceptInsertText(new I(s.range.startLineNumber,s.range.startColumn),s.text);this._versionId=t.versionId,this._cachedTextValue=null}_ensureLineStarts(){if(!this._lineStarts){let t=this._eol.length,r=this._lines.length,s=new Uint32Array(r);for(let i=0;i<r;i++)s[i]=this._lines[i].length+t;this._lineStarts=new ut(s)}}_setLineText(t,r){this._lines[t]=r,this._lineStarts&&this._lineStarts.setValue(t,this._lines[t].length+this._eol.length)}_acceptDeleteRange(t){if(t.startLineNumber===t.endLineNumber){if(t.startColumn===t.endColumn)return;this._setLineText(t.startLineNumber-1,this._lines[t.startLineNumber-1].substring(0,t.startColumn-1)+this._lines[t.startLineNumber-1].substring(t.endColumn-1));return}this._setLineText(t.startLineNumber-1,this._lines[t.startLineNumber-1].substring(0,t.startColumn-1)+this._lines[t.endLineNumber-1].substring(t.endColumn-1)),this._lines.splice(t.startLineNumber,t.endLineNumber-t.startLineNumber),this._lineStarts&&this._lineStarts.removeValues(t.startLineNumber,t.endLineNumber-t.startLineNumber)}_acceptInsertText(t,r){if(r.length===0)return;let s=M1(r);if(s.length===1){this._setLineText(t.lineNumber-1,this._lines[t.lineNumber-1].substring(0,t.column-1)+s[0]+this._lines[t.lineNumber-1].substring(t.column-1));return}s[s.length-1]+=this._lines[t.lineNumber-1].substring(t.column-1),this._setLineText(t.lineNumber-1,this._lines[t.lineNumber-1].substring(0,t.column-1)+s[0]);let i=new Uint32Array(s.length-1);for(let o=1;o<s.length;o++)this._lines.splice(t.lineNumber+o-1,0,s[o]),i[o-1]=s[o].length+this._eol.length;this._lineStarts&&this._lineStarts.insertValues(t.lineNumber,i)}};var Wr="`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";function qr(e=""){let t="(-?\\d*\\.\\d\\w*)|([^";for(let r of Wr)e.indexOf(r)>=0||(t+="\\"+r);return t+="\\s]+)",new RegExp(t,"g")}var Kt=qr();function Q1(e){let t=Kt;if(e&&e instanceof RegExp)if(e.global)t=e;else{let r="g";e.ignoreCase&&(r+="i"),e.multiline&&(r+="m"),e.unicode&&(r+="u"),t=new RegExp(e.source,r)}return t.lastIndex=0,t}var J1=new se;J1.unshift({maxLen:1e3,windowSize:15,timeBudget:150});function Ue(e,t,r,s,i){if(i||(i=Ne.first(J1)),r.length>i.maxLen){let u=e-i.maxLen/2;return u<0?u=0:s+=u,r=r.substring(u,e+i.maxLen/2),Ue(e,t,r,s,i)}let o=Date.now(),a=e-1-s,l=-1,c=null;for(let u=1;!(Date.now()-o>=i.timeBudget);u++){let h=a-i.windowSize*u;t.lastIndex=Math.max(0,h);let f=Hr(t,r,a,l);if(!f&&c||(c=f,h<=0))break;l=h}if(c){let u={word:c[0],startColumn:s+1+c.index,endColumn:s+1+c.index+c[0].length};return t.lastIndex=0,u}return null}function Hr(e,t,r,s){let i;for(;i=e.exec(t);){let o=i.index||0;if(o<=r&&e.lastIndex>=r)return i;if(s>0&&o>s)return null}return null}var ge=class{constructor(t){let r=Jt(t);this._defaultValue=r,this._asciiMap=ge._createAsciiMap(r),this._map=new Map}static _createAsciiMap(t){let r=new Uint8Array(256);for(let s=0;s<256;s++)r[s]=t;return r}set(t,r){let s=Jt(r);t>=0&&t<256?this._asciiMap[t]=s:this._map.set(t,s)}get(t){return t>=0&&t<256?this._asciiMap[t]:this._map.get(t)||this._defaultValue}};var t1=class{constructor(t,r,s){let i=new Uint8Array(t*r);for(let o=0,a=t*r;o<a;o++)i[o]=s;this._data=i,this.rows=t,this.cols=r}get(t,r){return this._data[t*this.cols+r]}set(t,r,s){this._data[t*this.cols+r]=s}},n1=class{constructor(t){let r=0,s=0;for(let o=0,a=t.length;o<a;o++){let[l,c,u]=t[o];c>r&&(r=c),l>s&&(s=l),u>s&&(s=u)}r++,s++;let i=new t1(s,r,0);for(let o=0,a=t.length;o<a;o++){let[l,c,u]=t[o];i.set(l,c,u)}this._states=i,this._maxCharCode=r}nextState(t,r){return r<0||r>=this._maxCharCode?0:this._states.get(t,r)}},e1=null;function Or(){return e1===null&&(e1=new n1([[1,104,2],[1,72,2],[1,102,6],[1,70,6],[2,116,3],[2,84,3],[3,116,4],[3,84,4],[4,112,5],[4,80,5],[5,115,9],[5,83,9],[5,58,10],[6,105,7],[6,73,7],[7,108,8],[7,76,8],[8,101,9],[8,69,9],[9,58,10],[10,47,11],[11,47,12]])),e1}var Te=null;function zr(){if(Te===null){Te=new ge(0);let e=` 	<>'"\u3001\u3002\uFF61\uFF64\uFF0C\uFF0E\uFF1A\uFF1B\u2018\u3008\u300C\u300E\u3014\uFF08\uFF3B\uFF5B\uFF62\uFF63\uFF5D\uFF3D\uFF09\u3015\u300F\u300D\u3009\u2019\uFF40\uFF5E\u2026`;for(let r=0;r<e.length;r++)Te.set(e.charCodeAt(r),1);let t=".,;:";for(let r=0;r<t.length;r++)Te.set(t.charCodeAt(r),2)}return Te}var Fe=class{static _createLink(t,r,s,i,o){let a=o-1;do{let l=r.charCodeAt(a);if(t.get(l)!==2)break;a--}while(a>i);if(i>0){let l=r.charCodeAt(i-1),c=r.charCodeAt(a);(l===40&&c===41||l===91&&c===93||l===123&&c===125)&&a--}return{range:{startLineNumber:s,startColumn:i+1,endLineNumber:s,endColumn:a+2},url:r.substring(i,a+1)}}static computeLinks(t,r=Or()){let s=zr(),i=[];for(let o=1,a=t.getLineCount();o<=a;o++){let l=t.getLineContent(o),c=l.length,u=0,h=0,f=0,d=1,C=!1,x=!1,N=!1,A=!1;for(;u<c;){let F=!1,k=l.charCodeAt(u);if(d===13){let S;switch(k){case 40:C=!0,S=0;break;case 41:S=C?0:1;break;case 91:N=!0,x=!0,S=0;break;case 93:N=!1,S=x?0:1;break;case 123:A=!0,S=0;break;case 125:S=A?0:1;break;case 39:S=f===39?1:0;break;case 34:S=f===34?1:0;break;case 96:S=f===96?1:0;break;case 42:S=f===42?1:0;break;case 124:S=f===124?1:0;break;case 32:S=N?0:1;break;default:S=s.get(k)}S===1&&(i.push(Fe._createLink(s,l,o,h,u)),F=!0)}else if(d===12){let S;k===91?(x=!0,S=0):S=s.get(k),S===1?F=!0:d=13}else d=r.nextState(d,k),d===0&&(F=!0);F&&(d=1,C=!1,x=!1,A=!1,h=u+1,f=k),u++}d===13&&i.push(Fe._createLink(s,l,o,h,c))}return i}};function X1(e){return!e||typeof e.getLineCount!="function"||typeof e.getLineContent!="function"?[]:Fe.computeLinks(e)}var ke=class{constructor(){this._defaultValueSet=[["true","false"],["True","False"],["Private","Public","Friend","ReadOnly","Partial","Protected","WriteOnly"],["public","protected","private"]]}navigateValueSet(t,r,s,i,o){if(t&&r){let a=this.doNavigateValueSet(r,o);if(a)return{range:t,value:a}}if(s&&i){let a=this.doNavigateValueSet(i,o);if(a)return{range:s,value:a}}return null}doNavigateValueSet(t,r){let s=this.numberReplace(t,r);return s!==null?s:this.textReplace(t,r)}numberReplace(t,r){let s=Math.pow(10,t.length-(t.lastIndexOf(".")+1)),i=Number(t),o=parseFloat(t);return!isNaN(i)&&!isNaN(o)&&i===o?i===0&&!r?null:(i=Math.floor(i*s),i+=r?s:-s,String(i/s)):null}textReplace(t,r){return this.valueSetsReplace(this._defaultValueSet,t,r)}valueSetsReplace(t,r,s){let i=null;for(let o=0,a=t.length;i===null&&o<a;o++)i=this.valueSetReplace(t[o],r,s);return i}valueSetReplace(t,r,s){let i=t.indexOf(r);return i>=0?(i+=s?1:-1,i<0?i=t.length-1:i%=t.length,t[i]):null}};ke.INSTANCE=new ke;var K1=Object.freeze(function(e,t){let r=setTimeout(e.bind(t),0);return{dispose(){clearTimeout(r)}}}),ft;(function(e){function t(r){return r===e.None||r===e.Cancelled||r instanceof Ee?!0:!r||typeof r!="object"?!1:typeof r.isCancellationRequested=="boolean"&&typeof r.onCancellationRequested=="function"}e.isCancellationToken=t,e.None=Object.freeze({isCancellationRequested:!1,onCancellationRequested:Qe.None}),e.Cancelled=Object.freeze({isCancellationRequested:!0,onCancellationRequested:K1})})(ft||(ft={}));var Ee=class{constructor(){this._isCancelled=!1,this._emitter=null}cancel(){this._isCancelled||(this._isCancelled=!0,this._emitter&&(this._emitter.fire(void 0),this.dispose()))}get isCancellationRequested(){return this._isCancelled}get onCancellationRequested(){return this._isCancelled?K1:(this._emitter||(this._emitter=new q),this._emitter.event)}dispose(){this._emitter&&(this._emitter.dispose(),this._emitter=null)}},ht=class{constructor(t){this._token=void 0,this._parentListener=void 0,this._parentListener=t&&t.onCancellationRequested(this.cancel,this)}get token(){return this._token||(this._token=new Ee),this._token}cancel(){this._token?this._token instanceof Ee&&this._token.cancel():this._token=ft.Cancelled}dispose(t=!1){t&&this.cancel(),this._parentListener&&this._parentListener.dispose(),this._token?this._token instanceof Ee&&this._token.dispose():this._token=ft.None}};var We=class{constructor(){this._keyCodeToStr=[],this._strToKeyCode=Object.create(null)}define(t,r){this._keyCodeToStr[t]=r,this._strToKeyCode[r.toLowerCase()]=t}keyCodeToStr(t){return this._keyCodeToStr[t]}strToKeyCode(t){return this._strToKeyCode[t.toLowerCase()]||0}},dt=new We,r1=new We,s1=new We,$r=new Array(230),Gr={},jr=[],Yr=Object.create(null),Zr=Object.create(null),tn=[],i1=[];for(let e=0;e<=193;e++)tn[e]=-1;for(let e=0;e<=127;e++)i1[e]=-1;(function(){let e="",t=[[0,1,0,"None",0,"unknown",0,"VK_UNKNOWN",e,e],[0,1,1,"Hyper",0,e,0,e,e,e],[0,1,2,"Super",0,e,0,e,e,e],[0,1,3,"Fn",0,e,0,e,e,e],[0,1,4,"FnLock",0,e,0,e,e,e],[0,1,5,"Suspend",0,e,0,e,e,e],[0,1,6,"Resume",0,e,0,e,e,e],[0,1,7,"Turbo",0,e,0,e,e,e],[0,1,8,"Sleep",0,e,0,"VK_SLEEP",e,e],[0,1,9,"WakeUp",0,e,0,e,e,e],[31,0,10,"KeyA",31,"A",65,"VK_A",e,e],[32,0,11,"KeyB",32,"B",66,"VK_B",e,e],[33,0,12,"KeyC",33,"C",67,"VK_C",e,e],[34,0,13,"KeyD",34,"D",68,"VK_D",e,e],[35,0,14,"KeyE",35,"E",69,"VK_E",e,e],[36,0,15,"KeyF",36,"F",70,"VK_F",e,e],[37,0,16,"KeyG",37,"G",71,"VK_G",e,e],[38,0,17,"KeyH",38,"H",72,"VK_H",e,e],[39,0,18,"KeyI",39,"I",73,"VK_I",e,e],[40,0,19,"KeyJ",40,"J",74,"VK_J",e,e],[41,0,20,"KeyK",41,"K",75,"VK_K",e,e],[42,0,21,"KeyL",42,"L",76,"VK_L",e,e],[43,0,22,"KeyM",43,"M",77,"VK_M",e,e],[44,0,23,"KeyN",44,"N",78,"VK_N",e,e],[45,0,24,"KeyO",45,"O",79,"VK_O",e,e],[46,0,25,"KeyP",46,"P",80,"VK_P",e,e],[47,0,26,"KeyQ",47,"Q",81,"VK_Q",e,e],[48,0,27,"KeyR",48,"R",82,"VK_R",e,e],[49,0,28,"KeyS",49,"S",83,"VK_S",e,e],[50,0,29,"KeyT",50,"T",84,"VK_T",e,e],[51,0,30,"KeyU",51,"U",85,"VK_U",e,e],[52,0,31,"KeyV",52,"V",86,"VK_V",e,e],[53,0,32,"KeyW",53,"W",87,"VK_W",e,e],[54,0,33,"KeyX",54,"X",88,"VK_X",e,e],[55,0,34,"KeyY",55,"Y",89,"VK_Y",e,e],[56,0,35,"KeyZ",56,"Z",90,"VK_Z",e,e],[22,0,36,"Digit1",22,"1",49,"VK_1",e,e],[23,0,37,"Digit2",23,"2",50,"VK_2",e,e],[24,0,38,"Digit3",24,"3",51,"VK_3",e,e],[25,0,39,"Digit4",25,"4",52,"VK_4",e,e],[26,0,40,"Digit5",26,"5",53,"VK_5",e,e],[27,0,41,"Digit6",27,"6",54,"VK_6",e,e],[28,0,42,"Digit7",28,"7",55,"VK_7",e,e],[29,0,43,"Digit8",29,"8",56,"VK_8",e,e],[30,0,44,"Digit9",30,"9",57,"VK_9",e,e],[21,0,45,"Digit0",21,"0",48,"VK_0",e,e],[3,1,46,"Enter",3,"Enter",13,"VK_RETURN",e,e],[9,1,47,"Escape",9,"Escape",27,"VK_ESCAPE",e,e],[1,1,48,"Backspace",1,"Backspace",8,"VK_BACK",e,e],[2,1,49,"Tab",2,"Tab",9,"VK_TAB",e,e],[10,1,50,"Space",10,"Space",32,"VK_SPACE",e,e],[83,0,51,"Minus",83,"-",189,"VK_OEM_MINUS","-","OEM_MINUS"],[81,0,52,"Equal",81,"=",187,"VK_OEM_PLUS","=","OEM_PLUS"],[87,0,53,"BracketLeft",87,"[",219,"VK_OEM_4","[","OEM_4"],[89,0,54,"BracketRight",89,"]",221,"VK_OEM_6","]","OEM_6"],[88,0,55,"Backslash",88,"\\",220,"VK_OEM_5","\\","OEM_5"],[0,0,56,"IntlHash",0,e,0,e,e,e],[80,0,57,"Semicolon",80,";",186,"VK_OEM_1",";","OEM_1"],[90,0,58,"Quote",90,"'",222,"VK_OEM_7","'","OEM_7"],[86,0,59,"Backquote",86,"`",192,"VK_OEM_3","`","OEM_3"],[82,0,60,"Comma",82,",",188,"VK_OEM_COMMA",",","OEM_COMMA"],[84,0,61,"Period",84,".",190,"VK_OEM_PERIOD",".","OEM_PERIOD"],[85,0,62,"Slash",85,"/",191,"VK_OEM_2","/","OEM_2"],[8,1,63,"CapsLock",8,"CapsLock",20,"VK_CAPITAL",e,e],[59,1,64,"F1",59,"F1",112,"VK_F1",e,e],[60,1,65,"F2",60,"F2",113,"VK_F2",e,e],[61,1,66,"F3",61,"F3",114,"VK_F3",e,e],[62,1,67,"F4",62,"F4",115,"VK_F4",e,e],[63,1,68,"F5",63,"F5",116,"VK_F5",e,e],[64,1,69,"F6",64,"F6",117,"VK_F6",e,e],[65,1,70,"F7",65,"F7",118,"VK_F7",e,e],[66,1,71,"F8",66,"F8",119,"VK_F8",e,e],[67,1,72,"F9",67,"F9",120,"VK_F9",e,e],[68,1,73,"F10",68,"F10",121,"VK_F10",e,e],[69,1,74,"F11",69,"F11",122,"VK_F11",e,e],[70,1,75,"F12",70,"F12",123,"VK_F12",e,e],[0,1,76,"PrintScreen",0,e,0,e,e,e],[79,1,77,"ScrollLock",79,"ScrollLock",145,"VK_SCROLL",e,e],[7,1,78,"Pause",7,"PauseBreak",19,"VK_PAUSE",e,e],[19,1,79,"Insert",19,"Insert",45,"VK_INSERT",e,e],[14,1,80,"Home",14,"Home",36,"VK_HOME",e,e],[11,1,81,"PageUp",11,"PageUp",33,"VK_PRIOR",e,e],[20,1,82,"Delete",20,"Delete",46,"VK_DELETE",e,e],[13,1,83,"End",13,"End",35,"VK_END",e,e],[12,1,84,"PageDown",12,"PageDown",34,"VK_NEXT",e,e],[17,1,85,"ArrowRight",17,"RightArrow",39,"VK_RIGHT","Right",e],[15,1,86,"ArrowLeft",15,"LeftArrow",37,"VK_LEFT","Left",e],[18,1,87,"ArrowDown",18,"DownArrow",40,"VK_DOWN","Down",e],[16,1,88,"ArrowUp",16,"UpArrow",38,"VK_UP","Up",e],[78,1,89,"NumLock",78,"NumLock",144,"VK_NUMLOCK",e,e],[108,1,90,"NumpadDivide",108,"NumPad_Divide",111,"VK_DIVIDE",e,e],[103,1,91,"NumpadMultiply",103,"NumPad_Multiply",106,"VK_MULTIPLY",e,e],[106,1,92,"NumpadSubtract",106,"NumPad_Subtract",109,"VK_SUBTRACT",e,e],[104,1,93,"NumpadAdd",104,"NumPad_Add",107,"VK_ADD",e,e],[3,1,94,"NumpadEnter",3,e,0,e,e,e],[94,1,95,"Numpad1",94,"NumPad1",97,"VK_NUMPAD1",e,e],[95,1,96,"Numpad2",95,"NumPad2",98,"VK_NUMPAD2",e,e],[96,1,97,"Numpad3",96,"NumPad3",99,"VK_NUMPAD3",e,e],[97,1,98,"Numpad4",97,"NumPad4",100,"VK_NUMPAD4",e,e],[98,1,99,"Numpad5",98,"NumPad5",101,"VK_NUMPAD5",e,e],[99,1,100,"Numpad6",99,"NumPad6",102,"VK_NUMPAD6",e,e],[100,1,101,"Numpad7",100,"NumPad7",103,"VK_NUMPAD7",e,e],[101,1,102,"Numpad8",101,"NumPad8",104,"VK_NUMPAD8",e,e],[102,1,103,"Numpad9",102,"NumPad9",105,"VK_NUMPAD9",e,e],[93,1,104,"Numpad0",93,"NumPad0",96,"VK_NUMPAD0",e,e],[107,1,105,"NumpadDecimal",107,"NumPad_Decimal",110,"VK_DECIMAL",e,e],[92,0,106,"IntlBackslash",92,"OEM_102",226,"VK_OEM_102",e,e],[58,1,107,"ContextMenu",58,"ContextMenu",93,e,e,e],[0,1,108,"Power",0,e,0,e,e,e],[0,1,109,"NumpadEqual",0,e,0,e,e,e],[71,1,110,"F13",71,"F13",124,"VK_F13",e,e],[72,1,111,"F14",72,"F14",125,"VK_F14",e,e],[73,1,112,"F15",73,"F15",126,"VK_F15",e,e],[74,1,113,"F16",74,"F16",127,"VK_F16",e,e],[75,1,114,"F17",75,"F17",128,"VK_F17",e,e],[76,1,115,"F18",76,"F18",129,"VK_F18",e,e],[77,1,116,"F19",77,"F19",130,"VK_F19",e,e],[0,1,117,"F20",0,e,0,"VK_F20",e,e],[0,1,118,"F21",0,e,0,"VK_F21",e,e],[0,1,119,"F22",0,e,0,"VK_F22",e,e],[0,1,120,"F23",0,e,0,"VK_F23",e,e],[0,1,121,"F24",0,e,0,"VK_F24",e,e],[0,1,122,"Open",0,e,0,e,e,e],[0,1,123,"Help",0,e,0,e,e,e],[0,1,124,"Select",0,e,0,e,e,e],[0,1,125,"Again",0,e,0,e,e,e],[0,1,126,"Undo",0,e,0,e,e,e],[0,1,127,"Cut",0,e,0,e,e,e],[0,1,128,"Copy",0,e,0,e,e,e],[0,1,129,"Paste",0,e,0,e,e,e],[0,1,130,"Find",0,e,0,e,e,e],[0,1,131,"AudioVolumeMute",112,"AudioVolumeMute",173,"VK_VOLUME_MUTE",e,e],[0,1,132,"AudioVolumeUp",113,"AudioVolumeUp",175,"VK_VOLUME_UP",e,e],[0,1,133,"AudioVolumeDown",114,"AudioVolumeDown",174,"VK_VOLUME_DOWN",e,e],[105,1,134,"NumpadComma",105,"NumPad_Separator",108,"VK_SEPARATOR",e,e],[110,0,135,"IntlRo",110,"ABNT_C1",193,"VK_ABNT_C1",e,e],[0,1,136,"KanaMode",0,e,0,e,e,e],[0,0,137,"IntlYen",0,e,0,e,e,e],[0,1,138,"Convert",0,e,0,e,e,e],[0,1,139,"NonConvert",0,e,0,e,e,e],[0,1,140,"Lang1",0,e,0,e,e,e],[0,1,141,"Lang2",0,e,0,e,e,e],[0,1,142,"Lang3",0,e,0,e,e,e],[0,1,143,"Lang4",0,e,0,e,e,e],[0,1,144,"Lang5",0,e,0,e,e,e],[0,1,145,"Abort",0,e,0,e,e,e],[0,1,146,"Props",0,e,0,e,e,e],[0,1,147,"NumpadParenLeft",0,e,0,e,e,e],[0,1,148,"NumpadParenRight",0,e,0,e,e,e],[0,1,149,"NumpadBackspace",0,e,0,e,e,e],[0,1,150,"NumpadMemoryStore",0,e,0,e,e,e],[0,1,151,"NumpadMemoryRecall",0,e,0,e,e,e],[0,1,152,"NumpadMemoryClear",0,e,0,e,e,e],[0,1,153,"NumpadMemoryAdd",0,e,0,e,e,e],[0,1,154,"NumpadMemorySubtract",0,e,0,e,e,e],[0,1,155,"NumpadClear",126,"Clear",12,"VK_CLEAR",e,e],[0,1,156,"NumpadClearEntry",0,e,0,e,e,e],[5,1,0,e,5,"Ctrl",17,"VK_CONTROL",e,e],[4,1,0,e,4,"Shift",16,"VK_SHIFT",e,e],[6,1,0,e,6,"Alt",18,"VK_MENU",e,e],[57,1,0,e,57,"Meta",0,"VK_COMMAND",e,e],[5,1,157,"ControlLeft",5,e,0,"VK_LCONTROL",e,e],[4,1,158,"ShiftLeft",4,e,0,"VK_LSHIFT",e,e],[6,1,159,"AltLeft",6,e,0,"VK_LMENU",e,e],[57,1,160,"MetaLeft",57,e,0,"VK_LWIN",e,e],[5,1,161,"ControlRight",5,e,0,"VK_RCONTROL",e,e],[4,1,162,"ShiftRight",4,e,0,"VK_RSHIFT",e,e],[6,1,163,"AltRight",6,e,0,"VK_RMENU",e,e],[57,1,164,"MetaRight",57,e,0,"VK_RWIN",e,e],[0,1,165,"BrightnessUp",0,e,0,e,e,e],[0,1,166,"BrightnessDown",0,e,0,e,e,e],[0,1,167,"MediaPlay",0,e,0,e,e,e],[0,1,168,"MediaRecord",0,e,0,e,e,e],[0,1,169,"MediaFastForward",0,e,0,e,e,e],[0,1,170,"MediaRewind",0,e,0,e,e,e],[114,1,171,"MediaTrackNext",119,"MediaTrackNext",176,"VK_MEDIA_NEXT_TRACK",e,e],[115,1,172,"MediaTrackPrevious",120,"MediaTrackPrevious",177,"VK_MEDIA_PREV_TRACK",e,e],[116,1,173,"MediaStop",121,"MediaStop",178,"VK_MEDIA_STOP",e,e],[0,1,174,"Eject",0,e,0,e,e,e],[117,1,175,"MediaPlayPause",122,"MediaPlayPause",179,"VK_MEDIA_PLAY_PAUSE",e,e],[0,1,176,"MediaSelect",123,"LaunchMediaPlayer",181,"VK_MEDIA_LAUNCH_MEDIA_SELECT",e,e],[0,1,177,"LaunchMail",124,"LaunchMail",180,"VK_MEDIA_LAUNCH_MAIL",e,e],[0,1,178,"LaunchApp2",125,"LaunchApp2",183,"VK_MEDIA_LAUNCH_APP2",e,e],[0,1,179,"LaunchApp1",0,e,0,"VK_MEDIA_LAUNCH_APP1",e,e],[0,1,180,"SelectTask",0,e,0,e,e,e],[0,1,181,"LaunchScreenSaver",0,e,0,e,e,e],[0,1,182,"BrowserSearch",115,"BrowserSearch",170,"VK_BROWSER_SEARCH",e,e],[0,1,183,"BrowserHome",116,"BrowserHome",172,"VK_BROWSER_HOME",e,e],[112,1,184,"BrowserBack",117,"BrowserBack",166,"VK_BROWSER_BACK",e,e],[113,1,185,"BrowserForward",118,"BrowserForward",167,"VK_BROWSER_FORWARD",e,e],[0,1,186,"BrowserStop",0,e,0,"VK_BROWSER_STOP",e,e],[0,1,187,"BrowserRefresh",0,e,0,"VK_BROWSER_REFRESH",e,e],[0,1,188,"BrowserFavorites",0,e,0,"VK_BROWSER_FAVORITES",e,e],[0,1,189,"ZoomToggle",0,e,0,e,e,e],[0,1,190,"MailReply",0,e,0,e,e,e],[0,1,191,"MailForward",0,e,0,e,e,e],[0,1,192,"MailSend",0,e,0,e,e,e],[109,1,0,e,109,"KeyInComposition",229,e,e,e],[111,1,0,e,111,"ABNT_C2",194,"VK_ABNT_C2",e,e],[91,1,0,e,91,"OEM_8",223,"VK_OEM_8",e,e],[0,1,0,e,0,e,0,"VK_KANA",e,e],[0,1,0,e,0,e,0,"VK_HANGUL",e,e],[0,1,0,e,0,e,0,"VK_JUNJA",e,e],[0,1,0,e,0,e,0,"VK_FINAL",e,e],[0,1,0,e,0,e,0,"VK_HANJA",e,e],[0,1,0,e,0,e,0,"VK_KANJI",e,e],[0,1,0,e,0,e,0,"VK_CONVERT",e,e],[0,1,0,e,0,e,0,"VK_NONCONVERT",e,e],[0,1,0,e,0,e,0,"VK_ACCEPT",e,e],[0,1,0,e,0,e,0,"VK_MODECHANGE",e,e],[0,1,0,e,0,e,0,"VK_SELECT",e,e],[0,1,0,e,0,e,0,"VK_PRINT",e,e],[0,1,0,e,0,e,0,"VK_EXECUTE",e,e],[0,1,0,e,0,e,0,"VK_SNAPSHOT",e,e],[0,1,0,e,0,e,0,"VK_HELP",e,e],[0,1,0,e,0,e,0,"VK_APPS",e,e],[0,1,0,e,0,e,0,"VK_PROCESSKEY",e,e],[0,1,0,e,0,e,0,"VK_PACKET",e,e],[0,1,0,e,0,e,0,"VK_DBE_SBCSCHAR",e,e],[0,1,0,e,0,e,0,"VK_DBE_DBCSCHAR",e,e],[0,1,0,e,0,e,0,"VK_ATTN",e,e],[0,1,0,e,0,e,0,"VK_CRSEL",e,e],[0,1,0,e,0,e,0,"VK_EXSEL",e,e],[0,1,0,e,0,e,0,"VK_EREOF",e,e],[0,1,0,e,0,e,0,"VK_PLAY",e,e],[0,1,0,e,0,e,0,"VK_ZOOM",e,e],[0,1,0,e,0,e,0,"VK_NONAME",e,e],[0,1,0,e,0,e,0,"VK_PA1",e,e],[0,1,0,e,0,e,0,"VK_OEM_CLEAR",e,e]],r=[],s=[];for(let i of t){let[o,a,l,c,u,h,f,d,C,x]=i;if(s[l]||(s[l]=!0,jr[l]=c,Yr[c]=l,Zr[c.toLowerCase()]=l,a&&(tn[l]=u,u!==0&&u!==3&&u!==5&&u!==4&&u!==6&&u!==57&&(i1[u]=l))),!r[u]){if(r[u]=!0,!h)throw new Error(`String representation missing for key code ${u} around scan code ${c}`);dt.define(u,h),r1.define(u,C||h),s1.define(u,x||C||h)}f&&($r[f]=u),d&&(Gr[d]=u)}i1[3]=46})();var en;(function(e){function t(l){return dt.keyCodeToStr(l)}e.toString=t;function r(l){return dt.strToKeyCode(l)}e.fromString=r;function s(l){return r1.keyCodeToStr(l)}e.toUserSettingsUS=s;function i(l){return s1.keyCodeToStr(l)}e.toUserSettingsGeneral=i;function o(l){return r1.strToKeyCode(l)||s1.strToKeyCode(l)}e.fromUserSettings=o;function a(l){if(l>=93&&l<=108)return null;switch(l){case 16:return"Up";case 18:return"Down";case 15:return"Left";case 17:return"Right"}return dt.keyCodeToStr(l)}e.toElectronAccelerator=a})(en||(en={}));function nn(e,t){let r=(t&65535)<<16>>>0;return(e|r)>>>0}var O=class extends E{constructor(t,r,s,i){super(t,r,s,i),this.selectionStartLineNumber=t,this.selectionStartColumn=r,this.positionLineNumber=s,this.positionColumn=i}toString(){return"["+this.selectionStartLineNumber+","+this.selectionStartColumn+" -> "+this.positionLineNumber+","+this.positionColumn+"]"}equalsSelection(t){return O.selectionsEqual(this,t)}static selectionsEqual(t,r){return t.selectionStartLineNumber===r.selectionStartLineNumber&&t.selectionStartColumn===r.selectionStartColumn&&t.positionLineNumber===r.positionLineNumber&&t.positionColumn===r.positionColumn}getDirection(){return this.selectionStartLineNumber===this.startLineNumber&&this.selectionStartColumn===this.startColumn?0:1}setEndPosition(t,r){return this.getDirection()===0?new O(this.startLineNumber,this.startColumn,t,r):new O(t,r,this.startLineNumber,this.startColumn)}getPosition(){return new I(this.positionLineNumber,this.positionColumn)}getSelectionStart(){return new I(this.selectionStartLineNumber,this.selectionStartColumn)}setStartPosition(t,r){return this.getDirection()===0?new O(t,r,this.endLineNumber,this.endColumn):new O(this.endLineNumber,this.endColumn,t,r)}static fromPositions(t,r=t){return new O(t.lineNumber,t.column,r.lineNumber,r.column)}static fromRange(t,r){return r===0?new O(t.startLineNumber,t.startColumn,t.endLineNumber,t.endColumn):new O(t.endLineNumber,t.endColumn,t.startLineNumber,t.startColumn)}static liftSelection(t){return new O(t.selectionStartLineNumber,t.selectionStartColumn,t.positionLineNumber,t.positionColumn)}static selectionsArrEqual(t,r){if(t&&!r||!t&&r)return!1;if(!t&&!r)return!0;if(t.length!==r.length)return!1;for(let s=0,i=t.length;s<i;s++)if(!this.selectionsEqual(t[s],r[s]))return!1;return!0}static isISelection(t){return t&&typeof t.selectionStartLineNumber=="number"&&typeof t.selectionStartColumn=="number"&&typeof t.positionLineNumber=="number"&&typeof t.positionColumn=="number"}static createWithDirection(t,r,s,i,o){return o===0?new O(t,r,s,i):new O(s,i,t,r)}};var n=class{constructor(t,r,s){this.id=t,this.definition=r,this.description=s,n._allCodicons.push(this)}get classNames(){return"codicon codicon-"+this.id}get classNamesArray(){return["codicon","codicon-"+this.id]}get cssSelector(){return".codicon.codicon-"+this.id}static getAll(){return n._allCodicons}};n._allCodicons=[];n.add=new n("add",{fontCharacter:"\\ea60"});n.plus=new n("plus",n.add.definition);n.gistNew=new n("gist-new",n.add.definition);n.repoCreate=new n("repo-create",n.add.definition);n.lightbulb=new n("lightbulb",{fontCharacter:"\\ea61"});n.lightBulb=new n("light-bulb",{fontCharacter:"\\ea61"});n.repo=new n("repo",{fontCharacter:"\\ea62"});n.repoDelete=new n("repo-delete",{fontCharacter:"\\ea62"});n.gistFork=new n("gist-fork",{fontCharacter:"\\ea63"});n.repoForked=new n("repo-forked",{fontCharacter:"\\ea63"});n.gitPullRequest=new n("git-pull-request",{fontCharacter:"\\ea64"});n.gitPullRequestAbandoned=new n("git-pull-request-abandoned",{fontCharacter:"\\ea64"});n.recordKeys=new n("record-keys",{fontCharacter:"\\ea65"});n.keyboard=new n("keyboard",{fontCharacter:"\\ea65"});n.tag=new n("tag",{fontCharacter:"\\ea66"});n.tagAdd=new n("tag-add",{fontCharacter:"\\ea66"});n.tagRemove=new n("tag-remove",{fontCharacter:"\\ea66"});n.person=new n("person",{fontCharacter:"\\ea67"});n.personFollow=new n("person-follow",{fontCharacter:"\\ea67"});n.personOutline=new n("person-outline",{fontCharacter:"\\ea67"});n.personFilled=new n("person-filled",{fontCharacter:"\\ea67"});n.gitBranch=new n("git-branch",{fontCharacter:"\\ea68"});n.gitBranchCreate=new n("git-branch-create",{fontCharacter:"\\ea68"});n.gitBranchDelete=new n("git-branch-delete",{fontCharacter:"\\ea68"});n.sourceControl=new n("source-control",{fontCharacter:"\\ea68"});n.mirror=new n("mirror",{fontCharacter:"\\ea69"});n.mirrorPublic=new n("mirror-public",{fontCharacter:"\\ea69"});n.star=new n("star",{fontCharacter:"\\ea6a"});n.starAdd=new n("star-add",{fontCharacter:"\\ea6a"});n.starDelete=new n("star-delete",{fontCharacter:"\\ea6a"});n.starEmpty=new n("star-empty",{fontCharacter:"\\ea6a"});n.comment=new n("comment",{fontCharacter:"\\ea6b"});n.commentAdd=new n("comment-add",{fontCharacter:"\\ea6b"});n.alert=new n("alert",{fontCharacter:"\\ea6c"});n.warning=new n("warning",{fontCharacter:"\\ea6c"});n.search=new n("search",{fontCharacter:"\\ea6d"});n.searchSave=new n("search-save",{fontCharacter:"\\ea6d"});n.logOut=new n("log-out",{fontCharacter:"\\ea6e"});n.signOut=new n("sign-out",{fontCharacter:"\\ea6e"});n.logIn=new n("log-in",{fontCharacter:"\\ea6f"});n.signIn=new n("sign-in",{fontCharacter:"\\ea6f"});n.eye=new n("eye",{fontCharacter:"\\ea70"});n.eyeUnwatch=new n("eye-unwatch",{fontCharacter:"\\ea70"});n.eyeWatch=new n("eye-watch",{fontCharacter:"\\ea70"});n.circleFilled=new n("circle-filled",{fontCharacter:"\\ea71"});n.primitiveDot=new n("primitive-dot",{fontCharacter:"\\ea71"});n.closeDirty=new n("close-dirty",{fontCharacter:"\\ea71"});n.debugBreakpoint=new n("debug-breakpoint",{fontCharacter:"\\ea71"});n.debugBreakpointDisabled=new n("debug-breakpoint-disabled",{fontCharacter:"\\ea71"});n.debugHint=new n("debug-hint",{fontCharacter:"\\ea71"});n.primitiveSquare=new n("primitive-square",{fontCharacter:"\\ea72"});n.edit=new n("edit",{fontCharacter:"\\ea73"});n.pencil=new n("pencil",{fontCharacter:"\\ea73"});n.info=new n("info",{fontCharacter:"\\ea74"});n.issueOpened=new n("issue-opened",{fontCharacter:"\\ea74"});n.gistPrivate=new n("gist-private",{fontCharacter:"\\ea75"});n.gitForkPrivate=new n("git-fork-private",{fontCharacter:"\\ea75"});n.lock=new n("lock",{fontCharacter:"\\ea75"});n.mirrorPrivate=new n("mirror-private",{fontCharacter:"\\ea75"});n.close=new n("close",{fontCharacter:"\\ea76"});n.removeClose=new n("remove-close",{fontCharacter:"\\ea76"});n.x=new n("x",{fontCharacter:"\\ea76"});n.repoSync=new n("repo-sync",{fontCharacter:"\\ea77"});n.sync=new n("sync",{fontCharacter:"\\ea77"});n.clone=new n("clone",{fontCharacter:"\\ea78"});n.desktopDownload=new n("desktop-download",{fontCharacter:"\\ea78"});n.beaker=new n("beaker",{fontCharacter:"\\ea79"});n.microscope=new n("microscope",{fontCharacter:"\\ea79"});n.vm=new n("vm",{fontCharacter:"\\ea7a"});n.deviceDesktop=new n("device-desktop",{fontCharacter:"\\ea7a"});n.file=new n("file",{fontCharacter:"\\ea7b"});n.fileText=new n("file-text",{fontCharacter:"\\ea7b"});n.more=new n("more",{fontCharacter:"\\ea7c"});n.ellipsis=new n("ellipsis",{fontCharacter:"\\ea7c"});n.kebabHorizontal=new n("kebab-horizontal",{fontCharacter:"\\ea7c"});n.mailReply=new n("mail-reply",{fontCharacter:"\\ea7d"});n.reply=new n("reply",{fontCharacter:"\\ea7d"});n.organization=new n("organization",{fontCharacter:"\\ea7e"});n.organizationFilled=new n("organization-filled",{fontCharacter:"\\ea7e"});n.organizationOutline=new n("organization-outline",{fontCharacter:"\\ea7e"});n.newFile=new n("new-file",{fontCharacter:"\\ea7f"});n.fileAdd=new n("file-add",{fontCharacter:"\\ea7f"});n.newFolder=new n("new-folder",{fontCharacter:"\\ea80"});n.fileDirectoryCreate=new n("file-directory-create",{fontCharacter:"\\ea80"});n.trash=new n("trash",{fontCharacter:"\\ea81"});n.trashcan=new n("trashcan",{fontCharacter:"\\ea81"});n.history=new n("history",{fontCharacter:"\\ea82"});n.clock=new n("clock",{fontCharacter:"\\ea82"});n.folder=new n("folder",{fontCharacter:"\\ea83"});n.fileDirectory=new n("file-directory",{fontCharacter:"\\ea83"});n.symbolFolder=new n("symbol-folder",{fontCharacter:"\\ea83"});n.logoGithub=new n("logo-github",{fontCharacter:"\\ea84"});n.markGithub=new n("mark-github",{fontCharacter:"\\ea84"});n.github=new n("github",{fontCharacter:"\\ea84"});n.terminal=new n("terminal",{fontCharacter:"\\ea85"});n.console=new n("console",{fontCharacter:"\\ea85"});n.repl=new n("repl",{fontCharacter:"\\ea85"});n.zap=new n("zap",{fontCharacter:"\\ea86"});n.symbolEvent=new n("symbol-event",{fontCharacter:"\\ea86"});n.error=new n("error",{fontCharacter:"\\ea87"});n.stop=new n("stop",{fontCharacter:"\\ea87"});n.variable=new n("variable",{fontCharacter:"\\ea88"});n.symbolVariable=new n("symbol-variable",{fontCharacter:"\\ea88"});n.array=new n("array",{fontCharacter:"\\ea8a"});n.symbolArray=new n("symbol-array",{fontCharacter:"\\ea8a"});n.symbolModule=new n("symbol-module",{fontCharacter:"\\ea8b"});n.symbolPackage=new n("symbol-package",{fontCharacter:"\\ea8b"});n.symbolNamespace=new n("symbol-namespace",{fontCharacter:"\\ea8b"});n.symbolObject=new n("symbol-object",{fontCharacter:"\\ea8b"});n.symbolMethod=new n("symbol-method",{fontCharacter:"\\ea8c"});n.symbolFunction=new n("symbol-function",{fontCharacter:"\\ea8c"});n.symbolConstructor=new n("symbol-constructor",{fontCharacter:"\\ea8c"});n.symbolBoolean=new n("symbol-boolean",{fontCharacter:"\\ea8f"});n.symbolNull=new n("symbol-null",{fontCharacter:"\\ea8f"});n.symbolNumeric=new n("symbol-numeric",{fontCharacter:"\\ea90"});n.symbolNumber=new n("symbol-number",{fontCharacter:"\\ea90"});n.symbolStructure=new n("symbol-structure",{fontCharacter:"\\ea91"});n.symbolStruct=new n("symbol-struct",{fontCharacter:"\\ea91"});n.symbolParameter=new n("symbol-parameter",{fontCharacter:"\\ea92"});n.symbolTypeParameter=new n("symbol-type-parameter",{fontCharacter:"\\ea92"});n.symbolKey=new n("symbol-key",{fontCharacter:"\\ea93"});n.symbolText=new n("symbol-text",{fontCharacter:"\\ea93"});n.symbolReference=new n("symbol-reference",{fontCharacter:"\\ea94"});n.goToFile=new n("go-to-file",{fontCharacter:"\\ea94"});n.symbolEnum=new n("symbol-enum",{fontCharacter:"\\ea95"});n.symbolValue=new n("symbol-value",{fontCharacter:"\\ea95"});n.symbolRuler=new n("symbol-ruler",{fontCharacter:"\\ea96"});n.symbolUnit=new n("symbol-unit",{fontCharacter:"\\ea96"});n.activateBreakpoints=new n("activate-breakpoints",{fontCharacter:"\\ea97"});n.archive=new n("archive",{fontCharacter:"\\ea98"});n.arrowBoth=new n("arrow-both",{fontCharacter:"\\ea99"});n.arrowDown=new n("arrow-down",{fontCharacter:"\\ea9a"});n.arrowLeft=new n("arrow-left",{fontCharacter:"\\ea9b"});n.arrowRight=new n("arrow-right",{fontCharacter:"\\ea9c"});n.arrowSmallDown=new n("arrow-small-down",{fontCharacter:"\\ea9d"});n.arrowSmallLeft=new n("arrow-small-left",{fontCharacter:"\\ea9e"});n.arrowSmallRight=new n("arrow-small-right",{fontCharacter:"\\ea9f"});n.arrowSmallUp=new n("arrow-small-up",{fontCharacter:"\\eaa0"});n.arrowUp=new n("arrow-up",{fontCharacter:"\\eaa1"});n.bell=new n("bell",{fontCharacter:"\\eaa2"});n.bold=new n("bold",{fontCharacter:"\\eaa3"});n.book=new n("book",{fontCharacter:"\\eaa4"});n.bookmark=new n("bookmark",{fontCharacter:"\\eaa5"});n.debugBreakpointConditionalUnverified=new n("debug-breakpoint-conditional-unverified",{fontCharacter:"\\eaa6"});n.debugBreakpointConditional=new n("debug-breakpoint-conditional",{fontCharacter:"\\eaa7"});n.debugBreakpointConditionalDisabled=new n("debug-breakpoint-conditional-disabled",{fontCharacter:"\\eaa7"});n.debugBreakpointDataUnverified=new n("debug-breakpoint-data-unverified",{fontCharacter:"\\eaa8"});n.debugBreakpointData=new n("debug-breakpoint-data",{fontCharacter:"\\eaa9"});n.debugBreakpointDataDisabled=new n("debug-breakpoint-data-disabled",{fontCharacter:"\\eaa9"});n.debugBreakpointLogUnverified=new n("debug-breakpoint-log-unverified",{fontCharacter:"\\eaaa"});n.debugBreakpointLog=new n("debug-breakpoint-log",{fontCharacter:"\\eaab"});n.debugBreakpointLogDisabled=new n("debug-breakpoint-log-disabled",{fontCharacter:"\\eaab"});n.briefcase=new n("briefcase",{fontCharacter:"\\eaac"});n.broadcast=new n("broadcast",{fontCharacter:"\\eaad"});n.browser=new n("browser",{fontCharacter:"\\eaae"});n.bug=new n("bug",{fontCharacter:"\\eaaf"});n.calendar=new n("calendar",{fontCharacter:"\\eab0"});n.caseSensitive=new n("case-sensitive",{fontCharacter:"\\eab1"});n.check=new n("check",{fontCharacter:"\\eab2"});n.checklist=new n("checklist",{fontCharacter:"\\eab3"});n.chevronDown=new n("chevron-down",{fontCharacter:"\\eab4"});n.dropDownButton=new n("drop-down-button",n.chevronDown.definition);n.chevronLeft=new n("chevron-left",{fontCharacter:"\\eab5"});n.chevronRight=new n("chevron-right",{fontCharacter:"\\eab6"});n.chevronUp=new n("chevron-up",{fontCharacter:"\\eab7"});n.chromeClose=new n("chrome-close",{fontCharacter:"\\eab8"});n.chromeMaximize=new n("chrome-maximize",{fontCharacter:"\\eab9"});n.chromeMinimize=new n("chrome-minimize",{fontCharacter:"\\eaba"});n.chromeRestore=new n("chrome-restore",{fontCharacter:"\\eabb"});n.circleOutline=new n("circle-outline",{fontCharacter:"\\eabc"});n.debugBreakpointUnverified=new n("debug-breakpoint-unverified",{fontCharacter:"\\eabc"});n.circleSlash=new n("circle-slash",{fontCharacter:"\\eabd"});n.circuitBoard=new n("circuit-board",{fontCharacter:"\\eabe"});n.clearAll=new n("clear-all",{fontCharacter:"\\eabf"});n.clippy=new n("clippy",{fontCharacter:"\\eac0"});n.closeAll=new n("close-all",{fontCharacter:"\\eac1"});n.cloudDownload=new n("cloud-download",{fontCharacter:"\\eac2"});n.cloudUpload=new n("cloud-upload",{fontCharacter:"\\eac3"});n.code=new n("code",{fontCharacter:"\\eac4"});n.collapseAll=new n("collapse-all",{fontCharacter:"\\eac5"});n.colorMode=new n("color-mode",{fontCharacter:"\\eac6"});n.commentDiscussion=new n("comment-discussion",{fontCharacter:"\\eac7"});n.compareChanges=new n("compare-changes",{fontCharacter:"\\eafd"});n.creditCard=new n("credit-card",{fontCharacter:"\\eac9"});n.dash=new n("dash",{fontCharacter:"\\eacc"});n.dashboard=new n("dashboard",{fontCharacter:"\\eacd"});n.database=new n("database",{fontCharacter:"\\eace"});n.debugContinue=new n("debug-continue",{fontCharacter:"\\eacf"});n.debugDisconnect=new n("debug-disconnect",{fontCharacter:"\\ead0"});n.debugPause=new n("debug-pause",{fontCharacter:"\\ead1"});n.debugRestart=new n("debug-restart",{fontCharacter:"\\ead2"});n.debugStart=new n("debug-start",{fontCharacter:"\\ead3"});n.debugStepInto=new n("debug-step-into",{fontCharacter:"\\ead4"});n.debugStepOut=new n("debug-step-out",{fontCharacter:"\\ead5"});n.debugStepOver=new n("debug-step-over",{fontCharacter:"\\ead6"});n.debugStop=new n("debug-stop",{fontCharacter:"\\ead7"});n.debug=new n("debug",{fontCharacter:"\\ead8"});n.deviceCameraVideo=new n("device-camera-video",{fontCharacter:"\\ead9"});n.deviceCamera=new n("device-camera",{fontCharacter:"\\eada"});n.deviceMobile=new n("device-mobile",{fontCharacter:"\\eadb"});n.diffAdded=new n("diff-added",{fontCharacter:"\\eadc"});n.diffIgnored=new n("diff-ignored",{fontCharacter:"\\eadd"});n.diffModified=new n("diff-modified",{fontCharacter:"\\eade"});n.diffRemoved=new n("diff-removed",{fontCharacter:"\\eadf"});n.diffRenamed=new n("diff-renamed",{fontCharacter:"\\eae0"});n.diff=new n("diff",{fontCharacter:"\\eae1"});n.discard=new n("discard",{fontCharacter:"\\eae2"});n.editorLayout=new n("editor-layout",{fontCharacter:"\\eae3"});n.emptyWindow=new n("empty-window",{fontCharacter:"\\eae4"});n.exclude=new n("exclude",{fontCharacter:"\\eae5"});n.extensions=new n("extensions",{fontCharacter:"\\eae6"});n.eyeClosed=new n("eye-closed",{fontCharacter:"\\eae7"});n.fileBinary=new n("file-binary",{fontCharacter:"\\eae8"});n.fileCode=new n("file-code",{fontCharacter:"\\eae9"});n.fileMedia=new n("file-media",{fontCharacter:"\\eaea"});n.filePdf=new n("file-pdf",{fontCharacter:"\\eaeb"});n.fileSubmodule=new n("file-submodule",{fontCharacter:"\\eaec"});n.fileSymlinkDirectory=new n("file-symlink-directory",{fontCharacter:"\\eaed"});n.fileSymlinkFile=new n("file-symlink-file",{fontCharacter:"\\eaee"});n.fileZip=new n("file-zip",{fontCharacter:"\\eaef"});n.files=new n("files",{fontCharacter:"\\eaf0"});n.filter=new n("filter",{fontCharacter:"\\eaf1"});n.flame=new n("flame",{fontCharacter:"\\eaf2"});n.foldDown=new n("fold-down",{fontCharacter:"\\eaf3"});n.foldUp=new n("fold-up",{fontCharacter:"\\eaf4"});n.fold=new n("fold",{fontCharacter:"\\eaf5"});n.folderActive=new n("folder-active",{fontCharacter:"\\eaf6"});n.folderOpened=new n("folder-opened",{fontCharacter:"\\eaf7"});n.gear=new n("gear",{fontCharacter:"\\eaf8"});n.gift=new n("gift",{fontCharacter:"\\eaf9"});n.gistSecret=new n("gist-secret",{fontCharacter:"\\eafa"});n.gist=new n("gist",{fontCharacter:"\\eafb"});n.gitCommit=new n("git-commit",{fontCharacter:"\\eafc"});n.gitCompare=new n("git-compare",{fontCharacter:"\\eafd"});n.gitMerge=new n("git-merge",{fontCharacter:"\\eafe"});n.githubAction=new n("github-action",{fontCharacter:"\\eaff"});n.githubAlt=new n("github-alt",{fontCharacter:"\\eb00"});n.globe=new n("globe",{fontCharacter:"\\eb01"});n.grabber=new n("grabber",{fontCharacter:"\\eb02"});n.graph=new n("graph",{fontCharacter:"\\eb03"});n.gripper=new n("gripper",{fontCharacter:"\\eb04"});n.heart=new n("heart",{fontCharacter:"\\eb05"});n.home=new n("home",{fontCharacter:"\\eb06"});n.horizontalRule=new n("horizontal-rule",{fontCharacter:"\\eb07"});n.hubot=new n("hubot",{fontCharacter:"\\eb08"});n.inbox=new n("inbox",{fontCharacter:"\\eb09"});n.issueClosed=new n("issue-closed",{fontCharacter:"\\eba4"});n.issueReopened=new n("issue-reopened",{fontCharacter:"\\eb0b"});n.issues=new n("issues",{fontCharacter:"\\eb0c"});n.italic=new n("italic",{fontCharacter:"\\eb0d"});n.jersey=new n("jersey",{fontCharacter:"\\eb0e"});n.json=new n("json",{fontCharacter:"\\eb0f"});n.kebabVertical=new n("kebab-vertical",{fontCharacter:"\\eb10"});n.key=new n("key",{fontCharacter:"\\eb11"});n.law=new n("law",{fontCharacter:"\\eb12"});n.lightbulbAutofix=new n("lightbulb-autofix",{fontCharacter:"\\eb13"});n.linkExternal=new n("link-external",{fontCharacter:"\\eb14"});n.link=new n("link",{fontCharacter:"\\eb15"});n.listOrdered=new n("list-ordered",{fontCharacter:"\\eb16"});n.listUnordered=new n("list-unordered",{fontCharacter:"\\eb17"});n.liveShare=new n("live-share",{fontCharacter:"\\eb18"});n.loading=new n("loading",{fontCharacter:"\\eb19"});n.location=new n("location",{fontCharacter:"\\eb1a"});n.mailRead=new n("mail-read",{fontCharacter:"\\eb1b"});n.mail=new n("mail",{fontCharacter:"\\eb1c"});n.markdown=new n("markdown",{fontCharacter:"\\eb1d"});n.megaphone=new n("megaphone",{fontCharacter:"\\eb1e"});n.mention=new n("mention",{fontCharacter:"\\eb1f"});n.milestone=new n("milestone",{fontCharacter:"\\eb20"});n.mortarBoard=new n("mortar-board",{fontCharacter:"\\eb21"});n.move=new n("move",{fontCharacter:"\\eb22"});n.multipleWindows=new n("multiple-windows",{fontCharacter:"\\eb23"});n.mute=new n("mute",{fontCharacter:"\\eb24"});n.noNewline=new n("no-newline",{fontCharacter:"\\eb25"});n.note=new n("note",{fontCharacter:"\\eb26"});n.octoface=new n("octoface",{fontCharacter:"\\eb27"});n.openPreview=new n("open-preview",{fontCharacter:"\\eb28"});n.package_=new n("package",{fontCharacter:"\\eb29"});n.paintcan=new n("paintcan",{fontCharacter:"\\eb2a"});n.pin=new n("pin",{fontCharacter:"\\eb2b"});n.play=new n("play",{fontCharacter:"\\eb2c"});n.run=new n("run",{fontCharacter:"\\eb2c"});n.plug=new n("plug",{fontCharacter:"\\eb2d"});n.preserveCase=new n("preserve-case",{fontCharacter:"\\eb2e"});n.preview=new n("preview",{fontCharacter:"\\eb2f"});n.project=new n("project",{fontCharacter:"\\eb30"});n.pulse=new n("pulse",{fontCharacter:"\\eb31"});n.question=new n("question",{fontCharacter:"\\eb32"});n.quote=new n("quote",{fontCharacter:"\\eb33"});n.radioTower=new n("radio-tower",{fontCharacter:"\\eb34"});n.reactions=new n("reactions",{fontCharacter:"\\eb35"});n.references=new n("references",{fontCharacter:"\\eb36"});n.refresh=new n("refresh",{fontCharacter:"\\eb37"});n.regex=new n("regex",{fontCharacter:"\\eb38"});n.remoteExplorer=new n("remote-explorer",{fontCharacter:"\\eb39"});n.remote=new n("remote",{fontCharacter:"\\eb3a"});n.remove=new n("remove",{fontCharacter:"\\eb3b"});n.replaceAll=new n("replace-all",{fontCharacter:"\\eb3c"});n.replace=new n("replace",{fontCharacter:"\\eb3d"});n.repoClone=new n("repo-clone",{fontCharacter:"\\eb3e"});n.repoForcePush=new n("repo-force-push",{fontCharacter:"\\eb3f"});n.repoPull=new n("repo-pull",{fontCharacter:"\\eb40"});n.repoPush=new n("repo-push",{fontCharacter:"\\eb41"});n.report=new n("report",{fontCharacter:"\\eb42"});n.requestChanges=new n("request-changes",{fontCharacter:"\\eb43"});n.rocket=new n("rocket",{fontCharacter:"\\eb44"});n.rootFolderOpened=new n("root-folder-opened",{fontCharacter:"\\eb45"});n.rootFolder=new n("root-folder",{fontCharacter:"\\eb46"});n.rss=new n("rss",{fontCharacter:"\\eb47"});n.ruby=new n("ruby",{fontCharacter:"\\eb48"});n.saveAll=new n("save-all",{fontCharacter:"\\eb49"});n.saveAs=new n("save-as",{fontCharacter:"\\eb4a"});n.save=new n("save",{fontCharacter:"\\eb4b"});n.screenFull=new n("screen-full",{fontCharacter:"\\eb4c"});n.screenNormal=new n("screen-normal",{fontCharacter:"\\eb4d"});n.searchStop=new n("search-stop",{fontCharacter:"\\eb4e"});n.server=new n("server",{fontCharacter:"\\eb50"});n.settingsGear=new n("settings-gear",{fontCharacter:"\\eb51"});n.settings=new n("settings",{fontCharacter:"\\eb52"});n.shield=new n("shield",{fontCharacter:"\\eb53"});n.smiley=new n("smiley",{fontCharacter:"\\eb54"});n.sortPrecedence=new n("sort-precedence",{fontCharacter:"\\eb55"});n.splitHorizontal=new n("split-horizontal",{fontCharacter:"\\eb56"});n.splitVertical=new n("split-vertical",{fontCharacter:"\\eb57"});n.squirrel=new n("squirrel",{fontCharacter:"\\eb58"});n.starFull=new n("star-full",{fontCharacter:"\\eb59"});n.starHalf=new n("star-half",{fontCharacter:"\\eb5a"});n.symbolClass=new n("symbol-class",{fontCharacter:"\\eb5b"});n.symbolColor=new n("symbol-color",{fontCharacter:"\\eb5c"});n.symbolCustomColor=new n("symbol-customcolor",{fontCharacter:"\\eb5c"});n.symbolConstant=new n("symbol-constant",{fontCharacter:"\\eb5d"});n.symbolEnumMember=new n("symbol-enum-member",{fontCharacter:"\\eb5e"});n.symbolField=new n("symbol-field",{fontCharacter:"\\eb5f"});n.symbolFile=new n("symbol-file",{fontCharacter:"\\eb60"});n.symbolInterface=new n("symbol-interface",{fontCharacter:"\\eb61"});n.symbolKeyword=new n("symbol-keyword",{fontCharacter:"\\eb62"});n.symbolMisc=new n("symbol-misc",{fontCharacter:"\\eb63"});n.symbolOperator=new n("symbol-operator",{fontCharacter:"\\eb64"});n.symbolProperty=new n("symbol-property",{fontCharacter:"\\eb65"});n.wrench=new n("wrench",{fontCharacter:"\\eb65"});n.wrenchSubaction=new n("wrench-subaction",{fontCharacter:"\\eb65"});n.symbolSnippet=new n("symbol-snippet",{fontCharacter:"\\eb66"});n.tasklist=new n("tasklist",{fontCharacter:"\\eb67"});n.telescope=new n("telescope",{fontCharacter:"\\eb68"});n.textSize=new n("text-size",{fontCharacter:"\\eb69"});n.threeBars=new n("three-bars",{fontCharacter:"\\eb6a"});n.thumbsdown=new n("thumbsdown",{fontCharacter:"\\eb6b"});n.thumbsup=new n("thumbsup",{fontCharacter:"\\eb6c"});n.tools=new n("tools",{fontCharacter:"\\eb6d"});n.triangleDown=new n("triangle-down",{fontCharacter:"\\eb6e"});n.triangleLeft=new n("triangle-left",{fontCharacter:"\\eb6f"});n.triangleRight=new n("triangle-right",{fontCharacter:"\\eb70"});n.triangleUp=new n("triangle-up",{fontCharacter:"\\eb71"});n.twitter=new n("twitter",{fontCharacter:"\\eb72"});n.unfold=new n("unfold",{fontCharacter:"\\eb73"});n.unlock=new n("unlock",{fontCharacter:"\\eb74"});n.unmute=new n("unmute",{fontCharacter:"\\eb75"});n.unverified=new n("unverified",{fontCharacter:"\\eb76"});n.verified=new n("verified",{fontCharacter:"\\eb77"});n.versions=new n("versions",{fontCharacter:"\\eb78"});n.vmActive=new n("vm-active",{fontCharacter:"\\eb79"});n.vmOutline=new n("vm-outline",{fontCharacter:"\\eb7a"});n.vmRunning=new n("vm-running",{fontCharacter:"\\eb7b"});n.watch=new n("watch",{fontCharacter:"\\eb7c"});n.whitespace=new n("whitespace",{fontCharacter:"\\eb7d"});n.wholeWord=new n("whole-word",{fontCharacter:"\\eb7e"});n.window=new n("window",{fontCharacter:"\\eb7f"});n.wordWrap=new n("word-wrap",{fontCharacter:"\\eb80"});n.zoomIn=new n("zoom-in",{fontCharacter:"\\eb81"});n.zoomOut=new n("zoom-out",{fontCharacter:"\\eb82"});n.listFilter=new n("list-filter",{fontCharacter:"\\eb83"});n.listFlat=new n("list-flat",{fontCharacter:"\\eb84"});n.listSelection=new n("list-selection",{fontCharacter:"\\eb85"});n.selection=new n("selection",{fontCharacter:"\\eb85"});n.listTree=new n("list-tree",{fontCharacter:"\\eb86"});n.debugBreakpointFunctionUnverified=new n("debug-breakpoint-function-unverified",{fontCharacter:"\\eb87"});n.debugBreakpointFunction=new n("debug-breakpoint-function",{fontCharacter:"\\eb88"});n.debugBreakpointFunctionDisabled=new n("debug-breakpoint-function-disabled",{fontCharacter:"\\eb88"});n.debugStackframeActive=new n("debug-stackframe-active",{fontCharacter:"\\eb89"});n.circleSmallFilled=new n("circle-small-filled",{fontCharacter:"\\eb8a"});n.debugStackframeDot=new n("debug-stackframe-dot",n.circleSmallFilled.definition);n.debugStackframe=new n("debug-stackframe",{fontCharacter:"\\eb8b"});n.debugStackframeFocused=new n("debug-stackframe-focused",{fontCharacter:"\\eb8b"});n.debugBreakpointUnsupported=new n("debug-breakpoint-unsupported",{fontCharacter:"\\eb8c"});n.symbolString=new n("symbol-string",{fontCharacter:"\\eb8d"});n.debugReverseContinue=new n("debug-reverse-continue",{fontCharacter:"\\eb8e"});n.debugStepBack=new n("debug-step-back",{fontCharacter:"\\eb8f"});n.debugRestartFrame=new n("debug-restart-frame",{fontCharacter:"\\eb90"});n.callIncoming=new n("call-incoming",{fontCharacter:"\\eb92"});n.callOutgoing=new n("call-outgoing",{fontCharacter:"\\eb93"});n.menu=new n("menu",{fontCharacter:"\\eb94"});n.expandAll=new n("expand-all",{fontCharacter:"\\eb95"});n.feedback=new n("feedback",{fontCharacter:"\\eb96"});n.groupByRefType=new n("group-by-ref-type",{fontCharacter:"\\eb97"});n.ungroupByRefType=new n("ungroup-by-ref-type",{fontCharacter:"\\eb98"});n.account=new n("account",{fontCharacter:"\\eb99"});n.bellDot=new n("bell-dot",{fontCharacter:"\\eb9a"});n.debugConsole=new n("debug-console",{fontCharacter:"\\eb9b"});n.library=new n("library",{fontCharacter:"\\eb9c"});n.output=new n("output",{fontCharacter:"\\eb9d"});n.runAll=new n("run-all",{fontCharacter:"\\eb9e"});n.syncIgnored=new n("sync-ignored",{fontCharacter:"\\eb9f"});n.pinned=new n("pinned",{fontCharacter:"\\eba0"});n.githubInverted=new n("github-inverted",{fontCharacter:"\\eba1"});n.debugAlt=new n("debug-alt",{fontCharacter:"\\eb91"});n.serverProcess=new n("server-process",{fontCharacter:"\\eba2"});n.serverEnvironment=new n("server-environment",{fontCharacter:"\\eba3"});n.pass=new n("pass",{fontCharacter:"\\eba4"});n.stopCircle=new n("stop-circle",{fontCharacter:"\\eba5"});n.playCircle=new n("play-circle",{fontCharacter:"\\eba6"});n.record=new n("record",{fontCharacter:"\\eba7"});n.debugAltSmall=new n("debug-alt-small",{fontCharacter:"\\eba8"});n.vmConnect=new n("vm-connect",{fontCharacter:"\\eba9"});n.cloud=new n("cloud",{fontCharacter:"\\ebaa"});n.merge=new n("merge",{fontCharacter:"\\ebab"});n.exportIcon=new n("export",{fontCharacter:"\\ebac"});n.graphLeft=new n("graph-left",{fontCharacter:"\\ebad"});n.magnet=new n("magnet",{fontCharacter:"\\ebae"});n.notebook=new n("notebook",{fontCharacter:"\\ebaf"});n.redo=new n("redo",{fontCharacter:"\\ebb0"});n.checkAll=new n("check-all",{fontCharacter:"\\ebb1"});n.pinnedDirty=new n("pinned-dirty",{fontCharacter:"\\ebb2"});n.passFilled=new n("pass-filled",{fontCharacter:"\\ebb3"});n.circleLargeFilled=new n("circle-large-filled",{fontCharacter:"\\ebb4"});n.circleLargeOutline=new n("circle-large-outline",{fontCharacter:"\\ebb5"});n.combine=new n("combine",{fontCharacter:"\\ebb6"});n.gather=new n("gather",{fontCharacter:"\\ebb6"});n.table=new n("table",{fontCharacter:"\\ebb7"});n.variableGroup=new n("variable-group",{fontCharacter:"\\ebb8"});n.typeHierarchy=new n("type-hierarchy",{fontCharacter:"\\ebb9"});n.typeHierarchySub=new n("type-hierarchy-sub",{fontCharacter:"\\ebba"});n.typeHierarchySuper=new n("type-hierarchy-super",{fontCharacter:"\\ebbb"});n.gitPullRequestCreate=new n("git-pull-request-create",{fontCharacter:"\\ebbc"});n.runAbove=new n("run-above",{fontCharacter:"\\ebbd"});n.runBelow=new n("run-below",{fontCharacter:"\\ebbe"});n.notebookTemplate=new n("notebook-template",{fontCharacter:"\\ebbf"});n.debugRerun=new n("debug-rerun",{fontCharacter:"\\ebc0"});n.workspaceTrusted=new n("workspace-trusted",{fontCharacter:"\\ebc1"});n.workspaceUntrusted=new n("workspace-untrusted",{fontCharacter:"\\ebc2"});n.workspaceUnspecified=new n("workspace-unspecified",{fontCharacter:"\\ebc3"});n.terminalCmd=new n("terminal-cmd",{fontCharacter:"\\ebc4"});n.terminalDebian=new n("terminal-debian",{fontCharacter:"\\ebc5"});n.terminalLinux=new n("terminal-linux",{fontCharacter:"\\ebc6"});n.terminalPowershell=new n("terminal-powershell",{fontCharacter:"\\ebc7"});n.terminalTmux=new n("terminal-tmux",{fontCharacter:"\\ebc8"});n.terminalUbuntu=new n("terminal-ubuntu",{fontCharacter:"\\ebc9"});n.terminalBash=new n("terminal-bash",{fontCharacter:"\\ebca"});n.arrowSwap=new n("arrow-swap",{fontCharacter:"\\ebcb"});n.copy=new n("copy",{fontCharacter:"\\ebcc"});n.personAdd=new n("person-add",{fontCharacter:"\\ebcd"});n.filterFilled=new n("filter-filled",{fontCharacter:"\\ebce"});n.wand=new n("wand",{fontCharacter:"\\ebcf"});n.debugLineByLine=new n("debug-line-by-line",{fontCharacter:"\\ebd0"});n.inspect=new n("inspect",{fontCharacter:"\\ebd1"});n.layers=new n("layers",{fontCharacter:"\\ebd2"});n.layersDot=new n("layers-dot",{fontCharacter:"\\ebd3"});n.layersActive=new n("layers-active",{fontCharacter:"\\ebd4"});n.compass=new n("compass",{fontCharacter:"\\ebd5"});n.compassDot=new n("compass-dot",{fontCharacter:"\\ebd6"});n.compassActive=new n("compass-active",{fontCharacter:"\\ebd7"});n.azure=new n("azure",{fontCharacter:"\\ebd8"});n.issueDraft=new n("issue-draft",{fontCharacter:"\\ebd9"});n.gitPullRequestClosed=new n("git-pull-request-closed",{fontCharacter:"\\ebda"});n.gitPullRequestDraft=new n("git-pull-request-draft",{fontCharacter:"\\ebdb"});n.debugAll=new n("debug-all",{fontCharacter:"\\ebdc"});n.debugCoverage=new n("debug-coverage",{fontCharacter:"\\ebdd"});n.runErrors=new n("run-errors",{fontCharacter:"\\ebde"});n.folderLibrary=new n("folder-library",{fontCharacter:"\\ebdf"});n.debugContinueSmall=new n("debug-continue-small",{fontCharacter:"\\ebe0"});n.beakerStop=new n("beaker-stop",{fontCharacter:"\\ebe1"});n.graphLine=new n("graph-line",{fontCharacter:"\\ebe2"});n.graphScatter=new n("graph-scatter",{fontCharacter:"\\ebe3"});n.pieChart=new n("pie-chart",{fontCharacter:"\\ebe4"});n.bracket=new n("bracket",n.json.definition);n.bracketDot=new n("bracket-dot",{fontCharacter:"\\ebe5"});n.bracketError=new n("bracket-error",{fontCharacter:"\\ebe6"});n.lockSmall=new n("lock-small",{fontCharacter:"\\ebe7"});n.azureDevops=new n("azure-devops",{fontCharacter:"\\ebe8"});n.verifiedFilled=new n("verified-filled",{fontCharacter:"\\ebe9"});n.newLine=new n("newline",{fontCharacter:"\\ebea"});n.layout=new n("layout",{fontCharacter:"\\ebeb"});n.layoutActivitybarLeft=new n("layout-activitybar-left",{fontCharacter:"\\ebec"});n.layoutActivitybarRight=new n("layout-activitybar-right",{fontCharacter:"\\ebed"});n.layoutPanelLeft=new n("layout-panel-left",{fontCharacter:"\\ebee"});n.layoutPanelCenter=new n("layout-panel-center",{fontCharacter:"\\ebef"});n.layoutPanelJustify=new n("layout-panel-justify",{fontCharacter:"\\ebf0"});n.layoutPanelRight=new n("layout-panel-right",{fontCharacter:"\\ebf1"});n.layoutPanel=new n("layout-panel",{fontCharacter:"\\ebf2"});n.layoutSidebarLeft=new n("layout-sidebar-left",{fontCharacter:"\\ebf3"});n.layoutSidebarRight=new n("layout-sidebar-right",{fontCharacter:"\\ebf4"});n.layoutStatusbar=new n("layout-statusbar",{fontCharacter:"\\ebf5"});n.layoutMenubar=new n("layout-menubar",{fontCharacter:"\\ebf6"});n.layoutCentered=new n("layout-centered",{fontCharacter:"\\ebf7"});n.layoutSidebarRightOff=new n("layout-sidebar-right-off",{fontCharacter:"\\ec00"});n.layoutPanelOff=new n("layout-panel-off",{fontCharacter:"\\ec01"});n.layoutSidebarLeftOff=new n("layout-sidebar-left-off",{fontCharacter:"\\ec02"});n.target=new n("target",{fontCharacter:"\\ebf8"});n.indent=new n("indent",{fontCharacter:"\\ebf9"});n.recordSmall=new n("record-small",{fontCharacter:"\\ebfa"});n.errorSmall=new n("error-small",{fontCharacter:"\\ebfb"});n.arrowCircleDown=new n("arrow-circle-down",{fontCharacter:"\\ebfc"});n.arrowCircleLeft=new n("arrow-circle-left",{fontCharacter:"\\ebfd"});n.arrowCircleRight=new n("arrow-circle-right",{fontCharacter:"\\ebfe"});n.arrowCircleUp=new n("arrow-circle-up",{fontCharacter:"\\ebff"});n.heartFilled=new n("heart-filled",{fontCharacter:"\\ec04"});n.map=new n("map",{fontCharacter:"\\ec05"});n.mapFilled=new n("map-filled",{fontCharacter:"\\ec06"});n.circleSmall=new n("circle-small",{fontCharacter:"\\ec07"});n.bellSlash=new n("bell-slash",{fontCharacter:"\\ec08"});n.bellSlashDot=new n("bell-slash-dot",{fontCharacter:"\\ec09"});n.commentUnresolved=new n("comment-unresolved",{fontCharacter:"\\ec0a"});n.gitPullRequestGoToChanges=new n("git-pull-request-go-to-changes",{fontCharacter:"\\ec0b"});n.gitPullRequestNewChanges=new n("git-pull-request-new-changes",{fontCharacter:"\\ec0c"});n.dialogError=new n("dialog-error",n.error.definition);n.dialogWarning=new n("dialog-warning",n.warning.definition);n.dialogInfo=new n("dialog-info",n.info.definition);n.dialogClose=new n("dialog-close",n.close.definition);n.treeItemExpanded=new n("tree-item-expanded",n.chevronDown.definition);n.treeFilterOnTypeOn=new n("tree-filter-on-type-on",n.listFilter.definition);n.treeFilterOnTypeOff=new n("tree-filter-on-type-off",n.listSelection.definition);n.treeFilterClear=new n("tree-filter-clear",n.close.definition);n.treeItemLoading=new n("tree-item-loading",n.loading.definition);n.menuSelection=new n("menu-selection",n.check.definition);n.menuSubmenu=new n("menu-submenu",n.chevronRight.definition);n.menuBarMore=new n("menubar-more",n.more.definition);n.scrollbarButtonLeft=new n("scrollbar-button-left",n.triangleLeft.definition);n.scrollbarButtonRight=new n("scrollbar-button-right",n.triangleRight.definition);n.scrollbarButtonUp=new n("scrollbar-button-up",n.triangleUp.definition);n.scrollbarButtonDown=new n("scrollbar-button-down",n.triangleDown.definition);n.toolBarMore=new n("toolbar-more",n.more.definition);n.quickInputBack=new n("quick-input-back",n.arrowLeft.definition);var rn;(function(e){e.iconNameSegment="[A-Za-z0-9]+",e.iconNameExpression="[A-Za-z0-9-]+",e.iconModifierExpression="~[A-Za-z]+",e.iconNameCharacter="[A-Za-z0-9~-]";let t=new RegExp(`^(${e.iconNameExpression})(${e.iconModifierExpression})?$`);function r(o){if(o instanceof n)return["codicon","codicon-"+o.id];let a=t.exec(o.id);if(!a)return r(n.error);let[,l,c]=a,u=["codicon","codicon-"+l];return c&&u.push("codicon-modifier-"+c.substr(1)),u}e.asClassNameArray=r;function s(o){return r(o).join(" ")}e.asClassName=s;function i(o){return"."+r(o).join(".")}e.asCSSSelector=i})(rn||(rn={}));var o1=function(e,t,r,s){function i(o){return o instanceof r?o:new r(function(a){a(o)})}return new(r||(r=Promise))(function(o,a){function l(h){try{u(s.next(h))}catch(f){a(f)}}function c(h){try{u(s.throw(h))}catch(f){a(f)}}function u(h){h.done?o(h.value):i(h.value).then(l,c)}u((s=s.apply(e,t||[])).next())})},mt=class{constructor(){this._map=new Map,this._factories=new Map,this._onDidChange=new q,this.onDidChange=this._onDidChange.event,this._colorMap=null}fire(t){this._onDidChange.fire({changedLanguages:t,changedColorMap:!1})}register(t,r){return this._map.set(t,r),this.fire([t]),Se(()=>{this._map.get(t)===r&&(this._map.delete(t),this.fire([t]))})}registerFactory(t,r){var s;(s=this._factories.get(t))===null||s===void 0||s.dispose();let i=new a1(this,t,r);return this._factories.set(t,i),Se(()=>{let o=this._factories.get(t);!o||o!==i||(this._factories.delete(t),o.dispose())})}getOrCreate(t){return o1(this,void 0,void 0,function*(){let r=this.get(t);if(r)return r;let s=this._factories.get(t);return!s||s.isResolved?null:(yield s.resolve(),this.get(t))})}get(t){return this._map.get(t)||null}isResolved(t){if(this.get(t))return!0;let s=this._factories.get(t);return!!(!s||s.isResolved)}setColorMap(t){this._colorMap=t,this._onDidChange.fire({changedLanguages:Array.from(this._map.keys()),changedColorMap:!0})}getColorMap(){return this._colorMap}getDefaultBackground(){return this._colorMap&&this._colorMap.length>2?this._colorMap[2]:null}},a1=class extends ee{constructor(t,r,s){super(),this._registry=t,this._languageId=r,this._factory=s,this._isDisposed=!1,this._resolvePromise=null,this._isResolved=!1}get isResolved(){return this._isResolved}dispose(){this._isDisposed=!0,super.dispose()}resolve(){return o1(this,void 0,void 0,function*(){return this._resolvePromise||(this._resolvePromise=this._create()),this._resolvePromise})}_create(){return o1(this,void 0,void 0,function*(){let t=yield Promise.resolve(this._factory.createTokenizationSupport());this._isResolved=!0,t&&!this._isDisposed&&this._register(this._registry.register(this._languageId,t))})}};var gt=class{constructor(t,r,s){this._tokenBrand=void 0,this.offset=t,this.type=r,this.language=s}toString(){return"("+this.offset+", "+this.type+")"}};var sn;(function(e){let t=new Map;t.set(0,n.symbolMethod),t.set(1,n.symbolFunction),t.set(2,n.symbolConstructor),t.set(3,n.symbolField),t.set(4,n.symbolVariable),t.set(5,n.symbolClass),t.set(6,n.symbolStruct),t.set(7,n.symbolInterface),t.set(8,n.symbolModule),t.set(9,n.symbolProperty),t.set(10,n.symbolEvent),t.set(11,n.symbolOperator),t.set(12,n.symbolUnit),t.set(13,n.symbolValue),t.set(15,n.symbolEnum),t.set(14,n.symbolConstant),t.set(15,n.symbolEnum),t.set(16,n.symbolEnumMember),t.set(17,n.symbolKeyword),t.set(27,n.symbolSnippet),t.set(18,n.symbolText),t.set(19,n.symbolColor),t.set(20,n.symbolFile),t.set(21,n.symbolReference),t.set(22,n.symbolCustomColor),t.set(23,n.symbolFolder),t.set(24,n.symbolTypeParameter),t.set(25,n.account),t.set(26,n.issues);function r(o){let a=t.get(o);return a||(console.info("No codicon found for CompletionItemKind "+o),a=n.symbolProperty),a}e.toIcon=r;let s=new Map;s.set("method",0),s.set("function",1),s.set("constructor",2),s.set("field",3),s.set("variable",4),s.set("class",5),s.set("struct",6),s.set("interface",7),s.set("module",8),s.set("property",9),s.set("event",10),s.set("operator",11),s.set("unit",12),s.set("value",13),s.set("constant",14),s.set("enum",15),s.set("enum-member",16),s.set("enumMember",16),s.set("keyword",17),s.set("snippet",27),s.set("text",18),s.set("color",19),s.set("file",20),s.set("reference",21),s.set("customcolor",22),s.set("folder",23),s.set("type-parameter",24),s.set("typeParameter",24),s.set("account",25),s.set("issue",26);function i(o,a){let l=s.get(o);return typeof l>"u"&&!a&&(l=9),l}e.fromString=i})(sn||(sn={}));var on;(function(e){e[e.Automatic=0]="Automatic",e[e.Explicit=1]="Explicit"})(on||(on={}));var an;(function(e){e[e.Invoke=1]="Invoke",e[e.TriggerCharacter=2]="TriggerCharacter",e[e.ContentChange=3]="ContentChange"})(an||(an={}));var ln;(function(e){e[e.Text=0]="Text",e[e.Read=1]="Read",e[e.Write=2]="Write"})(ln||(ln={}));var un;(function(e){let t=new Map;t.set(0,n.symbolFile),t.set(1,n.symbolModule),t.set(2,n.symbolNamespace),t.set(3,n.symbolPackage),t.set(4,n.symbolClass),t.set(5,n.symbolMethod),t.set(6,n.symbolProperty),t.set(7,n.symbolField),t.set(8,n.symbolConstructor),t.set(9,n.symbolEnum),t.set(10,n.symbolInterface),t.set(11,n.symbolFunction),t.set(12,n.symbolVariable),t.set(13,n.symbolConstant),t.set(14,n.symbolString),t.set(15,n.symbolNumber),t.set(16,n.symbolBoolean),t.set(17,n.symbolArray),t.set(18,n.symbolObject),t.set(19,n.symbolKey),t.set(20,n.symbolNull),t.set(21,n.symbolEnumMember),t.set(22,n.symbolStruct),t.set(23,n.symbolEvent),t.set(24,n.symbolOperator),t.set(25,n.symbolTypeParameter);function r(s){let i=t.get(s);return i||(console.info("No codicon found for SymbolKind "+s),i=n.symbolProperty),i}e.toIcon=r})(un||(un={}));var pe=class{constructor(t){this.value=t}};pe.Comment=new pe("comment");pe.Imports=new pe("imports");pe.Region=new pe("region");var cn;(function(e){function t(r){return!r||typeof r!="object"?!1:typeof r.id=="string"&&typeof r.title=="string"}e.is=t})(cn||(cn={}));var fn;(function(e){e[e.Type=1]="Type",e[e.Parameter=2]="Parameter"})(fn||(fn={}));var Ii=new mt;var hn;(function(e){e[e.Unknown=0]="Unknown",e[e.Disabled=1]="Disabled",e[e.Enabled=2]="Enabled"})(hn||(hn={}));var dn;(function(e){e[e.Invoke=1]="Invoke",e[e.Auto=2]="Auto"})(dn||(dn={}));var mn;(function(e){e[e.KeepWhitespace=1]="KeepWhitespace",e[e.InsertAsSnippet=4]="InsertAsSnippet"})(mn||(mn={}));var gn;(function(e){e[e.Method=0]="Method",e[e.Function=1]="Function",e[e.Constructor=2]="Constructor",e[e.Field=3]="Field",e[e.Variable=4]="Variable",e[e.Class=5]="Class",e[e.Struct=6]="Struct",e[e.Interface=7]="Interface",e[e.Module=8]="Module",e[e.Property=9]="Property",e[e.Event=10]="Event",e[e.Operator=11]="Operator",e[e.Unit=12]="Unit",e[e.Value=13]="Value",e[e.Constant=14]="Constant",e[e.Enum=15]="Enum",e[e.EnumMember=16]="EnumMember",e[e.Keyword=17]="Keyword",e[e.Text=18]="Text",e[e.Color=19]="Color",e[e.File=20]="File",e[e.Reference=21]="Reference",e[e.Customcolor=22]="Customcolor",e[e.Folder=23]="Folder",e[e.TypeParameter=24]="TypeParameter",e[e.User=25]="User",e[e.Issue=26]="Issue",e[e.Snippet=27]="Snippet"})(gn||(gn={}));var pn;(function(e){e[e.Deprecated=1]="Deprecated"})(pn||(pn={}));var bn;(function(e){e[e.Invoke=0]="Invoke",e[e.TriggerCharacter=1]="TriggerCharacter",e[e.TriggerForIncompleteCompletions=2]="TriggerForIncompleteCompletions"})(bn||(bn={}));var wn;(function(e){e[e.EXACT=0]="EXACT",e[e.ABOVE=1]="ABOVE",e[e.BELOW=2]="BELOW"})(wn||(wn={}));var _n;(function(e){e[e.NotSet=0]="NotSet",e[e.ContentFlush=1]="ContentFlush",e[e.RecoverFromMarkers=2]="RecoverFromMarkers",e[e.Explicit=3]="Explicit",e[e.Paste=4]="Paste",e[e.Undo=5]="Undo",e[e.Redo=6]="Redo"})(_n||(_n={}));var Cn;(function(e){e[e.LF=1]="LF",e[e.CRLF=2]="CRLF"})(Cn||(Cn={}));var Ln;(function(e){e[e.Text=0]="Text",e[e.Read=1]="Read",e[e.Write=2]="Write"})(Ln||(Ln={}));var xn;(function(e){e[e.None=0]="None",e[e.Keep=1]="Keep",e[e.Brackets=2]="Brackets",e[e.Advanced=3]="Advanced",e[e.Full=4]="Full"})(xn||(xn={}));var vn;(function(e){e[e.acceptSuggestionOnCommitCharacter=0]="acceptSuggestionOnCommitCharacter",e[e.acceptSuggestionOnEnter=1]="acceptSuggestionOnEnter",e[e.accessibilitySupport=2]="accessibilitySupport",e[e.accessibilityPageSize=3]="accessibilityPageSize",e[e.ariaLabel=4]="ariaLabel",e[e.autoClosingBrackets=5]="autoClosingBrackets",e[e.autoClosingDelete=6]="autoClosingDelete",e[e.autoClosingOvertype=7]="autoClosingOvertype",e[e.autoClosingQuotes=8]="autoClosingQuotes",e[e.autoIndent=9]="autoIndent",e[e.automaticLayout=10]="automaticLayout",e[e.autoSurround=11]="autoSurround",e[e.bracketPairColorization=12]="bracketPairColorization",e[e.guides=13]="guides",e[e.codeLens=14]="codeLens",e[e.codeLensFontFamily=15]="codeLensFontFamily",e[e.codeLensFontSize=16]="codeLensFontSize",e[e.colorDecorators=17]="colorDecorators",e[e.columnSelection=18]="columnSelection",e[e.comments=19]="comments",e[e.contextmenu=20]="contextmenu",e[e.copyWithSyntaxHighlighting=21]="copyWithSyntaxHighlighting",e[e.cursorBlinking=22]="cursorBlinking",e[e.cursorSmoothCaretAnimation=23]="cursorSmoothCaretAnimation",e[e.cursorStyle=24]="cursorStyle",e[e.cursorSurroundingLines=25]="cursorSurroundingLines",e[e.cursorSurroundingLinesStyle=26]="cursorSurroundingLinesStyle",e[e.cursorWidth=27]="cursorWidth",e[e.disableLayerHinting=28]="disableLayerHinting",e[e.disableMonospaceOptimizations=29]="disableMonospaceOptimizations",e[e.domReadOnly=30]="domReadOnly",e[e.dragAndDrop=31]="dragAndDrop",e[e.dropIntoEditor=32]="dropIntoEditor",e[e.emptySelectionClipboard=33]="emptySelectionClipboard",e[e.experimental=34]="experimental",e[e.extraEditorClassName=35]="extraEditorClassName",e[e.fastScrollSensitivity=36]="fastScrollSensitivity",e[e.find=37]="find",e[e.fixedOverflowWidgets=38]="fixedOverflowWidgets",e[e.folding=39]="folding",e[e.foldingStrategy=40]="foldingStrategy",e[e.foldingHighlight=41]="foldingHighlight",e[e.foldingImportsByDefault=42]="foldingImportsByDefault",e[e.foldingMaximumRegions=43]="foldingMaximumRegions",e[e.unfoldOnClickAfterEndOfLine=44]="unfoldOnClickAfterEndOfLine",e[e.fontFamily=45]="fontFamily",e[e.fontInfo=46]="fontInfo",e[e.fontLigatures=47]="fontLigatures",e[e.fontSize=48]="fontSize",e[e.fontWeight=49]="fontWeight",e[e.formatOnPaste=50]="formatOnPaste",e[e.formatOnType=51]="formatOnType",e[e.glyphMargin=52]="glyphMargin",e[e.gotoLocation=53]="gotoLocation",e[e.hideCursorInOverviewRuler=54]="hideCursorInOverviewRuler",e[e.hover=55]="hover",e[e.inDiffEditor=56]="inDiffEditor",e[e.inlineSuggest=57]="inlineSuggest",e[e.letterSpacing=58]="letterSpacing",e[e.lightbulb=59]="lightbulb",e[e.lineDecorationsWidth=60]="lineDecorationsWidth",e[e.lineHeight=61]="lineHeight",e[e.lineNumbers=62]="lineNumbers",e[e.lineNumbersMinChars=63]="lineNumbersMinChars",e[e.linkedEditing=64]="linkedEditing",e[e.links=65]="links",e[e.matchBrackets=66]="matchBrackets",e[e.minimap=67]="minimap",e[e.mouseStyle=68]="mouseStyle",e[e.mouseWheelScrollSensitivity=69]="mouseWheelScrollSensitivity",e[e.mouseWheelZoom=70]="mouseWheelZoom",e[e.multiCursorMergeOverlapping=71]="multiCursorMergeOverlapping",e[e.multiCursorModifier=72]="multiCursorModifier",e[e.multiCursorPaste=73]="multiCursorPaste",e[e.occurrencesHighlight=74]="occurrencesHighlight",e[e.overviewRulerBorder=75]="overviewRulerBorder",e[e.overviewRulerLanes=76]="overviewRulerLanes",e[e.padding=77]="padding",e[e.parameterHints=78]="parameterHints",e[e.peekWidgetDefaultFocus=79]="peekWidgetDefaultFocus",e[e.definitionLinkOpensInPeek=80]="definitionLinkOpensInPeek",e[e.quickSuggestions=81]="quickSuggestions",e[e.quickSuggestionsDelay=82]="quickSuggestionsDelay",e[e.readOnly=83]="readOnly",e[e.renameOnType=84]="renameOnType",e[e.renderControlCharacters=85]="renderControlCharacters",e[e.renderFinalNewline=86]="renderFinalNewline",e[e.renderLineHighlight=87]="renderLineHighlight",e[e.renderLineHighlightOnlyWhenFocus=88]="renderLineHighlightOnlyWhenFocus",e[e.renderValidationDecorations=89]="renderValidationDecorations",e[e.renderWhitespace=90]="renderWhitespace",e[e.revealHorizontalRightPadding=91]="revealHorizontalRightPadding",e[e.roundedSelection=92]="roundedSelection",e[e.rulers=93]="rulers",e[e.scrollbar=94]="scrollbar",e[e.scrollBeyondLastColumn=95]="scrollBeyondLastColumn",e[e.scrollBeyondLastLine=96]="scrollBeyondLastLine",e[e.scrollPredominantAxis=97]="scrollPredominantAxis",e[e.selectionClipboard=98]="selectionClipboard",e[e.selectionHighlight=99]="selectionHighlight",e[e.selectOnLineNumbers=100]="selectOnLineNumbers",e[e.showFoldingControls=101]="showFoldingControls",e[e.showUnused=102]="showUnused",e[e.snippetSuggestions=103]="snippetSuggestions",e[e.smartSelect=104]="smartSelect",e[e.smoothScrolling=105]="smoothScrolling",e[e.stickyTabStops=106]="stickyTabStops",e[e.stopRenderingLineAfter=107]="stopRenderingLineAfter",e[e.suggest=108]="suggest",e[e.suggestFontSize=109]="suggestFontSize",e[e.suggestLineHeight=110]="suggestLineHeight",e[e.suggestOnTriggerCharacters=111]="suggestOnTriggerCharacters",e[e.suggestSelection=112]="suggestSelection",e[e.tabCompletion=113]="tabCompletion",e[e.tabIndex=114]="tabIndex",e[e.unicodeHighlighting=115]="unicodeHighlighting",e[e.unusualLineTerminators=116]="unusualLineTerminators",e[e.useShadowDOM=117]="useShadowDOM",e[e.useTabStops=118]="useTabStops",e[e.wordSeparators=119]="wordSeparators",e[e.wordWrap=120]="wordWrap",e[e.wordWrapBreakAfterCharacters=121]="wordWrapBreakAfterCharacters",e[e.wordWrapBreakBeforeCharacters=122]="wordWrapBreakBeforeCharacters",e[e.wordWrapColumn=123]="wordWrapColumn",e[e.wordWrapOverride1=124]="wordWrapOverride1",e[e.wordWrapOverride2=125]="wordWrapOverride2",e[e.wrappingIndent=126]="wrappingIndent",e[e.wrappingStrategy=127]="wrappingStrategy",e[e.showDeprecated=128]="showDeprecated",e[e.inlayHints=129]="inlayHints",e[e.editorClassName=130]="editorClassName",e[e.pixelRatio=131]="pixelRatio",e[e.tabFocusMode=132]="tabFocusMode",e[e.layoutInfo=133]="layoutInfo",e[e.wrappingInfo=134]="wrappingInfo"})(vn||(vn={}));var Nn;(function(e){e[e.TextDefined=0]="TextDefined",e[e.LF=1]="LF",e[e.CRLF=2]="CRLF"})(Nn||(Nn={}));var Sn;(function(e){e[e.LF=0]="LF",e[e.CRLF=1]="CRLF"})(Sn||(Sn={}));var An;(function(e){e[e.None=0]="None",e[e.Indent=1]="Indent",e[e.IndentOutdent=2]="IndentOutdent",e[e.Outdent=3]="Outdent"})(An||(An={}));var yn;(function(e){e[e.Both=0]="Both",e[e.Right=1]="Right",e[e.Left=2]="Left",e[e.None=3]="None"})(yn||(yn={}));var Mn;(function(e){e[e.Type=1]="Type",e[e.Parameter=2]="Parameter"})(Mn||(Mn={}));var Fn;(function(e){e[e.Automatic=0]="Automatic",e[e.Explicit=1]="Explicit"})(Fn||(Fn={}));var pt;(function(e){e[e.DependsOnKbLayout=-1]="DependsOnKbLayout",e[e.Unknown=0]="Unknown",e[e.Backspace=1]="Backspace",e[e.Tab=2]="Tab",e[e.Enter=3]="Enter",e[e.Shift=4]="Shift",e[e.Ctrl=5]="Ctrl",e[e.Alt=6]="Alt",e[e.PauseBreak=7]="PauseBreak",e[e.CapsLock=8]="CapsLock",e[e.Escape=9]="Escape",e[e.Space=10]="Space",e[e.PageUp=11]="PageUp",e[e.PageDown=12]="PageDown",e[e.End=13]="End",e[e.Home=14]="Home",e[e.LeftArrow=15]="LeftArrow",e[e.UpArrow=16]="UpArrow",e[e.RightArrow=17]="RightArrow",e[e.DownArrow=18]="DownArrow",e[e.Insert=19]="Insert",e[e.Delete=20]="Delete",e[e.Digit0=21]="Digit0",e[e.Digit1=22]="Digit1",e[e.Digit2=23]="Digit2",e[e.Digit3=24]="Digit3",e[e.Digit4=25]="Digit4",e[e.Digit5=26]="Digit5",e[e.Digit6=27]="Digit6",e[e.Digit7=28]="Digit7",e[e.Digit8=29]="Digit8",e[e.Digit9=30]="Digit9",e[e.KeyA=31]="KeyA",e[e.KeyB=32]="KeyB",e[e.KeyC=33]="KeyC",e[e.KeyD=34]="KeyD",e[e.KeyE=35]="KeyE",e[e.KeyF=36]="KeyF",e[e.KeyG=37]="KeyG",e[e.KeyH=38]="KeyH",e[e.KeyI=39]="KeyI",e[e.KeyJ=40]="KeyJ",e[e.KeyK=41]="KeyK",e[e.KeyL=42]="KeyL",e[e.KeyM=43]="KeyM",e[e.KeyN=44]="KeyN",e[e.KeyO=45]="KeyO",e[e.KeyP=46]="KeyP",e[e.KeyQ=47]="KeyQ",e[e.KeyR=48]="KeyR",e[e.KeyS=49]="KeyS",e[e.KeyT=50]="KeyT",e[e.KeyU=51]="KeyU",e[e.KeyV=52]="KeyV",e[e.KeyW=53]="KeyW",e[e.KeyX=54]="KeyX",e[e.KeyY=55]="KeyY",e[e.KeyZ=56]="KeyZ",e[e.Meta=57]="Meta",e[e.ContextMenu=58]="ContextMenu",e[e.F1=59]="F1",e[e.F2=60]="F2",e[e.F3=61]="F3",e[e.F4=62]="F4",e[e.F5=63]="F5",e[e.F6=64]="F6",e[e.F7=65]="F7",e[e.F8=66]="F8",e[e.F9=67]="F9",e[e.F10=68]="F10",e[e.F11=69]="F11",e[e.F12=70]="F12",e[e.F13=71]="F13",e[e.F14=72]="F14",e[e.F15=73]="F15",e[e.F16=74]="F16",e[e.F17=75]="F17",e[e.F18=76]="F18",e[e.F19=77]="F19",e[e.NumLock=78]="NumLock",e[e.ScrollLock=79]="ScrollLock",e[e.Semicolon=80]="Semicolon",e[e.Equal=81]="Equal",e[e.Comma=82]="Comma",e[e.Minus=83]="Minus",e[e.Period=84]="Period",e[e.Slash=85]="Slash",e[e.Backquote=86]="Backquote",e[e.BracketLeft=87]="BracketLeft",e[e.Backslash=88]="Backslash",e[e.BracketRight=89]="BracketRight",e[e.Quote=90]="Quote",e[e.OEM_8=91]="OEM_8",e[e.IntlBackslash=92]="IntlBackslash",e[e.Numpad0=93]="Numpad0",e[e.Numpad1=94]="Numpad1",e[e.Numpad2=95]="Numpad2",e[e.Numpad3=96]="Numpad3",e[e.Numpad4=97]="Numpad4",e[e.Numpad5=98]="Numpad5",e[e.Numpad6=99]="Numpad6",e[e.Numpad7=100]="Numpad7",e[e.Numpad8=101]="Numpad8",e[e.Numpad9=102]="Numpad9",e[e.NumpadMultiply=103]="NumpadMultiply",e[e.NumpadAdd=104]="NumpadAdd",e[e.NUMPAD_SEPARATOR=105]="NUMPAD_SEPARATOR",e[e.NumpadSubtract=106]="NumpadSubtract",e[e.NumpadDecimal=107]="NumpadDecimal",e[e.NumpadDivide=108]="NumpadDivide",e[e.KEY_IN_COMPOSITION=109]="KEY_IN_COMPOSITION",e[e.ABNT_C1=110]="ABNT_C1",e[e.ABNT_C2=111]="ABNT_C2",e[e.AudioVolumeMute=112]="AudioVolumeMute",e[e.AudioVolumeUp=113]="AudioVolumeUp",e[e.AudioVolumeDown=114]="AudioVolumeDown",e[e.BrowserSearch=115]="BrowserSearch",e[e.BrowserHome=116]="BrowserHome",e[e.BrowserBack=117]="BrowserBack",e[e.BrowserForward=118]="BrowserForward",e[e.MediaTrackNext=119]="MediaTrackNext",e[e.MediaTrackPrevious=120]="MediaTrackPrevious",e[e.MediaStop=121]="MediaStop",e[e.MediaPlayPause=122]="MediaPlayPause",e[e.LaunchMediaPlayer=123]="LaunchMediaPlayer",e[e.LaunchMail=124]="LaunchMail",e[e.LaunchApp2=125]="LaunchApp2",e[e.Clear=126]="Clear",e[e.MAX_VALUE=127]="MAX_VALUE"})(pt||(pt={}));var bt;(function(e){e[e.Hint=1]="Hint",e[e.Info=2]="Info",e[e.Warning=4]="Warning",e[e.Error=8]="Error"})(bt||(bt={}));var wt;(function(e){e[e.Unnecessary=1]="Unnecessary",e[e.Deprecated=2]="Deprecated"})(wt||(wt={}));var kn;(function(e){e[e.Inline=1]="Inline",e[e.Gutter=2]="Gutter"})(kn||(kn={}));var En;(function(e){e[e.UNKNOWN=0]="UNKNOWN",e[e.TEXTAREA=1]="TEXTAREA",e[e.GUTTER_GLYPH_MARGIN=2]="GUTTER_GLYPH_MARGIN",e[e.GUTTER_LINE_NUMBERS=3]="GUTTER_LINE_NUMBERS",e[e.GUTTER_LINE_DECORATIONS=4]="GUTTER_LINE_DECORATIONS",e[e.GUTTER_VIEW_ZONE=5]="GUTTER_VIEW_ZONE",e[e.CONTENT_TEXT=6]="CONTENT_TEXT",e[e.CONTENT_EMPTY=7]="CONTENT_EMPTY",e[e.CONTENT_VIEW_ZONE=8]="CONTENT_VIEW_ZONE",e[e.CONTENT_WIDGET=9]="CONTENT_WIDGET",e[e.OVERVIEW_RULER=10]="OVERVIEW_RULER",e[e.SCROLLBAR=11]="SCROLLBAR",e[e.OVERLAY_WIDGET=12]="OVERLAY_WIDGET",e[e.OUTSIDE_EDITOR=13]="OUTSIDE_EDITOR"})(En||(En={}));var Dn;(function(e){e[e.TOP_RIGHT_CORNER=0]="TOP_RIGHT_CORNER",e[e.BOTTOM_RIGHT_CORNER=1]="BOTTOM_RIGHT_CORNER",e[e.TOP_CENTER=2]="TOP_CENTER"})(Dn||(Dn={}));var Pn;(function(e){e[e.Left=1]="Left",e[e.Center=2]="Center",e[e.Right=4]="Right",e[e.Full=7]="Full"})(Pn||(Pn={}));var Rn;(function(e){e[e.Left=0]="Left",e[e.Right=1]="Right",e[e.None=2]="None",e[e.LeftOfInjectedText=3]="LeftOfInjectedText",e[e.RightOfInjectedText=4]="RightOfInjectedText"})(Rn||(Rn={}));var Vn;(function(e){e[e.Off=0]="Off",e[e.On=1]="On",e[e.Relative=2]="Relative",e[e.Interval=3]="Interval",e[e.Custom=4]="Custom"})(Vn||(Vn={}));var In;(function(e){e[e.None=0]="None",e[e.Text=1]="Text",e[e.Blocks=2]="Blocks"})(In||(In={}));var Bn;(function(e){e[e.Smooth=0]="Smooth",e[e.Immediate=1]="Immediate"})(Bn||(Bn={}));var Un;(function(e){e[e.Auto=1]="Auto",e[e.Hidden=2]="Hidden",e[e.Visible=3]="Visible"})(Un||(Un={}));var _t;(function(e){e[e.LTR=0]="LTR",e[e.RTL=1]="RTL"})(_t||(_t={}));var Tn;(function(e){e[e.Invoke=1]="Invoke",e[e.TriggerCharacter=2]="TriggerCharacter",e[e.ContentChange=3]="ContentChange"})(Tn||(Tn={}));var Wn;(function(e){e[e.File=0]="File",e[e.Module=1]="Module",e[e.Namespace=2]="Namespace",e[e.Package=3]="Package",e[e.Class=4]="Class",e[e.Method=5]="Method",e[e.Property=6]="Property",e[e.Field=7]="Field",e[e.Constructor=8]="Constructor",e[e.Enum=9]="Enum",e[e.Interface=10]="Interface",e[e.Function=11]="Function",e[e.Variable=12]="Variable",e[e.Constant=13]="Constant",e[e.String=14]="String",e[e.Number=15]="Number",e[e.Boolean=16]="Boolean",e[e.Array=17]="Array",e[e.Object=18]="Object",e[e.Key=19]="Key",e[e.Null=20]="Null",e[e.EnumMember=21]="EnumMember",e[e.Struct=22]="Struct",e[e.Event=23]="Event",e[e.Operator=24]="Operator",e[e.TypeParameter=25]="TypeParameter"})(Wn||(Wn={}));var qn;(function(e){e[e.Deprecated=1]="Deprecated"})(qn||(qn={}));var Hn;(function(e){e[e.Hidden=0]="Hidden",e[e.Blink=1]="Blink",e[e.Smooth=2]="Smooth",e[e.Phase=3]="Phase",e[e.Expand=4]="Expand",e[e.Solid=5]="Solid"})(Hn||(Hn={}));var On;(function(e){e[e.Line=1]="Line",e[e.Block=2]="Block",e[e.Underline=3]="Underline",e[e.LineThin=4]="LineThin",e[e.BlockOutline=5]="BlockOutline",e[e.UnderlineThin=6]="UnderlineThin"})(On||(On={}));var zn;(function(e){e[e.AlwaysGrowsWhenTypingAtEdges=0]="AlwaysGrowsWhenTypingAtEdges",e[e.NeverGrowsWhenTypingAtEdges=1]="NeverGrowsWhenTypingAtEdges",e[e.GrowsOnlyWhenTypingBefore=2]="GrowsOnlyWhenTypingBefore",e[e.GrowsOnlyWhenTypingAfter=3]="GrowsOnlyWhenTypingAfter"})(zn||(zn={}));var $n;(function(e){e[e.None=0]="None",e[e.Same=1]="Same",e[e.Indent=2]="Indent",e[e.DeepIndent=3]="DeepIndent"})($n||($n={}));var xe=class{static chord(t,r){return nn(t,r)}};xe.CtrlCmd=2048;xe.Shift=1024;xe.Alt=512;xe.WinCtrl=256;function Gn(){return{editor:void 0,languages:void 0,CancellationTokenSource:ht,Emitter:q,KeyCode:pt,KeyMod:xe,Position:I,Range:E,Selection:O,SelectionDirection:_t,MarkerSeverity:bt,MarkerTag:wt,Uri:Y,Token:gt}}var l1=class extends ge{constructor(t){super(0);for(let r=0,s=t.length;r<s;r++)this.set(t.charCodeAt(r),2);this.set(32,1),this.set(9,1)}};function Jr(e){let t={};return r=>(t.hasOwnProperty(r)||(t[r]=e(r)),t[r])}var Xr=Jr(e=>new l1(e));var jn;(function(e){e[e.Left=1]="Left",e[e.Center=2]="Center",e[e.Right=4]="Right",e[e.Full=7]="Full"})(jn||(jn={}));var Yn;(function(e){e[e.Inline=1]="Inline",e[e.Gutter=2]="Gutter"})(Yn||(Yn={}));var Zn;(function(e){e[e.Both=0]="Both",e[e.Right=1]="Right",e[e.Left=2]="Left",e[e.None=3]="None"})(Zn||(Zn={}));function Kr(e,t,r,s,i){if(s===0)return!0;let o=t.charCodeAt(s-1);if(e.get(o)!==0||o===13||o===10)return!0;if(i>0){let a=t.charCodeAt(s);if(e.get(a)!==0)return!0}return!1}function es(e,t,r,s,i){if(s+i===r)return!0;let o=t.charCodeAt(s+i);if(e.get(o)!==0||o===13||o===10)return!0;if(i>0){let a=t.charCodeAt(s+i-1);if(e.get(a)!==0)return!0}return!1}function ts(e,t,r,s,i){return Kr(e,t,r,s,i)&&es(e,t,r,s,i)}var Ct=class{constructor(t,r){this._wordSeparators=t,this._searchRegex=r,this._prevMatchStartIndex=-1,this._prevMatchLength=0}reset(t){this._searchRegex.lastIndex=t,this._prevMatchStartIndex=-1,this._prevMatchLength=0}next(t){let r=t.length,s;do{if(this._prevMatchStartIndex+this._prevMatchLength===r||(s=this._searchRegex.exec(t),!s))return null;let i=s.index,o=s[0].length;if(i===this._prevMatchStartIndex&&o===this._prevMatchLength){if(o===0){E1(t,r,this._searchRegex.lastIndex)>65535?this._searchRegex.lastIndex+=2:this._searchRegex.lastIndex+=1;continue}return null}if(this._prevMatchStartIndex=i,this._prevMatchLength=o,!this._wordSeparators||ts(this._wordSeparators,t,r,i,o))return s}while(s);return null}};var Lt=class{static computeUnicodeHighlights(t,r,s){let i=s?s.startLineNumber:1,o=s?s.endLineNumber:t.getLineCount(),a=new xt(r),l=a.getCandidateCodePoints(),c;l==="allNonBasicAscii"?c=new RegExp("[^\\t\\n\\r\\x20-\\x7E]","g"):c=new RegExp(`${ns(Array.from(l))}`,"g");let u=new Ct(null,c),h=[],f=!1,d,C=0,x=0,N=0;e:for(let A=i,F=o;A<=F;A++){let k=t.getLineContent(A),S=k.length;u.reset(0);do if(d=u.next(k),d){let L=d.index,v=d.index+d[0].length;if(L>0){let g=k.charCodeAt(L-1);ye(g)&&L--}if(v+1<S){let g=k.charCodeAt(v-1);ye(g)&&v++}let y=k.substring(L,v),p=Ue(L+1,Kt,k,0),m=a.shouldHighlightNonBasicASCII(y,p?p.word:null);if(m!==0){m===3?C++:m===2?x++:m===1?N++:N1(m);let g=1e3;if(h.length>=g){f=!0;break e}h.push(new E(A,L+1,A,v+1))}}while(d)}return{ranges:h,hasMore:f,ambiguousCharacterCount:C,invisibleCharacterCount:x,nonBasicAsciiCharacterCount:N}}static computeUnicodeHighlightReason(t,r){let s=new xt(r);switch(s.shouldHighlightNonBasicASCII(t,null)){case 0:return null;case 2:return{kind:1};case 3:{let o=t.codePointAt(0),a=s.ambiguousCharacters.getPrimaryConfusable(o),l=z.getLocales().filter(c=>!z.getInstance(new Set([...r.allowedLocales,c])).isAmbiguous(o));return{kind:0,confusableWith:String.fromCodePoint(a),notAmbiguousInLocales:l}}case 1:return{kind:2}}}};function ns(e,t){return`[${y1(e.map(s=>String.fromCodePoint(s)).join(""))}]`}var xt=class{constructor(t){this.options=t,this.allowedCodePoints=new Set(t.allowedCodePoints),this.ambiguousCharacters=z.getInstance(new Set(t.allowedLocales))}getCandidateCodePoints(){if(this.options.nonBasicASCII)return"allNonBasicAscii";let t=new Set;if(this.options.invisibleCharacters)for(let r of Z.codePoints)Qn(String.fromCodePoint(r))||t.add(r);if(this.options.ambiguousCharacters)for(let r of this.ambiguousCharacters.getConfusableCodePoints())t.add(r);for(let r of this.allowedCodePoints)t.delete(r);return t}shouldHighlightNonBasicASCII(t,r){let s=t.codePointAt(0);if(this.allowedCodePoints.has(s))return 0;if(this.options.nonBasicASCII)return 1;let i=!1,o=!1;if(r)for(let a of r){let l=a.codePointAt(0),c=D1(a);i=i||c,!c&&!this.ambiguousCharacters.isAmbiguous(l)&&!Z.isInvisibleCharacter(l)&&(o=!0)}return!i&&o?0:this.options.invisibleCharacters&&!Qn(t)&&Z.isInvisibleCharacter(s)?2:this.options.ambiguousCharacters&&this.ambiguousCharacters.isAmbiguous(s)?3:0}};function Qn(e){return e===" "||e===`
-`||e==="	"}var ve=function(e,t,r,s){function i(o){return o instanceof r?o:new r(function(a){a(o)})}return new(r||(r=Promise))(function(o,a){function l(h){try{u(s.next(h))}catch(f){a(f)}}function c(h){try{u(s.throw(h))}catch(f){a(f)}}function u(h){h.done?o(h.value):i(h.value).then(l,c)}u((s=s.apply(e,t||[])).next())})},u1=class extends ct{get uri(){return this._uri}get eol(){return this._eol}getValue(){return this.getText()}getLinesContent(){return this._lines.slice(0)}getLineCount(){return this._lines.length}getLineContent(t){return this._lines[t-1]}getWordAtPosition(t,r){let s=Ue(t.column,Q1(r),this._lines[t.lineNumber-1],0);return s?new E(t.lineNumber,s.startColumn,t.lineNumber,s.endColumn):null}words(t){let r=this._lines,s=this._wordenize.bind(this),i=0,o="",a=0,l=[];return{*[Symbol.iterator](){for(;;)if(a<l.length){let c=o.substring(l[a].start,l[a].end);a+=1,yield c}else if(i<r.length)o=r[i],l=s(o,t),a=0,i+=1;else break}}}getLineWords(t,r){let s=this._lines[t-1],i=this._wordenize(s,r),o=[];for(let a of i)o.push({word:s.substring(a.start,a.end),startColumn:a.start+1,endColumn:a.end+1});return o}_wordenize(t,r){let s=[],i;for(r.lastIndex=0;(i=r.exec(t))&&i[0].length!==0;)s.push({start:i.index,end:i.index+i[0].length});return s}getValueInRange(t){if(t=this._validateRange(t),t.startLineNumber===t.endLineNumber)return this._lines[t.startLineNumber-1].substring(t.startColumn-1,t.endColumn-1);let r=this._eol,s=t.startLineNumber-1,i=t.endLineNumber-1,o=[];o.push(this._lines[s].substring(t.startColumn-1));for(let a=s+1;a<i;a++)o.push(this._lines[a]);return o.push(this._lines[i].substring(0,t.endColumn-1)),o.join(r)}offsetAt(t){return t=this._validatePosition(t),this._ensureLineStarts(),this._lineStarts.getPrefixSum(t.lineNumber-2)+(t.column-1)}positionAt(t){t=Math.floor(t),t=Math.max(0,t),this._ensureLineStarts();let r=this._lineStarts.getIndexOf(t),s=this._lines[r.index].length;return{lineNumber:1+r.index,column:1+Math.min(r.remainder,s)}}_validateRange(t){let r=this._validatePosition({lineNumber:t.startLineNumber,column:t.startColumn}),s=this._validatePosition({lineNumber:t.endLineNumber,column:t.endColumn});return r.lineNumber!==t.startLineNumber||r.column!==t.startColumn||s.lineNumber!==t.endLineNumber||s.column!==t.endColumn?{startLineNumber:r.lineNumber,startColumn:r.column,endLineNumber:s.lineNumber,endColumn:s.column}:t}_validatePosition(t){if(!I.isIPosition(t))throw new Error("bad position");let{lineNumber:r,column:s}=t,i=!1;if(r<1)r=1,s=1,i=!0;else if(r>this._lines.length)r=this._lines.length,s=this._lines[r-1].length+1,i=!0;else{let o=this._lines[r-1].length+1;s<1?(s=1,i=!0):s>o&&(s=o,i=!0)}return i?{lineNumber:r,column:s}:t}},ne=class{constructor(t,r){this._host=t,this._models=Object.create(null),this._foreignModuleFactory=r,this._foreignModule=null}dispose(){this._models=Object.create(null)}_getModel(t){return this._models[t]}_getModels(){let t=[];return Object.keys(this._models).forEach(r=>t.push(this._models[r])),t}acceptNewModel(t){this._models[t.url]=new u1(Y.parse(t.url),t.lines,t.EOL,t.versionId)}acceptModelChanged(t,r){if(!this._models[t])return;this._models[t].onEvents(r)}acceptRemovedModel(t){!this._models[t]||delete this._models[t]}computeUnicodeHighlights(t,r,s){return ve(this,void 0,void 0,function*(){let i=this._getModel(t);return i?Lt.computeUnicodeHighlights(i,r,s):{ranges:[],hasMore:!1,ambiguousCharacterCount:0,invisibleCharacterCount:0,nonBasicAsciiCharacterCount:0}})}computeDiff(t,r,s,i){return ve(this,void 0,void 0,function*(){let o=this._getModel(t),a=this._getModel(r);return!o||!a?null:ne.computeDiff(o,a,s,i)})}static computeDiff(t,r,s,i){let o=t.getLinesContent(),a=r.getLinesContent(),c=new lt(o,a,{shouldComputeCharChanges:!0,shouldPostProcessCharChanges:!0,shouldIgnoreTrimWhitespace:s,shouldMakePrettyDiff:!0,maxComputationTime:i}).computeDiff(),u=c.changes.length>0?!1:this._modelsAreIdentical(t,r);return{quitEarly:c.quitEarly,identical:u,changes:c.changes}}static _modelsAreIdentical(t,r){let s=t.getLineCount(),i=r.getLineCount();if(s!==i)return!1;for(let o=1;o<=s;o++){let a=t.getLineContent(o),l=r.getLineContent(o);if(a!==l)return!1}return!0}computeMoreMinimalEdits(t,r){return ve(this,void 0,void 0,function*(){let s=this._getModel(t);if(!s)return r;let i=[],o;r=r.slice(0).sort((a,l)=>{if(a.range&&l.range)return E.compareRangesUsingStarts(a.range,l.range);let c=a.range?0:1,u=l.range?0:1;return c-u});for(let{range:a,text:l,eol:c}of r){if(typeof c=="number"&&(o=c),E.isEmpty(a)&&!l)continue;let u=s.getValueInRange(a);if(l=l.replace(/\r\n|\n|\r/g,s.eol),u===l)continue;if(Math.max(l.length,u.length)>ne._diffLimit){i.push({range:a,text:l});continue}let h=U1(u,l,!1),f=s.offsetAt(E.lift(a).getStartPosition());for(let d of h){let C=s.positionAt(f+d.originalStart),x=s.positionAt(f+d.originalStart+d.originalLength),N={text:l.substr(d.modifiedStart,d.modifiedLength),range:{startLineNumber:C.lineNumber,startColumn:C.column,endLineNumber:x.lineNumber,endColumn:x.column}};s.getValueInRange(N.range)!==N.text&&i.push(N)}}return typeof o=="number"&&i.push({eol:o,text:"",range:{startLineNumber:0,startColumn:0,endLineNumber:0,endColumn:0}}),i})}computeLinks(t){return ve(this,void 0,void 0,function*(){let r=this._getModel(t);return r?X1(r):null})}textualSuggest(t,r,s,i){return ve(this,void 0,void 0,function*(){let o=new oe(!0),a=new RegExp(s,i),l=new Set;e:for(let c of t){let u=this._getModel(c);if(!!u){for(let h of u.words(a))if(!(h===r||!isNaN(Number(h)))&&(l.add(h),l.size>ne._suggestionsLimit))break e}}return{words:Array.from(l),duration:o.elapsed()}})}computeWordRanges(t,r,s,i){return ve(this,void 0,void 0,function*(){let o=this._getModel(t);if(!o)return Object.create(null);let a=new RegExp(s,i),l=Object.create(null);for(let c=r.startLineNumber;c<r.endLineNumber;c++){let u=o.getLineWords(c,a);for(let h of u){if(!isNaN(Number(h.word)))continue;let f=l[h.word];f||(f=[],l[h.word]=f),f.push({startLineNumber:c,startColumn:h.startColumn,endLineNumber:c,endColumn:h.endColumn})}}return l})}navigateValueSet(t,r,s,i,o){return ve(this,void 0,void 0,function*(){let a=this._getModel(t);if(!a)return null;let l=new RegExp(i,o);r.startColumn===r.endColumn&&(r={startLineNumber:r.startLineNumber,startColumn:r.startColumn,endLineNumber:r.endLineNumber,endColumn:r.endColumn+1});let c=a.getValueInRange(r),u=a.getWordAtPosition({lineNumber:r.startLineNumber,column:r.startColumn},l);if(!u)return null;let h=a.getValueInRange(u);return ke.INSTANCE.navigateValueSet(r,c,u,h,s)})}loadForeignModule(t,r,s){let a={host:v1(s,(l,c)=>this._host.fhr(l,c)),getMirrorModels:()=>this._getModels()};return this._foreignModuleFactory?(this._foreignModule=this._foreignModuleFactory(a,r),Promise.resolve(Pe(this._foreignModule))):Promise.reject(new Error("Unexpected usage"))}fmr(t,r){if(!this._foreignModule||typeof this._foreignModule[t]!="function")return Promise.reject(new Error("Missing requestHandler or method: "+t));try{return Promise.resolve(this._foreignModule[t].apply(this._foreignModule,r))}catch(s){return Promise.reject(s)}}};ne._diffLimit=1e5;ne._suggestionsLimit=1e4;typeof importScripts=="function"&&(B.monaco=Gn());var c1=!1;function rs(e){if(c1)return;c1=!0;let t=new et(r=>{self.postMessage(r)},r=>new ne(r,e));self.onmessage=r=>{t.onmessage(r.data)}}self.onmessage=e=>{c1||rs(null)};})();
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/iterator.js
+  var Iterable;
+  (function(Iterable2) {
+    function is(thing) {
+      return thing && typeof thing === "object" && typeof thing[Symbol.iterator] === "function";
+    }
+    Iterable2.is = is;
+    const _empty2 = Object.freeze([]);
+    function empty() {
+      return _empty2;
+    }
+    Iterable2.empty = empty;
+    function* single(element) {
+      yield element;
+    }
+    Iterable2.single = single;
+    function from(iterable) {
+      return iterable || _empty2;
+    }
+    Iterable2.from = from;
+    function isEmpty(iterable) {
+      return !iterable || iterable[Symbol.iterator]().next().done === true;
+    }
+    Iterable2.isEmpty = isEmpty;
+    function first(iterable) {
+      return iterable[Symbol.iterator]().next().value;
+    }
+    Iterable2.first = first;
+    function some(iterable, predicate) {
+      for (const element of iterable) {
+        if (predicate(element)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    Iterable2.some = some;
+    function find(iterable, predicate) {
+      for (const element of iterable) {
+        if (predicate(element)) {
+          return element;
+        }
+      }
+      return void 0;
+    }
+    Iterable2.find = find;
+    function* filter(iterable, predicate) {
+      for (const element of iterable) {
+        if (predicate(element)) {
+          yield element;
+        }
+      }
+    }
+    Iterable2.filter = filter;
+    function* map(iterable, fn) {
+      let index = 0;
+      for (const element of iterable) {
+        yield fn(element, index++);
+      }
+    }
+    Iterable2.map = map;
+    function* concat(...iterables) {
+      for (const iterable of iterables) {
+        for (const element of iterable) {
+          yield element;
+        }
+      }
+    }
+    Iterable2.concat = concat;
+    function* concatNested(iterables) {
+      for (const iterable of iterables) {
+        for (const element of iterable) {
+          yield element;
+        }
+      }
+    }
+    Iterable2.concatNested = concatNested;
+    function reduce(iterable, reducer, initialValue) {
+      let value = initialValue;
+      for (const element of iterable) {
+        value = reducer(value, element);
+      }
+      return value;
+    }
+    Iterable2.reduce = reduce;
+    function forEach(iterable, fn) {
+      let index = 0;
+      for (const element of iterable) {
+        fn(element, index++);
+      }
+    }
+    Iterable2.forEach = forEach;
+    function* slice(arr, from2, to = arr.length) {
+      if (from2 < 0) {
+        from2 += arr.length;
+      }
+      if (to < 0) {
+        to += arr.length;
+      } else if (to > arr.length) {
+        to = arr.length;
+      }
+      for (; from2 < to; from2++) {
+        yield arr[from2];
+      }
+    }
+    Iterable2.slice = slice;
+    function consume(iterable, atMost = Number.POSITIVE_INFINITY) {
+      const consumed = [];
+      if (atMost === 0) {
+        return [consumed, iterable];
+      }
+      const iterator = iterable[Symbol.iterator]();
+      for (let i = 0; i < atMost; i++) {
+        const next = iterator.next();
+        if (next.done) {
+          return [consumed, Iterable2.empty()];
+        }
+        consumed.push(next.value);
+      }
+      return [consumed, { [Symbol.iterator]() {
+        return iterator;
+      } }];
+    }
+    Iterable2.consume = consume;
+    function collect(iterable) {
+      return consume(iterable)[0];
+    }
+    Iterable2.collect = collect;
+    function equals2(a, b, comparator = (at, bt) => at === bt) {
+      const ai = a[Symbol.iterator]();
+      const bi = b[Symbol.iterator]();
+      while (true) {
+        const an = ai.next();
+        const bn = bi.next();
+        if (an.done !== bn.done) {
+          return false;
+        } else if (an.done) {
+          return true;
+        } else if (!comparator(an.value, bn.value)) {
+          return false;
+        }
+      }
+    }
+    Iterable2.equals = equals2;
+  })(Iterable || (Iterable = {}));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/lifecycle.js
+  var TRACK_DISPOSABLES = false;
+  var disposableTracker = null;
+  function setDisposableTracker(tracker) {
+    disposableTracker = tracker;
+  }
+  if (TRACK_DISPOSABLES) {
+    const __is_disposable_tracked__ = "__is_disposable_tracked__";
+    setDisposableTracker(new class {
+      trackDisposable(x) {
+        const stack = new Error("Potentially leaked disposable").stack;
+        setTimeout(() => {
+          if (!x[__is_disposable_tracked__]) {
+            console.log(stack);
+          }
+        }, 3e3);
+      }
+      setParent(child, parent) {
+        if (child && child !== Disposable.None) {
+          try {
+            child[__is_disposable_tracked__] = true;
+          } catch (_a3) {
+          }
+        }
+      }
+      markAsDisposed(disposable) {
+        if (disposable && disposable !== Disposable.None) {
+          try {
+            disposable[__is_disposable_tracked__] = true;
+          } catch (_a3) {
+          }
+        }
+      }
+      markAsSingleton(disposable) {
+      }
+    }());
+  }
+  function trackDisposable(x) {
+    disposableTracker === null || disposableTracker === void 0 ? void 0 : disposableTracker.trackDisposable(x);
+    return x;
+  }
+  function markAsDisposed(disposable) {
+    disposableTracker === null || disposableTracker === void 0 ? void 0 : disposableTracker.markAsDisposed(disposable);
+  }
+  function setParentOfDisposable(child, parent) {
+    disposableTracker === null || disposableTracker === void 0 ? void 0 : disposableTracker.setParent(child, parent);
+  }
+  function setParentOfDisposables(children, parent) {
+    if (!disposableTracker) {
+      return;
+    }
+    for (const child of children) {
+      disposableTracker.setParent(child, parent);
+    }
+  }
+  var MultiDisposeError = class extends Error {
+    constructor(errors) {
+      super(`Encountered errors while disposing of store. Errors: [${errors.join(", ")}]`);
+      this.errors = errors;
+    }
+  };
+  function dispose(arg) {
+    if (Iterable.is(arg)) {
+      const errors = [];
+      for (const d of arg) {
+        if (d) {
+          try {
+            d.dispose();
+          } catch (e) {
+            errors.push(e);
+          }
+        }
+      }
+      if (errors.length === 1) {
+        throw errors[0];
+      } else if (errors.length > 1) {
+        throw new MultiDisposeError(errors);
+      }
+      return Array.isArray(arg) ? [] : arg;
+    } else if (arg) {
+      arg.dispose();
+      return arg;
+    }
+  }
+  function combinedDisposable(...disposables) {
+    const parent = toDisposable(() => dispose(disposables));
+    setParentOfDisposables(disposables, parent);
+    return parent;
+  }
+  function toDisposable(fn) {
+    const self2 = trackDisposable({
+      dispose: once(() => {
+        markAsDisposed(self2);
+        fn();
+      })
+    });
+    return self2;
+  }
+  var DisposableStore = class {
+    constructor() {
+      this._toDispose = /* @__PURE__ */ new Set();
+      this._isDisposed = false;
+      trackDisposable(this);
+    }
+    /**
+     * Dispose of all registered disposables and mark this object as disposed.
+     *
+     * Any future disposables added to this object will be disposed of on `add`.
+     */
+    dispose() {
+      if (this._isDisposed) {
+        return;
+      }
+      markAsDisposed(this);
+      this._isDisposed = true;
+      this.clear();
+    }
+    /**
+     * Returns `true` if this object has been disposed
+     */
+    get isDisposed() {
+      return this._isDisposed;
+    }
+    /**
+     * Dispose of all registered disposables but do not mark this object as disposed.
+     */
+    clear() {
+      try {
+        dispose(this._toDispose.values());
+      } finally {
+        this._toDispose.clear();
+      }
+    }
+    add(o) {
+      if (!o) {
+        return o;
+      }
+      if (o === this) {
+        throw new Error("Cannot register a disposable on itself!");
+      }
+      setParentOfDisposable(o, this);
+      if (this._isDisposed) {
+        if (!DisposableStore.DISABLE_DISPOSED_WARNING) {
+          console.warn(new Error("Trying to add a disposable to a DisposableStore that has already been disposed of. The added object will be leaked!").stack);
+        }
+      } else {
+        this._toDispose.add(o);
+      }
+      return o;
+    }
+  };
+  DisposableStore.DISABLE_DISPOSED_WARNING = false;
+  var Disposable = class {
+    constructor() {
+      this._store = new DisposableStore();
+      trackDisposable(this);
+      setParentOfDisposable(this._store, this);
+    }
+    dispose() {
+      markAsDisposed(this);
+      this._store.dispose();
+    }
+    _register(o) {
+      if (o === this) {
+        throw new Error("Cannot register a disposable on itself!");
+      }
+      return this._store.add(o);
+    }
+  };
+  Disposable.None = Object.freeze({ dispose() {
+  } });
+  var SafeDisposable = class {
+    constructor() {
+      this.dispose = () => {
+      };
+      this.unset = () => {
+      };
+      this.isset = () => false;
+      trackDisposable(this);
+    }
+    set(fn) {
+      let callback = fn;
+      this.unset = () => callback = void 0;
+      this.isset = () => callback !== void 0;
+      this.dispose = () => {
+        if (callback) {
+          callback();
+          callback = void 0;
+          markAsDisposed(this);
+        }
+      };
+      return this;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/linkedList.js
+  var Node = class {
+    constructor(element) {
+      this.element = element;
+      this.next = Node.Undefined;
+      this.prev = Node.Undefined;
+    }
+  };
+  Node.Undefined = new Node(void 0);
+  var LinkedList = class {
+    constructor() {
+      this._first = Node.Undefined;
+      this._last = Node.Undefined;
+      this._size = 0;
+    }
+    get size() {
+      return this._size;
+    }
+    isEmpty() {
+      return this._first === Node.Undefined;
+    }
+    clear() {
+      let node = this._first;
+      while (node !== Node.Undefined) {
+        const next = node.next;
+        node.prev = Node.Undefined;
+        node.next = Node.Undefined;
+        node = next;
+      }
+      this._first = Node.Undefined;
+      this._last = Node.Undefined;
+      this._size = 0;
+    }
+    unshift(element) {
+      return this._insert(element, false);
+    }
+    push(element) {
+      return this._insert(element, true);
+    }
+    _insert(element, atTheEnd) {
+      const newNode = new Node(element);
+      if (this._first === Node.Undefined) {
+        this._first = newNode;
+        this._last = newNode;
+      } else if (atTheEnd) {
+        const oldLast = this._last;
+        this._last = newNode;
+        newNode.prev = oldLast;
+        oldLast.next = newNode;
+      } else {
+        const oldFirst = this._first;
+        this._first = newNode;
+        newNode.next = oldFirst;
+        oldFirst.prev = newNode;
+      }
+      this._size += 1;
+      let didRemove = false;
+      return () => {
+        if (!didRemove) {
+          didRemove = true;
+          this._remove(newNode);
+        }
+      };
+    }
+    shift() {
+      if (this._first === Node.Undefined) {
+        return void 0;
+      } else {
+        const res = this._first.element;
+        this._remove(this._first);
+        return res;
+      }
+    }
+    pop() {
+      if (this._last === Node.Undefined) {
+        return void 0;
+      } else {
+        const res = this._last.element;
+        this._remove(this._last);
+        return res;
+      }
+    }
+    _remove(node) {
+      if (node.prev !== Node.Undefined && node.next !== Node.Undefined) {
+        const anchor = node.prev;
+        anchor.next = node.next;
+        node.next.prev = anchor;
+      } else if (node.prev === Node.Undefined && node.next === Node.Undefined) {
+        this._first = Node.Undefined;
+        this._last = Node.Undefined;
+      } else if (node.next === Node.Undefined) {
+        this._last = this._last.prev;
+        this._last.next = Node.Undefined;
+      } else if (node.prev === Node.Undefined) {
+        this._first = this._first.next;
+        this._first.prev = Node.Undefined;
+      }
+      this._size -= 1;
+    }
+    *[Symbol.iterator]() {
+      let node = this._first;
+      while (node !== Node.Undefined) {
+        yield node.element;
+        node = node.next;
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/nls.js
+  var isPseudo = typeof document !== "undefined" && document.location && document.location.hash.indexOf("pseudo=true") >= 0;
+  function _format(message, args) {
+    let result;
+    if (args.length === 0) {
+      result = message;
+    } else {
+      result = message.replace(/\{(\d+)\}/g, (match, rest) => {
+        const index = rest[0];
+        const arg = args[index];
+        let result2 = match;
+        if (typeof arg === "string") {
+          result2 = arg;
+        } else if (typeof arg === "number" || typeof arg === "boolean" || arg === void 0 || arg === null) {
+          result2 = String(arg);
+        }
+        return result2;
+      });
+    }
+    if (isPseudo) {
+      result = "\uFF3B" + result.replace(/[aouei]/g, "$&$&") + "\uFF3D";
+    }
+    return result;
+  }
+  function localize(data, message, ...args) {
+    return _format(message, args);
+  }
+  function getConfiguredDefaultLocale(_) {
+    return void 0;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/platform.js
+  var _a;
+  var LANGUAGE_DEFAULT = "en";
+  var _isWindows = false;
+  var _isMacintosh = false;
+  var _isLinux = false;
+  var _isLinuxSnap = false;
+  var _isNative = false;
+  var _isWeb = false;
+  var _isElectron = false;
+  var _isIOS = false;
+  var _isCI = false;
+  var _locale = void 0;
+  var _language = LANGUAGE_DEFAULT;
+  var _translationsConfigFile = void 0;
+  var _userAgent = void 0;
+  var globals = typeof self === "object" ? self : typeof global === "object" ? global : {};
+  var nodeProcess = void 0;
+  if (typeof globals.vscode !== "undefined" && typeof globals.vscode.process !== "undefined") {
+    nodeProcess = globals.vscode.process;
+  } else if (typeof process !== "undefined") {
+    nodeProcess = process;
+  }
+  var isElectronProcess = typeof ((_a = nodeProcess === null || nodeProcess === void 0 ? void 0 : nodeProcess.versions) === null || _a === void 0 ? void 0 : _a.electron) === "string";
+  var isElectronRenderer = isElectronProcess && (nodeProcess === null || nodeProcess === void 0 ? void 0 : nodeProcess.type) === "renderer";
+  if (typeof navigator === "object" && !isElectronRenderer) {
+    _userAgent = navigator.userAgent;
+    _isWindows = _userAgent.indexOf("Windows") >= 0;
+    _isMacintosh = _userAgent.indexOf("Macintosh") >= 0;
+    _isIOS = (_userAgent.indexOf("Macintosh") >= 0 || _userAgent.indexOf("iPad") >= 0 || _userAgent.indexOf("iPhone") >= 0) && !!navigator.maxTouchPoints && navigator.maxTouchPoints > 0;
+    _isLinux = _userAgent.indexOf("Linux") >= 0;
+    _isWeb = true;
+    const configuredLocale = getConfiguredDefaultLocale(
+      // This call _must_ be done in the file that calls `nls.getConfiguredDefaultLocale`
+      // to ensure that the NLS AMD Loader plugin has been loaded and configured.
+      // This is because the loader plugin decides what the default locale is based on
+      // how it's able to resolve the strings.
+      localize({ key: "ensureLoaderPluginIsLoaded", comment: ["{Locked}"] }, "_")
+    );
+    _locale = configuredLocale || LANGUAGE_DEFAULT;
+    _language = _locale;
+  } else if (typeof nodeProcess === "object") {
+    _isWindows = nodeProcess.platform === "win32";
+    _isMacintosh = nodeProcess.platform === "darwin";
+    _isLinux = nodeProcess.platform === "linux";
+    _isLinuxSnap = _isLinux && !!nodeProcess.env["SNAP"] && !!nodeProcess.env["SNAP_REVISION"];
+    _isElectron = isElectronProcess;
+    _isCI = !!nodeProcess.env["CI"] || !!nodeProcess.env["BUILD_ARTIFACTSTAGINGDIRECTORY"];
+    _locale = LANGUAGE_DEFAULT;
+    _language = LANGUAGE_DEFAULT;
+    const rawNlsConfig = nodeProcess.env["VSCODE_NLS_CONFIG"];
+    if (rawNlsConfig) {
+      try {
+        const nlsConfig = JSON.parse(rawNlsConfig);
+        const resolved = nlsConfig.availableLanguages["*"];
+        _locale = nlsConfig.locale;
+        _language = resolved ? resolved : LANGUAGE_DEFAULT;
+        _translationsConfigFile = nlsConfig._translationsConfigFile;
+      } catch (e) {
+      }
+    }
+    _isNative = true;
+  } else {
+    console.error("Unable to resolve platform.");
+  }
+  var _platform = 0;
+  if (_isMacintosh) {
+    _platform = 1;
+  } else if (_isWindows) {
+    _platform = 3;
+  } else if (_isLinux) {
+    _platform = 2;
+  }
+  var isWindows = _isWindows;
+  var isMacintosh = _isMacintosh;
+  var isWebWorker = _isWeb && typeof globals.importScripts === "function";
+  var userAgent = _userAgent;
+  var setTimeout0IsFaster = typeof globals.postMessage === "function" && !globals.importScripts;
+  var setTimeout0 = (() => {
+    if (setTimeout0IsFaster) {
+      const pending = [];
+      globals.addEventListener("message", (e) => {
+        if (e.data && e.data.vscodeScheduleAsyncWork) {
+          for (let i = 0, len = pending.length; i < len; i++) {
+            const candidate = pending[i];
+            if (candidate.id === e.data.vscodeScheduleAsyncWork) {
+              pending.splice(i, 1);
+              candidate.callback();
+              return;
+            }
+          }
+        }
+      });
+      let lastId = 0;
+      return (callback) => {
+        const myId = ++lastId;
+        pending.push({
+          id: myId,
+          callback
+        });
+        globals.postMessage({ vscodeScheduleAsyncWork: myId }, "*");
+      };
+    }
+    return (callback) => setTimeout(callback);
+  })();
+  var isChrome = !!(userAgent && userAgent.indexOf("Chrome") >= 0);
+  var isFirefox = !!(userAgent && userAgent.indexOf("Firefox") >= 0);
+  var isSafari = !!(!isChrome && (userAgent && userAgent.indexOf("Safari") >= 0));
+  var isEdge = !!(userAgent && userAgent.indexOf("Edg/") >= 0);
+  var isAndroid = !!(userAgent && userAgent.indexOf("Android") >= 0);
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/stopwatch.js
+  var hasPerformanceNow = globals.performance && typeof globals.performance.now === "function";
+  var StopWatch = class {
+    constructor(highResolution) {
+      this._highResolution = hasPerformanceNow && highResolution;
+      this._startTime = this._now();
+      this._stopTime = -1;
+    }
+    static create(highResolution = true) {
+      return new StopWatch(highResolution);
+    }
+    stop() {
+      this._stopTime = this._now();
+    }
+    elapsed() {
+      if (this._stopTime !== -1) {
+        return this._stopTime - this._startTime;
+      }
+      return this._now() - this._startTime;
+    }
+    _now() {
+      return this._highResolution ? globals.performance.now() : Date.now();
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/event.js
+  var _enableDisposeWithListenerWarning = false;
+  var _enableSnapshotPotentialLeakWarning = false;
+  var Event;
+  (function(Event2) {
+    Event2.None = () => Disposable.None;
+    function _addLeakageTraceLogic(options) {
+      if (_enableSnapshotPotentialLeakWarning) {
+        const { onListenerDidAdd: origListenerDidAdd } = options;
+        const stack = Stacktrace.create();
+        let count = 0;
+        options.onListenerDidAdd = () => {
+          if (++count === 2) {
+            console.warn("snapshotted emitter LIKELY used public and SHOULD HAVE BEEN created with DisposableStore. snapshotted here");
+            stack.print();
+          }
+          origListenerDidAdd === null || origListenerDidAdd === void 0 ? void 0 : origListenerDidAdd();
+        };
+      }
+    }
+    function once3(event) {
+      return (listener, thisArgs = null, disposables) => {
+        let didFire = false;
+        let result = void 0;
+        result = event((e) => {
+          if (didFire) {
+            return;
+          } else if (result) {
+            result.dispose();
+          } else {
+            didFire = true;
+          }
+          return listener.call(thisArgs, e);
+        }, null, disposables);
+        if (didFire) {
+          result.dispose();
+        }
+        return result;
+      };
+    }
+    Event2.once = once3;
+    function map(event, map2, disposable) {
+      return snapshot((listener, thisArgs = null, disposables) => event((i) => listener.call(thisArgs, map2(i)), null, disposables), disposable);
+    }
+    Event2.map = map;
+    function forEach(event, each, disposable) {
+      return snapshot((listener, thisArgs = null, disposables) => event((i) => {
+        each(i);
+        listener.call(thisArgs, i);
+      }, null, disposables), disposable);
+    }
+    Event2.forEach = forEach;
+    function filter(event, filter2, disposable) {
+      return snapshot((listener, thisArgs = null, disposables) => event((e) => filter2(e) && listener.call(thisArgs, e), null, disposables), disposable);
+    }
+    Event2.filter = filter;
+    function signal(event) {
+      return event;
+    }
+    Event2.signal = signal;
+    function any(...events) {
+      return (listener, thisArgs = null, disposables) => combinedDisposable(...events.map((event) => event((e) => listener.call(thisArgs, e), null, disposables)));
+    }
+    Event2.any = any;
+    function reduce(event, merge, initial, disposable) {
+      let output = initial;
+      return map(event, (e) => {
+        output = merge(output, e);
+        return output;
+      }, disposable);
+    }
+    Event2.reduce = reduce;
+    function snapshot(event, disposable) {
+      let listener;
+      const options = {
+        onFirstListenerAdd() {
+          listener = event(emitter.fire, emitter);
+        },
+        onLastListenerRemove() {
+          listener === null || listener === void 0 ? void 0 : listener.dispose();
+        }
+      };
+      if (!disposable) {
+        _addLeakageTraceLogic(options);
+      }
+      const emitter = new Emitter(options);
+      disposable === null || disposable === void 0 ? void 0 : disposable.add(emitter);
+      return emitter.event;
+    }
+    function debounce(event, merge, delay = 100, leading = false, leakWarningThreshold, disposable) {
+      let subscription;
+      let output = void 0;
+      let handle = void 0;
+      let numDebouncedCalls = 0;
+      const options = {
+        leakWarningThreshold,
+        onFirstListenerAdd() {
+          subscription = event((cur) => {
+            numDebouncedCalls++;
+            output = merge(output, cur);
+            if (leading && !handle) {
+              emitter.fire(output);
+              output = void 0;
+            }
+            clearTimeout(handle);
+            handle = setTimeout(() => {
+              const _output = output;
+              output = void 0;
+              handle = void 0;
+              if (!leading || numDebouncedCalls > 1) {
+                emitter.fire(_output);
+              }
+              numDebouncedCalls = 0;
+            }, delay);
+          });
+        },
+        onLastListenerRemove() {
+          subscription.dispose();
+        }
+      };
+      if (!disposable) {
+        _addLeakageTraceLogic(options);
+      }
+      const emitter = new Emitter(options);
+      disposable === null || disposable === void 0 ? void 0 : disposable.add(emitter);
+      return emitter.event;
+    }
+    Event2.debounce = debounce;
+    function latch(event, equals2 = (a, b) => a === b, disposable) {
+      let firstCall = true;
+      let cache;
+      return filter(event, (value) => {
+        const shouldEmit = firstCall || !equals2(value, cache);
+        firstCall = false;
+        cache = value;
+        return shouldEmit;
+      }, disposable);
+    }
+    Event2.latch = latch;
+    function split(event, isT, disposable) {
+      return [
+        Event2.filter(event, isT, disposable),
+        Event2.filter(event, (e) => !isT(e), disposable)
+      ];
+    }
+    Event2.split = split;
+    function buffer(event, flushAfterTimeout = false, _buffer = []) {
+      let buffer2 = _buffer.slice();
+      let listener = event((e) => {
+        if (buffer2) {
+          buffer2.push(e);
+        } else {
+          emitter.fire(e);
+        }
+      });
+      const flush = () => {
+        buffer2 === null || buffer2 === void 0 ? void 0 : buffer2.forEach((e) => emitter.fire(e));
+        buffer2 = null;
+      };
+      const emitter = new Emitter({
+        onFirstListenerAdd() {
+          if (!listener) {
+            listener = event((e) => emitter.fire(e));
+          }
+        },
+        onFirstListenerDidAdd() {
+          if (buffer2) {
+            if (flushAfterTimeout) {
+              setTimeout(flush);
+            } else {
+              flush();
+            }
+          }
+        },
+        onLastListenerRemove() {
+          if (listener) {
+            listener.dispose();
+          }
+          listener = null;
+        }
+      });
+      return emitter.event;
+    }
+    Event2.buffer = buffer;
+    class ChainableEvent {
+      constructor(event) {
+        this.event = event;
+        this.disposables = new DisposableStore();
+      }
+      map(fn) {
+        return new ChainableEvent(map(this.event, fn, this.disposables));
+      }
+      forEach(fn) {
+        return new ChainableEvent(forEach(this.event, fn, this.disposables));
+      }
+      filter(fn) {
+        return new ChainableEvent(filter(this.event, fn, this.disposables));
+      }
+      reduce(merge, initial) {
+        return new ChainableEvent(reduce(this.event, merge, initial, this.disposables));
+      }
+      latch() {
+        return new ChainableEvent(latch(this.event, void 0, this.disposables));
+      }
+      debounce(merge, delay = 100, leading = false, leakWarningThreshold) {
+        return new ChainableEvent(debounce(this.event, merge, delay, leading, leakWarningThreshold, this.disposables));
+      }
+      on(listener, thisArgs, disposables) {
+        return this.event(listener, thisArgs, disposables);
+      }
+      once(listener, thisArgs, disposables) {
+        return once3(this.event)(listener, thisArgs, disposables);
+      }
+      dispose() {
+        this.disposables.dispose();
+      }
+    }
+    function chain(event) {
+      return new ChainableEvent(event);
+    }
+    Event2.chain = chain;
+    function fromNodeEventEmitter(emitter, eventName, map2 = (id) => id) {
+      const fn = (...args) => result.fire(map2(...args));
+      const onFirstListenerAdd = () => emitter.on(eventName, fn);
+      const onLastListenerRemove = () => emitter.removeListener(eventName, fn);
+      const result = new Emitter({ onFirstListenerAdd, onLastListenerRemove });
+      return result.event;
+    }
+    Event2.fromNodeEventEmitter = fromNodeEventEmitter;
+    function fromDOMEventEmitter(emitter, eventName, map2 = (id) => id) {
+      const fn = (...args) => result.fire(map2(...args));
+      const onFirstListenerAdd = () => emitter.addEventListener(eventName, fn);
+      const onLastListenerRemove = () => emitter.removeEventListener(eventName, fn);
+      const result = new Emitter({ onFirstListenerAdd, onLastListenerRemove });
+      return result.event;
+    }
+    Event2.fromDOMEventEmitter = fromDOMEventEmitter;
+    function toPromise(event) {
+      return new Promise((resolve2) => once3(event)(resolve2));
+    }
+    Event2.toPromise = toPromise;
+    function runAndSubscribe(event, handler) {
+      handler(void 0);
+      return event((e) => handler(e));
+    }
+    Event2.runAndSubscribe = runAndSubscribe;
+    function runAndSubscribeWithStore(event, handler) {
+      let store = null;
+      function run(e) {
+        store === null || store === void 0 ? void 0 : store.dispose();
+        store = new DisposableStore();
+        handler(e, store);
+      }
+      run(void 0);
+      const disposable = event((e) => run(e));
+      return toDisposable(() => {
+        disposable.dispose();
+        store === null || store === void 0 ? void 0 : store.dispose();
+      });
+    }
+    Event2.runAndSubscribeWithStore = runAndSubscribeWithStore;
+    class EmitterObserver {
+      constructor(obs, store) {
+        this.obs = obs;
+        this._counter = 0;
+        this._hasChanged = false;
+        const options = {
+          onFirstListenerAdd: () => {
+            obs.addObserver(this);
+          },
+          onLastListenerRemove: () => {
+            obs.removeObserver(this);
+          }
+        };
+        if (!store) {
+          _addLeakageTraceLogic(options);
+        }
+        this.emitter = new Emitter(options);
+        if (store) {
+          store.add(this.emitter);
+        }
+      }
+      beginUpdate(_observable) {
+        this._counter++;
+      }
+      handleChange(_observable, _change) {
+        this._hasChanged = true;
+      }
+      endUpdate(_observable) {
+        if (--this._counter === 0) {
+          if (this._hasChanged) {
+            this._hasChanged = false;
+            this.emitter.fire(this.obs.get());
+          }
+        }
+      }
+    }
+    function fromObservable(obs, store) {
+      const observer = new EmitterObserver(obs, store);
+      return observer.emitter.event;
+    }
+    Event2.fromObservable = fromObservable;
+  })(Event || (Event = {}));
+  var EventProfiling = class {
+    constructor(name) {
+      this._listenerCount = 0;
+      this._invocationCount = 0;
+      this._elapsedOverall = 0;
+      this._name = `${name}_${EventProfiling._idPool++}`;
+    }
+    start(listenerCount) {
+      this._stopWatch = new StopWatch(true);
+      this._listenerCount = listenerCount;
+    }
+    stop() {
+      if (this._stopWatch) {
+        const elapsed = this._stopWatch.elapsed();
+        this._elapsedOverall += elapsed;
+        this._invocationCount += 1;
+        console.info(`did FIRE ${this._name}: elapsed_ms: ${elapsed.toFixed(5)}, listener: ${this._listenerCount} (elapsed_overall: ${this._elapsedOverall.toFixed(2)}, invocations: ${this._invocationCount})`);
+        this._stopWatch = void 0;
+      }
+    }
+  };
+  EventProfiling._idPool = 0;
+  var _globalLeakWarningThreshold = -1;
+  var LeakageMonitor = class {
+    constructor(customThreshold, name = Math.random().toString(18).slice(2, 5)) {
+      this.customThreshold = customThreshold;
+      this.name = name;
+      this._warnCountdown = 0;
+    }
+    dispose() {
+      if (this._stacks) {
+        this._stacks.clear();
+      }
+    }
+    check(stack, listenerCount) {
+      let threshold = _globalLeakWarningThreshold;
+      if (typeof this.customThreshold === "number") {
+        threshold = this.customThreshold;
+      }
+      if (threshold <= 0 || listenerCount < threshold) {
+        return void 0;
+      }
+      if (!this._stacks) {
+        this._stacks = /* @__PURE__ */ new Map();
+      }
+      const count = this._stacks.get(stack.value) || 0;
+      this._stacks.set(stack.value, count + 1);
+      this._warnCountdown -= 1;
+      if (this._warnCountdown <= 0) {
+        this._warnCountdown = threshold * 0.5;
+        let topStack;
+        let topCount = 0;
+        for (const [stack2, count2] of this._stacks) {
+          if (!topStack || topCount < count2) {
+            topStack = stack2;
+            topCount = count2;
+          }
+        }
+        console.warn(`[${this.name}] potential listener LEAK detected, having ${listenerCount} listeners already. MOST frequent listener (${topCount}):`);
+        console.warn(topStack);
+      }
+      return () => {
+        const count2 = this._stacks.get(stack.value) || 0;
+        this._stacks.set(stack.value, count2 - 1);
+      };
+    }
+  };
+  var Stacktrace = class {
+    constructor(value) {
+      this.value = value;
+    }
+    static create() {
+      var _a3;
+      return new Stacktrace((_a3 = new Error().stack) !== null && _a3 !== void 0 ? _a3 : "");
+    }
+    print() {
+      console.warn(this.value.split("\n").slice(2).join("\n"));
+    }
+  };
+  var Listener = class {
+    constructor(callback, callbackThis, stack) {
+      this.callback = callback;
+      this.callbackThis = callbackThis;
+      this.stack = stack;
+      this.subscription = new SafeDisposable();
+    }
+    invoke(e) {
+      this.callback.call(this.callbackThis, e);
+    }
+  };
+  var Emitter = class {
+    constructor(options) {
+      var _a3, _b;
+      this._disposed = false;
+      this._options = options;
+      this._leakageMon = _globalLeakWarningThreshold > 0 ? new LeakageMonitor(this._options && this._options.leakWarningThreshold) : void 0;
+      this._perfMon = ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3._profName) ? new EventProfiling(this._options._profName) : void 0;
+      this._deliveryQueue = (_b = this._options) === null || _b === void 0 ? void 0 : _b.deliveryQueue;
+    }
+    dispose() {
+      var _a3, _b, _c, _d;
+      if (!this._disposed) {
+        this._disposed = true;
+        if (this._listeners) {
+          if (_enableDisposeWithListenerWarning) {
+            const listeners = Array.from(this._listeners);
+            queueMicrotask(() => {
+              var _a4;
+              for (const listener of listeners) {
+                if (listener.subscription.isset()) {
+                  listener.subscription.unset();
+                  (_a4 = listener.stack) === null || _a4 === void 0 ? void 0 : _a4.print();
+                }
+              }
+            });
+          }
+          this._listeners.clear();
+        }
+        (_a3 = this._deliveryQueue) === null || _a3 === void 0 ? void 0 : _a3.clear(this);
+        (_c = (_b = this._options) === null || _b === void 0 ? void 0 : _b.onLastListenerRemove) === null || _c === void 0 ? void 0 : _c.call(_b);
+        (_d = this._leakageMon) === null || _d === void 0 ? void 0 : _d.dispose();
+      }
+    }
+    /**
+     * For the public to allow to subscribe
+     * to events from this Emitter
+     */
+    get event() {
+      if (!this._event) {
+        this._event = (callback, thisArgs, disposables) => {
+          var _a3, _b, _c;
+          if (!this._listeners) {
+            this._listeners = new LinkedList();
+          }
+          const firstListener = this._listeners.isEmpty();
+          if (firstListener && ((_a3 = this._options) === null || _a3 === void 0 ? void 0 : _a3.onFirstListenerAdd)) {
+            this._options.onFirstListenerAdd(this);
+          }
+          let removeMonitor;
+          let stack;
+          if (this._leakageMon && this._listeners.size >= 30) {
+            stack = Stacktrace.create();
+            removeMonitor = this._leakageMon.check(stack, this._listeners.size + 1);
+          }
+          if (_enableDisposeWithListenerWarning) {
+            stack = stack !== null && stack !== void 0 ? stack : Stacktrace.create();
+          }
+          const listener = new Listener(callback, thisArgs, stack);
+          const removeListener = this._listeners.push(listener);
+          if (firstListener && ((_b = this._options) === null || _b === void 0 ? void 0 : _b.onFirstListenerDidAdd)) {
+            this._options.onFirstListenerDidAdd(this);
+          }
+          if ((_c = this._options) === null || _c === void 0 ? void 0 : _c.onListenerDidAdd) {
+            this._options.onListenerDidAdd(this, callback, thisArgs);
+          }
+          const result = listener.subscription.set(() => {
+            removeMonitor === null || removeMonitor === void 0 ? void 0 : removeMonitor();
+            if (!this._disposed) {
+              removeListener();
+              if (this._options && this._options.onLastListenerRemove) {
+                const hasListeners = this._listeners && !this._listeners.isEmpty();
+                if (!hasListeners) {
+                  this._options.onLastListenerRemove(this);
+                }
+              }
+            }
+          });
+          if (disposables instanceof DisposableStore) {
+            disposables.add(result);
+          } else if (Array.isArray(disposables)) {
+            disposables.push(result);
+          }
+          return result;
+        };
+      }
+      return this._event;
+    }
+    /**
+     * To be kept private to fire an event to
+     * subscribers
+     */
+    fire(event) {
+      var _a3, _b;
+      if (this._listeners) {
+        if (!this._deliveryQueue) {
+          this._deliveryQueue = new PrivateEventDeliveryQueue();
+        }
+        for (const listener of this._listeners) {
+          this._deliveryQueue.push(this, listener, event);
+        }
+        (_a3 = this._perfMon) === null || _a3 === void 0 ? void 0 : _a3.start(this._deliveryQueue.size);
+        this._deliveryQueue.deliver();
+        (_b = this._perfMon) === null || _b === void 0 ? void 0 : _b.stop();
+      }
+    }
+  };
+  var EventDeliveryQueue = class {
+    constructor() {
+      this._queue = new LinkedList();
+    }
+    get size() {
+      return this._queue.size;
+    }
+    push(emitter, listener, event) {
+      this._queue.push(new EventDeliveryQueueElement(emitter, listener, event));
+    }
+    clear(emitter) {
+      const newQueue = new LinkedList();
+      for (const element of this._queue) {
+        if (element.emitter !== emitter) {
+          newQueue.push(element);
+        }
+      }
+      this._queue = newQueue;
+    }
+    deliver() {
+      while (this._queue.size > 0) {
+        const element = this._queue.shift();
+        try {
+          element.listener.invoke(element.event);
+        } catch (e) {
+          onUnexpectedError(e);
+        }
+      }
+    }
+  };
+  var PrivateEventDeliveryQueue = class extends EventDeliveryQueue {
+    clear(emitter) {
+      this._queue.clear();
+    }
+  };
+  var EventDeliveryQueueElement = class {
+    constructor(emitter, listener, event) {
+      this.emitter = emitter;
+      this.listener = listener;
+      this.event = event;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/types.js
+  function getAllPropertyNames(obj) {
+    let res = [];
+    let proto = Object.getPrototypeOf(obj);
+    while (Object.prototype !== proto) {
+      res = res.concat(Object.getOwnPropertyNames(proto));
+      proto = Object.getPrototypeOf(proto);
+    }
+    return res;
+  }
+  function getAllMethodNames(obj) {
+    const methods = [];
+    for (const prop of getAllPropertyNames(obj)) {
+      if (typeof obj[prop] === "function") {
+        methods.push(prop);
+      }
+    }
+    return methods;
+  }
+  function createProxyObject(methodNames, invoke) {
+    const createProxyMethod = (method) => {
+      return function() {
+        const args = Array.prototype.slice.call(arguments, 0);
+        return invoke(method, args);
+      };
+    };
+    const result = {};
+    for (const methodName of methodNames) {
+      result[methodName] = createProxyMethod(methodName);
+    }
+    return result;
+  }
+  function assertNever(value, message = "Unreachable") {
+    throw new Error(message);
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/cache.js
+  var LRUCachedFunction = class {
+    constructor(fn) {
+      this.fn = fn;
+      this.lastCache = void 0;
+      this.lastArgKey = void 0;
+    }
+    get(arg) {
+      const key = JSON.stringify(arg);
+      if (this.lastArgKey !== key) {
+        this.lastArgKey = key;
+        this.lastCache = this.fn(arg);
+      }
+      return this.lastCache;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/lazy.js
+  var Lazy = class {
+    constructor(executor) {
+      this.executor = executor;
+      this._didRun = false;
+    }
+    /**
+     * True if the lazy value has been resolved.
+     */
+    hasValue() {
+      return this._didRun;
+    }
+    /**
+     * Get the wrapped value.
+     *
+     * This will force evaluation of the lazy value if it has not been resolved yet. Lazy values are only
+     * resolved once. `getValue` will re-throw exceptions that are hit while resolving the value
+     */
+    getValue() {
+      if (!this._didRun) {
+        try {
+          this._value = this.executor();
+        } catch (err) {
+          this._error = err;
+        } finally {
+          this._didRun = true;
+        }
+      }
+      if (this._error) {
+        throw this._error;
+      }
+      return this._value;
+    }
+    /**
+     * Get the wrapped value without forcing evaluation.
+     */
+    get rawValue() {
+      return this._value;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/strings.js
+  var _a2;
+  function escapeRegExpCharacters(value) {
+    return value.replace(/[\\\{\}\*\+\?\|\^\$\.\[\]\(\)]/g, "\\$&");
+  }
+  function splitLines(str) {
+    return str.split(/\r\n|\r|\n/);
+  }
+  function firstNonWhitespaceIndex(str) {
+    for (let i = 0, len = str.length; i < len; i++) {
+      const chCode = str.charCodeAt(i);
+      if (chCode !== 32 && chCode !== 9) {
+        return i;
+      }
+    }
+    return -1;
+  }
+  function lastNonWhitespaceIndex(str, startIndex = str.length - 1) {
+    for (let i = startIndex; i >= 0; i--) {
+      const chCode = str.charCodeAt(i);
+      if (chCode !== 32 && chCode !== 9) {
+        return i;
+      }
+    }
+    return -1;
+  }
+  function isUpperAsciiLetter(code) {
+    return code >= 65 && code <= 90;
+  }
+  function isHighSurrogate(charCode) {
+    return 55296 <= charCode && charCode <= 56319;
+  }
+  function isLowSurrogate(charCode) {
+    return 56320 <= charCode && charCode <= 57343;
+  }
+  function computeCodePoint(highSurrogate, lowSurrogate) {
+    return (highSurrogate - 55296 << 10) + (lowSurrogate - 56320) + 65536;
+  }
+  function getNextCodePoint(str, len, offset) {
+    const charCode = str.charCodeAt(offset);
+    if (isHighSurrogate(charCode) && offset + 1 < len) {
+      const nextCharCode = str.charCodeAt(offset + 1);
+      if (isLowSurrogate(nextCharCode)) {
+        return computeCodePoint(charCode, nextCharCode);
+      }
+    }
+    return charCode;
+  }
+  var IS_BASIC_ASCII = /^[\t\n\r\x20-\x7E]*$/;
+  function isBasicASCII(str) {
+    return IS_BASIC_ASCII.test(str);
+  }
+  var UTF8_BOM_CHARACTER = String.fromCharCode(
+    65279
+    /* CharCode.UTF8_BOM */
+  );
+  var GraphemeBreakTree = class {
+    constructor() {
+      this._data = getGraphemeBreakRawData();
+    }
+    static getInstance() {
+      if (!GraphemeBreakTree._INSTANCE) {
+        GraphemeBreakTree._INSTANCE = new GraphemeBreakTree();
+      }
+      return GraphemeBreakTree._INSTANCE;
+    }
+    getGraphemeBreakType(codePoint) {
+      if (codePoint < 32) {
+        if (codePoint === 10) {
+          return 3;
+        }
+        if (codePoint === 13) {
+          return 2;
+        }
+        return 4;
+      }
+      if (codePoint < 127) {
+        return 0;
+      }
+      const data = this._data;
+      const nodeCount = data.length / 3;
+      let nodeIndex = 1;
+      while (nodeIndex <= nodeCount) {
+        if (codePoint < data[3 * nodeIndex]) {
+          nodeIndex = 2 * nodeIndex;
+        } else if (codePoint > data[3 * nodeIndex + 1]) {
+          nodeIndex = 2 * nodeIndex + 1;
+        } else {
+          return data[3 * nodeIndex + 2];
+        }
+      }
+      return 0;
+    }
+  };
+  GraphemeBreakTree._INSTANCE = null;
+  function getGraphemeBreakRawData() {
+    return JSON.parse("[0,0,0,51229,51255,12,44061,44087,12,127462,127487,6,7083,7085,5,47645,47671,12,54813,54839,12,128678,128678,14,3270,3270,5,9919,9923,14,45853,45879,12,49437,49463,12,53021,53047,12,71216,71218,7,128398,128399,14,129360,129374,14,2519,2519,5,4448,4519,9,9742,9742,14,12336,12336,14,44957,44983,12,46749,46775,12,48541,48567,12,50333,50359,12,52125,52151,12,53917,53943,12,69888,69890,5,73018,73018,5,127990,127990,14,128558,128559,14,128759,128760,14,129653,129655,14,2027,2035,5,2891,2892,7,3761,3761,5,6683,6683,5,8293,8293,4,9825,9826,14,9999,9999,14,43452,43453,5,44509,44535,12,45405,45431,12,46301,46327,12,47197,47223,12,48093,48119,12,48989,49015,12,49885,49911,12,50781,50807,12,51677,51703,12,52573,52599,12,53469,53495,12,54365,54391,12,65279,65279,4,70471,70472,7,72145,72147,7,119173,119179,5,127799,127818,14,128240,128244,14,128512,128512,14,128652,128652,14,128721,128722,14,129292,129292,14,129445,129450,14,129734,129743,14,1476,1477,5,2366,2368,7,2750,2752,7,3076,3076,5,3415,3415,5,4141,4144,5,6109,6109,5,6964,6964,5,7394,7400,5,9197,9198,14,9770,9770,14,9877,9877,14,9968,9969,14,10084,10084,14,43052,43052,5,43713,43713,5,44285,44311,12,44733,44759,12,45181,45207,12,45629,45655,12,46077,46103,12,46525,46551,12,46973,46999,12,47421,47447,12,47869,47895,12,48317,48343,12,48765,48791,12,49213,49239,12,49661,49687,12,50109,50135,12,50557,50583,12,51005,51031,12,51453,51479,12,51901,51927,12,52349,52375,12,52797,52823,12,53245,53271,12,53693,53719,12,54141,54167,12,54589,54615,12,55037,55063,12,69506,69509,5,70191,70193,5,70841,70841,7,71463,71467,5,72330,72342,5,94031,94031,5,123628,123631,5,127763,127765,14,127941,127941,14,128043,128062,14,128302,128317,14,128465,128467,14,128539,128539,14,128640,128640,14,128662,128662,14,128703,128703,14,128745,128745,14,129004,129007,14,129329,129330,14,129402,129402,14,129483,129483,14,129686,129704,14,130048,131069,14,173,173,4,1757,1757,1,2200,2207,5,2434,2435,7,2631,2632,5,2817,2817,5,3008,3008,5,3201,3201,5,3387,3388,5,3542,3542,5,3902,3903,7,4190,4192,5,6002,6003,5,6439,6440,5,6765,6770,7,7019,7027,5,7154,7155,7,8205,8205,13,8505,8505,14,9654,9654,14,9757,9757,14,9792,9792,14,9852,9853,14,9890,9894,14,9937,9937,14,9981,9981,14,10035,10036,14,11035,11036,14,42654,42655,5,43346,43347,7,43587,43587,5,44006,44007,7,44173,44199,12,44397,44423,12,44621,44647,12,44845,44871,12,45069,45095,12,45293,45319,12,45517,45543,12,45741,45767,12,45965,45991,12,46189,46215,12,46413,46439,12,46637,46663,12,46861,46887,12,47085,47111,12,47309,47335,12,47533,47559,12,47757,47783,12,47981,48007,12,48205,48231,12,48429,48455,12,48653,48679,12,48877,48903,12,49101,49127,12,49325,49351,12,49549,49575,12,49773,49799,12,49997,50023,12,50221,50247,12,50445,50471,12,50669,50695,12,50893,50919,12,51117,51143,12,51341,51367,12,51565,51591,12,51789,51815,12,52013,52039,12,52237,52263,12,52461,52487,12,52685,52711,12,52909,52935,12,53133,53159,12,53357,53383,12,53581,53607,12,53805,53831,12,54029,54055,12,54253,54279,12,54477,54503,12,54701,54727,12,54925,54951,12,55149,55175,12,68101,68102,5,69762,69762,7,70067,70069,7,70371,70378,5,70720,70721,7,71087,71087,5,71341,71341,5,71995,71996,5,72249,72249,7,72850,72871,5,73109,73109,5,118576,118598,5,121505,121519,5,127245,127247,14,127568,127569,14,127777,127777,14,127872,127891,14,127956,127967,14,128015,128016,14,128110,128172,14,128259,128259,14,128367,128368,14,128424,128424,14,128488,128488,14,128530,128532,14,128550,128551,14,128566,128566,14,128647,128647,14,128656,128656,14,128667,128673,14,128691,128693,14,128715,128715,14,128728,128732,14,128752,128752,14,128765,128767,14,129096,129103,14,129311,129311,14,129344,129349,14,129394,129394,14,129413,129425,14,129466,129471,14,129511,129535,14,129664,129666,14,129719,129722,14,129760,129767,14,917536,917631,5,13,13,2,1160,1161,5,1564,1564,4,1807,1807,1,2085,2087,5,2307,2307,7,2382,2383,7,2497,2500,5,2563,2563,7,2677,2677,5,2763,2764,7,2879,2879,5,2914,2915,5,3021,3021,5,3142,3144,5,3263,3263,5,3285,3286,5,3398,3400,7,3530,3530,5,3633,3633,5,3864,3865,5,3974,3975,5,4155,4156,7,4229,4230,5,5909,5909,7,6078,6085,7,6277,6278,5,6451,6456,7,6744,6750,5,6846,6846,5,6972,6972,5,7074,7077,5,7146,7148,7,7222,7223,5,7416,7417,5,8234,8238,4,8417,8417,5,9000,9000,14,9203,9203,14,9730,9731,14,9748,9749,14,9762,9763,14,9776,9783,14,9800,9811,14,9831,9831,14,9872,9873,14,9882,9882,14,9900,9903,14,9929,9933,14,9941,9960,14,9974,9974,14,9989,9989,14,10006,10006,14,10062,10062,14,10160,10160,14,11647,11647,5,12953,12953,14,43019,43019,5,43232,43249,5,43443,43443,5,43567,43568,7,43696,43696,5,43765,43765,7,44013,44013,5,44117,44143,12,44229,44255,12,44341,44367,12,44453,44479,12,44565,44591,12,44677,44703,12,44789,44815,12,44901,44927,12,45013,45039,12,45125,45151,12,45237,45263,12,45349,45375,12,45461,45487,12,45573,45599,12,45685,45711,12,45797,45823,12,45909,45935,12,46021,46047,12,46133,46159,12,46245,46271,12,46357,46383,12,46469,46495,12,46581,46607,12,46693,46719,12,46805,46831,12,46917,46943,12,47029,47055,12,47141,47167,12,47253,47279,12,47365,47391,12,47477,47503,12,47589,47615,12,47701,47727,12,47813,47839,12,47925,47951,12,48037,48063,12,48149,48175,12,48261,48287,12,48373,48399,12,48485,48511,12,48597,48623,12,48709,48735,12,48821,48847,12,48933,48959,12,49045,49071,12,49157,49183,12,49269,49295,12,49381,49407,12,49493,49519,12,49605,49631,12,49717,49743,12,49829,49855,12,49941,49967,12,50053,50079,12,50165,50191,12,50277,50303,12,50389,50415,12,50501,50527,12,50613,50639,12,50725,50751,12,50837,50863,12,50949,50975,12,51061,51087,12,51173,51199,12,51285,51311,12,51397,51423,12,51509,51535,12,51621,51647,12,51733,51759,12,51845,51871,12,51957,51983,12,52069,52095,12,52181,52207,12,52293,52319,12,52405,52431,12,52517,52543,12,52629,52655,12,52741,52767,12,52853,52879,12,52965,52991,12,53077,53103,12,53189,53215,12,53301,53327,12,53413,53439,12,53525,53551,12,53637,53663,12,53749,53775,12,53861,53887,12,53973,53999,12,54085,54111,12,54197,54223,12,54309,54335,12,54421,54447,12,54533,54559,12,54645,54671,12,54757,54783,12,54869,54895,12,54981,55007,12,55093,55119,12,55243,55291,10,66045,66045,5,68325,68326,5,69688,69702,5,69817,69818,5,69957,69958,7,70089,70092,5,70198,70199,5,70462,70462,5,70502,70508,5,70750,70750,5,70846,70846,7,71100,71101,5,71230,71230,7,71351,71351,5,71737,71738,5,72000,72000,7,72160,72160,5,72273,72278,5,72752,72758,5,72882,72883,5,73031,73031,5,73461,73462,7,94192,94193,7,119149,119149,7,121403,121452,5,122915,122916,5,126980,126980,14,127358,127359,14,127535,127535,14,127759,127759,14,127771,127771,14,127792,127793,14,127825,127867,14,127897,127899,14,127945,127945,14,127985,127986,14,128000,128007,14,128021,128021,14,128066,128100,14,128184,128235,14,128249,128252,14,128266,128276,14,128335,128335,14,128379,128390,14,128407,128419,14,128444,128444,14,128481,128481,14,128499,128499,14,128526,128526,14,128536,128536,14,128543,128543,14,128556,128556,14,128564,128564,14,128577,128580,14,128643,128645,14,128649,128649,14,128654,128654,14,128660,128660,14,128664,128664,14,128675,128675,14,128686,128689,14,128695,128696,14,128705,128709,14,128717,128719,14,128725,128725,14,128736,128741,14,128747,128748,14,128755,128755,14,128762,128762,14,128981,128991,14,129009,129023,14,129160,129167,14,129296,129304,14,129320,129327,14,129340,129342,14,129356,129356,14,129388,129392,14,129399,129400,14,129404,129407,14,129432,129442,14,129454,129455,14,129473,129474,14,129485,129487,14,129648,129651,14,129659,129660,14,129671,129679,14,129709,129711,14,129728,129730,14,129751,129753,14,129776,129782,14,917505,917505,4,917760,917999,5,10,10,3,127,159,4,768,879,5,1471,1471,5,1536,1541,1,1648,1648,5,1767,1768,5,1840,1866,5,2070,2073,5,2137,2139,5,2274,2274,1,2363,2363,7,2377,2380,7,2402,2403,5,2494,2494,5,2507,2508,7,2558,2558,5,2622,2624,7,2641,2641,5,2691,2691,7,2759,2760,5,2786,2787,5,2876,2876,5,2881,2884,5,2901,2902,5,3006,3006,5,3014,3016,7,3072,3072,5,3134,3136,5,3157,3158,5,3260,3260,5,3266,3266,5,3274,3275,7,3328,3329,5,3391,3392,7,3405,3405,5,3457,3457,5,3536,3537,7,3551,3551,5,3636,3642,5,3764,3772,5,3895,3895,5,3967,3967,7,3993,4028,5,4146,4151,5,4182,4183,7,4226,4226,5,4253,4253,5,4957,4959,5,5940,5940,7,6070,6070,7,6087,6088,7,6158,6158,4,6432,6434,5,6448,6449,7,6679,6680,5,6742,6742,5,6754,6754,5,6783,6783,5,6912,6915,5,6966,6970,5,6978,6978,5,7042,7042,7,7080,7081,5,7143,7143,7,7150,7150,7,7212,7219,5,7380,7392,5,7412,7412,5,8203,8203,4,8232,8232,4,8265,8265,14,8400,8412,5,8421,8432,5,8617,8618,14,9167,9167,14,9200,9200,14,9410,9410,14,9723,9726,14,9733,9733,14,9745,9745,14,9752,9752,14,9760,9760,14,9766,9766,14,9774,9774,14,9786,9786,14,9794,9794,14,9823,9823,14,9828,9828,14,9833,9850,14,9855,9855,14,9875,9875,14,9880,9880,14,9885,9887,14,9896,9897,14,9906,9916,14,9926,9927,14,9935,9935,14,9939,9939,14,9962,9962,14,9972,9972,14,9978,9978,14,9986,9986,14,9997,9997,14,10002,10002,14,10017,10017,14,10055,10055,14,10071,10071,14,10133,10135,14,10548,10549,14,11093,11093,14,12330,12333,5,12441,12442,5,42608,42610,5,43010,43010,5,43045,43046,5,43188,43203,7,43302,43309,5,43392,43394,5,43446,43449,5,43493,43493,5,43571,43572,7,43597,43597,7,43703,43704,5,43756,43757,5,44003,44004,7,44009,44010,7,44033,44059,12,44089,44115,12,44145,44171,12,44201,44227,12,44257,44283,12,44313,44339,12,44369,44395,12,44425,44451,12,44481,44507,12,44537,44563,12,44593,44619,12,44649,44675,12,44705,44731,12,44761,44787,12,44817,44843,12,44873,44899,12,44929,44955,12,44985,45011,12,45041,45067,12,45097,45123,12,45153,45179,12,45209,45235,12,45265,45291,12,45321,45347,12,45377,45403,12,45433,45459,12,45489,45515,12,45545,45571,12,45601,45627,12,45657,45683,12,45713,45739,12,45769,45795,12,45825,45851,12,45881,45907,12,45937,45963,12,45993,46019,12,46049,46075,12,46105,46131,12,46161,46187,12,46217,46243,12,46273,46299,12,46329,46355,12,46385,46411,12,46441,46467,12,46497,46523,12,46553,46579,12,46609,46635,12,46665,46691,12,46721,46747,12,46777,46803,12,46833,46859,12,46889,46915,12,46945,46971,12,47001,47027,12,47057,47083,12,47113,47139,12,47169,47195,12,47225,47251,12,47281,47307,12,47337,47363,12,47393,47419,12,47449,47475,12,47505,47531,12,47561,47587,12,47617,47643,12,47673,47699,12,47729,47755,12,47785,47811,12,47841,47867,12,47897,47923,12,47953,47979,12,48009,48035,12,48065,48091,12,48121,48147,12,48177,48203,12,48233,48259,12,48289,48315,12,48345,48371,12,48401,48427,12,48457,48483,12,48513,48539,12,48569,48595,12,48625,48651,12,48681,48707,12,48737,48763,12,48793,48819,12,48849,48875,12,48905,48931,12,48961,48987,12,49017,49043,12,49073,49099,12,49129,49155,12,49185,49211,12,49241,49267,12,49297,49323,12,49353,49379,12,49409,49435,12,49465,49491,12,49521,49547,12,49577,49603,12,49633,49659,12,49689,49715,12,49745,49771,12,49801,49827,12,49857,49883,12,49913,49939,12,49969,49995,12,50025,50051,12,50081,50107,12,50137,50163,12,50193,50219,12,50249,50275,12,50305,50331,12,50361,50387,12,50417,50443,12,50473,50499,12,50529,50555,12,50585,50611,12,50641,50667,12,50697,50723,12,50753,50779,12,50809,50835,12,50865,50891,12,50921,50947,12,50977,51003,12,51033,51059,12,51089,51115,12,51145,51171,12,51201,51227,12,51257,51283,12,51313,51339,12,51369,51395,12,51425,51451,12,51481,51507,12,51537,51563,12,51593,51619,12,51649,51675,12,51705,51731,12,51761,51787,12,51817,51843,12,51873,51899,12,51929,51955,12,51985,52011,12,52041,52067,12,52097,52123,12,52153,52179,12,52209,52235,12,52265,52291,12,52321,52347,12,52377,52403,12,52433,52459,12,52489,52515,12,52545,52571,12,52601,52627,12,52657,52683,12,52713,52739,12,52769,52795,12,52825,52851,12,52881,52907,12,52937,52963,12,52993,53019,12,53049,53075,12,53105,53131,12,53161,53187,12,53217,53243,12,53273,53299,12,53329,53355,12,53385,53411,12,53441,53467,12,53497,53523,12,53553,53579,12,53609,53635,12,53665,53691,12,53721,53747,12,53777,53803,12,53833,53859,12,53889,53915,12,53945,53971,12,54001,54027,12,54057,54083,12,54113,54139,12,54169,54195,12,54225,54251,12,54281,54307,12,54337,54363,12,54393,54419,12,54449,54475,12,54505,54531,12,54561,54587,12,54617,54643,12,54673,54699,12,54729,54755,12,54785,54811,12,54841,54867,12,54897,54923,12,54953,54979,12,55009,55035,12,55065,55091,12,55121,55147,12,55177,55203,12,65024,65039,5,65520,65528,4,66422,66426,5,68152,68154,5,69291,69292,5,69633,69633,5,69747,69748,5,69811,69814,5,69826,69826,5,69932,69932,7,70016,70017,5,70079,70080,7,70095,70095,5,70196,70196,5,70367,70367,5,70402,70403,7,70464,70464,5,70487,70487,5,70709,70711,7,70725,70725,7,70833,70834,7,70843,70844,7,70849,70849,7,71090,71093,5,71103,71104,5,71227,71228,7,71339,71339,5,71344,71349,5,71458,71461,5,71727,71735,5,71985,71989,7,71998,71998,5,72002,72002,7,72154,72155,5,72193,72202,5,72251,72254,5,72281,72283,5,72344,72345,5,72766,72766,7,72874,72880,5,72885,72886,5,73023,73029,5,73104,73105,5,73111,73111,5,92912,92916,5,94095,94098,5,113824,113827,4,119142,119142,7,119155,119162,4,119362,119364,5,121476,121476,5,122888,122904,5,123184,123190,5,125252,125258,5,127183,127183,14,127340,127343,14,127377,127386,14,127491,127503,14,127548,127551,14,127744,127756,14,127761,127761,14,127769,127769,14,127773,127774,14,127780,127788,14,127796,127797,14,127820,127823,14,127869,127869,14,127894,127895,14,127902,127903,14,127943,127943,14,127947,127950,14,127972,127972,14,127988,127988,14,127992,127994,14,128009,128011,14,128019,128019,14,128023,128041,14,128064,128064,14,128102,128107,14,128174,128181,14,128238,128238,14,128246,128247,14,128254,128254,14,128264,128264,14,128278,128299,14,128329,128330,14,128348,128359,14,128371,128377,14,128392,128393,14,128401,128404,14,128421,128421,14,128433,128434,14,128450,128452,14,128476,128478,14,128483,128483,14,128495,128495,14,128506,128506,14,128519,128520,14,128528,128528,14,128534,128534,14,128538,128538,14,128540,128542,14,128544,128549,14,128552,128555,14,128557,128557,14,128560,128563,14,128565,128565,14,128567,128576,14,128581,128591,14,128641,128642,14,128646,128646,14,128648,128648,14,128650,128651,14,128653,128653,14,128655,128655,14,128657,128659,14,128661,128661,14,128663,128663,14,128665,128666,14,128674,128674,14,128676,128677,14,128679,128685,14,128690,128690,14,128694,128694,14,128697,128702,14,128704,128704,14,128710,128714,14,128716,128716,14,128720,128720,14,128723,128724,14,128726,128727,14,128733,128735,14,128742,128744,14,128746,128746,14,128749,128751,14,128753,128754,14,128756,128758,14,128761,128761,14,128763,128764,14,128884,128895,14,128992,129003,14,129008,129008,14,129036,129039,14,129114,129119,14,129198,129279,14,129293,129295,14,129305,129310,14,129312,129319,14,129328,129328,14,129331,129338,14,129343,129343,14,129351,129355,14,129357,129359,14,129375,129387,14,129393,129393,14,129395,129398,14,129401,129401,14,129403,129403,14,129408,129412,14,129426,129431,14,129443,129444,14,129451,129453,14,129456,129465,14,129472,129472,14,129475,129482,14,129484,129484,14,129488,129510,14,129536,129647,14,129652,129652,14,129656,129658,14,129661,129663,14,129667,129670,14,129680,129685,14,129705,129708,14,129712,129718,14,129723,129727,14,129731,129733,14,129744,129750,14,129754,129759,14,129768,129775,14,129783,129791,14,917504,917504,4,917506,917535,4,917632,917759,4,918000,921599,4,0,9,4,11,12,4,14,31,4,169,169,14,174,174,14,1155,1159,5,1425,1469,5,1473,1474,5,1479,1479,5,1552,1562,5,1611,1631,5,1750,1756,5,1759,1764,5,1770,1773,5,1809,1809,5,1958,1968,5,2045,2045,5,2075,2083,5,2089,2093,5,2192,2193,1,2250,2273,5,2275,2306,5,2362,2362,5,2364,2364,5,2369,2376,5,2381,2381,5,2385,2391,5,2433,2433,5,2492,2492,5,2495,2496,7,2503,2504,7,2509,2509,5,2530,2531,5,2561,2562,5,2620,2620,5,2625,2626,5,2635,2637,5,2672,2673,5,2689,2690,5,2748,2748,5,2753,2757,5,2761,2761,7,2765,2765,5,2810,2815,5,2818,2819,7,2878,2878,5,2880,2880,7,2887,2888,7,2893,2893,5,2903,2903,5,2946,2946,5,3007,3007,7,3009,3010,7,3018,3020,7,3031,3031,5,3073,3075,7,3132,3132,5,3137,3140,7,3146,3149,5,3170,3171,5,3202,3203,7,3262,3262,7,3264,3265,7,3267,3268,7,3271,3272,7,3276,3277,5,3298,3299,5,3330,3331,7,3390,3390,5,3393,3396,5,3402,3404,7,3406,3406,1,3426,3427,5,3458,3459,7,3535,3535,5,3538,3540,5,3544,3550,7,3570,3571,7,3635,3635,7,3655,3662,5,3763,3763,7,3784,3789,5,3893,3893,5,3897,3897,5,3953,3966,5,3968,3972,5,3981,3991,5,4038,4038,5,4145,4145,7,4153,4154,5,4157,4158,5,4184,4185,5,4209,4212,5,4228,4228,7,4237,4237,5,4352,4447,8,4520,4607,10,5906,5908,5,5938,5939,5,5970,5971,5,6068,6069,5,6071,6077,5,6086,6086,5,6089,6099,5,6155,6157,5,6159,6159,5,6313,6313,5,6435,6438,7,6441,6443,7,6450,6450,5,6457,6459,5,6681,6682,7,6741,6741,7,6743,6743,7,6752,6752,5,6757,6764,5,6771,6780,5,6832,6845,5,6847,6862,5,6916,6916,7,6965,6965,5,6971,6971,7,6973,6977,7,6979,6980,7,7040,7041,5,7073,7073,7,7078,7079,7,7082,7082,7,7142,7142,5,7144,7145,5,7149,7149,5,7151,7153,5,7204,7211,7,7220,7221,7,7376,7378,5,7393,7393,7,7405,7405,5,7415,7415,7,7616,7679,5,8204,8204,5,8206,8207,4,8233,8233,4,8252,8252,14,8288,8292,4,8294,8303,4,8413,8416,5,8418,8420,5,8482,8482,14,8596,8601,14,8986,8987,14,9096,9096,14,9193,9196,14,9199,9199,14,9201,9202,14,9208,9210,14,9642,9643,14,9664,9664,14,9728,9729,14,9732,9732,14,9735,9741,14,9743,9744,14,9746,9746,14,9750,9751,14,9753,9756,14,9758,9759,14,9761,9761,14,9764,9765,14,9767,9769,14,9771,9773,14,9775,9775,14,9784,9785,14,9787,9791,14,9793,9793,14,9795,9799,14,9812,9822,14,9824,9824,14,9827,9827,14,9829,9830,14,9832,9832,14,9851,9851,14,9854,9854,14,9856,9861,14,9874,9874,14,9876,9876,14,9878,9879,14,9881,9881,14,9883,9884,14,9888,9889,14,9895,9895,14,9898,9899,14,9904,9905,14,9917,9918,14,9924,9925,14,9928,9928,14,9934,9934,14,9936,9936,14,9938,9938,14,9940,9940,14,9961,9961,14,9963,9967,14,9970,9971,14,9973,9973,14,9975,9977,14,9979,9980,14,9982,9985,14,9987,9988,14,9992,9996,14,9998,9998,14,10000,10001,14,10004,10004,14,10013,10013,14,10024,10024,14,10052,10052,14,10060,10060,14,10067,10069,14,10083,10083,14,10085,10087,14,10145,10145,14,10175,10175,14,11013,11015,14,11088,11088,14,11503,11505,5,11744,11775,5,12334,12335,5,12349,12349,14,12951,12951,14,42607,42607,5,42612,42621,5,42736,42737,5,43014,43014,5,43043,43044,7,43047,43047,7,43136,43137,7,43204,43205,5,43263,43263,5,43335,43345,5,43360,43388,8,43395,43395,7,43444,43445,7,43450,43451,7,43454,43456,7,43561,43566,5,43569,43570,5,43573,43574,5,43596,43596,5,43644,43644,5,43698,43700,5,43710,43711,5,43755,43755,7,43758,43759,7,43766,43766,5,44005,44005,5,44008,44008,5,44012,44012,7,44032,44032,11,44060,44060,11,44088,44088,11,44116,44116,11,44144,44144,11,44172,44172,11,44200,44200,11,44228,44228,11,44256,44256,11,44284,44284,11,44312,44312,11,44340,44340,11,44368,44368,11,44396,44396,11,44424,44424,11,44452,44452,11,44480,44480,11,44508,44508,11,44536,44536,11,44564,44564,11,44592,44592,11,44620,44620,11,44648,44648,11,44676,44676,11,44704,44704,11,44732,44732,11,44760,44760,11,44788,44788,11,44816,44816,11,44844,44844,11,44872,44872,11,44900,44900,11,44928,44928,11,44956,44956,11,44984,44984,11,45012,45012,11,45040,45040,11,45068,45068,11,45096,45096,11,45124,45124,11,45152,45152,11,45180,45180,11,45208,45208,11,45236,45236,11,45264,45264,11,45292,45292,11,45320,45320,11,45348,45348,11,45376,45376,11,45404,45404,11,45432,45432,11,45460,45460,11,45488,45488,11,45516,45516,11,45544,45544,11,45572,45572,11,45600,45600,11,45628,45628,11,45656,45656,11,45684,45684,11,45712,45712,11,45740,45740,11,45768,45768,11,45796,45796,11,45824,45824,11,45852,45852,11,45880,45880,11,45908,45908,11,45936,45936,11,45964,45964,11,45992,45992,11,46020,46020,11,46048,46048,11,46076,46076,11,46104,46104,11,46132,46132,11,46160,46160,11,46188,46188,11,46216,46216,11,46244,46244,11,46272,46272,11,46300,46300,11,46328,46328,11,46356,46356,11,46384,46384,11,46412,46412,11,46440,46440,11,46468,46468,11,46496,46496,11,46524,46524,11,46552,46552,11,46580,46580,11,46608,46608,11,46636,46636,11,46664,46664,11,46692,46692,11,46720,46720,11,46748,46748,11,46776,46776,11,46804,46804,11,46832,46832,11,46860,46860,11,46888,46888,11,46916,46916,11,46944,46944,11,46972,46972,11,47000,47000,11,47028,47028,11,47056,47056,11,47084,47084,11,47112,47112,11,47140,47140,11,47168,47168,11,47196,47196,11,47224,47224,11,47252,47252,11,47280,47280,11,47308,47308,11,47336,47336,11,47364,47364,11,47392,47392,11,47420,47420,11,47448,47448,11,47476,47476,11,47504,47504,11,47532,47532,11,47560,47560,11,47588,47588,11,47616,47616,11,47644,47644,11,47672,47672,11,47700,47700,11,47728,47728,11,47756,47756,11,47784,47784,11,47812,47812,11,47840,47840,11,47868,47868,11,47896,47896,11,47924,47924,11,47952,47952,11,47980,47980,11,48008,48008,11,48036,48036,11,48064,48064,11,48092,48092,11,48120,48120,11,48148,48148,11,48176,48176,11,48204,48204,11,48232,48232,11,48260,48260,11,48288,48288,11,48316,48316,11,48344,48344,11,48372,48372,11,48400,48400,11,48428,48428,11,48456,48456,11,48484,48484,11,48512,48512,11,48540,48540,11,48568,48568,11,48596,48596,11,48624,48624,11,48652,48652,11,48680,48680,11,48708,48708,11,48736,48736,11,48764,48764,11,48792,48792,11,48820,48820,11,48848,48848,11,48876,48876,11,48904,48904,11,48932,48932,11,48960,48960,11,48988,48988,11,49016,49016,11,49044,49044,11,49072,49072,11,49100,49100,11,49128,49128,11,49156,49156,11,49184,49184,11,49212,49212,11,49240,49240,11,49268,49268,11,49296,49296,11,49324,49324,11,49352,49352,11,49380,49380,11,49408,49408,11,49436,49436,11,49464,49464,11,49492,49492,11,49520,49520,11,49548,49548,11,49576,49576,11,49604,49604,11,49632,49632,11,49660,49660,11,49688,49688,11,49716,49716,11,49744,49744,11,49772,49772,11,49800,49800,11,49828,49828,11,49856,49856,11,49884,49884,11,49912,49912,11,49940,49940,11,49968,49968,11,49996,49996,11,50024,50024,11,50052,50052,11,50080,50080,11,50108,50108,11,50136,50136,11,50164,50164,11,50192,50192,11,50220,50220,11,50248,50248,11,50276,50276,11,50304,50304,11,50332,50332,11,50360,50360,11,50388,50388,11,50416,50416,11,50444,50444,11,50472,50472,11,50500,50500,11,50528,50528,11,50556,50556,11,50584,50584,11,50612,50612,11,50640,50640,11,50668,50668,11,50696,50696,11,50724,50724,11,50752,50752,11,50780,50780,11,50808,50808,11,50836,50836,11,50864,50864,11,50892,50892,11,50920,50920,11,50948,50948,11,50976,50976,11,51004,51004,11,51032,51032,11,51060,51060,11,51088,51088,11,51116,51116,11,51144,51144,11,51172,51172,11,51200,51200,11,51228,51228,11,51256,51256,11,51284,51284,11,51312,51312,11,51340,51340,11,51368,51368,11,51396,51396,11,51424,51424,11,51452,51452,11,51480,51480,11,51508,51508,11,51536,51536,11,51564,51564,11,51592,51592,11,51620,51620,11,51648,51648,11,51676,51676,11,51704,51704,11,51732,51732,11,51760,51760,11,51788,51788,11,51816,51816,11,51844,51844,11,51872,51872,11,51900,51900,11,51928,51928,11,51956,51956,11,51984,51984,11,52012,52012,11,52040,52040,11,52068,52068,11,52096,52096,11,52124,52124,11,52152,52152,11,52180,52180,11,52208,52208,11,52236,52236,11,52264,52264,11,52292,52292,11,52320,52320,11,52348,52348,11,52376,52376,11,52404,52404,11,52432,52432,11,52460,52460,11,52488,52488,11,52516,52516,11,52544,52544,11,52572,52572,11,52600,52600,11,52628,52628,11,52656,52656,11,52684,52684,11,52712,52712,11,52740,52740,11,52768,52768,11,52796,52796,11,52824,52824,11,52852,52852,11,52880,52880,11,52908,52908,11,52936,52936,11,52964,52964,11,52992,52992,11,53020,53020,11,53048,53048,11,53076,53076,11,53104,53104,11,53132,53132,11,53160,53160,11,53188,53188,11,53216,53216,11,53244,53244,11,53272,53272,11,53300,53300,11,53328,53328,11,53356,53356,11,53384,53384,11,53412,53412,11,53440,53440,11,53468,53468,11,53496,53496,11,53524,53524,11,53552,53552,11,53580,53580,11,53608,53608,11,53636,53636,11,53664,53664,11,53692,53692,11,53720,53720,11,53748,53748,11,53776,53776,11,53804,53804,11,53832,53832,11,53860,53860,11,53888,53888,11,53916,53916,11,53944,53944,11,53972,53972,11,54000,54000,11,54028,54028,11,54056,54056,11,54084,54084,11,54112,54112,11,54140,54140,11,54168,54168,11,54196,54196,11,54224,54224,11,54252,54252,11,54280,54280,11,54308,54308,11,54336,54336,11,54364,54364,11,54392,54392,11,54420,54420,11,54448,54448,11,54476,54476,11,54504,54504,11,54532,54532,11,54560,54560,11,54588,54588,11,54616,54616,11,54644,54644,11,54672,54672,11,54700,54700,11,54728,54728,11,54756,54756,11,54784,54784,11,54812,54812,11,54840,54840,11,54868,54868,11,54896,54896,11,54924,54924,11,54952,54952,11,54980,54980,11,55008,55008,11,55036,55036,11,55064,55064,11,55092,55092,11,55120,55120,11,55148,55148,11,55176,55176,11,55216,55238,9,64286,64286,5,65056,65071,5,65438,65439,5,65529,65531,4,66272,66272,5,68097,68099,5,68108,68111,5,68159,68159,5,68900,68903,5,69446,69456,5,69632,69632,7,69634,69634,7,69744,69744,5,69759,69761,5,69808,69810,7,69815,69816,7,69821,69821,1,69837,69837,1,69927,69931,5,69933,69940,5,70003,70003,5,70018,70018,7,70070,70078,5,70082,70083,1,70094,70094,7,70188,70190,7,70194,70195,7,70197,70197,7,70206,70206,5,70368,70370,7,70400,70401,5,70459,70460,5,70463,70463,7,70465,70468,7,70475,70477,7,70498,70499,7,70512,70516,5,70712,70719,5,70722,70724,5,70726,70726,5,70832,70832,5,70835,70840,5,70842,70842,5,70845,70845,5,70847,70848,5,70850,70851,5,71088,71089,7,71096,71099,7,71102,71102,7,71132,71133,5,71219,71226,5,71229,71229,5,71231,71232,5,71340,71340,7,71342,71343,7,71350,71350,7,71453,71455,5,71462,71462,7,71724,71726,7,71736,71736,7,71984,71984,5,71991,71992,7,71997,71997,7,71999,71999,1,72001,72001,1,72003,72003,5,72148,72151,5,72156,72159,7,72164,72164,7,72243,72248,5,72250,72250,1,72263,72263,5,72279,72280,7,72324,72329,1,72343,72343,7,72751,72751,7,72760,72765,5,72767,72767,5,72873,72873,7,72881,72881,7,72884,72884,7,73009,73014,5,73020,73021,5,73030,73030,1,73098,73102,7,73107,73108,7,73110,73110,7,73459,73460,5,78896,78904,4,92976,92982,5,94033,94087,7,94180,94180,5,113821,113822,5,118528,118573,5,119141,119141,5,119143,119145,5,119150,119154,5,119163,119170,5,119210,119213,5,121344,121398,5,121461,121461,5,121499,121503,5,122880,122886,5,122907,122913,5,122918,122922,5,123566,123566,5,125136,125142,5,126976,126979,14,126981,127182,14,127184,127231,14,127279,127279,14,127344,127345,14,127374,127374,14,127405,127461,14,127489,127490,14,127514,127514,14,127538,127546,14,127561,127567,14,127570,127743,14,127757,127758,14,127760,127760,14,127762,127762,14,127766,127768,14,127770,127770,14,127772,127772,14,127775,127776,14,127778,127779,14,127789,127791,14,127794,127795,14,127798,127798,14,127819,127819,14,127824,127824,14,127868,127868,14,127870,127871,14,127892,127893,14,127896,127896,14,127900,127901,14,127904,127940,14,127942,127942,14,127944,127944,14,127946,127946,14,127951,127955,14,127968,127971,14,127973,127984,14,127987,127987,14,127989,127989,14,127991,127991,14,127995,127999,5,128008,128008,14,128012,128014,14,128017,128018,14,128020,128020,14,128022,128022,14,128042,128042,14,128063,128063,14,128065,128065,14,128101,128101,14,128108,128109,14,128173,128173,14,128182,128183,14,128236,128237,14,128239,128239,14,128245,128245,14,128248,128248,14,128253,128253,14,128255,128258,14,128260,128263,14,128265,128265,14,128277,128277,14,128300,128301,14,128326,128328,14,128331,128334,14,128336,128347,14,128360,128366,14,128369,128370,14,128378,128378,14,128391,128391,14,128394,128397,14,128400,128400,14,128405,128406,14,128420,128420,14,128422,128423,14,128425,128432,14,128435,128443,14,128445,128449,14,128453,128464,14,128468,128475,14,128479,128480,14,128482,128482,14,128484,128487,14,128489,128494,14,128496,128498,14,128500,128505,14,128507,128511,14,128513,128518,14,128521,128525,14,128527,128527,14,128529,128529,14,128533,128533,14,128535,128535,14,128537,128537,14]");
+  }
+  var AmbiguousCharacters = class {
+    constructor(confusableDictionary) {
+      this.confusableDictionary = confusableDictionary;
+    }
+    static getInstance(locales) {
+      return AmbiguousCharacters.cache.get(Array.from(locales));
+    }
+    static getLocales() {
+      return AmbiguousCharacters._locales.getValue();
+    }
+    isAmbiguous(codePoint) {
+      return this.confusableDictionary.has(codePoint);
+    }
+    /**
+     * Returns the non basic ASCII code point that the given code point can be confused,
+     * or undefined if such code point does note exist.
+     */
+    getPrimaryConfusable(codePoint) {
+      return this.confusableDictionary.get(codePoint);
+    }
+    getConfusableCodePoints() {
+      return new Set(this.confusableDictionary.keys());
+    }
+  };
+  _a2 = AmbiguousCharacters;
+  AmbiguousCharacters.ambiguousCharacterData = new Lazy(() => {
+    return JSON.parse('{"_common":[8232,32,8233,32,5760,32,8192,32,8193,32,8194,32,8195,32,8196,32,8197,32,8198,32,8200,32,8201,32,8202,32,8287,32,8199,32,8239,32,2042,95,65101,95,65102,95,65103,95,8208,45,8209,45,8210,45,65112,45,1748,45,8259,45,727,45,8722,45,10134,45,11450,45,1549,44,1643,44,8218,44,184,44,42233,44,894,59,2307,58,2691,58,1417,58,1795,58,1796,58,5868,58,65072,58,6147,58,6153,58,8282,58,1475,58,760,58,42889,58,8758,58,720,58,42237,58,451,33,11601,33,660,63,577,63,2429,63,5038,63,42731,63,119149,46,8228,46,1793,46,1794,46,42510,46,68176,46,1632,46,1776,46,42232,46,1373,96,65287,96,8219,96,8242,96,1370,96,1523,96,8175,96,65344,96,900,96,8189,96,8125,96,8127,96,8190,96,697,96,884,96,712,96,714,96,715,96,756,96,699,96,701,96,700,96,702,96,42892,96,1497,96,2036,96,2037,96,5194,96,5836,96,94033,96,94034,96,65339,91,10088,40,10098,40,12308,40,64830,40,65341,93,10089,41,10099,41,12309,41,64831,41,10100,123,119060,123,10101,125,65342,94,8270,42,1645,42,8727,42,66335,42,5941,47,8257,47,8725,47,8260,47,9585,47,10187,47,10744,47,119354,47,12755,47,12339,47,11462,47,20031,47,12035,47,65340,92,65128,92,8726,92,10189,92,10741,92,10745,92,119311,92,119355,92,12756,92,20022,92,12034,92,42872,38,708,94,710,94,5869,43,10133,43,66203,43,8249,60,10094,60,706,60,119350,60,5176,60,5810,60,5120,61,11840,61,12448,61,42239,61,8250,62,10095,62,707,62,119351,62,5171,62,94015,62,8275,126,732,126,8128,126,8764,126,65372,124,65293,45,120784,50,120794,50,120804,50,120814,50,120824,50,130034,50,42842,50,423,50,1000,50,42564,50,5311,50,42735,50,119302,51,120785,51,120795,51,120805,51,120815,51,120825,51,130035,51,42923,51,540,51,439,51,42858,51,11468,51,1248,51,94011,51,71882,51,120786,52,120796,52,120806,52,120816,52,120826,52,130036,52,5070,52,71855,52,120787,53,120797,53,120807,53,120817,53,120827,53,130037,53,444,53,71867,53,120788,54,120798,54,120808,54,120818,54,120828,54,130038,54,11474,54,5102,54,71893,54,119314,55,120789,55,120799,55,120809,55,120819,55,120829,55,130039,55,66770,55,71878,55,2819,56,2538,56,2666,56,125131,56,120790,56,120800,56,120810,56,120820,56,120830,56,130040,56,547,56,546,56,66330,56,2663,57,2920,57,2541,57,3437,57,120791,57,120801,57,120811,57,120821,57,120831,57,130041,57,42862,57,11466,57,71884,57,71852,57,71894,57,9082,97,65345,97,119834,97,119886,97,119938,97,119990,97,120042,97,120094,97,120146,97,120198,97,120250,97,120302,97,120354,97,120406,97,120458,97,593,97,945,97,120514,97,120572,97,120630,97,120688,97,120746,97,65313,65,119808,65,119860,65,119912,65,119964,65,120016,65,120068,65,120120,65,120172,65,120224,65,120276,65,120328,65,120380,65,120432,65,913,65,120488,65,120546,65,120604,65,120662,65,120720,65,5034,65,5573,65,42222,65,94016,65,66208,65,119835,98,119887,98,119939,98,119991,98,120043,98,120095,98,120147,98,120199,98,120251,98,120303,98,120355,98,120407,98,120459,98,388,98,5071,98,5234,98,5551,98,65314,66,8492,66,119809,66,119861,66,119913,66,120017,66,120069,66,120121,66,120173,66,120225,66,120277,66,120329,66,120381,66,120433,66,42932,66,914,66,120489,66,120547,66,120605,66,120663,66,120721,66,5108,66,5623,66,42192,66,66178,66,66209,66,66305,66,65347,99,8573,99,119836,99,119888,99,119940,99,119992,99,120044,99,120096,99,120148,99,120200,99,120252,99,120304,99,120356,99,120408,99,120460,99,7428,99,1010,99,11429,99,43951,99,66621,99,128844,67,71922,67,71913,67,65315,67,8557,67,8450,67,8493,67,119810,67,119862,67,119914,67,119966,67,120018,67,120174,67,120226,67,120278,67,120330,67,120382,67,120434,67,1017,67,11428,67,5087,67,42202,67,66210,67,66306,67,66581,67,66844,67,8574,100,8518,100,119837,100,119889,100,119941,100,119993,100,120045,100,120097,100,120149,100,120201,100,120253,100,120305,100,120357,100,120409,100,120461,100,1281,100,5095,100,5231,100,42194,100,8558,68,8517,68,119811,68,119863,68,119915,68,119967,68,120019,68,120071,68,120123,68,120175,68,120227,68,120279,68,120331,68,120383,68,120435,68,5024,68,5598,68,5610,68,42195,68,8494,101,65349,101,8495,101,8519,101,119838,101,119890,101,119942,101,120046,101,120098,101,120150,101,120202,101,120254,101,120306,101,120358,101,120410,101,120462,101,43826,101,1213,101,8959,69,65317,69,8496,69,119812,69,119864,69,119916,69,120020,69,120072,69,120124,69,120176,69,120228,69,120280,69,120332,69,120384,69,120436,69,917,69,120492,69,120550,69,120608,69,120666,69,120724,69,11577,69,5036,69,42224,69,71846,69,71854,69,66182,69,119839,102,119891,102,119943,102,119995,102,120047,102,120099,102,120151,102,120203,102,120255,102,120307,102,120359,102,120411,102,120463,102,43829,102,42905,102,383,102,7837,102,1412,102,119315,70,8497,70,119813,70,119865,70,119917,70,120021,70,120073,70,120125,70,120177,70,120229,70,120281,70,120333,70,120385,70,120437,70,42904,70,988,70,120778,70,5556,70,42205,70,71874,70,71842,70,66183,70,66213,70,66853,70,65351,103,8458,103,119840,103,119892,103,119944,103,120048,103,120100,103,120152,103,120204,103,120256,103,120308,103,120360,103,120412,103,120464,103,609,103,7555,103,397,103,1409,103,119814,71,119866,71,119918,71,119970,71,120022,71,120074,71,120126,71,120178,71,120230,71,120282,71,120334,71,120386,71,120438,71,1292,71,5056,71,5107,71,42198,71,65352,104,8462,104,119841,104,119945,104,119997,104,120049,104,120101,104,120153,104,120205,104,120257,104,120309,104,120361,104,120413,104,120465,104,1211,104,1392,104,5058,104,65320,72,8459,72,8460,72,8461,72,119815,72,119867,72,119919,72,120023,72,120179,72,120231,72,120283,72,120335,72,120387,72,120439,72,919,72,120494,72,120552,72,120610,72,120668,72,120726,72,11406,72,5051,72,5500,72,42215,72,66255,72,731,105,9075,105,65353,105,8560,105,8505,105,8520,105,119842,105,119894,105,119946,105,119998,105,120050,105,120102,105,120154,105,120206,105,120258,105,120310,105,120362,105,120414,105,120466,105,120484,105,618,105,617,105,953,105,8126,105,890,105,120522,105,120580,105,120638,105,120696,105,120754,105,1110,105,42567,105,1231,105,43893,105,5029,105,71875,105,65354,106,8521,106,119843,106,119895,106,119947,106,119999,106,120051,106,120103,106,120155,106,120207,106,120259,106,120311,106,120363,106,120415,106,120467,106,1011,106,1112,106,65322,74,119817,74,119869,74,119921,74,119973,74,120025,74,120077,74,120129,74,120181,74,120233,74,120285,74,120337,74,120389,74,120441,74,42930,74,895,74,1032,74,5035,74,5261,74,42201,74,119844,107,119896,107,119948,107,120000,107,120052,107,120104,107,120156,107,120208,107,120260,107,120312,107,120364,107,120416,107,120468,107,8490,75,65323,75,119818,75,119870,75,119922,75,119974,75,120026,75,120078,75,120130,75,120182,75,120234,75,120286,75,120338,75,120390,75,120442,75,922,75,120497,75,120555,75,120613,75,120671,75,120729,75,11412,75,5094,75,5845,75,42199,75,66840,75,1472,108,8739,73,9213,73,65512,73,1633,108,1777,73,66336,108,125127,108,120783,73,120793,73,120803,73,120813,73,120823,73,130033,73,65321,73,8544,73,8464,73,8465,73,119816,73,119868,73,119920,73,120024,73,120128,73,120180,73,120232,73,120284,73,120336,73,120388,73,120440,73,65356,108,8572,73,8467,108,119845,108,119897,108,119949,108,120001,108,120053,108,120105,73,120157,73,120209,73,120261,73,120313,73,120365,73,120417,73,120469,73,448,73,120496,73,120554,73,120612,73,120670,73,120728,73,11410,73,1030,73,1216,73,1493,108,1503,108,1575,108,126464,108,126592,108,65166,108,65165,108,1994,108,11599,73,5825,73,42226,73,93992,73,66186,124,66313,124,119338,76,8556,76,8466,76,119819,76,119871,76,119923,76,120027,76,120079,76,120131,76,120183,76,120235,76,120287,76,120339,76,120391,76,120443,76,11472,76,5086,76,5290,76,42209,76,93974,76,71843,76,71858,76,66587,76,66854,76,65325,77,8559,77,8499,77,119820,77,119872,77,119924,77,120028,77,120080,77,120132,77,120184,77,120236,77,120288,77,120340,77,120392,77,120444,77,924,77,120499,77,120557,77,120615,77,120673,77,120731,77,1018,77,11416,77,5047,77,5616,77,5846,77,42207,77,66224,77,66321,77,119847,110,119899,110,119951,110,120003,110,120055,110,120107,110,120159,110,120211,110,120263,110,120315,110,120367,110,120419,110,120471,110,1400,110,1404,110,65326,78,8469,78,119821,78,119873,78,119925,78,119977,78,120029,78,120081,78,120185,78,120237,78,120289,78,120341,78,120393,78,120445,78,925,78,120500,78,120558,78,120616,78,120674,78,120732,78,11418,78,42208,78,66835,78,3074,111,3202,111,3330,111,3458,111,2406,111,2662,111,2790,111,3046,111,3174,111,3302,111,3430,111,3664,111,3792,111,4160,111,1637,111,1781,111,65359,111,8500,111,119848,111,119900,111,119952,111,120056,111,120108,111,120160,111,120212,111,120264,111,120316,111,120368,111,120420,111,120472,111,7439,111,7441,111,43837,111,959,111,120528,111,120586,111,120644,111,120702,111,120760,111,963,111,120532,111,120590,111,120648,111,120706,111,120764,111,11423,111,4351,111,1413,111,1505,111,1607,111,126500,111,126564,111,126596,111,65259,111,65260,111,65258,111,65257,111,1726,111,64428,111,64429,111,64427,111,64426,111,1729,111,64424,111,64425,111,64423,111,64422,111,1749,111,3360,111,4125,111,66794,111,71880,111,71895,111,66604,111,1984,79,2534,79,2918,79,12295,79,70864,79,71904,79,120782,79,120792,79,120802,79,120812,79,120822,79,130032,79,65327,79,119822,79,119874,79,119926,79,119978,79,120030,79,120082,79,120134,79,120186,79,120238,79,120290,79,120342,79,120394,79,120446,79,927,79,120502,79,120560,79,120618,79,120676,79,120734,79,11422,79,1365,79,11604,79,4816,79,2848,79,66754,79,42227,79,71861,79,66194,79,66219,79,66564,79,66838,79,9076,112,65360,112,119849,112,119901,112,119953,112,120005,112,120057,112,120109,112,120161,112,120213,112,120265,112,120317,112,120369,112,120421,112,120473,112,961,112,120530,112,120544,112,120588,112,120602,112,120646,112,120660,112,120704,112,120718,112,120762,112,120776,112,11427,112,65328,80,8473,80,119823,80,119875,80,119927,80,119979,80,120031,80,120083,80,120187,80,120239,80,120291,80,120343,80,120395,80,120447,80,929,80,120504,80,120562,80,120620,80,120678,80,120736,80,11426,80,5090,80,5229,80,42193,80,66197,80,119850,113,119902,113,119954,113,120006,113,120058,113,120110,113,120162,113,120214,113,120266,113,120318,113,120370,113,120422,113,120474,113,1307,113,1379,113,1382,113,8474,81,119824,81,119876,81,119928,81,119980,81,120032,81,120084,81,120188,81,120240,81,120292,81,120344,81,120396,81,120448,81,11605,81,119851,114,119903,114,119955,114,120007,114,120059,114,120111,114,120163,114,120215,114,120267,114,120319,114,120371,114,120423,114,120475,114,43847,114,43848,114,7462,114,11397,114,43905,114,119318,82,8475,82,8476,82,8477,82,119825,82,119877,82,119929,82,120033,82,120189,82,120241,82,120293,82,120345,82,120397,82,120449,82,422,82,5025,82,5074,82,66740,82,5511,82,42211,82,94005,82,65363,115,119852,115,119904,115,119956,115,120008,115,120060,115,120112,115,120164,115,120216,115,120268,115,120320,115,120372,115,120424,115,120476,115,42801,115,445,115,1109,115,43946,115,71873,115,66632,115,65331,83,119826,83,119878,83,119930,83,119982,83,120034,83,120086,83,120138,83,120190,83,120242,83,120294,83,120346,83,120398,83,120450,83,1029,83,1359,83,5077,83,5082,83,42210,83,94010,83,66198,83,66592,83,119853,116,119905,116,119957,116,120009,116,120061,116,120113,116,120165,116,120217,116,120269,116,120321,116,120373,116,120425,116,120477,116,8868,84,10201,84,128872,84,65332,84,119827,84,119879,84,119931,84,119983,84,120035,84,120087,84,120139,84,120191,84,120243,84,120295,84,120347,84,120399,84,120451,84,932,84,120507,84,120565,84,120623,84,120681,84,120739,84,11430,84,5026,84,42196,84,93962,84,71868,84,66199,84,66225,84,66325,84,119854,117,119906,117,119958,117,120010,117,120062,117,120114,117,120166,117,120218,117,120270,117,120322,117,120374,117,120426,117,120478,117,42911,117,7452,117,43854,117,43858,117,651,117,965,117,120534,117,120592,117,120650,117,120708,117,120766,117,1405,117,66806,117,71896,117,8746,85,8899,85,119828,85,119880,85,119932,85,119984,85,120036,85,120088,85,120140,85,120192,85,120244,85,120296,85,120348,85,120400,85,120452,85,1357,85,4608,85,66766,85,5196,85,42228,85,94018,85,71864,85,8744,118,8897,118,65366,118,8564,118,119855,118,119907,118,119959,118,120011,118,120063,118,120115,118,120167,118,120219,118,120271,118,120323,118,120375,118,120427,118,120479,118,7456,118,957,118,120526,118,120584,118,120642,118,120700,118,120758,118,1141,118,1496,118,71430,118,43945,118,71872,118,119309,86,1639,86,1783,86,8548,86,119829,86,119881,86,119933,86,119985,86,120037,86,120089,86,120141,86,120193,86,120245,86,120297,86,120349,86,120401,86,120453,86,1140,86,11576,86,5081,86,5167,86,42719,86,42214,86,93960,86,71840,86,66845,86,623,119,119856,119,119908,119,119960,119,120012,119,120064,119,120116,119,120168,119,120220,119,120272,119,120324,119,120376,119,120428,119,120480,119,7457,119,1121,119,1309,119,1377,119,71434,119,71438,119,71439,119,43907,119,71919,87,71910,87,119830,87,119882,87,119934,87,119986,87,120038,87,120090,87,120142,87,120194,87,120246,87,120298,87,120350,87,120402,87,120454,87,1308,87,5043,87,5076,87,42218,87,5742,120,10539,120,10540,120,10799,120,65368,120,8569,120,119857,120,119909,120,119961,120,120013,120,120065,120,120117,120,120169,120,120221,120,120273,120,120325,120,120377,120,120429,120,120481,120,5441,120,5501,120,5741,88,9587,88,66338,88,71916,88,65336,88,8553,88,119831,88,119883,88,119935,88,119987,88,120039,88,120091,88,120143,88,120195,88,120247,88,120299,88,120351,88,120403,88,120455,88,42931,88,935,88,120510,88,120568,88,120626,88,120684,88,120742,88,11436,88,11613,88,5815,88,42219,88,66192,88,66228,88,66327,88,66855,88,611,121,7564,121,65369,121,119858,121,119910,121,119962,121,120014,121,120066,121,120118,121,120170,121,120222,121,120274,121,120326,121,120378,121,120430,121,120482,121,655,121,7935,121,43866,121,947,121,8509,121,120516,121,120574,121,120632,121,120690,121,120748,121,1199,121,4327,121,71900,121,65337,89,119832,89,119884,89,119936,89,119988,89,120040,89,120092,89,120144,89,120196,89,120248,89,120300,89,120352,89,120404,89,120456,89,933,89,978,89,120508,89,120566,89,120624,89,120682,89,120740,89,11432,89,1198,89,5033,89,5053,89,42220,89,94019,89,71844,89,66226,89,119859,122,119911,122,119963,122,120015,122,120067,122,120119,122,120171,122,120223,122,120275,122,120327,122,120379,122,120431,122,120483,122,7458,122,43923,122,71876,122,66293,90,71909,90,65338,90,8484,90,8488,90,119833,90,119885,90,119937,90,119989,90,120041,90,120197,90,120249,90,120301,90,120353,90,120405,90,120457,90,918,90,120493,90,120551,90,120609,90,120667,90,120725,90,5059,90,42204,90,71849,90,65282,34,65284,36,65285,37,65286,38,65290,42,65291,43,65294,46,65295,47,65296,48,65297,49,65298,50,65299,51,65300,52,65301,53,65302,54,65303,55,65304,56,65305,57,65308,60,65309,61,65310,62,65312,64,65316,68,65318,70,65319,71,65324,76,65329,81,65330,82,65333,85,65334,86,65335,87,65343,95,65346,98,65348,100,65350,102,65355,107,65357,109,65358,110,65361,113,65362,114,65364,116,65365,117,65367,119,65370,122,65371,123,65373,125],"_default":[160,32,8211,45,65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"cs":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"de":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"es":[8211,45,65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"fr":[65374,126,65306,58,65281,33,8216,96,8245,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"it":[160,32,8211,45,65374,126,65306,58,65281,33,8216,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"ja":[8211,45,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65292,44,65307,59],"ko":[8211,45,65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"pl":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"pt-BR":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"qps-ploc":[160,32,8211,45,65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"ru":[65374,126,65306,58,65281,33,8216,96,8217,96,8245,96,180,96,12494,47,305,105,921,73,1009,112,215,120,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"tr":[160,32,8211,45,65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65288,40,65289,41,65292,44,65307,59,65311,63],"zh-hans":[65374,126,65306,58,65281,33,8245,96,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65288,40,65289,41],"zh-hant":[8211,45,65374,126,180,96,12494,47,1047,51,1073,54,1072,97,1040,65,1068,98,1042,66,1089,99,1057,67,1077,101,1045,69,1053,72,305,105,1050,75,921,73,1052,77,1086,111,1054,79,1009,112,1088,112,1056,80,1075,114,1058,84,215,120,1093,120,1061,88,1091,121,1059,89,65283,35,65307,59]}');
+  });
+  AmbiguousCharacters.cache = new LRUCachedFunction((locales) => {
+    function arrayToMap(arr) {
+      const result = /* @__PURE__ */ new Map();
+      for (let i = 0; i < arr.length; i += 2) {
+        result.set(arr[i], arr[i + 1]);
+      }
+      return result;
+    }
+    function mergeMaps(map1, map2) {
+      const result = new Map(map1);
+      for (const [key, value] of map2) {
+        result.set(key, value);
+      }
+      return result;
+    }
+    function intersectMaps(map1, map2) {
+      if (!map1) {
+        return map2;
+      }
+      const result = /* @__PURE__ */ new Map();
+      for (const [key, value] of map1) {
+        if (map2.has(key)) {
+          result.set(key, value);
+        }
+      }
+      return result;
+    }
+    const data = _a2.ambiguousCharacterData.getValue();
+    let filteredLocales = locales.filter((l) => !l.startsWith("_") && l in data);
+    if (filteredLocales.length === 0) {
+      filteredLocales = ["_default"];
+    }
+    let languageSpecificMap = void 0;
+    for (const locale of filteredLocales) {
+      const map2 = arrayToMap(data[locale]);
+      languageSpecificMap = intersectMaps(languageSpecificMap, map2);
+    }
+    const commonMap = arrayToMap(data["_common"]);
+    const map = mergeMaps(commonMap, languageSpecificMap);
+    return new AmbiguousCharacters(map);
+  });
+  AmbiguousCharacters._locales = new Lazy(() => Object.keys(AmbiguousCharacters.ambiguousCharacterData.getValue()).filter((k) => !k.startsWith("_")));
+  var InvisibleCharacters = class {
+    static getRawData() {
+      return JSON.parse("[9,10,11,12,13,32,127,160,173,847,1564,4447,4448,6068,6069,6155,6156,6157,6158,7355,7356,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8203,8204,8205,8206,8207,8234,8235,8236,8237,8238,8239,8287,8288,8289,8290,8291,8292,8293,8294,8295,8296,8297,8298,8299,8300,8301,8302,8303,10240,12288,12644,65024,65025,65026,65027,65028,65029,65030,65031,65032,65033,65034,65035,65036,65037,65038,65039,65279,65440,65520,65521,65522,65523,65524,65525,65526,65527,65528,65532,78844,119155,119156,119157,119158,119159,119160,119161,119162,917504,917505,917506,917507,917508,917509,917510,917511,917512,917513,917514,917515,917516,917517,917518,917519,917520,917521,917522,917523,917524,917525,917526,917527,917528,917529,917530,917531,917532,917533,917534,917535,917536,917537,917538,917539,917540,917541,917542,917543,917544,917545,917546,917547,917548,917549,917550,917551,917552,917553,917554,917555,917556,917557,917558,917559,917560,917561,917562,917563,917564,917565,917566,917567,917568,917569,917570,917571,917572,917573,917574,917575,917576,917577,917578,917579,917580,917581,917582,917583,917584,917585,917586,917587,917588,917589,917590,917591,917592,917593,917594,917595,917596,917597,917598,917599,917600,917601,917602,917603,917604,917605,917606,917607,917608,917609,917610,917611,917612,917613,917614,917615,917616,917617,917618,917619,917620,917621,917622,917623,917624,917625,917626,917627,917628,917629,917630,917631,917760,917761,917762,917763,917764,917765,917766,917767,917768,917769,917770,917771,917772,917773,917774,917775,917776,917777,917778,917779,917780,917781,917782,917783,917784,917785,917786,917787,917788,917789,917790,917791,917792,917793,917794,917795,917796,917797,917798,917799,917800,917801,917802,917803,917804,917805,917806,917807,917808,917809,917810,917811,917812,917813,917814,917815,917816,917817,917818,917819,917820,917821,917822,917823,917824,917825,917826,917827,917828,917829,917830,917831,917832,917833,917834,917835,917836,917837,917838,917839,917840,917841,917842,917843,917844,917845,917846,917847,917848,917849,917850,917851,917852,917853,917854,917855,917856,917857,917858,917859,917860,917861,917862,917863,917864,917865,917866,917867,917868,917869,917870,917871,917872,917873,917874,917875,917876,917877,917878,917879,917880,917881,917882,917883,917884,917885,917886,917887,917888,917889,917890,917891,917892,917893,917894,917895,917896,917897,917898,917899,917900,917901,917902,917903,917904,917905,917906,917907,917908,917909,917910,917911,917912,917913,917914,917915,917916,917917,917918,917919,917920,917921,917922,917923,917924,917925,917926,917927,917928,917929,917930,917931,917932,917933,917934,917935,917936,917937,917938,917939,917940,917941,917942,917943,917944,917945,917946,917947,917948,917949,917950,917951,917952,917953,917954,917955,917956,917957,917958,917959,917960,917961,917962,917963,917964,917965,917966,917967,917968,917969,917970,917971,917972,917973,917974,917975,917976,917977,917978,917979,917980,917981,917982,917983,917984,917985,917986,917987,917988,917989,917990,917991,917992,917993,917994,917995,917996,917997,917998,917999]");
+    }
+    static getData() {
+      if (!this._data) {
+        this._data = new Set(InvisibleCharacters.getRawData());
+      }
+      return this._data;
+    }
+    static isInvisibleCharacter(codePoint) {
+      return InvisibleCharacters.getData().has(codePoint);
+    }
+    static get codePoints() {
+      return InvisibleCharacters.getData();
+    }
+  };
+  InvisibleCharacters._data = void 0;
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/worker/simpleWorker.js
+  var INITIALIZE = "$initialize";
+  var RequestMessage = class {
+    constructor(vsWorker, req, method, args) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.method = method;
+      this.args = args;
+      this.type = 0;
+    }
+  };
+  var ReplyMessage = class {
+    constructor(vsWorker, seq, res, err) {
+      this.vsWorker = vsWorker;
+      this.seq = seq;
+      this.res = res;
+      this.err = err;
+      this.type = 1;
+    }
+  };
+  var SubscribeEventMessage = class {
+    constructor(vsWorker, req, eventName, arg) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.eventName = eventName;
+      this.arg = arg;
+      this.type = 2;
+    }
+  };
+  var EventMessage = class {
+    constructor(vsWorker, req, event) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.event = event;
+      this.type = 3;
+    }
+  };
+  var UnsubscribeEventMessage = class {
+    constructor(vsWorker, req) {
+      this.vsWorker = vsWorker;
+      this.req = req;
+      this.type = 4;
+    }
+  };
+  var SimpleWorkerProtocol = class {
+    constructor(handler) {
+      this._workerId = -1;
+      this._handler = handler;
+      this._lastSentReq = 0;
+      this._pendingReplies = /* @__PURE__ */ Object.create(null);
+      this._pendingEmitters = /* @__PURE__ */ new Map();
+      this._pendingEvents = /* @__PURE__ */ new Map();
+    }
+    setWorkerId(workerId) {
+      this._workerId = workerId;
+    }
+    sendMessage(method, args) {
+      const req = String(++this._lastSentReq);
+      return new Promise((resolve2, reject) => {
+        this._pendingReplies[req] = {
+          resolve: resolve2,
+          reject
+        };
+        this._send(new RequestMessage(this._workerId, req, method, args));
+      });
+    }
+    listen(eventName, arg) {
+      let req = null;
+      const emitter = new Emitter({
+        onFirstListenerAdd: () => {
+          req = String(++this._lastSentReq);
+          this._pendingEmitters.set(req, emitter);
+          this._send(new SubscribeEventMessage(this._workerId, req, eventName, arg));
+        },
+        onLastListenerRemove: () => {
+          this._pendingEmitters.delete(req);
+          this._send(new UnsubscribeEventMessage(this._workerId, req));
+          req = null;
+        }
+      });
+      return emitter.event;
+    }
+    handleMessage(message) {
+      if (!message || !message.vsWorker) {
+        return;
+      }
+      if (this._workerId !== -1 && message.vsWorker !== this._workerId) {
+        return;
+      }
+      this._handleMessage(message);
+    }
+    _handleMessage(msg) {
+      switch (msg.type) {
+        case 1:
+          return this._handleReplyMessage(msg);
+        case 0:
+          return this._handleRequestMessage(msg);
+        case 2:
+          return this._handleSubscribeEventMessage(msg);
+        case 3:
+          return this._handleEventMessage(msg);
+        case 4:
+          return this._handleUnsubscribeEventMessage(msg);
+      }
+    }
+    _handleReplyMessage(replyMessage) {
+      if (!this._pendingReplies[replyMessage.seq]) {
+        console.warn("Got reply to unknown seq");
+        return;
+      }
+      const reply = this._pendingReplies[replyMessage.seq];
+      delete this._pendingReplies[replyMessage.seq];
+      if (replyMessage.err) {
+        let err = replyMessage.err;
+        if (replyMessage.err.$isError) {
+          err = new Error();
+          err.name = replyMessage.err.name;
+          err.message = replyMessage.err.message;
+          err.stack = replyMessage.err.stack;
+        }
+        reply.reject(err);
+        return;
+      }
+      reply.resolve(replyMessage.res);
+    }
+    _handleRequestMessage(requestMessage) {
+      const req = requestMessage.req;
+      const result = this._handler.handleMessage(requestMessage.method, requestMessage.args);
+      result.then((r) => {
+        this._send(new ReplyMessage(this._workerId, req, r, void 0));
+      }, (e) => {
+        if (e.detail instanceof Error) {
+          e.detail = transformErrorForSerialization(e.detail);
+        }
+        this._send(new ReplyMessage(this._workerId, req, void 0, transformErrorForSerialization(e)));
+      });
+    }
+    _handleSubscribeEventMessage(msg) {
+      const req = msg.req;
+      const disposable = this._handler.handleEvent(msg.eventName, msg.arg)((event) => {
+        this._send(new EventMessage(this._workerId, req, event));
+      });
+      this._pendingEvents.set(req, disposable);
+    }
+    _handleEventMessage(msg) {
+      if (!this._pendingEmitters.has(msg.req)) {
+        console.warn("Got event for unknown req");
+        return;
+      }
+      this._pendingEmitters.get(msg.req).fire(msg.event);
+    }
+    _handleUnsubscribeEventMessage(msg) {
+      if (!this._pendingEvents.has(msg.req)) {
+        console.warn("Got unsubscribe for unknown req");
+        return;
+      }
+      this._pendingEvents.get(msg.req).dispose();
+      this._pendingEvents.delete(msg.req);
+    }
+    _send(msg) {
+      const transfer = [];
+      if (msg.type === 0) {
+        for (let i = 0; i < msg.args.length; i++) {
+          if (msg.args[i] instanceof ArrayBuffer) {
+            transfer.push(msg.args[i]);
+          }
+        }
+      } else if (msg.type === 1) {
+        if (msg.res instanceof ArrayBuffer) {
+          transfer.push(msg.res);
+        }
+      }
+      this._handler.sendMessage(msg, transfer);
+    }
+  };
+  function propertyIsEvent(name) {
+    return name[0] === "o" && name[1] === "n" && isUpperAsciiLetter(name.charCodeAt(2));
+  }
+  function propertyIsDynamicEvent(name) {
+    return /^onDynamic/.test(name) && isUpperAsciiLetter(name.charCodeAt(9));
+  }
+  function createProxyObject2(methodNames, invoke, proxyListen) {
+    const createProxyMethod = (method) => {
+      return function() {
+        const args = Array.prototype.slice.call(arguments, 0);
+        return invoke(method, args);
+      };
+    };
+    const createProxyDynamicEvent = (eventName) => {
+      return function(arg) {
+        return proxyListen(eventName, arg);
+      };
+    };
+    const result = {};
+    for (const methodName of methodNames) {
+      if (propertyIsDynamicEvent(methodName)) {
+        result[methodName] = createProxyDynamicEvent(methodName);
+        continue;
+      }
+      if (propertyIsEvent(methodName)) {
+        result[methodName] = proxyListen(methodName, void 0);
+        continue;
+      }
+      result[methodName] = createProxyMethod(methodName);
+    }
+    return result;
+  }
+  var SimpleWorkerServer = class {
+    constructor(postMessage, requestHandlerFactory) {
+      this._requestHandlerFactory = requestHandlerFactory;
+      this._requestHandler = null;
+      this._protocol = new SimpleWorkerProtocol({
+        sendMessage: (msg, transfer) => {
+          postMessage(msg, transfer);
+        },
+        handleMessage: (method, args) => this._handleMessage(method, args),
+        handleEvent: (eventName, arg) => this._handleEvent(eventName, arg)
+      });
+    }
+    onmessage(msg) {
+      this._protocol.handleMessage(msg);
+    }
+    _handleMessage(method, args) {
+      if (method === INITIALIZE) {
+        return this.initialize(args[0], args[1], args[2], args[3]);
+      }
+      if (!this._requestHandler || typeof this._requestHandler[method] !== "function") {
+        return Promise.reject(new Error("Missing requestHandler or method: " + method));
+      }
+      try {
+        return Promise.resolve(this._requestHandler[method].apply(this._requestHandler, args));
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+    _handleEvent(eventName, arg) {
+      if (!this._requestHandler) {
+        throw new Error(`Missing requestHandler`);
+      }
+      if (propertyIsDynamicEvent(eventName)) {
+        const event = this._requestHandler[eventName].call(this._requestHandler, arg);
+        if (typeof event !== "function") {
+          throw new Error(`Missing dynamic event ${eventName} on request handler.`);
+        }
+        return event;
+      }
+      if (propertyIsEvent(eventName)) {
+        const event = this._requestHandler[eventName];
+        if (typeof event !== "function") {
+          throw new Error(`Missing event ${eventName} on request handler.`);
+        }
+        return event;
+      }
+      throw new Error(`Malformed event name ${eventName}`);
+    }
+    initialize(workerId, loaderConfig, moduleId, hostMethods) {
+      this._protocol.setWorkerId(workerId);
+      const proxyMethodRequest = (method, args) => {
+        return this._protocol.sendMessage(method, args);
+      };
+      const proxyListen = (eventName, arg) => {
+        return this._protocol.listen(eventName, arg);
+      };
+      const hostProxy = createProxyObject2(hostMethods, proxyMethodRequest, proxyListen);
+      if (this._requestHandlerFactory) {
+        this._requestHandler = this._requestHandlerFactory(hostProxy);
+        return Promise.resolve(getAllMethodNames(this._requestHandler));
+      }
+      if (loaderConfig) {
+        if (typeof loaderConfig.baseUrl !== "undefined") {
+          delete loaderConfig["baseUrl"];
+        }
+        if (typeof loaderConfig.paths !== "undefined") {
+          if (typeof loaderConfig.paths.vs !== "undefined") {
+            delete loaderConfig.paths["vs"];
+          }
+        }
+        if (typeof loaderConfig.trustedTypesPolicy !== void 0) {
+          delete loaderConfig["trustedTypesPolicy"];
+        }
+        loaderConfig.catchError = true;
+        globals.require.config(loaderConfig);
+      }
+      return new Promise((resolve2, reject) => {
+        const req = globals.require;
+        req([moduleId], (module) => {
+          this._requestHandler = module.create(hostProxy);
+          if (!this._requestHandler) {
+            reject(new Error(`No RequestHandler!`));
+            return;
+          }
+          resolve2(getAllMethodNames(this._requestHandler));
+        }, reject);
+      });
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/diff/diffChange.js
+  var DiffChange = class {
+    /**
+     * Constructs a new DiffChange with the given sequence information
+     * and content.
+     */
+    constructor(originalStart, originalLength, modifiedStart, modifiedLength) {
+      this.originalStart = originalStart;
+      this.originalLength = originalLength;
+      this.modifiedStart = modifiedStart;
+      this.modifiedLength = modifiedLength;
+    }
+    /**
+     * The end point (exclusive) of the change in the original sequence.
+     */
+    getOriginalEnd() {
+      return this.originalStart + this.originalLength;
+    }
+    /**
+     * The end point (exclusive) of the change in the modified sequence.
+     */
+    getModifiedEnd() {
+      return this.modifiedStart + this.modifiedLength;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/hash.js
+  function numberHash(val, initialHashVal) {
+    return (initialHashVal << 5) - initialHashVal + val | 0;
+  }
+  function stringHash(s, hashVal) {
+    hashVal = numberHash(149417, hashVal);
+    for (let i = 0, length = s.length; i < length; i++) {
+      hashVal = numberHash(s.charCodeAt(i), hashVal);
+    }
+    return hashVal;
+  }
+  function leftRotate(value, bits, totalBits = 32) {
+    const delta = totalBits - bits;
+    const mask = ~((1 << delta) - 1);
+    return (value << bits | (mask & value) >>> delta) >>> 0;
+  }
+  function fill(dest, index = 0, count = dest.byteLength, value = 0) {
+    for (let i = 0; i < count; i++) {
+      dest[index + i] = value;
+    }
+  }
+  function leftPad(value, length, char = "0") {
+    while (value.length < length) {
+      value = char + value;
+    }
+    return value;
+  }
+  function toHexString(bufferOrValue, bitsize = 32) {
+    if (bufferOrValue instanceof ArrayBuffer) {
+      return Array.from(new Uint8Array(bufferOrValue)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+    return leftPad((bufferOrValue >>> 0).toString(16), bitsize / 4);
+  }
+  var StringSHA1 = class {
+    constructor() {
+      this._h0 = 1732584193;
+      this._h1 = 4023233417;
+      this._h2 = 2562383102;
+      this._h3 = 271733878;
+      this._h4 = 3285377520;
+      this._buff = new Uint8Array(
+        64 + 3
+        /* to fit any utf-8 */
+      );
+      this._buffDV = new DataView(this._buff.buffer);
+      this._buffLen = 0;
+      this._totalLen = 0;
+      this._leftoverHighSurrogate = 0;
+      this._finished = false;
+    }
+    update(str) {
+      const strLen = str.length;
+      if (strLen === 0) {
+        return;
+      }
+      const buff = this._buff;
+      let buffLen = this._buffLen;
+      let leftoverHighSurrogate = this._leftoverHighSurrogate;
+      let charCode;
+      let offset;
+      if (leftoverHighSurrogate !== 0) {
+        charCode = leftoverHighSurrogate;
+        offset = -1;
+        leftoverHighSurrogate = 0;
+      } else {
+        charCode = str.charCodeAt(0);
+        offset = 0;
+      }
+      while (true) {
+        let codePoint = charCode;
+        if (isHighSurrogate(charCode)) {
+          if (offset + 1 < strLen) {
+            const nextCharCode = str.charCodeAt(offset + 1);
+            if (isLowSurrogate(nextCharCode)) {
+              offset++;
+              codePoint = computeCodePoint(charCode, nextCharCode);
+            } else {
+              codePoint = 65533;
+            }
+          } else {
+            leftoverHighSurrogate = charCode;
+            break;
+          }
+        } else if (isLowSurrogate(charCode)) {
+          codePoint = 65533;
+        }
+        buffLen = this._push(buff, buffLen, codePoint);
+        offset++;
+        if (offset < strLen) {
+          charCode = str.charCodeAt(offset);
+        } else {
+          break;
+        }
+      }
+      this._buffLen = buffLen;
+      this._leftoverHighSurrogate = leftoverHighSurrogate;
+    }
+    _push(buff, buffLen, codePoint) {
+      if (codePoint < 128) {
+        buff[buffLen++] = codePoint;
+      } else if (codePoint < 2048) {
+        buff[buffLen++] = 192 | (codePoint & 1984) >>> 6;
+        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
+      } else if (codePoint < 65536) {
+        buff[buffLen++] = 224 | (codePoint & 61440) >>> 12;
+        buff[buffLen++] = 128 | (codePoint & 4032) >>> 6;
+        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
+      } else {
+        buff[buffLen++] = 240 | (codePoint & 1835008) >>> 18;
+        buff[buffLen++] = 128 | (codePoint & 258048) >>> 12;
+        buff[buffLen++] = 128 | (codePoint & 4032) >>> 6;
+        buff[buffLen++] = 128 | (codePoint & 63) >>> 0;
+      }
+      if (buffLen >= 64) {
+        this._step();
+        buffLen -= 64;
+        this._totalLen += 64;
+        buff[0] = buff[64 + 0];
+        buff[1] = buff[64 + 1];
+        buff[2] = buff[64 + 2];
+      }
+      return buffLen;
+    }
+    digest() {
+      if (!this._finished) {
+        this._finished = true;
+        if (this._leftoverHighSurrogate) {
+          this._leftoverHighSurrogate = 0;
+          this._buffLen = this._push(
+            this._buff,
+            this._buffLen,
+            65533
+            /* SHA1Constant.UNICODE_REPLACEMENT */
+          );
+        }
+        this._totalLen += this._buffLen;
+        this._wrapUp();
+      }
+      return toHexString(this._h0) + toHexString(this._h1) + toHexString(this._h2) + toHexString(this._h3) + toHexString(this._h4);
+    }
+    _wrapUp() {
+      this._buff[this._buffLen++] = 128;
+      fill(this._buff, this._buffLen);
+      if (this._buffLen > 56) {
+        this._step();
+        fill(this._buff);
+      }
+      const ml = 8 * this._totalLen;
+      this._buffDV.setUint32(56, Math.floor(ml / 4294967296), false);
+      this._buffDV.setUint32(60, ml % 4294967296, false);
+      this._step();
+    }
+    _step() {
+      const bigBlock32 = StringSHA1._bigBlock32;
+      const data = this._buffDV;
+      for (let j = 0; j < 64; j += 4) {
+        bigBlock32.setUint32(j, data.getUint32(j, false), false);
+      }
+      for (let j = 64; j < 320; j += 4) {
+        bigBlock32.setUint32(j, leftRotate(bigBlock32.getUint32(j - 12, false) ^ bigBlock32.getUint32(j - 32, false) ^ bigBlock32.getUint32(j - 56, false) ^ bigBlock32.getUint32(j - 64, false), 1), false);
+      }
+      let a = this._h0;
+      let b = this._h1;
+      let c = this._h2;
+      let d = this._h3;
+      let e = this._h4;
+      let f, k;
+      let temp;
+      for (let j = 0; j < 80; j++) {
+        if (j < 20) {
+          f = b & c | ~b & d;
+          k = 1518500249;
+        } else if (j < 40) {
+          f = b ^ c ^ d;
+          k = 1859775393;
+        } else if (j < 60) {
+          f = b & c | b & d | c & d;
+          k = 2400959708;
+        } else {
+          f = b ^ c ^ d;
+          k = 3395469782;
+        }
+        temp = leftRotate(a, 5) + f + e + k + bigBlock32.getUint32(j * 4, false) & 4294967295;
+        e = d;
+        d = c;
+        c = leftRotate(b, 30);
+        b = a;
+        a = temp;
+      }
+      this._h0 = this._h0 + a & 4294967295;
+      this._h1 = this._h1 + b & 4294967295;
+      this._h2 = this._h2 + c & 4294967295;
+      this._h3 = this._h3 + d & 4294967295;
+      this._h4 = this._h4 + e & 4294967295;
+    }
+  };
+  StringSHA1._bigBlock32 = new DataView(new ArrayBuffer(320));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/diff/diff.js
+  var StringDiffSequence = class {
+    constructor(source) {
+      this.source = source;
+    }
+    getElements() {
+      const source = this.source;
+      const characters = new Int32Array(source.length);
+      for (let i = 0, len = source.length; i < len; i++) {
+        characters[i] = source.charCodeAt(i);
+      }
+      return characters;
+    }
+  };
+  function stringDiff(original, modified, pretty) {
+    return new LcsDiff(new StringDiffSequence(original), new StringDiffSequence(modified)).ComputeDiff(pretty).changes;
+  }
+  var Debug = class {
+    static Assert(condition, message) {
+      if (!condition) {
+        throw new Error(message);
+      }
+    }
+  };
+  var MyArray = class {
+    /**
+     * Copies a range of elements from an Array starting at the specified source index and pastes
+     * them to another Array starting at the specified destination index. The length and the indexes
+     * are specified as 64-bit integers.
+     * sourceArray:
+     *		The Array that contains the data to copy.
+     * sourceIndex:
+     *		A 64-bit integer that represents the index in the sourceArray at which copying begins.
+     * destinationArray:
+     *		The Array that receives the data.
+     * destinationIndex:
+     *		A 64-bit integer that represents the index in the destinationArray at which storing begins.
+     * length:
+     *		A 64-bit integer that represents the number of elements to copy.
+     */
+    static Copy(sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
+      for (let i = 0; i < length; i++) {
+        destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+      }
+    }
+    static Copy2(sourceArray, sourceIndex, destinationArray, destinationIndex, length) {
+      for (let i = 0; i < length; i++) {
+        destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+      }
+    }
+  };
+  var DiffChangeHelper = class {
+    /**
+     * Constructs a new DiffChangeHelper for the given DiffSequences.
+     */
+    constructor() {
+      this.m_changes = [];
+      this.m_originalStart = 1073741824;
+      this.m_modifiedStart = 1073741824;
+      this.m_originalCount = 0;
+      this.m_modifiedCount = 0;
+    }
+    /**
+     * Marks the beginning of the next change in the set of differences.
+     */
+    MarkNextChange() {
+      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
+        this.m_changes.push(new DiffChange(this.m_originalStart, this.m_originalCount, this.m_modifiedStart, this.m_modifiedCount));
+      }
+      this.m_originalCount = 0;
+      this.m_modifiedCount = 0;
+      this.m_originalStart = 1073741824;
+      this.m_modifiedStart = 1073741824;
+    }
+    /**
+     * Adds the original element at the given position to the elements
+     * affected by the current change. The modified index gives context
+     * to the change position with respect to the original sequence.
+     * @param originalIndex The index of the original element to add.
+     * @param modifiedIndex The index of the modified element that provides corresponding position in the modified sequence.
+     */
+    AddOriginalElement(originalIndex, modifiedIndex) {
+      this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
+      this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
+      this.m_originalCount++;
+    }
+    /**
+     * Adds the modified element at the given position to the elements
+     * affected by the current change. The original index gives context
+     * to the change position with respect to the modified sequence.
+     * @param originalIndex The index of the original element that provides corresponding position in the original sequence.
+     * @param modifiedIndex The index of the modified element to add.
+     */
+    AddModifiedElement(originalIndex, modifiedIndex) {
+      this.m_originalStart = Math.min(this.m_originalStart, originalIndex);
+      this.m_modifiedStart = Math.min(this.m_modifiedStart, modifiedIndex);
+      this.m_modifiedCount++;
+    }
+    /**
+     * Retrieves all of the changes marked by the class.
+     */
+    getChanges() {
+      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
+        this.MarkNextChange();
+      }
+      return this.m_changes;
+    }
+    /**
+     * Retrieves all of the changes marked by the class in the reverse order
+     */
+    getReverseChanges() {
+      if (this.m_originalCount > 0 || this.m_modifiedCount > 0) {
+        this.MarkNextChange();
+      }
+      this.m_changes.reverse();
+      return this.m_changes;
+    }
+  };
+  var LcsDiff = class {
+    /**
+     * Constructs the DiffFinder
+     */
+    constructor(originalSequence, modifiedSequence, continueProcessingPredicate = null) {
+      this.ContinueProcessingPredicate = continueProcessingPredicate;
+      this._originalSequence = originalSequence;
+      this._modifiedSequence = modifiedSequence;
+      const [originalStringElements, originalElementsOrHash, originalHasStrings] = LcsDiff._getElements(originalSequence);
+      const [modifiedStringElements, modifiedElementsOrHash, modifiedHasStrings] = LcsDiff._getElements(modifiedSequence);
+      this._hasStrings = originalHasStrings && modifiedHasStrings;
+      this._originalStringElements = originalStringElements;
+      this._originalElementsOrHash = originalElementsOrHash;
+      this._modifiedStringElements = modifiedStringElements;
+      this._modifiedElementsOrHash = modifiedElementsOrHash;
+      this.m_forwardHistory = [];
+      this.m_reverseHistory = [];
+    }
+    static _isStringArray(arr) {
+      return arr.length > 0 && typeof arr[0] === "string";
+    }
+    static _getElements(sequence) {
+      const elements = sequence.getElements();
+      if (LcsDiff._isStringArray(elements)) {
+        const hashes = new Int32Array(elements.length);
+        for (let i = 0, len = elements.length; i < len; i++) {
+          hashes[i] = stringHash(elements[i], 0);
+        }
+        return [elements, hashes, true];
+      }
+      if (elements instanceof Int32Array) {
+        return [[], elements, false];
+      }
+      return [[], new Int32Array(elements), false];
+    }
+    ElementsAreEqual(originalIndex, newIndex) {
+      if (this._originalElementsOrHash[originalIndex] !== this._modifiedElementsOrHash[newIndex]) {
+        return false;
+      }
+      return this._hasStrings ? this._originalStringElements[originalIndex] === this._modifiedStringElements[newIndex] : true;
+    }
+    ElementsAreStrictEqual(originalIndex, newIndex) {
+      if (!this.ElementsAreEqual(originalIndex, newIndex)) {
+        return false;
+      }
+      const originalElement = LcsDiff._getStrictElement(this._originalSequence, originalIndex);
+      const modifiedElement = LcsDiff._getStrictElement(this._modifiedSequence, newIndex);
+      return originalElement === modifiedElement;
+    }
+    static _getStrictElement(sequence, index) {
+      if (typeof sequence.getStrictElement === "function") {
+        return sequence.getStrictElement(index);
+      }
+      return null;
+    }
+    OriginalElementsAreEqual(index1, index2) {
+      if (this._originalElementsOrHash[index1] !== this._originalElementsOrHash[index2]) {
+        return false;
+      }
+      return this._hasStrings ? this._originalStringElements[index1] === this._originalStringElements[index2] : true;
+    }
+    ModifiedElementsAreEqual(index1, index2) {
+      if (this._modifiedElementsOrHash[index1] !== this._modifiedElementsOrHash[index2]) {
+        return false;
+      }
+      return this._hasStrings ? this._modifiedStringElements[index1] === this._modifiedStringElements[index2] : true;
+    }
+    ComputeDiff(pretty) {
+      return this._ComputeDiff(0, this._originalElementsOrHash.length - 1, 0, this._modifiedElementsOrHash.length - 1, pretty);
+    }
+    /**
+     * Computes the differences between the original and modified input
+     * sequences on the bounded range.
+     * @returns An array of the differences between the two input sequences.
+     */
+    _ComputeDiff(originalStart, originalEnd, modifiedStart, modifiedEnd, pretty) {
+      const quitEarlyArr = [false];
+      let changes = this.ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr);
+      if (pretty) {
+        changes = this.PrettifyChanges(changes);
+      }
+      return {
+        quitEarly: quitEarlyArr[0],
+        changes
+      };
+    }
+    /**
+     * Private helper method which computes the differences on the bounded range
+     * recursively.
+     * @returns An array of the differences between the two input sequences.
+     */
+    ComputeDiffRecursive(originalStart, originalEnd, modifiedStart, modifiedEnd, quitEarlyArr) {
+      quitEarlyArr[0] = false;
+      while (originalStart <= originalEnd && modifiedStart <= modifiedEnd && this.ElementsAreEqual(originalStart, modifiedStart)) {
+        originalStart++;
+        modifiedStart++;
+      }
+      while (originalEnd >= originalStart && modifiedEnd >= modifiedStart && this.ElementsAreEqual(originalEnd, modifiedEnd)) {
+        originalEnd--;
+        modifiedEnd--;
+      }
+      if (originalStart > originalEnd || modifiedStart > modifiedEnd) {
+        let changes;
+        if (modifiedStart <= modifiedEnd) {
+          Debug.Assert(originalStart === originalEnd + 1, "originalStart should only be one more than originalEnd");
+          changes = [
+            new DiffChange(originalStart, 0, modifiedStart, modifiedEnd - modifiedStart + 1)
+          ];
+        } else if (originalStart <= originalEnd) {
+          Debug.Assert(modifiedStart === modifiedEnd + 1, "modifiedStart should only be one more than modifiedEnd");
+          changes = [
+            new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, 0)
+          ];
+        } else {
+          Debug.Assert(originalStart === originalEnd + 1, "originalStart should only be one more than originalEnd");
+          Debug.Assert(modifiedStart === modifiedEnd + 1, "modifiedStart should only be one more than modifiedEnd");
+          changes = [];
+        }
+        return changes;
+      }
+      const midOriginalArr = [0];
+      const midModifiedArr = [0];
+      const result = this.ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr);
+      const midOriginal = midOriginalArr[0];
+      const midModified = midModifiedArr[0];
+      if (result !== null) {
+        return result;
+      } else if (!quitEarlyArr[0]) {
+        const leftChanges = this.ComputeDiffRecursive(originalStart, midOriginal, modifiedStart, midModified, quitEarlyArr);
+        let rightChanges = [];
+        if (!quitEarlyArr[0]) {
+          rightChanges = this.ComputeDiffRecursive(midOriginal + 1, originalEnd, midModified + 1, modifiedEnd, quitEarlyArr);
+        } else {
+          rightChanges = [
+            new DiffChange(midOriginal + 1, originalEnd - (midOriginal + 1) + 1, midModified + 1, modifiedEnd - (midModified + 1) + 1)
+          ];
+        }
+        return this.ConcatenateChanges(leftChanges, rightChanges);
+      }
+      return [
+        new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
+      ];
+    }
+    WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr) {
+      let forwardChanges = null;
+      let reverseChanges = null;
+      let changeHelper = new DiffChangeHelper();
+      let diagonalMin = diagonalForwardStart;
+      let diagonalMax = diagonalForwardEnd;
+      let diagonalRelative = midOriginalArr[0] - midModifiedArr[0] - diagonalForwardOffset;
+      let lastOriginalIndex = -1073741824;
+      let historyIndex = this.m_forwardHistory.length - 1;
+      do {
+        const diagonal = diagonalRelative + diagonalForwardBase;
+        if (diagonal === diagonalMin || diagonal < diagonalMax && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1]) {
+          originalIndex = forwardPoints[diagonal + 1];
+          modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
+          if (originalIndex < lastOriginalIndex) {
+            changeHelper.MarkNextChange();
+          }
+          lastOriginalIndex = originalIndex;
+          changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex);
+          diagonalRelative = diagonal + 1 - diagonalForwardBase;
+        } else {
+          originalIndex = forwardPoints[diagonal - 1] + 1;
+          modifiedIndex = originalIndex - diagonalRelative - diagonalForwardOffset;
+          if (originalIndex < lastOriginalIndex) {
+            changeHelper.MarkNextChange();
+          }
+          lastOriginalIndex = originalIndex - 1;
+          changeHelper.AddOriginalElement(originalIndex, modifiedIndex + 1);
+          diagonalRelative = diagonal - 1 - diagonalForwardBase;
+        }
+        if (historyIndex >= 0) {
+          forwardPoints = this.m_forwardHistory[historyIndex];
+          diagonalForwardBase = forwardPoints[0];
+          diagonalMin = 1;
+          diagonalMax = forwardPoints.length - 1;
+        }
+      } while (--historyIndex >= -1);
+      forwardChanges = changeHelper.getReverseChanges();
+      if (quitEarlyArr[0]) {
+        let originalStartPoint = midOriginalArr[0] + 1;
+        let modifiedStartPoint = midModifiedArr[0] + 1;
+        if (forwardChanges !== null && forwardChanges.length > 0) {
+          const lastForwardChange = forwardChanges[forwardChanges.length - 1];
+          originalStartPoint = Math.max(originalStartPoint, lastForwardChange.getOriginalEnd());
+          modifiedStartPoint = Math.max(modifiedStartPoint, lastForwardChange.getModifiedEnd());
+        }
+        reverseChanges = [
+          new DiffChange(originalStartPoint, originalEnd - originalStartPoint + 1, modifiedStartPoint, modifiedEnd - modifiedStartPoint + 1)
+        ];
+      } else {
+        changeHelper = new DiffChangeHelper();
+        diagonalMin = diagonalReverseStart;
+        diagonalMax = diagonalReverseEnd;
+        diagonalRelative = midOriginalArr[0] - midModifiedArr[0] - diagonalReverseOffset;
+        lastOriginalIndex = 1073741824;
+        historyIndex = deltaIsEven ? this.m_reverseHistory.length - 1 : this.m_reverseHistory.length - 2;
+        do {
+          const diagonal = diagonalRelative + diagonalReverseBase;
+          if (diagonal === diagonalMin || diagonal < diagonalMax && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1]) {
+            originalIndex = reversePoints[diagonal + 1] - 1;
+            modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
+            if (originalIndex > lastOriginalIndex) {
+              changeHelper.MarkNextChange();
+            }
+            lastOriginalIndex = originalIndex + 1;
+            changeHelper.AddOriginalElement(originalIndex + 1, modifiedIndex + 1);
+            diagonalRelative = diagonal + 1 - diagonalReverseBase;
+          } else {
+            originalIndex = reversePoints[diagonal - 1];
+            modifiedIndex = originalIndex - diagonalRelative - diagonalReverseOffset;
+            if (originalIndex > lastOriginalIndex) {
+              changeHelper.MarkNextChange();
+            }
+            lastOriginalIndex = originalIndex;
+            changeHelper.AddModifiedElement(originalIndex + 1, modifiedIndex + 1);
+            diagonalRelative = diagonal - 1 - diagonalReverseBase;
+          }
+          if (historyIndex >= 0) {
+            reversePoints = this.m_reverseHistory[historyIndex];
+            diagonalReverseBase = reversePoints[0];
+            diagonalMin = 1;
+            diagonalMax = reversePoints.length - 1;
+          }
+        } while (--historyIndex >= -1);
+        reverseChanges = changeHelper.getChanges();
+      }
+      return this.ConcatenateChanges(forwardChanges, reverseChanges);
+    }
+    /**
+     * Given the range to compute the diff on, this method finds the point:
+     * (midOriginal, midModified)
+     * that exists in the middle of the LCS of the two sequences and
+     * is the point at which the LCS problem may be broken down recursively.
+     * This method will try to keep the LCS trace in memory. If the LCS recursion
+     * point is calculated and the full trace is available in memory, then this method
+     * will return the change list.
+     * @param originalStart The start bound of the original sequence range
+     * @param originalEnd The end bound of the original sequence range
+     * @param modifiedStart The start bound of the modified sequence range
+     * @param modifiedEnd The end bound of the modified sequence range
+     * @param midOriginal The middle point of the original sequence range
+     * @param midModified The middle point of the modified sequence range
+     * @returns The diff changes, if available, otherwise null
+     */
+    ComputeRecursionPoint(originalStart, originalEnd, modifiedStart, modifiedEnd, midOriginalArr, midModifiedArr, quitEarlyArr) {
+      let originalIndex = 0, modifiedIndex = 0;
+      let diagonalForwardStart = 0, diagonalForwardEnd = 0;
+      let diagonalReverseStart = 0, diagonalReverseEnd = 0;
+      originalStart--;
+      modifiedStart--;
+      midOriginalArr[0] = 0;
+      midModifiedArr[0] = 0;
+      this.m_forwardHistory = [];
+      this.m_reverseHistory = [];
+      const maxDifferences = originalEnd - originalStart + (modifiedEnd - modifiedStart);
+      const numDiagonals = maxDifferences + 1;
+      const forwardPoints = new Int32Array(numDiagonals);
+      const reversePoints = new Int32Array(numDiagonals);
+      const diagonalForwardBase = modifiedEnd - modifiedStart;
+      const diagonalReverseBase = originalEnd - originalStart;
+      const diagonalForwardOffset = originalStart - modifiedStart;
+      const diagonalReverseOffset = originalEnd - modifiedEnd;
+      const delta = diagonalReverseBase - diagonalForwardBase;
+      const deltaIsEven = delta % 2 === 0;
+      forwardPoints[diagonalForwardBase] = originalStart;
+      reversePoints[diagonalReverseBase] = originalEnd;
+      quitEarlyArr[0] = false;
+      for (let numDifferences = 1; numDifferences <= maxDifferences / 2 + 1; numDifferences++) {
+        let furthestOriginalIndex = 0;
+        let furthestModifiedIndex = 0;
+        diagonalForwardStart = this.ClipDiagonalBound(diagonalForwardBase - numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
+        diagonalForwardEnd = this.ClipDiagonalBound(diagonalForwardBase + numDifferences, numDifferences, diagonalForwardBase, numDiagonals);
+        for (let diagonal = diagonalForwardStart; diagonal <= diagonalForwardEnd; diagonal += 2) {
+          if (diagonal === diagonalForwardStart || diagonal < diagonalForwardEnd && forwardPoints[diagonal - 1] < forwardPoints[diagonal + 1]) {
+            originalIndex = forwardPoints[diagonal + 1];
+          } else {
+            originalIndex = forwardPoints[diagonal - 1] + 1;
+          }
+          modifiedIndex = originalIndex - (diagonal - diagonalForwardBase) - diagonalForwardOffset;
+          const tempOriginalIndex = originalIndex;
+          while (originalIndex < originalEnd && modifiedIndex < modifiedEnd && this.ElementsAreEqual(originalIndex + 1, modifiedIndex + 1)) {
+            originalIndex++;
+            modifiedIndex++;
+          }
+          forwardPoints[diagonal] = originalIndex;
+          if (originalIndex + modifiedIndex > furthestOriginalIndex + furthestModifiedIndex) {
+            furthestOriginalIndex = originalIndex;
+            furthestModifiedIndex = modifiedIndex;
+          }
+          if (!deltaIsEven && Math.abs(diagonal - diagonalReverseBase) <= numDifferences - 1) {
+            if (originalIndex >= reversePoints[diagonal]) {
+              midOriginalArr[0] = originalIndex;
+              midModifiedArr[0] = modifiedIndex;
+              if (tempOriginalIndex <= reversePoints[diagonal] && 1447 > 0 && numDifferences <= 1447 + 1) {
+                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+              } else {
+                return null;
+              }
+            }
+          }
+        }
+        const matchLengthOfLongest = (furthestOriginalIndex - originalStart + (furthestModifiedIndex - modifiedStart) - numDifferences) / 2;
+        if (this.ContinueProcessingPredicate !== null && !this.ContinueProcessingPredicate(furthestOriginalIndex, matchLengthOfLongest)) {
+          quitEarlyArr[0] = true;
+          midOriginalArr[0] = furthestOriginalIndex;
+          midModifiedArr[0] = furthestModifiedIndex;
+          if (matchLengthOfLongest > 0 && 1447 > 0 && numDifferences <= 1447 + 1) {
+            return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+          } else {
+            originalStart++;
+            modifiedStart++;
+            return [
+              new DiffChange(originalStart, originalEnd - originalStart + 1, modifiedStart, modifiedEnd - modifiedStart + 1)
+            ];
+          }
+        }
+        diagonalReverseStart = this.ClipDiagonalBound(diagonalReverseBase - numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
+        diagonalReverseEnd = this.ClipDiagonalBound(diagonalReverseBase + numDifferences, numDifferences, diagonalReverseBase, numDiagonals);
+        for (let diagonal = diagonalReverseStart; diagonal <= diagonalReverseEnd; diagonal += 2) {
+          if (diagonal === diagonalReverseStart || diagonal < diagonalReverseEnd && reversePoints[diagonal - 1] >= reversePoints[diagonal + 1]) {
+            originalIndex = reversePoints[diagonal + 1] - 1;
+          } else {
+            originalIndex = reversePoints[diagonal - 1];
+          }
+          modifiedIndex = originalIndex - (diagonal - diagonalReverseBase) - diagonalReverseOffset;
+          const tempOriginalIndex = originalIndex;
+          while (originalIndex > originalStart && modifiedIndex > modifiedStart && this.ElementsAreEqual(originalIndex, modifiedIndex)) {
+            originalIndex--;
+            modifiedIndex--;
+          }
+          reversePoints[diagonal] = originalIndex;
+          if (deltaIsEven && Math.abs(diagonal - diagonalForwardBase) <= numDifferences) {
+            if (originalIndex <= forwardPoints[diagonal]) {
+              midOriginalArr[0] = originalIndex;
+              midModifiedArr[0] = modifiedIndex;
+              if (tempOriginalIndex >= forwardPoints[diagonal] && 1447 > 0 && numDifferences <= 1447 + 1) {
+                return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+              } else {
+                return null;
+              }
+            }
+          }
+        }
+        if (numDifferences <= 1447) {
+          let temp = new Int32Array(diagonalForwardEnd - diagonalForwardStart + 2);
+          temp[0] = diagonalForwardBase - diagonalForwardStart + 1;
+          MyArray.Copy2(forwardPoints, diagonalForwardStart, temp, 1, diagonalForwardEnd - diagonalForwardStart + 1);
+          this.m_forwardHistory.push(temp);
+          temp = new Int32Array(diagonalReverseEnd - diagonalReverseStart + 2);
+          temp[0] = diagonalReverseBase - diagonalReverseStart + 1;
+          MyArray.Copy2(reversePoints, diagonalReverseStart, temp, 1, diagonalReverseEnd - diagonalReverseStart + 1);
+          this.m_reverseHistory.push(temp);
+        }
+      }
+      return this.WALKTRACE(diagonalForwardBase, diagonalForwardStart, diagonalForwardEnd, diagonalForwardOffset, diagonalReverseBase, diagonalReverseStart, diagonalReverseEnd, diagonalReverseOffset, forwardPoints, reversePoints, originalIndex, originalEnd, midOriginalArr, modifiedIndex, modifiedEnd, midModifiedArr, deltaIsEven, quitEarlyArr);
+    }
+    /**
+     * Shifts the given changes to provide a more intuitive diff.
+     * While the first element in a diff matches the first element after the diff,
+     * we shift the diff down.
+     *
+     * @param changes The list of changes to shift
+     * @returns The shifted changes
+     */
+    PrettifyChanges(changes) {
+      for (let i = 0; i < changes.length; i++) {
+        const change = changes[i];
+        const originalStop = i < changes.length - 1 ? changes[i + 1].originalStart : this._originalElementsOrHash.length;
+        const modifiedStop = i < changes.length - 1 ? changes[i + 1].modifiedStart : this._modifiedElementsOrHash.length;
+        const checkOriginal = change.originalLength > 0;
+        const checkModified = change.modifiedLength > 0;
+        while (change.originalStart + change.originalLength < originalStop && change.modifiedStart + change.modifiedLength < modifiedStop && (!checkOriginal || this.OriginalElementsAreEqual(change.originalStart, change.originalStart + change.originalLength)) && (!checkModified || this.ModifiedElementsAreEqual(change.modifiedStart, change.modifiedStart + change.modifiedLength))) {
+          const startStrictEqual = this.ElementsAreStrictEqual(change.originalStart, change.modifiedStart);
+          const endStrictEqual = this.ElementsAreStrictEqual(change.originalStart + change.originalLength, change.modifiedStart + change.modifiedLength);
+          if (endStrictEqual && !startStrictEqual) {
+            break;
+          }
+          change.originalStart++;
+          change.modifiedStart++;
+        }
+        const mergedChangeArr = [null];
+        if (i < changes.length - 1 && this.ChangesOverlap(changes[i], changes[i + 1], mergedChangeArr)) {
+          changes[i] = mergedChangeArr[0];
+          changes.splice(i + 1, 1);
+          i--;
+          continue;
+        }
+      }
+      for (let i = changes.length - 1; i >= 0; i--) {
+        const change = changes[i];
+        let originalStop = 0;
+        let modifiedStop = 0;
+        if (i > 0) {
+          const prevChange = changes[i - 1];
+          originalStop = prevChange.originalStart + prevChange.originalLength;
+          modifiedStop = prevChange.modifiedStart + prevChange.modifiedLength;
+        }
+        const checkOriginal = change.originalLength > 0;
+        const checkModified = change.modifiedLength > 0;
+        let bestDelta = 0;
+        let bestScore = this._boundaryScore(change.originalStart, change.originalLength, change.modifiedStart, change.modifiedLength);
+        for (let delta = 1; ; delta++) {
+          const originalStart = change.originalStart - delta;
+          const modifiedStart = change.modifiedStart - delta;
+          if (originalStart < originalStop || modifiedStart < modifiedStop) {
+            break;
+          }
+          if (checkOriginal && !this.OriginalElementsAreEqual(originalStart, originalStart + change.originalLength)) {
+            break;
+          }
+          if (checkModified && !this.ModifiedElementsAreEqual(modifiedStart, modifiedStart + change.modifiedLength)) {
+            break;
+          }
+          const touchingPreviousChange = originalStart === originalStop && modifiedStart === modifiedStop;
+          const score = (touchingPreviousChange ? 5 : 0) + this._boundaryScore(originalStart, change.originalLength, modifiedStart, change.modifiedLength);
+          if (score > bestScore) {
+            bestScore = score;
+            bestDelta = delta;
+          }
+        }
+        change.originalStart -= bestDelta;
+        change.modifiedStart -= bestDelta;
+        const mergedChangeArr = [null];
+        if (i > 0 && this.ChangesOverlap(changes[i - 1], changes[i], mergedChangeArr)) {
+          changes[i - 1] = mergedChangeArr[0];
+          changes.splice(i, 1);
+          i++;
+          continue;
+        }
+      }
+      if (this._hasStrings) {
+        for (let i = 1, len = changes.length; i < len; i++) {
+          const aChange = changes[i - 1];
+          const bChange = changes[i];
+          const matchedLength = bChange.originalStart - aChange.originalStart - aChange.originalLength;
+          const aOriginalStart = aChange.originalStart;
+          const bOriginalEnd = bChange.originalStart + bChange.originalLength;
+          const abOriginalLength = bOriginalEnd - aOriginalStart;
+          const aModifiedStart = aChange.modifiedStart;
+          const bModifiedEnd = bChange.modifiedStart + bChange.modifiedLength;
+          const abModifiedLength = bModifiedEnd - aModifiedStart;
+          if (matchedLength < 5 && abOriginalLength < 20 && abModifiedLength < 20) {
+            const t = this._findBetterContiguousSequence(aOriginalStart, abOriginalLength, aModifiedStart, abModifiedLength, matchedLength);
+            if (t) {
+              const [originalMatchStart, modifiedMatchStart] = t;
+              if (originalMatchStart !== aChange.originalStart + aChange.originalLength || modifiedMatchStart !== aChange.modifiedStart + aChange.modifiedLength) {
+                aChange.originalLength = originalMatchStart - aChange.originalStart;
+                aChange.modifiedLength = modifiedMatchStart - aChange.modifiedStart;
+                bChange.originalStart = originalMatchStart + matchedLength;
+                bChange.modifiedStart = modifiedMatchStart + matchedLength;
+                bChange.originalLength = bOriginalEnd - bChange.originalStart;
+                bChange.modifiedLength = bModifiedEnd - bChange.modifiedStart;
+              }
+            }
+          }
+        }
+      }
+      return changes;
+    }
+    _findBetterContiguousSequence(originalStart, originalLength, modifiedStart, modifiedLength, desiredLength) {
+      if (originalLength < desiredLength || modifiedLength < desiredLength) {
+        return null;
+      }
+      const originalMax = originalStart + originalLength - desiredLength + 1;
+      const modifiedMax = modifiedStart + modifiedLength - desiredLength + 1;
+      let bestScore = 0;
+      let bestOriginalStart = 0;
+      let bestModifiedStart = 0;
+      for (let i = originalStart; i < originalMax; i++) {
+        for (let j = modifiedStart; j < modifiedMax; j++) {
+          const score = this._contiguousSequenceScore(i, j, desiredLength);
+          if (score > 0 && score > bestScore) {
+            bestScore = score;
+            bestOriginalStart = i;
+            bestModifiedStart = j;
+          }
+        }
+      }
+      if (bestScore > 0) {
+        return [bestOriginalStart, bestModifiedStart];
+      }
+      return null;
+    }
+    _contiguousSequenceScore(originalStart, modifiedStart, length) {
+      let score = 0;
+      for (let l = 0; l < length; l++) {
+        if (!this.ElementsAreEqual(originalStart + l, modifiedStart + l)) {
+          return 0;
+        }
+        score += this._originalStringElements[originalStart + l].length;
+      }
+      return score;
+    }
+    _OriginalIsBoundary(index) {
+      if (index <= 0 || index >= this._originalElementsOrHash.length - 1) {
+        return true;
+      }
+      return this._hasStrings && /^\s*$/.test(this._originalStringElements[index]);
+    }
+    _OriginalRegionIsBoundary(originalStart, originalLength) {
+      if (this._OriginalIsBoundary(originalStart) || this._OriginalIsBoundary(originalStart - 1)) {
+        return true;
+      }
+      if (originalLength > 0) {
+        const originalEnd = originalStart + originalLength;
+        if (this._OriginalIsBoundary(originalEnd - 1) || this._OriginalIsBoundary(originalEnd)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    _ModifiedIsBoundary(index) {
+      if (index <= 0 || index >= this._modifiedElementsOrHash.length - 1) {
+        return true;
+      }
+      return this._hasStrings && /^\s*$/.test(this._modifiedStringElements[index]);
+    }
+    _ModifiedRegionIsBoundary(modifiedStart, modifiedLength) {
+      if (this._ModifiedIsBoundary(modifiedStart) || this._ModifiedIsBoundary(modifiedStart - 1)) {
+        return true;
+      }
+      if (modifiedLength > 0) {
+        const modifiedEnd = modifiedStart + modifiedLength;
+        if (this._ModifiedIsBoundary(modifiedEnd - 1) || this._ModifiedIsBoundary(modifiedEnd)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    _boundaryScore(originalStart, originalLength, modifiedStart, modifiedLength) {
+      const originalScore = this._OriginalRegionIsBoundary(originalStart, originalLength) ? 1 : 0;
+      const modifiedScore = this._ModifiedRegionIsBoundary(modifiedStart, modifiedLength) ? 1 : 0;
+      return originalScore + modifiedScore;
+    }
+    /**
+     * Concatenates the two input DiffChange lists and returns the resulting
+     * list.
+     * @param The left changes
+     * @param The right changes
+     * @returns The concatenated list
+     */
+    ConcatenateChanges(left, right) {
+      const mergedChangeArr = [];
+      if (left.length === 0 || right.length === 0) {
+        return right.length > 0 ? right : left;
+      } else if (this.ChangesOverlap(left[left.length - 1], right[0], mergedChangeArr)) {
+        const result = new Array(left.length + right.length - 1);
+        MyArray.Copy(left, 0, result, 0, left.length - 1);
+        result[left.length - 1] = mergedChangeArr[0];
+        MyArray.Copy(right, 1, result, left.length, right.length - 1);
+        return result;
+      } else {
+        const result = new Array(left.length + right.length);
+        MyArray.Copy(left, 0, result, 0, left.length);
+        MyArray.Copy(right, 0, result, left.length, right.length);
+        return result;
+      }
+    }
+    /**
+     * Returns true if the two changes overlap and can be merged into a single
+     * change
+     * @param left The left change
+     * @param right The right change
+     * @param mergedChange The merged change if the two overlap, null otherwise
+     * @returns True if the two changes overlap
+     */
+    ChangesOverlap(left, right, mergedChangeArr) {
+      Debug.Assert(left.originalStart <= right.originalStart, "Left change is not less than or equal to right change");
+      Debug.Assert(left.modifiedStart <= right.modifiedStart, "Left change is not less than or equal to right change");
+      if (left.originalStart + left.originalLength >= right.originalStart || left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
+        const originalStart = left.originalStart;
+        let originalLength = left.originalLength;
+        const modifiedStart = left.modifiedStart;
+        let modifiedLength = left.modifiedLength;
+        if (left.originalStart + left.originalLength >= right.originalStart) {
+          originalLength = right.originalStart + right.originalLength - left.originalStart;
+        }
+        if (left.modifiedStart + left.modifiedLength >= right.modifiedStart) {
+          modifiedLength = right.modifiedStart + right.modifiedLength - left.modifiedStart;
+        }
+        mergedChangeArr[0] = new DiffChange(originalStart, originalLength, modifiedStart, modifiedLength);
+        return true;
+      } else {
+        mergedChangeArr[0] = null;
+        return false;
+      }
+    }
+    /**
+     * Helper method used to clip a diagonal index to the range of valid
+     * diagonals. This also decides whether or not the diagonal index,
+     * if it exceeds the boundary, should be clipped to the boundary or clipped
+     * one inside the boundary depending on the Even/Odd status of the boundary
+     * and numDifferences.
+     * @param diagonal The index of the diagonal to clip.
+     * @param numDifferences The current number of differences being iterated upon.
+     * @param diagonalBaseIndex The base reference diagonal.
+     * @param numDiagonals The total number of diagonals.
+     * @returns The clipped diagonal index.
+     */
+    ClipDiagonalBound(diagonal, numDifferences, diagonalBaseIndex, numDiagonals) {
+      if (diagonal >= 0 && diagonal < numDiagonals) {
+        return diagonal;
+      }
+      const diagonalsBelow = diagonalBaseIndex;
+      const diagonalsAbove = numDiagonals - diagonalBaseIndex - 1;
+      const diffEven = numDifferences % 2 === 0;
+      if (diagonal < 0) {
+        const lowerBoundEven = diagonalsBelow % 2 === 0;
+        return diffEven === lowerBoundEven ? 0 : 1;
+      } else {
+        const upperBoundEven = diagonalsAbove % 2 === 0;
+        return diffEven === upperBoundEven ? numDiagonals - 1 : numDiagonals - 2;
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/process.js
+  var safeProcess;
+  if (typeof globals.vscode !== "undefined" && typeof globals.vscode.process !== "undefined") {
+    const sandboxProcess = globals.vscode.process;
+    safeProcess = {
+      get platform() {
+        return sandboxProcess.platform;
+      },
+      get arch() {
+        return sandboxProcess.arch;
+      },
+      get env() {
+        return sandboxProcess.env;
+      },
+      cwd() {
+        return sandboxProcess.cwd();
+      }
+    };
+  } else if (typeof process !== "undefined") {
+    safeProcess = {
+      get platform() {
+        return process.platform;
+      },
+      get arch() {
+        return process.arch;
+      },
+      get env() {
+        return process.env;
+      },
+      cwd() {
+        return process.env["VSCODE_CWD"] || process.cwd();
+      }
+    };
+  } else {
+    safeProcess = {
+      // Supported
+      get platform() {
+        return isWindows ? "win32" : isMacintosh ? "darwin" : "linux";
+      },
+      get arch() {
+        return void 0;
+      },
+      // Unsupported
+      get env() {
+        return {};
+      },
+      cwd() {
+        return "/";
+      }
+    };
+  }
+  var cwd = safeProcess.cwd;
+  var env = safeProcess.env;
+  var platform = safeProcess.platform;
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/path.js
+  var CHAR_UPPERCASE_A = 65;
+  var CHAR_LOWERCASE_A = 97;
+  var CHAR_UPPERCASE_Z = 90;
+  var CHAR_LOWERCASE_Z = 122;
+  var CHAR_DOT = 46;
+  var CHAR_FORWARD_SLASH = 47;
+  var CHAR_BACKWARD_SLASH = 92;
+  var CHAR_COLON = 58;
+  var CHAR_QUESTION_MARK = 63;
+  var ErrorInvalidArgType = class extends Error {
+    constructor(name, expected, actual) {
+      let determiner;
+      if (typeof expected === "string" && expected.indexOf("not ") === 0) {
+        determiner = "must not be";
+        expected = expected.replace(/^not /, "");
+      } else {
+        determiner = "must be";
+      }
+      const type = name.indexOf(".") !== -1 ? "property" : "argument";
+      let msg = `The "${name}" ${type} ${determiner} of type ${expected}`;
+      msg += `. Received type ${typeof actual}`;
+      super(msg);
+      this.code = "ERR_INVALID_ARG_TYPE";
+    }
+  };
+  function validateString(value, name) {
+    if (typeof value !== "string") {
+      throw new ErrorInvalidArgType(name, "string", value);
+    }
+  }
+  function isPathSeparator(code) {
+    return code === CHAR_FORWARD_SLASH || code === CHAR_BACKWARD_SLASH;
+  }
+  function isPosixPathSeparator(code) {
+    return code === CHAR_FORWARD_SLASH;
+  }
+  function isWindowsDeviceRoot(code) {
+    return code >= CHAR_UPPERCASE_A && code <= CHAR_UPPERCASE_Z || code >= CHAR_LOWERCASE_A && code <= CHAR_LOWERCASE_Z;
+  }
+  function normalizeString(path, allowAboveRoot, separator, isPathSeparator2) {
+    let res = "";
+    let lastSegmentLength = 0;
+    let lastSlash = -1;
+    let dots = 0;
+    let code = 0;
+    for (let i = 0; i <= path.length; ++i) {
+      if (i < path.length) {
+        code = path.charCodeAt(i);
+      } else if (isPathSeparator2(code)) {
+        break;
+      } else {
+        code = CHAR_FORWARD_SLASH;
+      }
+      if (isPathSeparator2(code)) {
+        if (lastSlash === i - 1 || dots === 1) {
+        } else if (dots === 2) {
+          if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== CHAR_DOT || res.charCodeAt(res.length - 2) !== CHAR_DOT) {
+            if (res.length > 2) {
+              const lastSlashIndex = res.lastIndexOf(separator);
+              if (lastSlashIndex === -1) {
+                res = "";
+                lastSegmentLength = 0;
+              } else {
+                res = res.slice(0, lastSlashIndex);
+                lastSegmentLength = res.length - 1 - res.lastIndexOf(separator);
+              }
+              lastSlash = i;
+              dots = 0;
+              continue;
+            } else if (res.length !== 0) {
+              res = "";
+              lastSegmentLength = 0;
+              lastSlash = i;
+              dots = 0;
+              continue;
+            }
+          }
+          if (allowAboveRoot) {
+            res += res.length > 0 ? `${separator}..` : "..";
+            lastSegmentLength = 2;
+          }
+        } else {
+          if (res.length > 0) {
+            res += `${separator}${path.slice(lastSlash + 1, i)}`;
+          } else {
+            res = path.slice(lastSlash + 1, i);
+          }
+          lastSegmentLength = i - lastSlash - 1;
+        }
+        lastSlash = i;
+        dots = 0;
+      } else if (code === CHAR_DOT && dots !== -1) {
+        ++dots;
+      } else {
+        dots = -1;
+      }
+    }
+    return res;
+  }
+  function _format2(sep2, pathObject) {
+    if (pathObject === null || typeof pathObject !== "object") {
+      throw new ErrorInvalidArgType("pathObject", "Object", pathObject);
+    }
+    const dir = pathObject.dir || pathObject.root;
+    const base = pathObject.base || `${pathObject.name || ""}${pathObject.ext || ""}`;
+    if (!dir) {
+      return base;
+    }
+    return dir === pathObject.root ? `${dir}${base}` : `${dir}${sep2}${base}`;
+  }
+  var win32 = {
+    // path.resolve([from ...], to)
+    resolve(...pathSegments) {
+      let resolvedDevice = "";
+      let resolvedTail = "";
+      let resolvedAbsolute = false;
+      for (let i = pathSegments.length - 1; i >= -1; i--) {
+        let path;
+        if (i >= 0) {
+          path = pathSegments[i];
+          validateString(path, "path");
+          if (path.length === 0) {
+            continue;
+          }
+        } else if (resolvedDevice.length === 0) {
+          path = cwd();
+        } else {
+          path = env[`=${resolvedDevice}`] || cwd();
+          if (path === void 0 || path.slice(0, 2).toLowerCase() !== resolvedDevice.toLowerCase() && path.charCodeAt(2) === CHAR_BACKWARD_SLASH) {
+            path = `${resolvedDevice}\\`;
+          }
+        }
+        const len = path.length;
+        let rootEnd = 0;
+        let device = "";
+        let isAbsolute = false;
+        const code = path.charCodeAt(0);
+        if (len === 1) {
+          if (isPathSeparator(code)) {
+            rootEnd = 1;
+            isAbsolute = true;
+          }
+        } else if (isPathSeparator(code)) {
+          isAbsolute = true;
+          if (isPathSeparator(path.charCodeAt(1))) {
+            let j = 2;
+            let last = j;
+            while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+              j++;
+            }
+            if (j < len && j !== last) {
+              const firstPart = path.slice(last, j);
+              last = j;
+              while (j < len && isPathSeparator(path.charCodeAt(j))) {
+                j++;
+              }
+              if (j < len && j !== last) {
+                last = j;
+                while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+                  j++;
+                }
+                if (j === len || j !== last) {
+                  device = `\\\\${firstPart}\\${path.slice(last, j)}`;
+                  rootEnd = j;
+                }
+              }
+            }
+          } else {
+            rootEnd = 1;
+          }
+        } else if (isWindowsDeviceRoot(code) && path.charCodeAt(1) === CHAR_COLON) {
+          device = path.slice(0, 2);
+          rootEnd = 2;
+          if (len > 2 && isPathSeparator(path.charCodeAt(2))) {
+            isAbsolute = true;
+            rootEnd = 3;
+          }
+        }
+        if (device.length > 0) {
+          if (resolvedDevice.length > 0) {
+            if (device.toLowerCase() !== resolvedDevice.toLowerCase()) {
+              continue;
+            }
+          } else {
+            resolvedDevice = device;
+          }
+        }
+        if (resolvedAbsolute) {
+          if (resolvedDevice.length > 0) {
+            break;
+          }
+        } else {
+          resolvedTail = `${path.slice(rootEnd)}\\${resolvedTail}`;
+          resolvedAbsolute = isAbsolute;
+          if (isAbsolute && resolvedDevice.length > 0) {
+            break;
+          }
+        }
+      }
+      resolvedTail = normalizeString(resolvedTail, !resolvedAbsolute, "\\", isPathSeparator);
+      return resolvedAbsolute ? `${resolvedDevice}\\${resolvedTail}` : `${resolvedDevice}${resolvedTail}` || ".";
+    },
+    normalize(path) {
+      validateString(path, "path");
+      const len = path.length;
+      if (len === 0) {
+        return ".";
+      }
+      let rootEnd = 0;
+      let device;
+      let isAbsolute = false;
+      const code = path.charCodeAt(0);
+      if (len === 1) {
+        return isPosixPathSeparator(code) ? "\\" : path;
+      }
+      if (isPathSeparator(code)) {
+        isAbsolute = true;
+        if (isPathSeparator(path.charCodeAt(1))) {
+          let j = 2;
+          let last = j;
+          while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+            j++;
+          }
+          if (j < len && j !== last) {
+            const firstPart = path.slice(last, j);
+            last = j;
+            while (j < len && isPathSeparator(path.charCodeAt(j))) {
+              j++;
+            }
+            if (j < len && j !== last) {
+              last = j;
+              while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+                j++;
+              }
+              if (j === len) {
+                return `\\\\${firstPart}\\${path.slice(last)}\\`;
+              }
+              if (j !== last) {
+                device = `\\\\${firstPart}\\${path.slice(last, j)}`;
+                rootEnd = j;
+              }
+            }
+          }
+        } else {
+          rootEnd = 1;
+        }
+      } else if (isWindowsDeviceRoot(code) && path.charCodeAt(1) === CHAR_COLON) {
+        device = path.slice(0, 2);
+        rootEnd = 2;
+        if (len > 2 && isPathSeparator(path.charCodeAt(2))) {
+          isAbsolute = true;
+          rootEnd = 3;
+        }
+      }
+      let tail = rootEnd < len ? normalizeString(path.slice(rootEnd), !isAbsolute, "\\", isPathSeparator) : "";
+      if (tail.length === 0 && !isAbsolute) {
+        tail = ".";
+      }
+      if (tail.length > 0 && isPathSeparator(path.charCodeAt(len - 1))) {
+        tail += "\\";
+      }
+      if (device === void 0) {
+        return isAbsolute ? `\\${tail}` : tail;
+      }
+      return isAbsolute ? `${device}\\${tail}` : `${device}${tail}`;
+    },
+    isAbsolute(path) {
+      validateString(path, "path");
+      const len = path.length;
+      if (len === 0) {
+        return false;
+      }
+      const code = path.charCodeAt(0);
+      return isPathSeparator(code) || // Possible device root
+      len > 2 && isWindowsDeviceRoot(code) && path.charCodeAt(1) === CHAR_COLON && isPathSeparator(path.charCodeAt(2));
+    },
+    join(...paths) {
+      if (paths.length === 0) {
+        return ".";
+      }
+      let joined;
+      let firstPart;
+      for (let i = 0; i < paths.length; ++i) {
+        const arg = paths[i];
+        validateString(arg, "path");
+        if (arg.length > 0) {
+          if (joined === void 0) {
+            joined = firstPart = arg;
+          } else {
+            joined += `\\${arg}`;
+          }
+        }
+      }
+      if (joined === void 0) {
+        return ".";
+      }
+      let needsReplace = true;
+      let slashCount = 0;
+      if (typeof firstPart === "string" && isPathSeparator(firstPart.charCodeAt(0))) {
+        ++slashCount;
+        const firstLen = firstPart.length;
+        if (firstLen > 1 && isPathSeparator(firstPart.charCodeAt(1))) {
+          ++slashCount;
+          if (firstLen > 2) {
+            if (isPathSeparator(firstPart.charCodeAt(2))) {
+              ++slashCount;
+            } else {
+              needsReplace = false;
+            }
+          }
+        }
+      }
+      if (needsReplace) {
+        while (slashCount < joined.length && isPathSeparator(joined.charCodeAt(slashCount))) {
+          slashCount++;
+        }
+        if (slashCount >= 2) {
+          joined = `\\${joined.slice(slashCount)}`;
+        }
+      }
+      return win32.normalize(joined);
+    },
+    // It will solve the relative path from `from` to `to`, for instance:
+    //  from = 'C:\\orandea\\test\\aaa'
+    //  to = 'C:\\orandea\\impl\\bbb'
+    // The output of the function should be: '..\\..\\impl\\bbb'
+    relative(from, to) {
+      validateString(from, "from");
+      validateString(to, "to");
+      if (from === to) {
+        return "";
+      }
+      const fromOrig = win32.resolve(from);
+      const toOrig = win32.resolve(to);
+      if (fromOrig === toOrig) {
+        return "";
+      }
+      from = fromOrig.toLowerCase();
+      to = toOrig.toLowerCase();
+      if (from === to) {
+        return "";
+      }
+      let fromStart = 0;
+      while (fromStart < from.length && from.charCodeAt(fromStart) === CHAR_BACKWARD_SLASH) {
+        fromStart++;
+      }
+      let fromEnd = from.length;
+      while (fromEnd - 1 > fromStart && from.charCodeAt(fromEnd - 1) === CHAR_BACKWARD_SLASH) {
+        fromEnd--;
+      }
+      const fromLen = fromEnd - fromStart;
+      let toStart = 0;
+      while (toStart < to.length && to.charCodeAt(toStart) === CHAR_BACKWARD_SLASH) {
+        toStart++;
+      }
+      let toEnd = to.length;
+      while (toEnd - 1 > toStart && to.charCodeAt(toEnd - 1) === CHAR_BACKWARD_SLASH) {
+        toEnd--;
+      }
+      const toLen = toEnd - toStart;
+      const length = fromLen < toLen ? fromLen : toLen;
+      let lastCommonSep = -1;
+      let i = 0;
+      for (; i < length; i++) {
+        const fromCode = from.charCodeAt(fromStart + i);
+        if (fromCode !== to.charCodeAt(toStart + i)) {
+          break;
+        } else if (fromCode === CHAR_BACKWARD_SLASH) {
+          lastCommonSep = i;
+        }
+      }
+      if (i !== length) {
+        if (lastCommonSep === -1) {
+          return toOrig;
+        }
+      } else {
+        if (toLen > length) {
+          if (to.charCodeAt(toStart + i) === CHAR_BACKWARD_SLASH) {
+            return toOrig.slice(toStart + i + 1);
+          }
+          if (i === 2) {
+            return toOrig.slice(toStart + i);
+          }
+        }
+        if (fromLen > length) {
+          if (from.charCodeAt(fromStart + i) === CHAR_BACKWARD_SLASH) {
+            lastCommonSep = i;
+          } else if (i === 2) {
+            lastCommonSep = 3;
+          }
+        }
+        if (lastCommonSep === -1) {
+          lastCommonSep = 0;
+        }
+      }
+      let out = "";
+      for (i = fromStart + lastCommonSep + 1; i <= fromEnd; ++i) {
+        if (i === fromEnd || from.charCodeAt(i) === CHAR_BACKWARD_SLASH) {
+          out += out.length === 0 ? ".." : "\\..";
+        }
+      }
+      toStart += lastCommonSep;
+      if (out.length > 0) {
+        return `${out}${toOrig.slice(toStart, toEnd)}`;
+      }
+      if (toOrig.charCodeAt(toStart) === CHAR_BACKWARD_SLASH) {
+        ++toStart;
+      }
+      return toOrig.slice(toStart, toEnd);
+    },
+    toNamespacedPath(path) {
+      if (typeof path !== "string") {
+        return path;
+      }
+      if (path.length === 0) {
+        return "";
+      }
+      const resolvedPath = win32.resolve(path);
+      if (resolvedPath.length <= 2) {
+        return path;
+      }
+      if (resolvedPath.charCodeAt(0) === CHAR_BACKWARD_SLASH) {
+        if (resolvedPath.charCodeAt(1) === CHAR_BACKWARD_SLASH) {
+          const code = resolvedPath.charCodeAt(2);
+          if (code !== CHAR_QUESTION_MARK && code !== CHAR_DOT) {
+            return `\\\\?\\UNC\\${resolvedPath.slice(2)}`;
+          }
+        }
+      } else if (isWindowsDeviceRoot(resolvedPath.charCodeAt(0)) && resolvedPath.charCodeAt(1) === CHAR_COLON && resolvedPath.charCodeAt(2) === CHAR_BACKWARD_SLASH) {
+        return `\\\\?\\${resolvedPath}`;
+      }
+      return path;
+    },
+    dirname(path) {
+      validateString(path, "path");
+      const len = path.length;
+      if (len === 0) {
+        return ".";
+      }
+      let rootEnd = -1;
+      let offset = 0;
+      const code = path.charCodeAt(0);
+      if (len === 1) {
+        return isPathSeparator(code) ? path : ".";
+      }
+      if (isPathSeparator(code)) {
+        rootEnd = offset = 1;
+        if (isPathSeparator(path.charCodeAt(1))) {
+          let j = 2;
+          let last = j;
+          while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+            j++;
+          }
+          if (j < len && j !== last) {
+            last = j;
+            while (j < len && isPathSeparator(path.charCodeAt(j))) {
+              j++;
+            }
+            if (j < len && j !== last) {
+              last = j;
+              while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+                j++;
+              }
+              if (j === len) {
+                return path;
+              }
+              if (j !== last) {
+                rootEnd = offset = j + 1;
+              }
+            }
+          }
+        }
+      } else if (isWindowsDeviceRoot(code) && path.charCodeAt(1) === CHAR_COLON) {
+        rootEnd = len > 2 && isPathSeparator(path.charCodeAt(2)) ? 3 : 2;
+        offset = rootEnd;
+      }
+      let end = -1;
+      let matchedSlash = true;
+      for (let i = len - 1; i >= offset; --i) {
+        if (isPathSeparator(path.charCodeAt(i))) {
+          if (!matchedSlash) {
+            end = i;
+            break;
+          }
+        } else {
+          matchedSlash = false;
+        }
+      }
+      if (end === -1) {
+        if (rootEnd === -1) {
+          return ".";
+        }
+        end = rootEnd;
+      }
+      return path.slice(0, end);
+    },
+    basename(path, ext) {
+      if (ext !== void 0) {
+        validateString(ext, "ext");
+      }
+      validateString(path, "path");
+      let start = 0;
+      let end = -1;
+      let matchedSlash = true;
+      let i;
+      if (path.length >= 2 && isWindowsDeviceRoot(path.charCodeAt(0)) && path.charCodeAt(1) === CHAR_COLON) {
+        start = 2;
+      }
+      if (ext !== void 0 && ext.length > 0 && ext.length <= path.length) {
+        if (ext === path) {
+          return "";
+        }
+        let extIdx = ext.length - 1;
+        let firstNonSlashEnd = -1;
+        for (i = path.length - 1; i >= start; --i) {
+          const code = path.charCodeAt(i);
+          if (isPathSeparator(code)) {
+            if (!matchedSlash) {
+              start = i + 1;
+              break;
+            }
+          } else {
+            if (firstNonSlashEnd === -1) {
+              matchedSlash = false;
+              firstNonSlashEnd = i + 1;
+            }
+            if (extIdx >= 0) {
+              if (code === ext.charCodeAt(extIdx)) {
+                if (--extIdx === -1) {
+                  end = i;
+                }
+              } else {
+                extIdx = -1;
+                end = firstNonSlashEnd;
+              }
+            }
+          }
+        }
+        if (start === end) {
+          end = firstNonSlashEnd;
+        } else if (end === -1) {
+          end = path.length;
+        }
+        return path.slice(start, end);
+      }
+      for (i = path.length - 1; i >= start; --i) {
+        if (isPathSeparator(path.charCodeAt(i))) {
+          if (!matchedSlash) {
+            start = i + 1;
+            break;
+          }
+        } else if (end === -1) {
+          matchedSlash = false;
+          end = i + 1;
+        }
+      }
+      if (end === -1) {
+        return "";
+      }
+      return path.slice(start, end);
+    },
+    extname(path) {
+      validateString(path, "path");
+      let start = 0;
+      let startDot = -1;
+      let startPart = 0;
+      let end = -1;
+      let matchedSlash = true;
+      let preDotState = 0;
+      if (path.length >= 2 && path.charCodeAt(1) === CHAR_COLON && isWindowsDeviceRoot(path.charCodeAt(0))) {
+        start = startPart = 2;
+      }
+      for (let i = path.length - 1; i >= start; --i) {
+        const code = path.charCodeAt(i);
+        if (isPathSeparator(code)) {
+          if (!matchedSlash) {
+            startPart = i + 1;
+            break;
+          }
+          continue;
+        }
+        if (end === -1) {
+          matchedSlash = false;
+          end = i + 1;
+        }
+        if (code === CHAR_DOT) {
+          if (startDot === -1) {
+            startDot = i;
+          } else if (preDotState !== 1) {
+            preDotState = 1;
+          }
+        } else if (startDot !== -1) {
+          preDotState = -1;
+        }
+      }
+      if (startDot === -1 || end === -1 || // We saw a non-dot character immediately before the dot
+      preDotState === 0 || // The (right-most) trimmed path component is exactly '..'
+      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+        return "";
+      }
+      return path.slice(startDot, end);
+    },
+    format: _format2.bind(null, "\\"),
+    parse(path) {
+      validateString(path, "path");
+      const ret = { root: "", dir: "", base: "", ext: "", name: "" };
+      if (path.length === 0) {
+        return ret;
+      }
+      const len = path.length;
+      let rootEnd = 0;
+      let code = path.charCodeAt(0);
+      if (len === 1) {
+        if (isPathSeparator(code)) {
+          ret.root = ret.dir = path;
+          return ret;
+        }
+        ret.base = ret.name = path;
+        return ret;
+      }
+      if (isPathSeparator(code)) {
+        rootEnd = 1;
+        if (isPathSeparator(path.charCodeAt(1))) {
+          let j = 2;
+          let last = j;
+          while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+            j++;
+          }
+          if (j < len && j !== last) {
+            last = j;
+            while (j < len && isPathSeparator(path.charCodeAt(j))) {
+              j++;
+            }
+            if (j < len && j !== last) {
+              last = j;
+              while (j < len && !isPathSeparator(path.charCodeAt(j))) {
+                j++;
+              }
+              if (j === len) {
+                rootEnd = j;
+              } else if (j !== last) {
+                rootEnd = j + 1;
+              }
+            }
+          }
+        }
+      } else if (isWindowsDeviceRoot(code) && path.charCodeAt(1) === CHAR_COLON) {
+        if (len <= 2) {
+          ret.root = ret.dir = path;
+          return ret;
+        }
+        rootEnd = 2;
+        if (isPathSeparator(path.charCodeAt(2))) {
+          if (len === 3) {
+            ret.root = ret.dir = path;
+            return ret;
+          }
+          rootEnd = 3;
+        }
+      }
+      if (rootEnd > 0) {
+        ret.root = path.slice(0, rootEnd);
+      }
+      let startDot = -1;
+      let startPart = rootEnd;
+      let end = -1;
+      let matchedSlash = true;
+      let i = path.length - 1;
+      let preDotState = 0;
+      for (; i >= rootEnd; --i) {
+        code = path.charCodeAt(i);
+        if (isPathSeparator(code)) {
+          if (!matchedSlash) {
+            startPart = i + 1;
+            break;
+          }
+          continue;
+        }
+        if (end === -1) {
+          matchedSlash = false;
+          end = i + 1;
+        }
+        if (code === CHAR_DOT) {
+          if (startDot === -1) {
+            startDot = i;
+          } else if (preDotState !== 1) {
+            preDotState = 1;
+          }
+        } else if (startDot !== -1) {
+          preDotState = -1;
+        }
+      }
+      if (end !== -1) {
+        if (startDot === -1 || // We saw a non-dot character immediately before the dot
+        preDotState === 0 || // The (right-most) trimmed path component is exactly '..'
+        preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+          ret.base = ret.name = path.slice(startPart, end);
+        } else {
+          ret.name = path.slice(startPart, startDot);
+          ret.base = path.slice(startPart, end);
+          ret.ext = path.slice(startDot, end);
+        }
+      }
+      if (startPart > 0 && startPart !== rootEnd) {
+        ret.dir = path.slice(0, startPart - 1);
+      } else {
+        ret.dir = ret.root;
+      }
+      return ret;
+    },
+    sep: "\\",
+    delimiter: ";",
+    win32: null,
+    posix: null
+  };
+  var posix = {
+    // path.resolve([from ...], to)
+    resolve(...pathSegments) {
+      let resolvedPath = "";
+      let resolvedAbsolute = false;
+      for (let i = pathSegments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+        const path = i >= 0 ? pathSegments[i] : cwd();
+        validateString(path, "path");
+        if (path.length === 0) {
+          continue;
+        }
+        resolvedPath = `${path}/${resolvedPath}`;
+        resolvedAbsolute = path.charCodeAt(0) === CHAR_FORWARD_SLASH;
+      }
+      resolvedPath = normalizeString(resolvedPath, !resolvedAbsolute, "/", isPosixPathSeparator);
+      if (resolvedAbsolute) {
+        return `/${resolvedPath}`;
+      }
+      return resolvedPath.length > 0 ? resolvedPath : ".";
+    },
+    normalize(path) {
+      validateString(path, "path");
+      if (path.length === 0) {
+        return ".";
+      }
+      const isAbsolute = path.charCodeAt(0) === CHAR_FORWARD_SLASH;
+      const trailingSeparator = path.charCodeAt(path.length - 1) === CHAR_FORWARD_SLASH;
+      path = normalizeString(path, !isAbsolute, "/", isPosixPathSeparator);
+      if (path.length === 0) {
+        if (isAbsolute) {
+          return "/";
+        }
+        return trailingSeparator ? "./" : ".";
+      }
+      if (trailingSeparator) {
+        path += "/";
+      }
+      return isAbsolute ? `/${path}` : path;
+    },
+    isAbsolute(path) {
+      validateString(path, "path");
+      return path.length > 0 && path.charCodeAt(0) === CHAR_FORWARD_SLASH;
+    },
+    join(...paths) {
+      if (paths.length === 0) {
+        return ".";
+      }
+      let joined;
+      for (let i = 0; i < paths.length; ++i) {
+        const arg = paths[i];
+        validateString(arg, "path");
+        if (arg.length > 0) {
+          if (joined === void 0) {
+            joined = arg;
+          } else {
+            joined += `/${arg}`;
+          }
+        }
+      }
+      if (joined === void 0) {
+        return ".";
+      }
+      return posix.normalize(joined);
+    },
+    relative(from, to) {
+      validateString(from, "from");
+      validateString(to, "to");
+      if (from === to) {
+        return "";
+      }
+      from = posix.resolve(from);
+      to = posix.resolve(to);
+      if (from === to) {
+        return "";
+      }
+      const fromStart = 1;
+      const fromEnd = from.length;
+      const fromLen = fromEnd - fromStart;
+      const toStart = 1;
+      const toLen = to.length - toStart;
+      const length = fromLen < toLen ? fromLen : toLen;
+      let lastCommonSep = -1;
+      let i = 0;
+      for (; i < length; i++) {
+        const fromCode = from.charCodeAt(fromStart + i);
+        if (fromCode !== to.charCodeAt(toStart + i)) {
+          break;
+        } else if (fromCode === CHAR_FORWARD_SLASH) {
+          lastCommonSep = i;
+        }
+      }
+      if (i === length) {
+        if (toLen > length) {
+          if (to.charCodeAt(toStart + i) === CHAR_FORWARD_SLASH) {
+            return to.slice(toStart + i + 1);
+          }
+          if (i === 0) {
+            return to.slice(toStart + i);
+          }
+        } else if (fromLen > length) {
+          if (from.charCodeAt(fromStart + i) === CHAR_FORWARD_SLASH) {
+            lastCommonSep = i;
+          } else if (i === 0) {
+            lastCommonSep = 0;
+          }
+        }
+      }
+      let out = "";
+      for (i = fromStart + lastCommonSep + 1; i <= fromEnd; ++i) {
+        if (i === fromEnd || from.charCodeAt(i) === CHAR_FORWARD_SLASH) {
+          out += out.length === 0 ? ".." : "/..";
+        }
+      }
+      return `${out}${to.slice(toStart + lastCommonSep)}`;
+    },
+    toNamespacedPath(path) {
+      return path;
+    },
+    dirname(path) {
+      validateString(path, "path");
+      if (path.length === 0) {
+        return ".";
+      }
+      const hasRoot = path.charCodeAt(0) === CHAR_FORWARD_SLASH;
+      let end = -1;
+      let matchedSlash = true;
+      for (let i = path.length - 1; i >= 1; --i) {
+        if (path.charCodeAt(i) === CHAR_FORWARD_SLASH) {
+          if (!matchedSlash) {
+            end = i;
+            break;
+          }
+        } else {
+          matchedSlash = false;
+        }
+      }
+      if (end === -1) {
+        return hasRoot ? "/" : ".";
+      }
+      if (hasRoot && end === 1) {
+        return "//";
+      }
+      return path.slice(0, end);
+    },
+    basename(path, ext) {
+      if (ext !== void 0) {
+        validateString(ext, "ext");
+      }
+      validateString(path, "path");
+      let start = 0;
+      let end = -1;
+      let matchedSlash = true;
+      let i;
+      if (ext !== void 0 && ext.length > 0 && ext.length <= path.length) {
+        if (ext === path) {
+          return "";
+        }
+        let extIdx = ext.length - 1;
+        let firstNonSlashEnd = -1;
+        for (i = path.length - 1; i >= 0; --i) {
+          const code = path.charCodeAt(i);
+          if (code === CHAR_FORWARD_SLASH) {
+            if (!matchedSlash) {
+              start = i + 1;
+              break;
+            }
+          } else {
+            if (firstNonSlashEnd === -1) {
+              matchedSlash = false;
+              firstNonSlashEnd = i + 1;
+            }
+            if (extIdx >= 0) {
+              if (code === ext.charCodeAt(extIdx)) {
+                if (--extIdx === -1) {
+                  end = i;
+                }
+              } else {
+                extIdx = -1;
+                end = firstNonSlashEnd;
+              }
+            }
+          }
+        }
+        if (start === end) {
+          end = firstNonSlashEnd;
+        } else if (end === -1) {
+          end = path.length;
+        }
+        return path.slice(start, end);
+      }
+      for (i = path.length - 1; i >= 0; --i) {
+        if (path.charCodeAt(i) === CHAR_FORWARD_SLASH) {
+          if (!matchedSlash) {
+            start = i + 1;
+            break;
+          }
+        } else if (end === -1) {
+          matchedSlash = false;
+          end = i + 1;
+        }
+      }
+      if (end === -1) {
+        return "";
+      }
+      return path.slice(start, end);
+    },
+    extname(path) {
+      validateString(path, "path");
+      let startDot = -1;
+      let startPart = 0;
+      let end = -1;
+      let matchedSlash = true;
+      let preDotState = 0;
+      for (let i = path.length - 1; i >= 0; --i) {
+        const code = path.charCodeAt(i);
+        if (code === CHAR_FORWARD_SLASH) {
+          if (!matchedSlash) {
+            startPart = i + 1;
+            break;
+          }
+          continue;
+        }
+        if (end === -1) {
+          matchedSlash = false;
+          end = i + 1;
+        }
+        if (code === CHAR_DOT) {
+          if (startDot === -1) {
+            startDot = i;
+          } else if (preDotState !== 1) {
+            preDotState = 1;
+          }
+        } else if (startDot !== -1) {
+          preDotState = -1;
+        }
+      }
+      if (startDot === -1 || end === -1 || // We saw a non-dot character immediately before the dot
+      preDotState === 0 || // The (right-most) trimmed path component is exactly '..'
+      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+        return "";
+      }
+      return path.slice(startDot, end);
+    },
+    format: _format2.bind(null, "/"),
+    parse(path) {
+      validateString(path, "path");
+      const ret = { root: "", dir: "", base: "", ext: "", name: "" };
+      if (path.length === 0) {
+        return ret;
+      }
+      const isAbsolute = path.charCodeAt(0) === CHAR_FORWARD_SLASH;
+      let start;
+      if (isAbsolute) {
+        ret.root = "/";
+        start = 1;
+      } else {
+        start = 0;
+      }
+      let startDot = -1;
+      let startPart = 0;
+      let end = -1;
+      let matchedSlash = true;
+      let i = path.length - 1;
+      let preDotState = 0;
+      for (; i >= start; --i) {
+        const code = path.charCodeAt(i);
+        if (code === CHAR_FORWARD_SLASH) {
+          if (!matchedSlash) {
+            startPart = i + 1;
+            break;
+          }
+          continue;
+        }
+        if (end === -1) {
+          matchedSlash = false;
+          end = i + 1;
+        }
+        if (code === CHAR_DOT) {
+          if (startDot === -1) {
+            startDot = i;
+          } else if (preDotState !== 1) {
+            preDotState = 1;
+          }
+        } else if (startDot !== -1) {
+          preDotState = -1;
+        }
+      }
+      if (end !== -1) {
+        const start2 = startPart === 0 && isAbsolute ? 1 : startPart;
+        if (startDot === -1 || // We saw a non-dot character immediately before the dot
+        preDotState === 0 || // The (right-most) trimmed path component is exactly '..'
+        preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+          ret.base = ret.name = path.slice(start2, end);
+        } else {
+          ret.name = path.slice(start2, startDot);
+          ret.base = path.slice(start2, end);
+          ret.ext = path.slice(startDot, end);
+        }
+      }
+      if (startPart > 0) {
+        ret.dir = path.slice(0, startPart - 1);
+      } else if (isAbsolute) {
+        ret.dir = "/";
+      }
+      return ret;
+    },
+    sep: "/",
+    delimiter: ":",
+    win32: null,
+    posix: null
+  };
+  posix.win32 = win32.win32 = win32;
+  posix.posix = win32.posix = posix;
+  var normalize = platform === "win32" ? win32.normalize : posix.normalize;
+  var resolve = platform === "win32" ? win32.resolve : posix.resolve;
+  var relative = platform === "win32" ? win32.relative : posix.relative;
+  var dirname = platform === "win32" ? win32.dirname : posix.dirname;
+  var basename = platform === "win32" ? win32.basename : posix.basename;
+  var extname = platform === "win32" ? win32.extname : posix.extname;
+  var sep = platform === "win32" ? win32.sep : posix.sep;
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/uri.js
+  var _schemePattern = /^\w[\w\d+.-]*$/;
+  var _singleSlashStart = /^\//;
+  var _doubleSlashStart = /^\/\//;
+  function _validateUri(ret, _strict) {
+    if (!ret.scheme && _strict) {
+      throw new Error(`[UriError]: Scheme is missing: {scheme: "", authority: "${ret.authority}", path: "${ret.path}", query: "${ret.query}", fragment: "${ret.fragment}"}`);
+    }
+    if (ret.scheme && !_schemePattern.test(ret.scheme)) {
+      throw new Error("[UriError]: Scheme contains illegal characters.");
+    }
+    if (ret.path) {
+      if (ret.authority) {
+        if (!_singleSlashStart.test(ret.path)) {
+          throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+        }
+      } else {
+        if (_doubleSlashStart.test(ret.path)) {
+          throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+        }
+      }
+    }
+  }
+  function _schemeFix(scheme, _strict) {
+    if (!scheme && !_strict) {
+      return "file";
+    }
+    return scheme;
+  }
+  function _referenceResolution(scheme, path) {
+    switch (scheme) {
+      case "https":
+      case "http":
+      case "file":
+        if (!path) {
+          path = _slash;
+        } else if (path[0] !== _slash) {
+          path = _slash + path;
+        }
+        break;
+    }
+    return path;
+  }
+  var _empty = "";
+  var _slash = "/";
+  var _regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+  var URI = class {
+    /**
+     * @internal
+     */
+    constructor(schemeOrData, authority, path, query, fragment, _strict = false) {
+      if (typeof schemeOrData === "object") {
+        this.scheme = schemeOrData.scheme || _empty;
+        this.authority = schemeOrData.authority || _empty;
+        this.path = schemeOrData.path || _empty;
+        this.query = schemeOrData.query || _empty;
+        this.fragment = schemeOrData.fragment || _empty;
+      } else {
+        this.scheme = _schemeFix(schemeOrData, _strict);
+        this.authority = authority || _empty;
+        this.path = _referenceResolution(this.scheme, path || _empty);
+        this.query = query || _empty;
+        this.fragment = fragment || _empty;
+        _validateUri(this, _strict);
+      }
+    }
+    static isUri(thing) {
+      if (thing instanceof URI) {
+        return true;
+      }
+      if (!thing) {
+        return false;
+      }
+      return typeof thing.authority === "string" && typeof thing.fragment === "string" && typeof thing.path === "string" && typeof thing.query === "string" && typeof thing.scheme === "string" && typeof thing.fsPath === "string" && typeof thing.with === "function" && typeof thing.toString === "function";
+    }
+    // ---- filesystem path -----------------------
+    /**
+     * Returns a string representing the corresponding file system path of this URI.
+     * Will handle UNC paths, normalizes windows drive letters to lower-case, and uses the
+     * platform specific path separator.
+     *
+     * * Will *not* validate the path for invalid characters and semantics.
+     * * Will *not* look at the scheme of this URI.
+     * * The result shall *not* be used for display purposes but for accessing a file on disk.
+     *
+     *
+     * The *difference* to `URI#path` is the use of the platform specific separator and the handling
+     * of UNC paths. See the below sample of a file-uri with an authority (UNC path).
+     *
+     * ```ts
+        const u = URI.parse('file://server/c$/folder/file.txt')
+        u.authority === 'server'
+        u.path === '/shares/c$/file.txt'
+        u.fsPath === '\\server\c$\folder\file.txt'
+    ```
+     *
+     * Using `URI#path` to read a file (using fs-apis) would not be enough because parts of the path,
+     * namely the server name, would be missing. Therefore `URI#fsPath` exists - it's sugar to ease working
+     * with URIs that represent files on disk (`file` scheme).
+     */
+    get fsPath() {
+      return uriToFsPath(this, false);
+    }
+    // ---- modify to new -------------------------
+    with(change) {
+      if (!change) {
+        return this;
+      }
+      let { scheme, authority, path, query, fragment } = change;
+      if (scheme === void 0) {
+        scheme = this.scheme;
+      } else if (scheme === null) {
+        scheme = _empty;
+      }
+      if (authority === void 0) {
+        authority = this.authority;
+      } else if (authority === null) {
+        authority = _empty;
+      }
+      if (path === void 0) {
+        path = this.path;
+      } else if (path === null) {
+        path = _empty;
+      }
+      if (query === void 0) {
+        query = this.query;
+      } else if (query === null) {
+        query = _empty;
+      }
+      if (fragment === void 0) {
+        fragment = this.fragment;
+      } else if (fragment === null) {
+        fragment = _empty;
+      }
+      if (scheme === this.scheme && authority === this.authority && path === this.path && query === this.query && fragment === this.fragment) {
+        return this;
+      }
+      return new Uri(scheme, authority, path, query, fragment);
+    }
+    // ---- parse & validate ------------------------
+    /**
+     * Creates a new URI from a string, e.g. `http://www.example.com/some/path`,
+     * `file:///usr/home`, or `scheme:with/path`.
+     *
+     * @param value A string which represents an URI (see `URI#toString`).
+     */
+    static parse(value, _strict = false) {
+      const match = _regexp.exec(value);
+      if (!match) {
+        return new Uri(_empty, _empty, _empty, _empty, _empty);
+      }
+      return new Uri(match[2] || _empty, percentDecode(match[4] || _empty), percentDecode(match[5] || _empty), percentDecode(match[7] || _empty), percentDecode(match[9] || _empty), _strict);
+    }
+    /**
+     * Creates a new URI from a file system path, e.g. `c:\my\files`,
+     * `/usr/home`, or `\\server\share\some\path`.
+     *
+     * The *difference* between `URI#parse` and `URI#file` is that the latter treats the argument
+     * as path, not as stringified-uri. E.g. `URI.file(path)` is **not the same as**
+     * `URI.parse('file://' + path)` because the path might contain characters that are
+     * interpreted (# and ?). See the following sample:
+     * ```ts
+    const good = URI.file('/coding/c#/project1');
+    good.scheme === 'file';
+    good.path === '/coding/c#/project1';
+    good.fragment === '';
+    const bad = URI.parse('file://' + '/coding/c#/project1');
+    bad.scheme === 'file';
+    bad.path === '/coding/c'; // path is now broken
+    bad.fragment === '/project1';
+    ```
+     *
+     * @param path A file system path (see `URI#fsPath`)
+     */
+    static file(path) {
+      let authority = _empty;
+      if (isWindows) {
+        path = path.replace(/\\/g, _slash);
+      }
+      if (path[0] === _slash && path[1] === _slash) {
+        const idx = path.indexOf(_slash, 2);
+        if (idx === -1) {
+          authority = path.substring(2);
+          path = _slash;
+        } else {
+          authority = path.substring(2, idx);
+          path = path.substring(idx) || _slash;
+        }
+      }
+      return new Uri("file", authority, path, _empty, _empty);
+    }
+    static from(components) {
+      const result = new Uri(components.scheme, components.authority, components.path, components.query, components.fragment);
+      _validateUri(result, true);
+      return result;
+    }
+    /**
+     * Join a URI path with path fragments and normalizes the resulting path.
+     *
+     * @param uri The input URI.
+     * @param pathFragment The path fragment to add to the URI path.
+     * @returns The resulting URI.
+     */
+    static joinPath(uri, ...pathFragment) {
+      if (!uri.path) {
+        throw new Error(`[UriError]: cannot call joinPath on URI without path`);
+      }
+      let newPath;
+      if (isWindows && uri.scheme === "file") {
+        newPath = URI.file(win32.join(uriToFsPath(uri, true), ...pathFragment)).path;
+      } else {
+        newPath = posix.join(uri.path, ...pathFragment);
+      }
+      return uri.with({ path: newPath });
+    }
+    // ---- printing/externalize ---------------------------
+    /**
+     * Creates a string representation for this URI. It's guaranteed that calling
+     * `URI.parse` with the result of this function creates an URI which is equal
+     * to this URI.
+     *
+     * * The result shall *not* be used for display purposes but for externalization or transport.
+     * * The result will be encoded using the percentage encoding and encoding happens mostly
+     * ignore the scheme-specific encoding rules.
+     *
+     * @param skipEncoding Do not encode the result, default is `false`
+     */
+    toString(skipEncoding = false) {
+      return _asFormatted(this, skipEncoding);
+    }
+    toJSON() {
+      return this;
+    }
+    static revive(data) {
+      if (!data) {
+        return data;
+      } else if (data instanceof URI) {
+        return data;
+      } else {
+        const result = new Uri(data);
+        result._formatted = data.external;
+        result._fsPath = data._sep === _pathSepMarker ? data.fsPath : null;
+        return result;
+      }
+    }
+  };
+  var _pathSepMarker = isWindows ? 1 : void 0;
+  var Uri = class extends URI {
+    constructor() {
+      super(...arguments);
+      this._formatted = null;
+      this._fsPath = null;
+    }
+    get fsPath() {
+      if (!this._fsPath) {
+        this._fsPath = uriToFsPath(this, false);
+      }
+      return this._fsPath;
+    }
+    toString(skipEncoding = false) {
+      if (!skipEncoding) {
+        if (!this._formatted) {
+          this._formatted = _asFormatted(this, false);
+        }
+        return this._formatted;
+      } else {
+        return _asFormatted(this, true);
+      }
+    }
+    toJSON() {
+      const res = {
+        $mid: 1
+        /* MarshalledId.Uri */
+      };
+      if (this._fsPath) {
+        res.fsPath = this._fsPath;
+        res._sep = _pathSepMarker;
+      }
+      if (this._formatted) {
+        res.external = this._formatted;
+      }
+      if (this.path) {
+        res.path = this.path;
+      }
+      if (this.scheme) {
+        res.scheme = this.scheme;
+      }
+      if (this.authority) {
+        res.authority = this.authority;
+      }
+      if (this.query) {
+        res.query = this.query;
+      }
+      if (this.fragment) {
+        res.fragment = this.fragment;
+      }
+      return res;
+    }
+  };
+  var encodeTable = {
+    [
+      58
+      /* CharCode.Colon */
+    ]: "%3A",
+    [
+      47
+      /* CharCode.Slash */
+    ]: "%2F",
+    [
+      63
+      /* CharCode.QuestionMark */
+    ]: "%3F",
+    [
+      35
+      /* CharCode.Hash */
+    ]: "%23",
+    [
+      91
+      /* CharCode.OpenSquareBracket */
+    ]: "%5B",
+    [
+      93
+      /* CharCode.CloseSquareBracket */
+    ]: "%5D",
+    [
+      64
+      /* CharCode.AtSign */
+    ]: "%40",
+    [
+      33
+      /* CharCode.ExclamationMark */
+    ]: "%21",
+    [
+      36
+      /* CharCode.DollarSign */
+    ]: "%24",
+    [
+      38
+      /* CharCode.Ampersand */
+    ]: "%26",
+    [
+      39
+      /* CharCode.SingleQuote */
+    ]: "%27",
+    [
+      40
+      /* CharCode.OpenParen */
+    ]: "%28",
+    [
+      41
+      /* CharCode.CloseParen */
+    ]: "%29",
+    [
+      42
+      /* CharCode.Asterisk */
+    ]: "%2A",
+    [
+      43
+      /* CharCode.Plus */
+    ]: "%2B",
+    [
+      44
+      /* CharCode.Comma */
+    ]: "%2C",
+    [
+      59
+      /* CharCode.Semicolon */
+    ]: "%3B",
+    [
+      61
+      /* CharCode.Equals */
+    ]: "%3D",
+    [
+      32
+      /* CharCode.Space */
+    ]: "%20"
+  };
+  function encodeURIComponentFast(uriComponent, allowSlash) {
+    let res = void 0;
+    let nativeEncodePos = -1;
+    for (let pos = 0; pos < uriComponent.length; pos++) {
+      const code = uriComponent.charCodeAt(pos);
+      if (code >= 97 && code <= 122 || code >= 65 && code <= 90 || code >= 48 && code <= 57 || code === 45 || code === 46 || code === 95 || code === 126 || allowSlash && code === 47) {
+        if (nativeEncodePos !== -1) {
+          res += encodeURIComponent(uriComponent.substring(nativeEncodePos, pos));
+          nativeEncodePos = -1;
+        }
+        if (res !== void 0) {
+          res += uriComponent.charAt(pos);
+        }
+      } else {
+        if (res === void 0) {
+          res = uriComponent.substr(0, pos);
+        }
+        const escaped = encodeTable[code];
+        if (escaped !== void 0) {
+          if (nativeEncodePos !== -1) {
+            res += encodeURIComponent(uriComponent.substring(nativeEncodePos, pos));
+            nativeEncodePos = -1;
+          }
+          res += escaped;
+        } else if (nativeEncodePos === -1) {
+          nativeEncodePos = pos;
+        }
+      }
+    }
+    if (nativeEncodePos !== -1) {
+      res += encodeURIComponent(uriComponent.substring(nativeEncodePos));
+    }
+    return res !== void 0 ? res : uriComponent;
+  }
+  function encodeURIComponentMinimal(path) {
+    let res = void 0;
+    for (let pos = 0; pos < path.length; pos++) {
+      const code = path.charCodeAt(pos);
+      if (code === 35 || code === 63) {
+        if (res === void 0) {
+          res = path.substr(0, pos);
+        }
+        res += encodeTable[code];
+      } else {
+        if (res !== void 0) {
+          res += path[pos];
+        }
+      }
+    }
+    return res !== void 0 ? res : path;
+  }
+  function uriToFsPath(uri, keepDriveLetterCasing) {
+    let value;
+    if (uri.authority && uri.path.length > 1 && uri.scheme === "file") {
+      value = `//${uri.authority}${uri.path}`;
+    } else if (uri.path.charCodeAt(0) === 47 && (uri.path.charCodeAt(1) >= 65 && uri.path.charCodeAt(1) <= 90 || uri.path.charCodeAt(1) >= 97 && uri.path.charCodeAt(1) <= 122) && uri.path.charCodeAt(2) === 58) {
+      if (!keepDriveLetterCasing) {
+        value = uri.path[1].toLowerCase() + uri.path.substr(2);
+      } else {
+        value = uri.path.substr(1);
+      }
+    } else {
+      value = uri.path;
+    }
+    if (isWindows) {
+      value = value.replace(/\//g, "\\");
+    }
+    return value;
+  }
+  function _asFormatted(uri, skipEncoding) {
+    const encoder = !skipEncoding ? encodeURIComponentFast : encodeURIComponentMinimal;
+    let res = "";
+    let { scheme, authority, path, query, fragment } = uri;
+    if (scheme) {
+      res += scheme;
+      res += ":";
+    }
+    if (authority || scheme === "file") {
+      res += _slash;
+      res += _slash;
+    }
+    if (authority) {
+      let idx = authority.indexOf("@");
+      if (idx !== -1) {
+        const userinfo = authority.substr(0, idx);
+        authority = authority.substr(idx + 1);
+        idx = userinfo.indexOf(":");
+        if (idx === -1) {
+          res += encoder(userinfo, false);
+        } else {
+          res += encoder(userinfo.substr(0, idx), false);
+          res += ":";
+          res += encoder(userinfo.substr(idx + 1), false);
+        }
+        res += "@";
+      }
+      authority = authority.toLowerCase();
+      idx = authority.indexOf(":");
+      if (idx === -1) {
+        res += encoder(authority, false);
+      } else {
+        res += encoder(authority.substr(0, idx), false);
+        res += authority.substr(idx);
+      }
+    }
+    if (path) {
+      if (path.length >= 3 && path.charCodeAt(0) === 47 && path.charCodeAt(2) === 58) {
+        const code = path.charCodeAt(1);
+        if (code >= 65 && code <= 90) {
+          path = `/${String.fromCharCode(code + 32)}:${path.substr(3)}`;
+        }
+      } else if (path.length >= 2 && path.charCodeAt(1) === 58) {
+        const code = path.charCodeAt(0);
+        if (code >= 65 && code <= 90) {
+          path = `${String.fromCharCode(code + 32)}:${path.substr(2)}`;
+        }
+      }
+      res += encoder(path, true);
+    }
+    if (query) {
+      res += "?";
+      res += encoder(query, false);
+    }
+    if (fragment) {
+      res += "#";
+      res += !skipEncoding ? encodeURIComponentFast(fragment, false) : fragment;
+    }
+    return res;
+  }
+  function decodeURIComponentGraceful(str) {
+    try {
+      return decodeURIComponent(str);
+    } catch (_a3) {
+      if (str.length > 3) {
+        return str.substr(0, 3) + decodeURIComponentGraceful(str.substr(3));
+      } else {
+        return str;
+      }
+    }
+  }
+  var _rEncodedAsHex = /(%[0-9A-Za-z][0-9A-Za-z])+/g;
+  function percentDecode(str) {
+    if (!str.match(_rEncodedAsHex)) {
+      return str;
+    }
+    return str.replace(_rEncodedAsHex, (match) => decodeURIComponentGraceful(match));
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/core/position.js
+  var Position = class {
+    constructor(lineNumber, column) {
+      this.lineNumber = lineNumber;
+      this.column = column;
+    }
+    /**
+     * Create a new position from this position.
+     *
+     * @param newLineNumber new line number
+     * @param newColumn new column
+     */
+    with(newLineNumber = this.lineNumber, newColumn = this.column) {
+      if (newLineNumber === this.lineNumber && newColumn === this.column) {
+        return this;
+      } else {
+        return new Position(newLineNumber, newColumn);
+      }
+    }
+    /**
+     * Derive a new position from this position.
+     *
+     * @param deltaLineNumber line number delta
+     * @param deltaColumn column delta
+     */
+    delta(deltaLineNumber = 0, deltaColumn = 0) {
+      return this.with(this.lineNumber + deltaLineNumber, this.column + deltaColumn);
+    }
+    /**
+     * Test if this position equals other position
+     */
+    equals(other) {
+      return Position.equals(this, other);
+    }
+    /**
+     * Test if position `a` equals position `b`
+     */
+    static equals(a, b) {
+      if (!a && !b) {
+        return true;
+      }
+      return !!a && !!b && a.lineNumber === b.lineNumber && a.column === b.column;
+    }
+    /**
+     * Test if this position is before other position.
+     * If the two positions are equal, the result will be false.
+     */
+    isBefore(other) {
+      return Position.isBefore(this, other);
+    }
+    /**
+     * Test if position `a` is before position `b`.
+     * If the two positions are equal, the result will be false.
+     */
+    static isBefore(a, b) {
+      if (a.lineNumber < b.lineNumber) {
+        return true;
+      }
+      if (b.lineNumber < a.lineNumber) {
+        return false;
+      }
+      return a.column < b.column;
+    }
+    /**
+     * Test if this position is before other position.
+     * If the two positions are equal, the result will be true.
+     */
+    isBeforeOrEqual(other) {
+      return Position.isBeforeOrEqual(this, other);
+    }
+    /**
+     * Test if position `a` is before position `b`.
+     * If the two positions are equal, the result will be true.
+     */
+    static isBeforeOrEqual(a, b) {
+      if (a.lineNumber < b.lineNumber) {
+        return true;
+      }
+      if (b.lineNumber < a.lineNumber) {
+        return false;
+      }
+      return a.column <= b.column;
+    }
+    /**
+     * A function that compares positions, useful for sorting
+     */
+    static compare(a, b) {
+      const aLineNumber = a.lineNumber | 0;
+      const bLineNumber = b.lineNumber | 0;
+      if (aLineNumber === bLineNumber) {
+        const aColumn = a.column | 0;
+        const bColumn = b.column | 0;
+        return aColumn - bColumn;
+      }
+      return aLineNumber - bLineNumber;
+    }
+    /**
+     * Clone this position.
+     */
+    clone() {
+      return new Position(this.lineNumber, this.column);
+    }
+    /**
+     * Convert to a human-readable representation.
+     */
+    toString() {
+      return "(" + this.lineNumber + "," + this.column + ")";
+    }
+    // ---
+    /**
+     * Create a `Position` from an `IPosition`.
+     */
+    static lift(pos) {
+      return new Position(pos.lineNumber, pos.column);
+    }
+    /**
+     * Test if `obj` is an `IPosition`.
+     */
+    static isIPosition(obj) {
+      return obj && typeof obj.lineNumber === "number" && typeof obj.column === "number";
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/core/range.js
+  var Range = class {
+    constructor(startLineNumber, startColumn, endLineNumber, endColumn) {
+      if (startLineNumber > endLineNumber || startLineNumber === endLineNumber && startColumn > endColumn) {
+        this.startLineNumber = endLineNumber;
+        this.startColumn = endColumn;
+        this.endLineNumber = startLineNumber;
+        this.endColumn = startColumn;
+      } else {
+        this.startLineNumber = startLineNumber;
+        this.startColumn = startColumn;
+        this.endLineNumber = endLineNumber;
+        this.endColumn = endColumn;
+      }
+    }
+    /**
+     * Test if this range is empty.
+     */
+    isEmpty() {
+      return Range.isEmpty(this);
+    }
+    /**
+     * Test if `range` is empty.
+     */
+    static isEmpty(range) {
+      return range.startLineNumber === range.endLineNumber && range.startColumn === range.endColumn;
+    }
+    /**
+     * Test if position is in this range. If the position is at the edges, will return true.
+     */
+    containsPosition(position) {
+      return Range.containsPosition(this, position);
+    }
+    /**
+     * Test if `position` is in `range`. If the position is at the edges, will return true.
+     */
+    static containsPosition(range, position) {
+      if (position.lineNumber < range.startLineNumber || position.lineNumber > range.endLineNumber) {
+        return false;
+      }
+      if (position.lineNumber === range.startLineNumber && position.column < range.startColumn) {
+        return false;
+      }
+      if (position.lineNumber === range.endLineNumber && position.column > range.endColumn) {
+        return false;
+      }
+      return true;
+    }
+    /**
+     * Test if `position` is in `range`. If the position is at the edges, will return false.
+     * @internal
+     */
+    static strictContainsPosition(range, position) {
+      if (position.lineNumber < range.startLineNumber || position.lineNumber > range.endLineNumber) {
+        return false;
+      }
+      if (position.lineNumber === range.startLineNumber && position.column <= range.startColumn) {
+        return false;
+      }
+      if (position.lineNumber === range.endLineNumber && position.column >= range.endColumn) {
+        return false;
+      }
+      return true;
+    }
+    /**
+     * Test if range is in this range. If the range is equal to this range, will return true.
+     */
+    containsRange(range) {
+      return Range.containsRange(this, range);
+    }
+    /**
+     * Test if `otherRange` is in `range`. If the ranges are equal, will return true.
+     */
+    static containsRange(range, otherRange) {
+      if (otherRange.startLineNumber < range.startLineNumber || otherRange.endLineNumber < range.startLineNumber) {
+        return false;
+      }
+      if (otherRange.startLineNumber > range.endLineNumber || otherRange.endLineNumber > range.endLineNumber) {
+        return false;
+      }
+      if (otherRange.startLineNumber === range.startLineNumber && otherRange.startColumn < range.startColumn) {
+        return false;
+      }
+      if (otherRange.endLineNumber === range.endLineNumber && otherRange.endColumn > range.endColumn) {
+        return false;
+      }
+      return true;
+    }
+    /**
+     * Test if `range` is strictly in this range. `range` must start after and end before this range for the result to be true.
+     */
+    strictContainsRange(range) {
+      return Range.strictContainsRange(this, range);
+    }
+    /**
+     * Test if `otherRange` is strictly in `range` (must start after, and end before). If the ranges are equal, will return false.
+     */
+    static strictContainsRange(range, otherRange) {
+      if (otherRange.startLineNumber < range.startLineNumber || otherRange.endLineNumber < range.startLineNumber) {
+        return false;
+      }
+      if (otherRange.startLineNumber > range.endLineNumber || otherRange.endLineNumber > range.endLineNumber) {
+        return false;
+      }
+      if (otherRange.startLineNumber === range.startLineNumber && otherRange.startColumn <= range.startColumn) {
+        return false;
+      }
+      if (otherRange.endLineNumber === range.endLineNumber && otherRange.endColumn >= range.endColumn) {
+        return false;
+      }
+      return true;
+    }
+    /**
+     * A reunion of the two ranges.
+     * The smallest position will be used as the start point, and the largest one as the end point.
+     */
+    plusRange(range) {
+      return Range.plusRange(this, range);
+    }
+    /**
+     * A reunion of the two ranges.
+     * The smallest position will be used as the start point, and the largest one as the end point.
+     */
+    static plusRange(a, b) {
+      let startLineNumber;
+      let startColumn;
+      let endLineNumber;
+      let endColumn;
+      if (b.startLineNumber < a.startLineNumber) {
+        startLineNumber = b.startLineNumber;
+        startColumn = b.startColumn;
+      } else if (b.startLineNumber === a.startLineNumber) {
+        startLineNumber = b.startLineNumber;
+        startColumn = Math.min(b.startColumn, a.startColumn);
+      } else {
+        startLineNumber = a.startLineNumber;
+        startColumn = a.startColumn;
+      }
+      if (b.endLineNumber > a.endLineNumber) {
+        endLineNumber = b.endLineNumber;
+        endColumn = b.endColumn;
+      } else if (b.endLineNumber === a.endLineNumber) {
+        endLineNumber = b.endLineNumber;
+        endColumn = Math.max(b.endColumn, a.endColumn);
+      } else {
+        endLineNumber = a.endLineNumber;
+        endColumn = a.endColumn;
+      }
+      return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
+    }
+    /**
+     * A intersection of the two ranges.
+     */
+    intersectRanges(range) {
+      return Range.intersectRanges(this, range);
+    }
+    /**
+     * A intersection of the two ranges.
+     */
+    static intersectRanges(a, b) {
+      let resultStartLineNumber = a.startLineNumber;
+      let resultStartColumn = a.startColumn;
+      let resultEndLineNumber = a.endLineNumber;
+      let resultEndColumn = a.endColumn;
+      const otherStartLineNumber = b.startLineNumber;
+      const otherStartColumn = b.startColumn;
+      const otherEndLineNumber = b.endLineNumber;
+      const otherEndColumn = b.endColumn;
+      if (resultStartLineNumber < otherStartLineNumber) {
+        resultStartLineNumber = otherStartLineNumber;
+        resultStartColumn = otherStartColumn;
+      } else if (resultStartLineNumber === otherStartLineNumber) {
+        resultStartColumn = Math.max(resultStartColumn, otherStartColumn);
+      }
+      if (resultEndLineNumber > otherEndLineNumber) {
+        resultEndLineNumber = otherEndLineNumber;
+        resultEndColumn = otherEndColumn;
+      } else if (resultEndLineNumber === otherEndLineNumber) {
+        resultEndColumn = Math.min(resultEndColumn, otherEndColumn);
+      }
+      if (resultStartLineNumber > resultEndLineNumber) {
+        return null;
+      }
+      if (resultStartLineNumber === resultEndLineNumber && resultStartColumn > resultEndColumn) {
+        return null;
+      }
+      return new Range(resultStartLineNumber, resultStartColumn, resultEndLineNumber, resultEndColumn);
+    }
+    /**
+     * Test if this range equals other.
+     */
+    equalsRange(other) {
+      return Range.equalsRange(this, other);
+    }
+    /**
+     * Test if range `a` equals `b`.
+     */
+    static equalsRange(a, b) {
+      return !!a && !!b && a.startLineNumber === b.startLineNumber && a.startColumn === b.startColumn && a.endLineNumber === b.endLineNumber && a.endColumn === b.endColumn;
+    }
+    /**
+     * Return the end position (which will be after or equal to the start position)
+     */
+    getEndPosition() {
+      return Range.getEndPosition(this);
+    }
+    /**
+     * Return the end position (which will be after or equal to the start position)
+     */
+    static getEndPosition(range) {
+      return new Position(range.endLineNumber, range.endColumn);
+    }
+    /**
+     * Return the start position (which will be before or equal to the end position)
+     */
+    getStartPosition() {
+      return Range.getStartPosition(this);
+    }
+    /**
+     * Return the start position (which will be before or equal to the end position)
+     */
+    static getStartPosition(range) {
+      return new Position(range.startLineNumber, range.startColumn);
+    }
+    /**
+     * Transform to a user presentable string representation.
+     */
+    toString() {
+      return "[" + this.startLineNumber + "," + this.startColumn + " -> " + this.endLineNumber + "," + this.endColumn + "]";
+    }
+    /**
+     * Create a new range using this range's start position, and using endLineNumber and endColumn as the end position.
+     */
+    setEndPosition(endLineNumber, endColumn) {
+      return new Range(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
+    }
+    /**
+     * Create a new range using this range's end position, and using startLineNumber and startColumn as the start position.
+     */
+    setStartPosition(startLineNumber, startColumn) {
+      return new Range(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
+    }
+    /**
+     * Create a new empty range using this range's start position.
+     */
+    collapseToStart() {
+      return Range.collapseToStart(this);
+    }
+    /**
+     * Create a new empty range using this range's start position.
+     */
+    static collapseToStart(range) {
+      return new Range(range.startLineNumber, range.startColumn, range.startLineNumber, range.startColumn);
+    }
+    // ---
+    static fromPositions(start, end = start) {
+      return new Range(start.lineNumber, start.column, end.lineNumber, end.column);
+    }
+    static lift(range) {
+      if (!range) {
+        return null;
+      }
+      return new Range(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
+    }
+    /**
+     * Test if `obj` is an `IRange`.
+     */
+    static isIRange(obj) {
+      return obj && typeof obj.startLineNumber === "number" && typeof obj.startColumn === "number" && typeof obj.endLineNumber === "number" && typeof obj.endColumn === "number";
+    }
+    /**
+     * Test if the two ranges are touching in any way.
+     */
+    static areIntersectingOrTouching(a, b) {
+      if (a.endLineNumber < b.startLineNumber || a.endLineNumber === b.startLineNumber && a.endColumn < b.startColumn) {
+        return false;
+      }
+      if (b.endLineNumber < a.startLineNumber || b.endLineNumber === a.startLineNumber && b.endColumn < a.startColumn) {
+        return false;
+      }
+      return true;
+    }
+    /**
+     * Test if the two ranges are intersecting. If the ranges are touching it returns true.
+     */
+    static areIntersecting(a, b) {
+      if (a.endLineNumber < b.startLineNumber || a.endLineNumber === b.startLineNumber && a.endColumn <= b.startColumn) {
+        return false;
+      }
+      if (b.endLineNumber < a.startLineNumber || b.endLineNumber === a.startLineNumber && b.endColumn <= a.startColumn) {
+        return false;
+      }
+      return true;
+    }
+    /**
+     * A function that compares ranges, useful for sorting ranges
+     * It will first compare ranges on the startPosition and then on the endPosition
+     */
+    static compareRangesUsingStarts(a, b) {
+      if (a && b) {
+        const aStartLineNumber = a.startLineNumber | 0;
+        const bStartLineNumber = b.startLineNumber | 0;
+        if (aStartLineNumber === bStartLineNumber) {
+          const aStartColumn = a.startColumn | 0;
+          const bStartColumn = b.startColumn | 0;
+          if (aStartColumn === bStartColumn) {
+            const aEndLineNumber = a.endLineNumber | 0;
+            const bEndLineNumber = b.endLineNumber | 0;
+            if (aEndLineNumber === bEndLineNumber) {
+              const aEndColumn = a.endColumn | 0;
+              const bEndColumn = b.endColumn | 0;
+              return aEndColumn - bEndColumn;
+            }
+            return aEndLineNumber - bEndLineNumber;
+          }
+          return aStartColumn - bStartColumn;
+        }
+        return aStartLineNumber - bStartLineNumber;
+      }
+      const aExists = a ? 1 : 0;
+      const bExists = b ? 1 : 0;
+      return aExists - bExists;
+    }
+    /**
+     * A function that compares ranges, useful for sorting ranges
+     * It will first compare ranges on the endPosition and then on the startPosition
+     */
+    static compareRangesUsingEnds(a, b) {
+      if (a.endLineNumber === b.endLineNumber) {
+        if (a.endColumn === b.endColumn) {
+          if (a.startLineNumber === b.startLineNumber) {
+            return a.startColumn - b.startColumn;
+          }
+          return a.startLineNumber - b.startLineNumber;
+        }
+        return a.endColumn - b.endColumn;
+      }
+      return a.endLineNumber - b.endLineNumber;
+    }
+    /**
+     * Test if the range spans multiple lines.
+     */
+    static spansMultipleLines(range) {
+      return range.endLineNumber > range.startLineNumber;
+    }
+    toJSON() {
+      return this;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/diff/diffComputer.js
+  var MINIMUM_MATCHING_CHARACTER_LENGTH = 3;
+  function computeDiff(originalSequence, modifiedSequence, continueProcessingPredicate, pretty) {
+    const diffAlgo = new LcsDiff(originalSequence, modifiedSequence, continueProcessingPredicate);
+    return diffAlgo.ComputeDiff(pretty);
+  }
+  var LineSequence = class {
+    constructor(lines) {
+      const startColumns = [];
+      const endColumns = [];
+      for (let i = 0, length = lines.length; i < length; i++) {
+        startColumns[i] = getFirstNonBlankColumn(lines[i], 1);
+        endColumns[i] = getLastNonBlankColumn(lines[i], 1);
+      }
+      this.lines = lines;
+      this._startColumns = startColumns;
+      this._endColumns = endColumns;
+    }
+    getElements() {
+      const elements = [];
+      for (let i = 0, len = this.lines.length; i < len; i++) {
+        elements[i] = this.lines[i].substring(this._startColumns[i] - 1, this._endColumns[i] - 1);
+      }
+      return elements;
+    }
+    getStrictElement(index) {
+      return this.lines[index];
+    }
+    getStartLineNumber(i) {
+      return i + 1;
+    }
+    getEndLineNumber(i) {
+      return i + 1;
+    }
+    createCharSequence(shouldIgnoreTrimWhitespace, startIndex, endIndex) {
+      const charCodes = [];
+      const lineNumbers = [];
+      const columns = [];
+      let len = 0;
+      for (let index = startIndex; index <= endIndex; index++) {
+        const lineContent = this.lines[index];
+        const startColumn = shouldIgnoreTrimWhitespace ? this._startColumns[index] : 1;
+        const endColumn = shouldIgnoreTrimWhitespace ? this._endColumns[index] : lineContent.length + 1;
+        for (let col = startColumn; col < endColumn; col++) {
+          charCodes[len] = lineContent.charCodeAt(col - 1);
+          lineNumbers[len] = index + 1;
+          columns[len] = col;
+          len++;
+        }
+        if (!shouldIgnoreTrimWhitespace && index < endIndex) {
+          charCodes[len] = 10;
+          lineNumbers[len] = index + 1;
+          columns[len] = lineContent.length + 1;
+          len++;
+        }
+      }
+      return new CharSequence(charCodes, lineNumbers, columns);
+    }
+  };
+  var CharSequence = class {
+    constructor(charCodes, lineNumbers, columns) {
+      this._charCodes = charCodes;
+      this._lineNumbers = lineNumbers;
+      this._columns = columns;
+    }
+    toString() {
+      return "[" + this._charCodes.map((s, idx) => (s === 10 ? "\\n" : String.fromCharCode(s)) + `-(${this._lineNumbers[idx]},${this._columns[idx]})`).join(", ") + "]";
+    }
+    _assertIndex(index, arr) {
+      if (index < 0 || index >= arr.length) {
+        throw new Error(`Illegal index`);
+      }
+    }
+    getElements() {
+      return this._charCodes;
+    }
+    getStartLineNumber(i) {
+      if (i > 0 && i === this._lineNumbers.length) {
+        return this.getEndLineNumber(i - 1);
+      }
+      this._assertIndex(i, this._lineNumbers);
+      return this._lineNumbers[i];
+    }
+    getEndLineNumber(i) {
+      if (i === -1) {
+        return this.getStartLineNumber(i + 1);
+      }
+      this._assertIndex(i, this._lineNumbers);
+      if (this._charCodes[i] === 10) {
+        return this._lineNumbers[i] + 1;
+      }
+      return this._lineNumbers[i];
+    }
+    getStartColumn(i) {
+      if (i > 0 && i === this._columns.length) {
+        return this.getEndColumn(i - 1);
+      }
+      this._assertIndex(i, this._columns);
+      return this._columns[i];
+    }
+    getEndColumn(i) {
+      if (i === -1) {
+        return this.getStartColumn(i + 1);
+      }
+      this._assertIndex(i, this._columns);
+      if (this._charCodes[i] === 10) {
+        return 1;
+      }
+      return this._columns[i] + 1;
+    }
+  };
+  var CharChange = class {
+    constructor(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn) {
+      this.originalStartLineNumber = originalStartLineNumber;
+      this.originalStartColumn = originalStartColumn;
+      this.originalEndLineNumber = originalEndLineNumber;
+      this.originalEndColumn = originalEndColumn;
+      this.modifiedStartLineNumber = modifiedStartLineNumber;
+      this.modifiedStartColumn = modifiedStartColumn;
+      this.modifiedEndLineNumber = modifiedEndLineNumber;
+      this.modifiedEndColumn = modifiedEndColumn;
+    }
+    static createFromDiffChange(diffChange, originalCharSequence, modifiedCharSequence) {
+      const originalStartLineNumber = originalCharSequence.getStartLineNumber(diffChange.originalStart);
+      const originalStartColumn = originalCharSequence.getStartColumn(diffChange.originalStart);
+      const originalEndLineNumber = originalCharSequence.getEndLineNumber(diffChange.originalStart + diffChange.originalLength - 1);
+      const originalEndColumn = originalCharSequence.getEndColumn(diffChange.originalStart + diffChange.originalLength - 1);
+      const modifiedStartLineNumber = modifiedCharSequence.getStartLineNumber(diffChange.modifiedStart);
+      const modifiedStartColumn = modifiedCharSequence.getStartColumn(diffChange.modifiedStart);
+      const modifiedEndLineNumber = modifiedCharSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
+      const modifiedEndColumn = modifiedCharSequence.getEndColumn(diffChange.modifiedStart + diffChange.modifiedLength - 1);
+      return new CharChange(originalStartLineNumber, originalStartColumn, originalEndLineNumber, originalEndColumn, modifiedStartLineNumber, modifiedStartColumn, modifiedEndLineNumber, modifiedEndColumn);
+    }
+  };
+  function postProcessCharChanges(rawChanges) {
+    if (rawChanges.length <= 1) {
+      return rawChanges;
+    }
+    const result = [rawChanges[0]];
+    let prevChange = result[0];
+    for (let i = 1, len = rawChanges.length; i < len; i++) {
+      const currChange = rawChanges[i];
+      const originalMatchingLength = currChange.originalStart - (prevChange.originalStart + prevChange.originalLength);
+      const modifiedMatchingLength = currChange.modifiedStart - (prevChange.modifiedStart + prevChange.modifiedLength);
+      const matchingLength = Math.min(originalMatchingLength, modifiedMatchingLength);
+      if (matchingLength < MINIMUM_MATCHING_CHARACTER_LENGTH) {
+        prevChange.originalLength = currChange.originalStart + currChange.originalLength - prevChange.originalStart;
+        prevChange.modifiedLength = currChange.modifiedStart + currChange.modifiedLength - prevChange.modifiedStart;
+      } else {
+        result.push(currChange);
+        prevChange = currChange;
+      }
+    }
+    return result;
+  }
+  var LineChange = class {
+    constructor(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges) {
+      this.originalStartLineNumber = originalStartLineNumber;
+      this.originalEndLineNumber = originalEndLineNumber;
+      this.modifiedStartLineNumber = modifiedStartLineNumber;
+      this.modifiedEndLineNumber = modifiedEndLineNumber;
+      this.charChanges = charChanges;
+    }
+    static createFromDiffResult(shouldIgnoreTrimWhitespace, diffChange, originalLineSequence, modifiedLineSequence, continueCharDiff, shouldComputeCharChanges, shouldPostProcessCharChanges) {
+      let originalStartLineNumber;
+      let originalEndLineNumber;
+      let modifiedStartLineNumber;
+      let modifiedEndLineNumber;
+      let charChanges = void 0;
+      if (diffChange.originalLength === 0) {
+        originalStartLineNumber = originalLineSequence.getStartLineNumber(diffChange.originalStart) - 1;
+        originalEndLineNumber = 0;
+      } else {
+        originalStartLineNumber = originalLineSequence.getStartLineNumber(diffChange.originalStart);
+        originalEndLineNumber = originalLineSequence.getEndLineNumber(diffChange.originalStart + diffChange.originalLength - 1);
+      }
+      if (diffChange.modifiedLength === 0) {
+        modifiedStartLineNumber = modifiedLineSequence.getStartLineNumber(diffChange.modifiedStart) - 1;
+        modifiedEndLineNumber = 0;
+      } else {
+        modifiedStartLineNumber = modifiedLineSequence.getStartLineNumber(diffChange.modifiedStart);
+        modifiedEndLineNumber = modifiedLineSequence.getEndLineNumber(diffChange.modifiedStart + diffChange.modifiedLength - 1);
+      }
+      if (shouldComputeCharChanges && diffChange.originalLength > 0 && diffChange.originalLength < 20 && diffChange.modifiedLength > 0 && diffChange.modifiedLength < 20 && continueCharDiff()) {
+        const originalCharSequence = originalLineSequence.createCharSequence(shouldIgnoreTrimWhitespace, diffChange.originalStart, diffChange.originalStart + diffChange.originalLength - 1);
+        const modifiedCharSequence = modifiedLineSequence.createCharSequence(shouldIgnoreTrimWhitespace, diffChange.modifiedStart, diffChange.modifiedStart + diffChange.modifiedLength - 1);
+        if (originalCharSequence.getElements().length > 0 && modifiedCharSequence.getElements().length > 0) {
+          let rawChanges = computeDiff(originalCharSequence, modifiedCharSequence, continueCharDiff, true).changes;
+          if (shouldPostProcessCharChanges) {
+            rawChanges = postProcessCharChanges(rawChanges);
+          }
+          charChanges = [];
+          for (let i = 0, length = rawChanges.length; i < length; i++) {
+            charChanges.push(CharChange.createFromDiffChange(rawChanges[i], originalCharSequence, modifiedCharSequence));
+          }
+        }
+      }
+      return new LineChange(originalStartLineNumber, originalEndLineNumber, modifiedStartLineNumber, modifiedEndLineNumber, charChanges);
+    }
+  };
+  var DiffComputer = class {
+    constructor(originalLines, modifiedLines, opts) {
+      this.shouldComputeCharChanges = opts.shouldComputeCharChanges;
+      this.shouldPostProcessCharChanges = opts.shouldPostProcessCharChanges;
+      this.shouldIgnoreTrimWhitespace = opts.shouldIgnoreTrimWhitespace;
+      this.shouldMakePrettyDiff = opts.shouldMakePrettyDiff;
+      this.originalLines = originalLines;
+      this.modifiedLines = modifiedLines;
+      this.original = new LineSequence(originalLines);
+      this.modified = new LineSequence(modifiedLines);
+      this.continueLineDiff = createContinueProcessingPredicate(opts.maxComputationTime);
+      this.continueCharDiff = createContinueProcessingPredicate(opts.maxComputationTime === 0 ? 0 : Math.min(opts.maxComputationTime, 5e3));
+    }
+    computeDiff() {
+      if (this.original.lines.length === 1 && this.original.lines[0].length === 0) {
+        if (this.modified.lines.length === 1 && this.modified.lines[0].length === 0) {
+          return {
+            quitEarly: false,
+            changes: []
+          };
+        }
+        return {
+          quitEarly: false,
+          changes: [{
+            originalStartLineNumber: 1,
+            originalEndLineNumber: 1,
+            modifiedStartLineNumber: 1,
+            modifiedEndLineNumber: this.modified.lines.length,
+            charChanges: [{
+              modifiedEndColumn: 0,
+              modifiedEndLineNumber: 0,
+              modifiedStartColumn: 0,
+              modifiedStartLineNumber: 0,
+              originalEndColumn: 0,
+              originalEndLineNumber: 0,
+              originalStartColumn: 0,
+              originalStartLineNumber: 0
+            }]
+          }]
+        };
+      }
+      if (this.modified.lines.length === 1 && this.modified.lines[0].length === 0) {
+        return {
+          quitEarly: false,
+          changes: [{
+            originalStartLineNumber: 1,
+            originalEndLineNumber: this.original.lines.length,
+            modifiedStartLineNumber: 1,
+            modifiedEndLineNumber: 1,
+            charChanges: [{
+              modifiedEndColumn: 0,
+              modifiedEndLineNumber: 0,
+              modifiedStartColumn: 0,
+              modifiedStartLineNumber: 0,
+              originalEndColumn: 0,
+              originalEndLineNumber: 0,
+              originalStartColumn: 0,
+              originalStartLineNumber: 0
+            }]
+          }]
+        };
+      }
+      const diffResult = computeDiff(this.original, this.modified, this.continueLineDiff, this.shouldMakePrettyDiff);
+      const rawChanges = diffResult.changes;
+      const quitEarly = diffResult.quitEarly;
+      if (this.shouldIgnoreTrimWhitespace) {
+        const lineChanges = [];
+        for (let i = 0, length = rawChanges.length; i < length; i++) {
+          lineChanges.push(LineChange.createFromDiffResult(this.shouldIgnoreTrimWhitespace, rawChanges[i], this.original, this.modified, this.continueCharDiff, this.shouldComputeCharChanges, this.shouldPostProcessCharChanges));
+        }
+        return {
+          quitEarly,
+          changes: lineChanges
+        };
+      }
+      const result = [];
+      let originalLineIndex = 0;
+      let modifiedLineIndex = 0;
+      for (let i = -1, len = rawChanges.length; i < len; i++) {
+        const nextChange = i + 1 < len ? rawChanges[i + 1] : null;
+        const originalStop = nextChange ? nextChange.originalStart : this.originalLines.length;
+        const modifiedStop = nextChange ? nextChange.modifiedStart : this.modifiedLines.length;
+        while (originalLineIndex < originalStop && modifiedLineIndex < modifiedStop) {
+          const originalLine = this.originalLines[originalLineIndex];
+          const modifiedLine = this.modifiedLines[modifiedLineIndex];
+          if (originalLine !== modifiedLine) {
+            {
+              let originalStartColumn = getFirstNonBlankColumn(originalLine, 1);
+              let modifiedStartColumn = getFirstNonBlankColumn(modifiedLine, 1);
+              while (originalStartColumn > 1 && modifiedStartColumn > 1) {
+                const originalChar = originalLine.charCodeAt(originalStartColumn - 2);
+                const modifiedChar = modifiedLine.charCodeAt(modifiedStartColumn - 2);
+                if (originalChar !== modifiedChar) {
+                  break;
+                }
+                originalStartColumn--;
+                modifiedStartColumn--;
+              }
+              if (originalStartColumn > 1 || modifiedStartColumn > 1) {
+                this._pushTrimWhitespaceCharChange(result, originalLineIndex + 1, 1, originalStartColumn, modifiedLineIndex + 1, 1, modifiedStartColumn);
+              }
+            }
+            {
+              let originalEndColumn = getLastNonBlankColumn(originalLine, 1);
+              let modifiedEndColumn = getLastNonBlankColumn(modifiedLine, 1);
+              const originalMaxColumn = originalLine.length + 1;
+              const modifiedMaxColumn = modifiedLine.length + 1;
+              while (originalEndColumn < originalMaxColumn && modifiedEndColumn < modifiedMaxColumn) {
+                const originalChar = originalLine.charCodeAt(originalEndColumn - 1);
+                const modifiedChar = originalLine.charCodeAt(modifiedEndColumn - 1);
+                if (originalChar !== modifiedChar) {
+                  break;
+                }
+                originalEndColumn++;
+                modifiedEndColumn++;
+              }
+              if (originalEndColumn < originalMaxColumn || modifiedEndColumn < modifiedMaxColumn) {
+                this._pushTrimWhitespaceCharChange(result, originalLineIndex + 1, originalEndColumn, originalMaxColumn, modifiedLineIndex + 1, modifiedEndColumn, modifiedMaxColumn);
+              }
+            }
+          }
+          originalLineIndex++;
+          modifiedLineIndex++;
+        }
+        if (nextChange) {
+          result.push(LineChange.createFromDiffResult(this.shouldIgnoreTrimWhitespace, nextChange, this.original, this.modified, this.continueCharDiff, this.shouldComputeCharChanges, this.shouldPostProcessCharChanges));
+          originalLineIndex += nextChange.originalLength;
+          modifiedLineIndex += nextChange.modifiedLength;
+        }
+      }
+      return {
+        quitEarly,
+        changes: result
+      };
+    }
+    _pushTrimWhitespaceCharChange(result, originalLineNumber, originalStartColumn, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedEndColumn) {
+      if (this._mergeTrimWhitespaceCharChange(result, originalLineNumber, originalStartColumn, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedEndColumn)) {
+        return;
+      }
+      let charChanges = void 0;
+      if (this.shouldComputeCharChanges) {
+        charChanges = [new CharChange(originalLineNumber, originalStartColumn, originalLineNumber, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedLineNumber, modifiedEndColumn)];
+      }
+      result.push(new LineChange(originalLineNumber, originalLineNumber, modifiedLineNumber, modifiedLineNumber, charChanges));
+    }
+    _mergeTrimWhitespaceCharChange(result, originalLineNumber, originalStartColumn, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedEndColumn) {
+      const len = result.length;
+      if (len === 0) {
+        return false;
+      }
+      const prevChange = result[len - 1];
+      if (prevChange.originalEndLineNumber === 0 || prevChange.modifiedEndLineNumber === 0) {
+        return false;
+      }
+      if (prevChange.originalEndLineNumber + 1 === originalLineNumber && prevChange.modifiedEndLineNumber + 1 === modifiedLineNumber) {
+        prevChange.originalEndLineNumber = originalLineNumber;
+        prevChange.modifiedEndLineNumber = modifiedLineNumber;
+        if (this.shouldComputeCharChanges && prevChange.charChanges) {
+          prevChange.charChanges.push(new CharChange(originalLineNumber, originalStartColumn, originalLineNumber, originalEndColumn, modifiedLineNumber, modifiedStartColumn, modifiedLineNumber, modifiedEndColumn));
+        }
+        return true;
+      }
+      return false;
+    }
+  };
+  function getFirstNonBlankColumn(txt, defaultValue) {
+    const r = firstNonWhitespaceIndex(txt);
+    if (r === -1) {
+      return defaultValue;
+    }
+    return r + 1;
+  }
+  function getLastNonBlankColumn(txt, defaultValue) {
+    const r = lastNonWhitespaceIndex(txt);
+    if (r === -1) {
+      return defaultValue;
+    }
+    return r + 2;
+  }
+  function createContinueProcessingPredicate(maximumRuntime) {
+    if (maximumRuntime === 0) {
+      return () => true;
+    }
+    const startTime = Date.now();
+    return () => {
+      return Date.now() - startTime < maximumRuntime;
+    };
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/arrays.js
+  var CompareResult;
+  (function(CompareResult2) {
+    function isLessThan(result) {
+      return result < 0;
+    }
+    CompareResult2.isLessThan = isLessThan;
+    function isGreaterThan(result) {
+      return result > 0;
+    }
+    CompareResult2.isGreaterThan = isGreaterThan;
+    function isNeitherLessOrGreaterThan(result) {
+      return result === 0;
+    }
+    CompareResult2.isNeitherLessOrGreaterThan = isNeitherLessOrGreaterThan;
+    CompareResult2.greaterThan = 1;
+    CompareResult2.lessThan = -1;
+    CompareResult2.neitherLessOrGreaterThan = 0;
+  })(CompareResult || (CompareResult = {}));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/uint.js
+  function toUint8(v) {
+    if (v < 0) {
+      return 0;
+    }
+    if (v > 255) {
+      return 255;
+    }
+    return v | 0;
+  }
+  function toUint32(v) {
+    if (v < 0) {
+      return 0;
+    }
+    if (v > 4294967295) {
+      return 4294967295;
+    }
+    return v | 0;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/model/prefixSumComputer.js
+  var PrefixSumComputer = class {
+    constructor(values) {
+      this.values = values;
+      this.prefixSum = new Uint32Array(values.length);
+      this.prefixSumValidIndex = new Int32Array(1);
+      this.prefixSumValidIndex[0] = -1;
+    }
+    insertValues(insertIndex, insertValues) {
+      insertIndex = toUint32(insertIndex);
+      const oldValues = this.values;
+      const oldPrefixSum = this.prefixSum;
+      const insertValuesLen = insertValues.length;
+      if (insertValuesLen === 0) {
+        return false;
+      }
+      this.values = new Uint32Array(oldValues.length + insertValuesLen);
+      this.values.set(oldValues.subarray(0, insertIndex), 0);
+      this.values.set(oldValues.subarray(insertIndex), insertIndex + insertValuesLen);
+      this.values.set(insertValues, insertIndex);
+      if (insertIndex - 1 < this.prefixSumValidIndex[0]) {
+        this.prefixSumValidIndex[0] = insertIndex - 1;
+      }
+      this.prefixSum = new Uint32Array(this.values.length);
+      if (this.prefixSumValidIndex[0] >= 0) {
+        this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
+      }
+      return true;
+    }
+    setValue(index, value) {
+      index = toUint32(index);
+      value = toUint32(value);
+      if (this.values[index] === value) {
+        return false;
+      }
+      this.values[index] = value;
+      if (index - 1 < this.prefixSumValidIndex[0]) {
+        this.prefixSumValidIndex[0] = index - 1;
+      }
+      return true;
+    }
+    removeValues(startIndex, count) {
+      startIndex = toUint32(startIndex);
+      count = toUint32(count);
+      const oldValues = this.values;
+      const oldPrefixSum = this.prefixSum;
+      if (startIndex >= oldValues.length) {
+        return false;
+      }
+      const maxCount = oldValues.length - startIndex;
+      if (count >= maxCount) {
+        count = maxCount;
+      }
+      if (count === 0) {
+        return false;
+      }
+      this.values = new Uint32Array(oldValues.length - count);
+      this.values.set(oldValues.subarray(0, startIndex), 0);
+      this.values.set(oldValues.subarray(startIndex + count), startIndex);
+      this.prefixSum = new Uint32Array(this.values.length);
+      if (startIndex - 1 < this.prefixSumValidIndex[0]) {
+        this.prefixSumValidIndex[0] = startIndex - 1;
+      }
+      if (this.prefixSumValidIndex[0] >= 0) {
+        this.prefixSum.set(oldPrefixSum.subarray(0, this.prefixSumValidIndex[0] + 1));
+      }
+      return true;
+    }
+    getTotalSum() {
+      if (this.values.length === 0) {
+        return 0;
+      }
+      return this._getPrefixSum(this.values.length - 1);
+    }
+    /**
+     * Returns the sum of the first `index + 1` many items.
+     * @returns `SUM(0 <= j <= index, values[j])`.
+     */
+    getPrefixSum(index) {
+      if (index < 0) {
+        return 0;
+      }
+      index = toUint32(index);
+      return this._getPrefixSum(index);
+    }
+    _getPrefixSum(index) {
+      if (index <= this.prefixSumValidIndex[0]) {
+        return this.prefixSum[index];
+      }
+      let startIndex = this.prefixSumValidIndex[0] + 1;
+      if (startIndex === 0) {
+        this.prefixSum[0] = this.values[0];
+        startIndex++;
+      }
+      if (index >= this.values.length) {
+        index = this.values.length - 1;
+      }
+      for (let i = startIndex; i <= index; i++) {
+        this.prefixSum[i] = this.prefixSum[i - 1] + this.values[i];
+      }
+      this.prefixSumValidIndex[0] = Math.max(this.prefixSumValidIndex[0], index);
+      return this.prefixSum[index];
+    }
+    getIndexOf(sum) {
+      sum = Math.floor(sum);
+      this.getTotalSum();
+      let low = 0;
+      let high = this.values.length - 1;
+      let mid = 0;
+      let midStop = 0;
+      let midStart = 0;
+      while (low <= high) {
+        mid = low + (high - low) / 2 | 0;
+        midStop = this.prefixSum[mid];
+        midStart = midStop - this.values[mid];
+        if (sum < midStart) {
+          high = mid - 1;
+        } else if (sum >= midStop) {
+          low = mid + 1;
+        } else {
+          break;
+        }
+      }
+      return new PrefixSumIndexOfResult(mid, sum - midStart);
+    }
+  };
+  var PrefixSumIndexOfResult = class {
+    constructor(index, remainder) {
+      this.index = index;
+      this.remainder = remainder;
+      this._prefixSumIndexOfResultBrand = void 0;
+      this.index = index;
+      this.remainder = remainder;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/model/mirrorTextModel.js
+  var MirrorTextModel = class {
+    constructor(uri, lines, eol, versionId) {
+      this._uri = uri;
+      this._lines = lines;
+      this._eol = eol;
+      this._versionId = versionId;
+      this._lineStarts = null;
+      this._cachedTextValue = null;
+    }
+    dispose() {
+      this._lines.length = 0;
+    }
+    get version() {
+      return this._versionId;
+    }
+    getText() {
+      if (this._cachedTextValue === null) {
+        this._cachedTextValue = this._lines.join(this._eol);
+      }
+      return this._cachedTextValue;
+    }
+    onEvents(e) {
+      if (e.eol && e.eol !== this._eol) {
+        this._eol = e.eol;
+        this._lineStarts = null;
+      }
+      const changes = e.changes;
+      for (const change of changes) {
+        this._acceptDeleteRange(change.range);
+        this._acceptInsertText(new Position(change.range.startLineNumber, change.range.startColumn), change.text);
+      }
+      this._versionId = e.versionId;
+      this._cachedTextValue = null;
+    }
+    _ensureLineStarts() {
+      if (!this._lineStarts) {
+        const eolLength = this._eol.length;
+        const linesLength = this._lines.length;
+        const lineStartValues = new Uint32Array(linesLength);
+        for (let i = 0; i < linesLength; i++) {
+          lineStartValues[i] = this._lines[i].length + eolLength;
+        }
+        this._lineStarts = new PrefixSumComputer(lineStartValues);
+      }
+    }
+    /**
+     * All changes to a line's text go through this method
+     */
+    _setLineText(lineIndex, newValue) {
+      this._lines[lineIndex] = newValue;
+      if (this._lineStarts) {
+        this._lineStarts.setValue(lineIndex, this._lines[lineIndex].length + this._eol.length);
+      }
+    }
+    _acceptDeleteRange(range) {
+      if (range.startLineNumber === range.endLineNumber) {
+        if (range.startColumn === range.endColumn) {
+          return;
+        }
+        this._setLineText(range.startLineNumber - 1, this._lines[range.startLineNumber - 1].substring(0, range.startColumn - 1) + this._lines[range.startLineNumber - 1].substring(range.endColumn - 1));
+        return;
+      }
+      this._setLineText(range.startLineNumber - 1, this._lines[range.startLineNumber - 1].substring(0, range.startColumn - 1) + this._lines[range.endLineNumber - 1].substring(range.endColumn - 1));
+      this._lines.splice(range.startLineNumber, range.endLineNumber - range.startLineNumber);
+      if (this._lineStarts) {
+        this._lineStarts.removeValues(range.startLineNumber, range.endLineNumber - range.startLineNumber);
+      }
+    }
+    _acceptInsertText(position, insertText) {
+      if (insertText.length === 0) {
+        return;
+      }
+      const insertLines = splitLines(insertText);
+      if (insertLines.length === 1) {
+        this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1) + insertLines[0] + this._lines[position.lineNumber - 1].substring(position.column - 1));
+        return;
+      }
+      insertLines[insertLines.length - 1] += this._lines[position.lineNumber - 1].substring(position.column - 1);
+      this._setLineText(position.lineNumber - 1, this._lines[position.lineNumber - 1].substring(0, position.column - 1) + insertLines[0]);
+      const newLengths = new Uint32Array(insertLines.length - 1);
+      for (let i = 1; i < insertLines.length; i++) {
+        this._lines.splice(position.lineNumber + i - 1, 0, insertLines[i]);
+        newLengths[i - 1] = insertLines[i].length + this._eol.length;
+      }
+      if (this._lineStarts) {
+        this._lineStarts.insertValues(position.lineNumber, newLengths);
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/core/wordHelper.js
+  var USUAL_WORD_SEPARATORS = "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?";
+  function createWordRegExp(allowInWords = "") {
+    let source = "(-?\\d*\\.\\d\\w*)|([^";
+    for (const sep2 of USUAL_WORD_SEPARATORS) {
+      if (allowInWords.indexOf(sep2) >= 0) {
+        continue;
+      }
+      source += "\\" + sep2;
+    }
+    source += "\\s]+)";
+    return new RegExp(source, "g");
+  }
+  var DEFAULT_WORD_REGEXP = createWordRegExp();
+  function ensureValidWordDefinition(wordDefinition) {
+    let result = DEFAULT_WORD_REGEXP;
+    if (wordDefinition && wordDefinition instanceof RegExp) {
+      if (!wordDefinition.global) {
+        let flags = "g";
+        if (wordDefinition.ignoreCase) {
+          flags += "i";
+        }
+        if (wordDefinition.multiline) {
+          flags += "m";
+        }
+        if (wordDefinition.unicode) {
+          flags += "u";
+        }
+        result = new RegExp(wordDefinition.source, flags);
+      } else {
+        result = wordDefinition;
+      }
+    }
+    result.lastIndex = 0;
+    return result;
+  }
+  var _defaultConfig = new LinkedList();
+  _defaultConfig.unshift({
+    maxLen: 1e3,
+    windowSize: 15,
+    timeBudget: 150
+  });
+  function getWordAtText(column, wordDefinition, text, textOffset, config) {
+    if (!config) {
+      config = Iterable.first(_defaultConfig);
+    }
+    if (text.length > config.maxLen) {
+      let start = column - config.maxLen / 2;
+      if (start < 0) {
+        start = 0;
+      } else {
+        textOffset += start;
+      }
+      text = text.substring(start, column + config.maxLen / 2);
+      return getWordAtText(column, wordDefinition, text, textOffset, config);
+    }
+    const t1 = Date.now();
+    const pos = column - 1 - textOffset;
+    let prevRegexIndex = -1;
+    let match = null;
+    for (let i = 1; ; i++) {
+      if (Date.now() - t1 >= config.timeBudget) {
+        break;
+      }
+      const regexIndex = pos - config.windowSize * i;
+      wordDefinition.lastIndex = Math.max(0, regexIndex);
+      const thisMatch = _findRegexMatchEnclosingPosition(wordDefinition, text, pos, prevRegexIndex);
+      if (!thisMatch && match) {
+        break;
+      }
+      match = thisMatch;
+      if (regexIndex <= 0) {
+        break;
+      }
+      prevRegexIndex = regexIndex;
+    }
+    if (match) {
+      const result = {
+        word: match[0],
+        startColumn: textOffset + 1 + match.index,
+        endColumn: textOffset + 1 + match.index + match[0].length
+      };
+      wordDefinition.lastIndex = 0;
+      return result;
+    }
+    return null;
+  }
+  function _findRegexMatchEnclosingPosition(wordDefinition, text, pos, stopPos) {
+    let match;
+    while (match = wordDefinition.exec(text)) {
+      const matchIndex = match.index || 0;
+      if (matchIndex <= pos && wordDefinition.lastIndex >= pos) {
+        return match;
+      } else if (stopPos > 0 && matchIndex > stopPos) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/core/characterClassifier.js
+  var CharacterClassifier = class {
+    constructor(_defaultValue) {
+      const defaultValue = toUint8(_defaultValue);
+      this._defaultValue = defaultValue;
+      this._asciiMap = CharacterClassifier._createAsciiMap(defaultValue);
+      this._map = /* @__PURE__ */ new Map();
+    }
+    static _createAsciiMap(defaultValue) {
+      const asciiMap = new Uint8Array(256);
+      for (let i = 0; i < 256; i++) {
+        asciiMap[i] = defaultValue;
+      }
+      return asciiMap;
+    }
+    set(charCode, _value) {
+      const value = toUint8(_value);
+      if (charCode >= 0 && charCode < 256) {
+        this._asciiMap[charCode] = value;
+      } else {
+        this._map.set(charCode, value);
+      }
+    }
+    get(charCode) {
+      if (charCode >= 0 && charCode < 256) {
+        return this._asciiMap[charCode];
+      } else {
+        return this._map.get(charCode) || this._defaultValue;
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/languages/linkComputer.js
+  var Uint8Matrix = class {
+    constructor(rows, cols, defaultValue) {
+      const data = new Uint8Array(rows * cols);
+      for (let i = 0, len = rows * cols; i < len; i++) {
+        data[i] = defaultValue;
+      }
+      this._data = data;
+      this.rows = rows;
+      this.cols = cols;
+    }
+    get(row, col) {
+      return this._data[row * this.cols + col];
+    }
+    set(row, col, value) {
+      this._data[row * this.cols + col] = value;
+    }
+  };
+  var StateMachine = class {
+    constructor(edges) {
+      let maxCharCode = 0;
+      let maxState = 0;
+      for (let i = 0, len = edges.length; i < len; i++) {
+        const [from, chCode, to] = edges[i];
+        if (chCode > maxCharCode) {
+          maxCharCode = chCode;
+        }
+        if (from > maxState) {
+          maxState = from;
+        }
+        if (to > maxState) {
+          maxState = to;
+        }
+      }
+      maxCharCode++;
+      maxState++;
+      const states = new Uint8Matrix(
+        maxState,
+        maxCharCode,
+        0
+        /* State.Invalid */
+      );
+      for (let i = 0, len = edges.length; i < len; i++) {
+        const [from, chCode, to] = edges[i];
+        states.set(from, chCode, to);
+      }
+      this._states = states;
+      this._maxCharCode = maxCharCode;
+    }
+    nextState(currentState, chCode) {
+      if (chCode < 0 || chCode >= this._maxCharCode) {
+        return 0;
+      }
+      return this._states.get(currentState, chCode);
+    }
+  };
+  var _stateMachine = null;
+  function getStateMachine() {
+    if (_stateMachine === null) {
+      _stateMachine = new StateMachine([
+        [
+          1,
+          104,
+          2
+          /* State.H */
+        ],
+        [
+          1,
+          72,
+          2
+          /* State.H */
+        ],
+        [
+          1,
+          102,
+          6
+          /* State.F */
+        ],
+        [
+          1,
+          70,
+          6
+          /* State.F */
+        ],
+        [
+          2,
+          116,
+          3
+          /* State.HT */
+        ],
+        [
+          2,
+          84,
+          3
+          /* State.HT */
+        ],
+        [
+          3,
+          116,
+          4
+          /* State.HTT */
+        ],
+        [
+          3,
+          84,
+          4
+          /* State.HTT */
+        ],
+        [
+          4,
+          112,
+          5
+          /* State.HTTP */
+        ],
+        [
+          4,
+          80,
+          5
+          /* State.HTTP */
+        ],
+        [
+          5,
+          115,
+          9
+          /* State.BeforeColon */
+        ],
+        [
+          5,
+          83,
+          9
+          /* State.BeforeColon */
+        ],
+        [
+          5,
+          58,
+          10
+          /* State.AfterColon */
+        ],
+        [
+          6,
+          105,
+          7
+          /* State.FI */
+        ],
+        [
+          6,
+          73,
+          7
+          /* State.FI */
+        ],
+        [
+          7,
+          108,
+          8
+          /* State.FIL */
+        ],
+        [
+          7,
+          76,
+          8
+          /* State.FIL */
+        ],
+        [
+          8,
+          101,
+          9
+          /* State.BeforeColon */
+        ],
+        [
+          8,
+          69,
+          9
+          /* State.BeforeColon */
+        ],
+        [
+          9,
+          58,
+          10
+          /* State.AfterColon */
+        ],
+        [
+          10,
+          47,
+          11
+          /* State.AlmostThere */
+        ],
+        [
+          11,
+          47,
+          12
+          /* State.End */
+        ]
+      ]);
+    }
+    return _stateMachine;
+  }
+  var _classifier = null;
+  function getClassifier() {
+    if (_classifier === null) {
+      _classifier = new CharacterClassifier(
+        0
+        /* CharacterClass.None */
+      );
+      const FORCE_TERMINATION_CHARACTERS = ` 	<>'"\u3001\u3002\uFF61\uFF64\uFF0C\uFF0E\uFF1A\uFF1B\u2018\u3008\u300C\u300E\u3014\uFF08\uFF3B\uFF5B\uFF62\uFF63\uFF5D\uFF3D\uFF09\u3015\u300F\u300D\u3009\u2019\uFF40\uFF5E\u2026`;
+      for (let i = 0; i < FORCE_TERMINATION_CHARACTERS.length; i++) {
+        _classifier.set(
+          FORCE_TERMINATION_CHARACTERS.charCodeAt(i),
+          1
+          /* CharacterClass.ForceTermination */
+        );
+      }
+      const CANNOT_END_WITH_CHARACTERS = ".,;:";
+      for (let i = 0; i < CANNOT_END_WITH_CHARACTERS.length; i++) {
+        _classifier.set(
+          CANNOT_END_WITH_CHARACTERS.charCodeAt(i),
+          2
+          /* CharacterClass.CannotEndIn */
+        );
+      }
+    }
+    return _classifier;
+  }
+  var LinkComputer = class {
+    static _createLink(classifier, line, lineNumber, linkBeginIndex, linkEndIndex) {
+      let lastIncludedCharIndex = linkEndIndex - 1;
+      do {
+        const chCode = line.charCodeAt(lastIncludedCharIndex);
+        const chClass = classifier.get(chCode);
+        if (chClass !== 2) {
+          break;
+        }
+        lastIncludedCharIndex--;
+      } while (lastIncludedCharIndex > linkBeginIndex);
+      if (linkBeginIndex > 0) {
+        const charCodeBeforeLink = line.charCodeAt(linkBeginIndex - 1);
+        const lastCharCodeInLink = line.charCodeAt(lastIncludedCharIndex);
+        if (charCodeBeforeLink === 40 && lastCharCodeInLink === 41 || charCodeBeforeLink === 91 && lastCharCodeInLink === 93 || charCodeBeforeLink === 123 && lastCharCodeInLink === 125) {
+          lastIncludedCharIndex--;
+        }
+      }
+      return {
+        range: {
+          startLineNumber: lineNumber,
+          startColumn: linkBeginIndex + 1,
+          endLineNumber: lineNumber,
+          endColumn: lastIncludedCharIndex + 2
+        },
+        url: line.substring(linkBeginIndex, lastIncludedCharIndex + 1)
+      };
+    }
+    static computeLinks(model, stateMachine = getStateMachine()) {
+      const classifier = getClassifier();
+      const result = [];
+      for (let i = 1, lineCount = model.getLineCount(); i <= lineCount; i++) {
+        const line = model.getLineContent(i);
+        const len = line.length;
+        let j = 0;
+        let linkBeginIndex = 0;
+        let linkBeginChCode = 0;
+        let state = 1;
+        let hasOpenParens = false;
+        let hasOpenSquareBracket = false;
+        let inSquareBrackets = false;
+        let hasOpenCurlyBracket = false;
+        while (j < len) {
+          let resetStateMachine = false;
+          const chCode = line.charCodeAt(j);
+          if (state === 13) {
+            let chClass;
+            switch (chCode) {
+              case 40:
+                hasOpenParens = true;
+                chClass = 0;
+                break;
+              case 41:
+                chClass = hasOpenParens ? 0 : 1;
+                break;
+              case 91:
+                inSquareBrackets = true;
+                hasOpenSquareBracket = true;
+                chClass = 0;
+                break;
+              case 93:
+                inSquareBrackets = false;
+                chClass = hasOpenSquareBracket ? 0 : 1;
+                break;
+              case 123:
+                hasOpenCurlyBracket = true;
+                chClass = 0;
+                break;
+              case 125:
+                chClass = hasOpenCurlyBracket ? 0 : 1;
+                break;
+              case 39:
+                chClass = linkBeginChCode === 39 ? 1 : 0;
+                break;
+              case 34:
+                chClass = linkBeginChCode === 34 ? 1 : 0;
+                break;
+              case 96:
+                chClass = linkBeginChCode === 96 ? 1 : 0;
+                break;
+              case 42:
+                chClass = linkBeginChCode === 42 ? 1 : 0;
+                break;
+              case 124:
+                chClass = linkBeginChCode === 124 ? 1 : 0;
+                break;
+              case 32:
+                chClass = inSquareBrackets ? 0 : 1;
+                break;
+              default:
+                chClass = classifier.get(chCode);
+            }
+            if (chClass === 1) {
+              result.push(LinkComputer._createLink(classifier, line, i, linkBeginIndex, j));
+              resetStateMachine = true;
+            }
+          } else if (state === 12) {
+            let chClass;
+            if (chCode === 91) {
+              hasOpenSquareBracket = true;
+              chClass = 0;
+            } else {
+              chClass = classifier.get(chCode);
+            }
+            if (chClass === 1) {
+              resetStateMachine = true;
+            } else {
+              state = 13;
+            }
+          } else {
+            state = stateMachine.nextState(state, chCode);
+            if (state === 0) {
+              resetStateMachine = true;
+            }
+          }
+          if (resetStateMachine) {
+            state = 1;
+            hasOpenParens = false;
+            hasOpenSquareBracket = false;
+            hasOpenCurlyBracket = false;
+            linkBeginIndex = j + 1;
+            linkBeginChCode = chCode;
+          }
+          j++;
+        }
+        if (state === 13) {
+          result.push(LinkComputer._createLink(classifier, line, i, linkBeginIndex, len));
+        }
+      }
+      return result;
+    }
+  };
+  function computeLinks(model) {
+    if (!model || typeof model.getLineCount !== "function" || typeof model.getLineContent !== "function") {
+      return [];
+    }
+    return LinkComputer.computeLinks(model);
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/languages/supports/inplaceReplaceSupport.js
+  var BasicInplaceReplace = class {
+    constructor() {
+      this._defaultValueSet = [
+        ["true", "false"],
+        ["True", "False"],
+        ["Private", "Public", "Friend", "ReadOnly", "Partial", "Protected", "WriteOnly"],
+        ["public", "protected", "private"]
+      ];
+    }
+    navigateValueSet(range1, text1, range2, text2, up) {
+      if (range1 && text1) {
+        const result = this.doNavigateValueSet(text1, up);
+        if (result) {
+          return {
+            range: range1,
+            value: result
+          };
+        }
+      }
+      if (range2 && text2) {
+        const result = this.doNavigateValueSet(text2, up);
+        if (result) {
+          return {
+            range: range2,
+            value: result
+          };
+        }
+      }
+      return null;
+    }
+    doNavigateValueSet(text, up) {
+      const numberResult = this.numberReplace(text, up);
+      if (numberResult !== null) {
+        return numberResult;
+      }
+      return this.textReplace(text, up);
+    }
+    numberReplace(value, up) {
+      const precision = Math.pow(10, value.length - (value.lastIndexOf(".") + 1));
+      let n1 = Number(value);
+      const n2 = parseFloat(value);
+      if (!isNaN(n1) && !isNaN(n2) && n1 === n2) {
+        if (n1 === 0 && !up) {
+          return null;
+        } else {
+          n1 = Math.floor(n1 * precision);
+          n1 += up ? precision : -precision;
+          return String(n1 / precision);
+        }
+      }
+      return null;
+    }
+    textReplace(value, up) {
+      return this.valueSetsReplace(this._defaultValueSet, value, up);
+    }
+    valueSetsReplace(valueSets, value, up) {
+      let result = null;
+      for (let i = 0, len = valueSets.length; result === null && i < len; i++) {
+        result = this.valueSetReplace(valueSets[i], value, up);
+      }
+      return result;
+    }
+    valueSetReplace(valueSet, value, up) {
+      let idx = valueSet.indexOf(value);
+      if (idx >= 0) {
+        idx += up ? 1 : -1;
+        if (idx < 0) {
+          idx = valueSet.length - 1;
+        } else {
+          idx %= valueSet.length;
+        }
+        return valueSet[idx];
+      }
+      return null;
+    }
+  };
+  BasicInplaceReplace.INSTANCE = new BasicInplaceReplace();
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/cancellation.js
+  var shortcutEvent = Object.freeze(function(callback, context) {
+    const handle = setTimeout(callback.bind(context), 0);
+    return { dispose() {
+      clearTimeout(handle);
+    } };
+  });
+  var CancellationToken;
+  (function(CancellationToken2) {
+    function isCancellationToken(thing) {
+      if (thing === CancellationToken2.None || thing === CancellationToken2.Cancelled) {
+        return true;
+      }
+      if (thing instanceof MutableToken) {
+        return true;
+      }
+      if (!thing || typeof thing !== "object") {
+        return false;
+      }
+      return typeof thing.isCancellationRequested === "boolean" && typeof thing.onCancellationRequested === "function";
+    }
+    CancellationToken2.isCancellationToken = isCancellationToken;
+    CancellationToken2.None = Object.freeze({
+      isCancellationRequested: false,
+      onCancellationRequested: Event.None
+    });
+    CancellationToken2.Cancelled = Object.freeze({
+      isCancellationRequested: true,
+      onCancellationRequested: shortcutEvent
+    });
+  })(CancellationToken || (CancellationToken = {}));
+  var MutableToken = class {
+    constructor() {
+      this._isCancelled = false;
+      this._emitter = null;
+    }
+    cancel() {
+      if (!this._isCancelled) {
+        this._isCancelled = true;
+        if (this._emitter) {
+          this._emitter.fire(void 0);
+          this.dispose();
+        }
+      }
+    }
+    get isCancellationRequested() {
+      return this._isCancelled;
+    }
+    get onCancellationRequested() {
+      if (this._isCancelled) {
+        return shortcutEvent;
+      }
+      if (!this._emitter) {
+        this._emitter = new Emitter();
+      }
+      return this._emitter.event;
+    }
+    dispose() {
+      if (this._emitter) {
+        this._emitter.dispose();
+        this._emitter = null;
+      }
+    }
+  };
+  var CancellationTokenSource = class {
+    constructor(parent) {
+      this._token = void 0;
+      this._parentListener = void 0;
+      this._parentListener = parent && parent.onCancellationRequested(this.cancel, this);
+    }
+    get token() {
+      if (!this._token) {
+        this._token = new MutableToken();
+      }
+      return this._token;
+    }
+    cancel() {
+      if (!this._token) {
+        this._token = CancellationToken.Cancelled;
+      } else if (this._token instanceof MutableToken) {
+        this._token.cancel();
+      }
+    }
+    dispose(cancel = false) {
+      if (cancel) {
+        this.cancel();
+      }
+      if (this._parentListener) {
+        this._parentListener.dispose();
+      }
+      if (!this._token) {
+        this._token = CancellationToken.None;
+      } else if (this._token instanceof MutableToken) {
+        this._token.dispose();
+      }
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/keyCodes.js
+  var KeyCodeStrMap = class {
+    constructor() {
+      this._keyCodeToStr = [];
+      this._strToKeyCode = /* @__PURE__ */ Object.create(null);
+    }
+    define(keyCode, str) {
+      this._keyCodeToStr[keyCode] = str;
+      this._strToKeyCode[str.toLowerCase()] = keyCode;
+    }
+    keyCodeToStr(keyCode) {
+      return this._keyCodeToStr[keyCode];
+    }
+    strToKeyCode(str) {
+      return this._strToKeyCode[str.toLowerCase()] || 0;
+    }
+  };
+  var uiMap = new KeyCodeStrMap();
+  var userSettingsUSMap = new KeyCodeStrMap();
+  var userSettingsGeneralMap = new KeyCodeStrMap();
+  var EVENT_KEY_CODE_MAP = new Array(230);
+  var NATIVE_WINDOWS_KEY_CODE_TO_KEY_CODE = {};
+  var scanCodeIntToStr = [];
+  var scanCodeStrToInt = /* @__PURE__ */ Object.create(null);
+  var scanCodeLowerCaseStrToInt = /* @__PURE__ */ Object.create(null);
+  var IMMUTABLE_CODE_TO_KEY_CODE = [];
+  var IMMUTABLE_KEY_CODE_TO_CODE = [];
+  for (let i = 0; i <= 193; i++) {
+    IMMUTABLE_CODE_TO_KEY_CODE[i] = -1;
+  }
+  for (let i = 0; i <= 127; i++) {
+    IMMUTABLE_KEY_CODE_TO_CODE[i] = -1;
+  }
+  (function() {
+    const empty = "";
+    const mappings = [
+      // keyCodeOrd, immutable, scanCode, scanCodeStr, keyCode, keyCodeStr, eventKeyCode, vkey, usUserSettingsLabel, generalUserSettingsLabel
+      [0, 1, 0, "None", 0, "unknown", 0, "VK_UNKNOWN", empty, empty],
+      [0, 1, 1, "Hyper", 0, empty, 0, empty, empty, empty],
+      [0, 1, 2, "Super", 0, empty, 0, empty, empty, empty],
+      [0, 1, 3, "Fn", 0, empty, 0, empty, empty, empty],
+      [0, 1, 4, "FnLock", 0, empty, 0, empty, empty, empty],
+      [0, 1, 5, "Suspend", 0, empty, 0, empty, empty, empty],
+      [0, 1, 6, "Resume", 0, empty, 0, empty, empty, empty],
+      [0, 1, 7, "Turbo", 0, empty, 0, empty, empty, empty],
+      [0, 1, 8, "Sleep", 0, empty, 0, "VK_SLEEP", empty, empty],
+      [0, 1, 9, "WakeUp", 0, empty, 0, empty, empty, empty],
+      [31, 0, 10, "KeyA", 31, "A", 65, "VK_A", empty, empty],
+      [32, 0, 11, "KeyB", 32, "B", 66, "VK_B", empty, empty],
+      [33, 0, 12, "KeyC", 33, "C", 67, "VK_C", empty, empty],
+      [34, 0, 13, "KeyD", 34, "D", 68, "VK_D", empty, empty],
+      [35, 0, 14, "KeyE", 35, "E", 69, "VK_E", empty, empty],
+      [36, 0, 15, "KeyF", 36, "F", 70, "VK_F", empty, empty],
+      [37, 0, 16, "KeyG", 37, "G", 71, "VK_G", empty, empty],
+      [38, 0, 17, "KeyH", 38, "H", 72, "VK_H", empty, empty],
+      [39, 0, 18, "KeyI", 39, "I", 73, "VK_I", empty, empty],
+      [40, 0, 19, "KeyJ", 40, "J", 74, "VK_J", empty, empty],
+      [41, 0, 20, "KeyK", 41, "K", 75, "VK_K", empty, empty],
+      [42, 0, 21, "KeyL", 42, "L", 76, "VK_L", empty, empty],
+      [43, 0, 22, "KeyM", 43, "M", 77, "VK_M", empty, empty],
+      [44, 0, 23, "KeyN", 44, "N", 78, "VK_N", empty, empty],
+      [45, 0, 24, "KeyO", 45, "O", 79, "VK_O", empty, empty],
+      [46, 0, 25, "KeyP", 46, "P", 80, "VK_P", empty, empty],
+      [47, 0, 26, "KeyQ", 47, "Q", 81, "VK_Q", empty, empty],
+      [48, 0, 27, "KeyR", 48, "R", 82, "VK_R", empty, empty],
+      [49, 0, 28, "KeyS", 49, "S", 83, "VK_S", empty, empty],
+      [50, 0, 29, "KeyT", 50, "T", 84, "VK_T", empty, empty],
+      [51, 0, 30, "KeyU", 51, "U", 85, "VK_U", empty, empty],
+      [52, 0, 31, "KeyV", 52, "V", 86, "VK_V", empty, empty],
+      [53, 0, 32, "KeyW", 53, "W", 87, "VK_W", empty, empty],
+      [54, 0, 33, "KeyX", 54, "X", 88, "VK_X", empty, empty],
+      [55, 0, 34, "KeyY", 55, "Y", 89, "VK_Y", empty, empty],
+      [56, 0, 35, "KeyZ", 56, "Z", 90, "VK_Z", empty, empty],
+      [22, 0, 36, "Digit1", 22, "1", 49, "VK_1", empty, empty],
+      [23, 0, 37, "Digit2", 23, "2", 50, "VK_2", empty, empty],
+      [24, 0, 38, "Digit3", 24, "3", 51, "VK_3", empty, empty],
+      [25, 0, 39, "Digit4", 25, "4", 52, "VK_4", empty, empty],
+      [26, 0, 40, "Digit5", 26, "5", 53, "VK_5", empty, empty],
+      [27, 0, 41, "Digit6", 27, "6", 54, "VK_6", empty, empty],
+      [28, 0, 42, "Digit7", 28, "7", 55, "VK_7", empty, empty],
+      [29, 0, 43, "Digit8", 29, "8", 56, "VK_8", empty, empty],
+      [30, 0, 44, "Digit9", 30, "9", 57, "VK_9", empty, empty],
+      [21, 0, 45, "Digit0", 21, "0", 48, "VK_0", empty, empty],
+      [3, 1, 46, "Enter", 3, "Enter", 13, "VK_RETURN", empty, empty],
+      [9, 1, 47, "Escape", 9, "Escape", 27, "VK_ESCAPE", empty, empty],
+      [1, 1, 48, "Backspace", 1, "Backspace", 8, "VK_BACK", empty, empty],
+      [2, 1, 49, "Tab", 2, "Tab", 9, "VK_TAB", empty, empty],
+      [10, 1, 50, "Space", 10, "Space", 32, "VK_SPACE", empty, empty],
+      [83, 0, 51, "Minus", 83, "-", 189, "VK_OEM_MINUS", "-", "OEM_MINUS"],
+      [81, 0, 52, "Equal", 81, "=", 187, "VK_OEM_PLUS", "=", "OEM_PLUS"],
+      [87, 0, 53, "BracketLeft", 87, "[", 219, "VK_OEM_4", "[", "OEM_4"],
+      [89, 0, 54, "BracketRight", 89, "]", 221, "VK_OEM_6", "]", "OEM_6"],
+      [88, 0, 55, "Backslash", 88, "\\", 220, "VK_OEM_5", "\\", "OEM_5"],
+      [0, 0, 56, "IntlHash", 0, empty, 0, empty, empty, empty],
+      [80, 0, 57, "Semicolon", 80, ";", 186, "VK_OEM_1", ";", "OEM_1"],
+      [90, 0, 58, "Quote", 90, "'", 222, "VK_OEM_7", "'", "OEM_7"],
+      [86, 0, 59, "Backquote", 86, "`", 192, "VK_OEM_3", "`", "OEM_3"],
+      [82, 0, 60, "Comma", 82, ",", 188, "VK_OEM_COMMA", ",", "OEM_COMMA"],
+      [84, 0, 61, "Period", 84, ".", 190, "VK_OEM_PERIOD", ".", "OEM_PERIOD"],
+      [85, 0, 62, "Slash", 85, "/", 191, "VK_OEM_2", "/", "OEM_2"],
+      [8, 1, 63, "CapsLock", 8, "CapsLock", 20, "VK_CAPITAL", empty, empty],
+      [59, 1, 64, "F1", 59, "F1", 112, "VK_F1", empty, empty],
+      [60, 1, 65, "F2", 60, "F2", 113, "VK_F2", empty, empty],
+      [61, 1, 66, "F3", 61, "F3", 114, "VK_F3", empty, empty],
+      [62, 1, 67, "F4", 62, "F4", 115, "VK_F4", empty, empty],
+      [63, 1, 68, "F5", 63, "F5", 116, "VK_F5", empty, empty],
+      [64, 1, 69, "F6", 64, "F6", 117, "VK_F6", empty, empty],
+      [65, 1, 70, "F7", 65, "F7", 118, "VK_F7", empty, empty],
+      [66, 1, 71, "F8", 66, "F8", 119, "VK_F8", empty, empty],
+      [67, 1, 72, "F9", 67, "F9", 120, "VK_F9", empty, empty],
+      [68, 1, 73, "F10", 68, "F10", 121, "VK_F10", empty, empty],
+      [69, 1, 74, "F11", 69, "F11", 122, "VK_F11", empty, empty],
+      [70, 1, 75, "F12", 70, "F12", 123, "VK_F12", empty, empty],
+      [0, 1, 76, "PrintScreen", 0, empty, 0, empty, empty, empty],
+      [79, 1, 77, "ScrollLock", 79, "ScrollLock", 145, "VK_SCROLL", empty, empty],
+      [7, 1, 78, "Pause", 7, "PauseBreak", 19, "VK_PAUSE", empty, empty],
+      [19, 1, 79, "Insert", 19, "Insert", 45, "VK_INSERT", empty, empty],
+      [14, 1, 80, "Home", 14, "Home", 36, "VK_HOME", empty, empty],
+      [11, 1, 81, "PageUp", 11, "PageUp", 33, "VK_PRIOR", empty, empty],
+      [20, 1, 82, "Delete", 20, "Delete", 46, "VK_DELETE", empty, empty],
+      [13, 1, 83, "End", 13, "End", 35, "VK_END", empty, empty],
+      [12, 1, 84, "PageDown", 12, "PageDown", 34, "VK_NEXT", empty, empty],
+      [17, 1, 85, "ArrowRight", 17, "RightArrow", 39, "VK_RIGHT", "Right", empty],
+      [15, 1, 86, "ArrowLeft", 15, "LeftArrow", 37, "VK_LEFT", "Left", empty],
+      [18, 1, 87, "ArrowDown", 18, "DownArrow", 40, "VK_DOWN", "Down", empty],
+      [16, 1, 88, "ArrowUp", 16, "UpArrow", 38, "VK_UP", "Up", empty],
+      [78, 1, 89, "NumLock", 78, "NumLock", 144, "VK_NUMLOCK", empty, empty],
+      [108, 1, 90, "NumpadDivide", 108, "NumPad_Divide", 111, "VK_DIVIDE", empty, empty],
+      [103, 1, 91, "NumpadMultiply", 103, "NumPad_Multiply", 106, "VK_MULTIPLY", empty, empty],
+      [106, 1, 92, "NumpadSubtract", 106, "NumPad_Subtract", 109, "VK_SUBTRACT", empty, empty],
+      [104, 1, 93, "NumpadAdd", 104, "NumPad_Add", 107, "VK_ADD", empty, empty],
+      [3, 1, 94, "NumpadEnter", 3, empty, 0, empty, empty, empty],
+      [94, 1, 95, "Numpad1", 94, "NumPad1", 97, "VK_NUMPAD1", empty, empty],
+      [95, 1, 96, "Numpad2", 95, "NumPad2", 98, "VK_NUMPAD2", empty, empty],
+      [96, 1, 97, "Numpad3", 96, "NumPad3", 99, "VK_NUMPAD3", empty, empty],
+      [97, 1, 98, "Numpad4", 97, "NumPad4", 100, "VK_NUMPAD4", empty, empty],
+      [98, 1, 99, "Numpad5", 98, "NumPad5", 101, "VK_NUMPAD5", empty, empty],
+      [99, 1, 100, "Numpad6", 99, "NumPad6", 102, "VK_NUMPAD6", empty, empty],
+      [100, 1, 101, "Numpad7", 100, "NumPad7", 103, "VK_NUMPAD7", empty, empty],
+      [101, 1, 102, "Numpad8", 101, "NumPad8", 104, "VK_NUMPAD8", empty, empty],
+      [102, 1, 103, "Numpad9", 102, "NumPad9", 105, "VK_NUMPAD9", empty, empty],
+      [93, 1, 104, "Numpad0", 93, "NumPad0", 96, "VK_NUMPAD0", empty, empty],
+      [107, 1, 105, "NumpadDecimal", 107, "NumPad_Decimal", 110, "VK_DECIMAL", empty, empty],
+      [92, 0, 106, "IntlBackslash", 92, "OEM_102", 226, "VK_OEM_102", empty, empty],
+      [58, 1, 107, "ContextMenu", 58, "ContextMenu", 93, empty, empty, empty],
+      [0, 1, 108, "Power", 0, empty, 0, empty, empty, empty],
+      [0, 1, 109, "NumpadEqual", 0, empty, 0, empty, empty, empty],
+      [71, 1, 110, "F13", 71, "F13", 124, "VK_F13", empty, empty],
+      [72, 1, 111, "F14", 72, "F14", 125, "VK_F14", empty, empty],
+      [73, 1, 112, "F15", 73, "F15", 126, "VK_F15", empty, empty],
+      [74, 1, 113, "F16", 74, "F16", 127, "VK_F16", empty, empty],
+      [75, 1, 114, "F17", 75, "F17", 128, "VK_F17", empty, empty],
+      [76, 1, 115, "F18", 76, "F18", 129, "VK_F18", empty, empty],
+      [77, 1, 116, "F19", 77, "F19", 130, "VK_F19", empty, empty],
+      [0, 1, 117, "F20", 0, empty, 0, "VK_F20", empty, empty],
+      [0, 1, 118, "F21", 0, empty, 0, "VK_F21", empty, empty],
+      [0, 1, 119, "F22", 0, empty, 0, "VK_F22", empty, empty],
+      [0, 1, 120, "F23", 0, empty, 0, "VK_F23", empty, empty],
+      [0, 1, 121, "F24", 0, empty, 0, "VK_F24", empty, empty],
+      [0, 1, 122, "Open", 0, empty, 0, empty, empty, empty],
+      [0, 1, 123, "Help", 0, empty, 0, empty, empty, empty],
+      [0, 1, 124, "Select", 0, empty, 0, empty, empty, empty],
+      [0, 1, 125, "Again", 0, empty, 0, empty, empty, empty],
+      [0, 1, 126, "Undo", 0, empty, 0, empty, empty, empty],
+      [0, 1, 127, "Cut", 0, empty, 0, empty, empty, empty],
+      [0, 1, 128, "Copy", 0, empty, 0, empty, empty, empty],
+      [0, 1, 129, "Paste", 0, empty, 0, empty, empty, empty],
+      [0, 1, 130, "Find", 0, empty, 0, empty, empty, empty],
+      [0, 1, 131, "AudioVolumeMute", 112, "AudioVolumeMute", 173, "VK_VOLUME_MUTE", empty, empty],
+      [0, 1, 132, "AudioVolumeUp", 113, "AudioVolumeUp", 175, "VK_VOLUME_UP", empty, empty],
+      [0, 1, 133, "AudioVolumeDown", 114, "AudioVolumeDown", 174, "VK_VOLUME_DOWN", empty, empty],
+      [105, 1, 134, "NumpadComma", 105, "NumPad_Separator", 108, "VK_SEPARATOR", empty, empty],
+      [110, 0, 135, "IntlRo", 110, "ABNT_C1", 193, "VK_ABNT_C1", empty, empty],
+      [0, 1, 136, "KanaMode", 0, empty, 0, empty, empty, empty],
+      [0, 0, 137, "IntlYen", 0, empty, 0, empty, empty, empty],
+      [0, 1, 138, "Convert", 0, empty, 0, empty, empty, empty],
+      [0, 1, 139, "NonConvert", 0, empty, 0, empty, empty, empty],
+      [0, 1, 140, "Lang1", 0, empty, 0, empty, empty, empty],
+      [0, 1, 141, "Lang2", 0, empty, 0, empty, empty, empty],
+      [0, 1, 142, "Lang3", 0, empty, 0, empty, empty, empty],
+      [0, 1, 143, "Lang4", 0, empty, 0, empty, empty, empty],
+      [0, 1, 144, "Lang5", 0, empty, 0, empty, empty, empty],
+      [0, 1, 145, "Abort", 0, empty, 0, empty, empty, empty],
+      [0, 1, 146, "Props", 0, empty, 0, empty, empty, empty],
+      [0, 1, 147, "NumpadParenLeft", 0, empty, 0, empty, empty, empty],
+      [0, 1, 148, "NumpadParenRight", 0, empty, 0, empty, empty, empty],
+      [0, 1, 149, "NumpadBackspace", 0, empty, 0, empty, empty, empty],
+      [0, 1, 150, "NumpadMemoryStore", 0, empty, 0, empty, empty, empty],
+      [0, 1, 151, "NumpadMemoryRecall", 0, empty, 0, empty, empty, empty],
+      [0, 1, 152, "NumpadMemoryClear", 0, empty, 0, empty, empty, empty],
+      [0, 1, 153, "NumpadMemoryAdd", 0, empty, 0, empty, empty, empty],
+      [0, 1, 154, "NumpadMemorySubtract", 0, empty, 0, empty, empty, empty],
+      [0, 1, 155, "NumpadClear", 126, "Clear", 12, "VK_CLEAR", empty, empty],
+      [0, 1, 156, "NumpadClearEntry", 0, empty, 0, empty, empty, empty],
+      [5, 1, 0, empty, 5, "Ctrl", 17, "VK_CONTROL", empty, empty],
+      [4, 1, 0, empty, 4, "Shift", 16, "VK_SHIFT", empty, empty],
+      [6, 1, 0, empty, 6, "Alt", 18, "VK_MENU", empty, empty],
+      [57, 1, 0, empty, 57, "Meta", 0, "VK_COMMAND", empty, empty],
+      [5, 1, 157, "ControlLeft", 5, empty, 0, "VK_LCONTROL", empty, empty],
+      [4, 1, 158, "ShiftLeft", 4, empty, 0, "VK_LSHIFT", empty, empty],
+      [6, 1, 159, "AltLeft", 6, empty, 0, "VK_LMENU", empty, empty],
+      [57, 1, 160, "MetaLeft", 57, empty, 0, "VK_LWIN", empty, empty],
+      [5, 1, 161, "ControlRight", 5, empty, 0, "VK_RCONTROL", empty, empty],
+      [4, 1, 162, "ShiftRight", 4, empty, 0, "VK_RSHIFT", empty, empty],
+      [6, 1, 163, "AltRight", 6, empty, 0, "VK_RMENU", empty, empty],
+      [57, 1, 164, "MetaRight", 57, empty, 0, "VK_RWIN", empty, empty],
+      [0, 1, 165, "BrightnessUp", 0, empty, 0, empty, empty, empty],
+      [0, 1, 166, "BrightnessDown", 0, empty, 0, empty, empty, empty],
+      [0, 1, 167, "MediaPlay", 0, empty, 0, empty, empty, empty],
+      [0, 1, 168, "MediaRecord", 0, empty, 0, empty, empty, empty],
+      [0, 1, 169, "MediaFastForward", 0, empty, 0, empty, empty, empty],
+      [0, 1, 170, "MediaRewind", 0, empty, 0, empty, empty, empty],
+      [114, 1, 171, "MediaTrackNext", 119, "MediaTrackNext", 176, "VK_MEDIA_NEXT_TRACK", empty, empty],
+      [115, 1, 172, "MediaTrackPrevious", 120, "MediaTrackPrevious", 177, "VK_MEDIA_PREV_TRACK", empty, empty],
+      [116, 1, 173, "MediaStop", 121, "MediaStop", 178, "VK_MEDIA_STOP", empty, empty],
+      [0, 1, 174, "Eject", 0, empty, 0, empty, empty, empty],
+      [117, 1, 175, "MediaPlayPause", 122, "MediaPlayPause", 179, "VK_MEDIA_PLAY_PAUSE", empty, empty],
+      [0, 1, 176, "MediaSelect", 123, "LaunchMediaPlayer", 181, "VK_MEDIA_LAUNCH_MEDIA_SELECT", empty, empty],
+      [0, 1, 177, "LaunchMail", 124, "LaunchMail", 180, "VK_MEDIA_LAUNCH_MAIL", empty, empty],
+      [0, 1, 178, "LaunchApp2", 125, "LaunchApp2", 183, "VK_MEDIA_LAUNCH_APP2", empty, empty],
+      [0, 1, 179, "LaunchApp1", 0, empty, 0, "VK_MEDIA_LAUNCH_APP1", empty, empty],
+      [0, 1, 180, "SelectTask", 0, empty, 0, empty, empty, empty],
+      [0, 1, 181, "LaunchScreenSaver", 0, empty, 0, empty, empty, empty],
+      [0, 1, 182, "BrowserSearch", 115, "BrowserSearch", 170, "VK_BROWSER_SEARCH", empty, empty],
+      [0, 1, 183, "BrowserHome", 116, "BrowserHome", 172, "VK_BROWSER_HOME", empty, empty],
+      [112, 1, 184, "BrowserBack", 117, "BrowserBack", 166, "VK_BROWSER_BACK", empty, empty],
+      [113, 1, 185, "BrowserForward", 118, "BrowserForward", 167, "VK_BROWSER_FORWARD", empty, empty],
+      [0, 1, 186, "BrowserStop", 0, empty, 0, "VK_BROWSER_STOP", empty, empty],
+      [0, 1, 187, "BrowserRefresh", 0, empty, 0, "VK_BROWSER_REFRESH", empty, empty],
+      [0, 1, 188, "BrowserFavorites", 0, empty, 0, "VK_BROWSER_FAVORITES", empty, empty],
+      [0, 1, 189, "ZoomToggle", 0, empty, 0, empty, empty, empty],
+      [0, 1, 190, "MailReply", 0, empty, 0, empty, empty, empty],
+      [0, 1, 191, "MailForward", 0, empty, 0, empty, empty, empty],
+      [0, 1, 192, "MailSend", 0, empty, 0, empty, empty, empty],
+      // See https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+      // If an Input Method Editor is processing key input and the event is keydown, return 229.
+      [109, 1, 0, empty, 109, "KeyInComposition", 229, empty, empty, empty],
+      [111, 1, 0, empty, 111, "ABNT_C2", 194, "VK_ABNT_C2", empty, empty],
+      [91, 1, 0, empty, 91, "OEM_8", 223, "VK_OEM_8", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_KANA", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_HANGUL", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_JUNJA", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_FINAL", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_HANJA", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_KANJI", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_CONVERT", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_NONCONVERT", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_ACCEPT", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_MODECHANGE", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_SELECT", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_PRINT", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_EXECUTE", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_SNAPSHOT", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_HELP", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_APPS", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_PROCESSKEY", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_PACKET", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_DBE_SBCSCHAR", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_DBE_DBCSCHAR", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_ATTN", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_CRSEL", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_EXSEL", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_EREOF", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_PLAY", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_ZOOM", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_NONAME", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_PA1", empty, empty],
+      [0, 1, 0, empty, 0, empty, 0, "VK_OEM_CLEAR", empty, empty]
+    ];
+    const seenKeyCode = [];
+    const seenScanCode = [];
+    for (const mapping of mappings) {
+      const [_keyCodeOrd, immutable, scanCode, scanCodeStr, keyCode, keyCodeStr, eventKeyCode, vkey, usUserSettingsLabel, generalUserSettingsLabel] = mapping;
+      if (!seenScanCode[scanCode]) {
+        seenScanCode[scanCode] = true;
+        scanCodeIntToStr[scanCode] = scanCodeStr;
+        scanCodeStrToInt[scanCodeStr] = scanCode;
+        scanCodeLowerCaseStrToInt[scanCodeStr.toLowerCase()] = scanCode;
+        if (immutable) {
+          IMMUTABLE_CODE_TO_KEY_CODE[scanCode] = keyCode;
+          if (keyCode !== 0 && keyCode !== 3 && keyCode !== 5 && keyCode !== 4 && keyCode !== 6 && keyCode !== 57) {
+            IMMUTABLE_KEY_CODE_TO_CODE[keyCode] = scanCode;
+          }
+        }
+      }
+      if (!seenKeyCode[keyCode]) {
+        seenKeyCode[keyCode] = true;
+        if (!keyCodeStr) {
+          throw new Error(`String representation missing for key code ${keyCode} around scan code ${scanCodeStr}`);
+        }
+        uiMap.define(keyCode, keyCodeStr);
+        userSettingsUSMap.define(keyCode, usUserSettingsLabel || keyCodeStr);
+        userSettingsGeneralMap.define(keyCode, generalUserSettingsLabel || usUserSettingsLabel || keyCodeStr);
+      }
+      if (eventKeyCode) {
+        EVENT_KEY_CODE_MAP[eventKeyCode] = keyCode;
+      }
+      if (vkey) {
+        NATIVE_WINDOWS_KEY_CODE_TO_KEY_CODE[vkey] = keyCode;
+      }
+    }
+    IMMUTABLE_KEY_CODE_TO_CODE[
+      3
+      /* KeyCode.Enter */
+    ] = 46;
+  })();
+  var KeyCodeUtils;
+  (function(KeyCodeUtils2) {
+    function toString(keyCode) {
+      return uiMap.keyCodeToStr(keyCode);
+    }
+    KeyCodeUtils2.toString = toString;
+    function fromString(key) {
+      return uiMap.strToKeyCode(key);
+    }
+    KeyCodeUtils2.fromString = fromString;
+    function toUserSettingsUS(keyCode) {
+      return userSettingsUSMap.keyCodeToStr(keyCode);
+    }
+    KeyCodeUtils2.toUserSettingsUS = toUserSettingsUS;
+    function toUserSettingsGeneral(keyCode) {
+      return userSettingsGeneralMap.keyCodeToStr(keyCode);
+    }
+    KeyCodeUtils2.toUserSettingsGeneral = toUserSettingsGeneral;
+    function fromUserSettings(key) {
+      return userSettingsUSMap.strToKeyCode(key) || userSettingsGeneralMap.strToKeyCode(key);
+    }
+    KeyCodeUtils2.fromUserSettings = fromUserSettings;
+    function toElectronAccelerator(keyCode) {
+      if (keyCode >= 93 && keyCode <= 108) {
+        return null;
+      }
+      switch (keyCode) {
+        case 16:
+          return "Up";
+        case 18:
+          return "Down";
+        case 15:
+          return "Left";
+        case 17:
+          return "Right";
+      }
+      return uiMap.keyCodeToStr(keyCode);
+    }
+    KeyCodeUtils2.toElectronAccelerator = toElectronAccelerator;
+  })(KeyCodeUtils || (KeyCodeUtils = {}));
+  function KeyChord(firstPart, secondPart) {
+    const chordPart = (secondPart & 65535) << 16 >>> 0;
+    return (firstPart | chordPart) >>> 0;
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/core/selection.js
+  var Selection = class extends Range {
+    constructor(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn) {
+      super(selectionStartLineNumber, selectionStartColumn, positionLineNumber, positionColumn);
+      this.selectionStartLineNumber = selectionStartLineNumber;
+      this.selectionStartColumn = selectionStartColumn;
+      this.positionLineNumber = positionLineNumber;
+      this.positionColumn = positionColumn;
+    }
+    /**
+     * Transform to a human-readable representation.
+     */
+    toString() {
+      return "[" + this.selectionStartLineNumber + "," + this.selectionStartColumn + " -> " + this.positionLineNumber + "," + this.positionColumn + "]";
+    }
+    /**
+     * Test if equals other selection.
+     */
+    equalsSelection(other) {
+      return Selection.selectionsEqual(this, other);
+    }
+    /**
+     * Test if the two selections are equal.
+     */
+    static selectionsEqual(a, b) {
+      return a.selectionStartLineNumber === b.selectionStartLineNumber && a.selectionStartColumn === b.selectionStartColumn && a.positionLineNumber === b.positionLineNumber && a.positionColumn === b.positionColumn;
+    }
+    /**
+     * Get directions (LTR or RTL).
+     */
+    getDirection() {
+      if (this.selectionStartLineNumber === this.startLineNumber && this.selectionStartColumn === this.startColumn) {
+        return 0;
+      }
+      return 1;
+    }
+    /**
+     * Create a new selection with a different `positionLineNumber` and `positionColumn`.
+     */
+    setEndPosition(endLineNumber, endColumn) {
+      if (this.getDirection() === 0) {
+        return new Selection(this.startLineNumber, this.startColumn, endLineNumber, endColumn);
+      }
+      return new Selection(endLineNumber, endColumn, this.startLineNumber, this.startColumn);
+    }
+    /**
+     * Get the position at `positionLineNumber` and `positionColumn`.
+     */
+    getPosition() {
+      return new Position(this.positionLineNumber, this.positionColumn);
+    }
+    /**
+     * Get the position at the start of the selection.
+    */
+    getSelectionStart() {
+      return new Position(this.selectionStartLineNumber, this.selectionStartColumn);
+    }
+    /**
+     * Create a new selection with a different `selectionStartLineNumber` and `selectionStartColumn`.
+     */
+    setStartPosition(startLineNumber, startColumn) {
+      if (this.getDirection() === 0) {
+        return new Selection(startLineNumber, startColumn, this.endLineNumber, this.endColumn);
+      }
+      return new Selection(this.endLineNumber, this.endColumn, startLineNumber, startColumn);
+    }
+    // ----
+    /**
+     * Create a `Selection` from one or two positions
+     */
+    static fromPositions(start, end = start) {
+      return new Selection(start.lineNumber, start.column, end.lineNumber, end.column);
+    }
+    /**
+     * Creates a `Selection` from a range, given a direction.
+     */
+    static fromRange(range, direction) {
+      if (direction === 0) {
+        return new Selection(range.startLineNumber, range.startColumn, range.endLineNumber, range.endColumn);
+      } else {
+        return new Selection(range.endLineNumber, range.endColumn, range.startLineNumber, range.startColumn);
+      }
+    }
+    /**
+     * Create a `Selection` from an `ISelection`.
+     */
+    static liftSelection(sel) {
+      return new Selection(sel.selectionStartLineNumber, sel.selectionStartColumn, sel.positionLineNumber, sel.positionColumn);
+    }
+    /**
+     * `a` equals `b`.
+     */
+    static selectionsArrEqual(a, b) {
+      if (a && !b || !a && b) {
+        return false;
+      }
+      if (!a && !b) {
+        return true;
+      }
+      if (a.length !== b.length) {
+        return false;
+      }
+      for (let i = 0, len = a.length; i < len; i++) {
+        if (!this.selectionsEqual(a[i], b[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+    /**
+     * Test if `obj` is an `ISelection`.
+     */
+    static isISelection(obj) {
+      return obj && typeof obj.selectionStartLineNumber === "number" && typeof obj.selectionStartColumn === "number" && typeof obj.positionLineNumber === "number" && typeof obj.positionColumn === "number";
+    }
+    /**
+     * Create with a direction.
+     */
+    static createWithDirection(startLineNumber, startColumn, endLineNumber, endColumn, direction) {
+      if (direction === 0) {
+        return new Selection(startLineNumber, startColumn, endLineNumber, endColumn);
+      }
+      return new Selection(endLineNumber, endColumn, startLineNumber, startColumn);
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/common/codicons.js
+  var Codicon = class {
+    constructor(id, definition, description) {
+      this.id = id;
+      this.definition = definition;
+      this.description = description;
+      Codicon._allCodicons.push(this);
+    }
+    get classNames() {
+      return "codicon codicon-" + this.id;
+    }
+    // classNamesArray is useful for migrating to ES6 classlist
+    get classNamesArray() {
+      return ["codicon", "codicon-" + this.id];
+    }
+    get cssSelector() {
+      return ".codicon.codicon-" + this.id;
+    }
+    /**
+     * @returns Returns all default icons covered by the codicon font. Only to be used by the icon registry in platform.
+     */
+    static getAll() {
+      return Codicon._allCodicons;
+    }
+  };
+  Codicon._allCodicons = [];
+  Codicon.add = new Codicon("add", { fontCharacter: "\\ea60" });
+  Codicon.plus = new Codicon("plus", Codicon.add.definition);
+  Codicon.gistNew = new Codicon("gist-new", Codicon.add.definition);
+  Codicon.repoCreate = new Codicon("repo-create", Codicon.add.definition);
+  Codicon.lightbulb = new Codicon("lightbulb", { fontCharacter: "\\ea61" });
+  Codicon.lightBulb = new Codicon("light-bulb", { fontCharacter: "\\ea61" });
+  Codicon.repo = new Codicon("repo", { fontCharacter: "\\ea62" });
+  Codicon.repoDelete = new Codicon("repo-delete", { fontCharacter: "\\ea62" });
+  Codicon.gistFork = new Codicon("gist-fork", { fontCharacter: "\\ea63" });
+  Codicon.repoForked = new Codicon("repo-forked", { fontCharacter: "\\ea63" });
+  Codicon.gitPullRequest = new Codicon("git-pull-request", { fontCharacter: "\\ea64" });
+  Codicon.gitPullRequestAbandoned = new Codicon("git-pull-request-abandoned", { fontCharacter: "\\ea64" });
+  Codicon.recordKeys = new Codicon("record-keys", { fontCharacter: "\\ea65" });
+  Codicon.keyboard = new Codicon("keyboard", { fontCharacter: "\\ea65" });
+  Codicon.tag = new Codicon("tag", { fontCharacter: "\\ea66" });
+  Codicon.tagAdd = new Codicon("tag-add", { fontCharacter: "\\ea66" });
+  Codicon.tagRemove = new Codicon("tag-remove", { fontCharacter: "\\ea66" });
+  Codicon.person = new Codicon("person", { fontCharacter: "\\ea67" });
+  Codicon.personFollow = new Codicon("person-follow", { fontCharacter: "\\ea67" });
+  Codicon.personOutline = new Codicon("person-outline", { fontCharacter: "\\ea67" });
+  Codicon.personFilled = new Codicon("person-filled", { fontCharacter: "\\ea67" });
+  Codicon.gitBranch = new Codicon("git-branch", { fontCharacter: "\\ea68" });
+  Codicon.gitBranchCreate = new Codicon("git-branch-create", { fontCharacter: "\\ea68" });
+  Codicon.gitBranchDelete = new Codicon("git-branch-delete", { fontCharacter: "\\ea68" });
+  Codicon.sourceControl = new Codicon("source-control", { fontCharacter: "\\ea68" });
+  Codicon.mirror = new Codicon("mirror", { fontCharacter: "\\ea69" });
+  Codicon.mirrorPublic = new Codicon("mirror-public", { fontCharacter: "\\ea69" });
+  Codicon.star = new Codicon("star", { fontCharacter: "\\ea6a" });
+  Codicon.starAdd = new Codicon("star-add", { fontCharacter: "\\ea6a" });
+  Codicon.starDelete = new Codicon("star-delete", { fontCharacter: "\\ea6a" });
+  Codicon.starEmpty = new Codicon("star-empty", { fontCharacter: "\\ea6a" });
+  Codicon.comment = new Codicon("comment", { fontCharacter: "\\ea6b" });
+  Codicon.commentAdd = new Codicon("comment-add", { fontCharacter: "\\ea6b" });
+  Codicon.alert = new Codicon("alert", { fontCharacter: "\\ea6c" });
+  Codicon.warning = new Codicon("warning", { fontCharacter: "\\ea6c" });
+  Codicon.search = new Codicon("search", { fontCharacter: "\\ea6d" });
+  Codicon.searchSave = new Codicon("search-save", { fontCharacter: "\\ea6d" });
+  Codicon.logOut = new Codicon("log-out", { fontCharacter: "\\ea6e" });
+  Codicon.signOut = new Codicon("sign-out", { fontCharacter: "\\ea6e" });
+  Codicon.logIn = new Codicon("log-in", { fontCharacter: "\\ea6f" });
+  Codicon.signIn = new Codicon("sign-in", { fontCharacter: "\\ea6f" });
+  Codicon.eye = new Codicon("eye", { fontCharacter: "\\ea70" });
+  Codicon.eyeUnwatch = new Codicon("eye-unwatch", { fontCharacter: "\\ea70" });
+  Codicon.eyeWatch = new Codicon("eye-watch", { fontCharacter: "\\ea70" });
+  Codicon.circleFilled = new Codicon("circle-filled", { fontCharacter: "\\ea71" });
+  Codicon.primitiveDot = new Codicon("primitive-dot", { fontCharacter: "\\ea71" });
+  Codicon.closeDirty = new Codicon("close-dirty", { fontCharacter: "\\ea71" });
+  Codicon.debugBreakpoint = new Codicon("debug-breakpoint", { fontCharacter: "\\ea71" });
+  Codicon.debugBreakpointDisabled = new Codicon("debug-breakpoint-disabled", { fontCharacter: "\\ea71" });
+  Codicon.debugHint = new Codicon("debug-hint", { fontCharacter: "\\ea71" });
+  Codicon.primitiveSquare = new Codicon("primitive-square", { fontCharacter: "\\ea72" });
+  Codicon.edit = new Codicon("edit", { fontCharacter: "\\ea73" });
+  Codicon.pencil = new Codicon("pencil", { fontCharacter: "\\ea73" });
+  Codicon.info = new Codicon("info", { fontCharacter: "\\ea74" });
+  Codicon.issueOpened = new Codicon("issue-opened", { fontCharacter: "\\ea74" });
+  Codicon.gistPrivate = new Codicon("gist-private", { fontCharacter: "\\ea75" });
+  Codicon.gitForkPrivate = new Codicon("git-fork-private", { fontCharacter: "\\ea75" });
+  Codicon.lock = new Codicon("lock", { fontCharacter: "\\ea75" });
+  Codicon.mirrorPrivate = new Codicon("mirror-private", { fontCharacter: "\\ea75" });
+  Codicon.close = new Codicon("close", { fontCharacter: "\\ea76" });
+  Codicon.removeClose = new Codicon("remove-close", { fontCharacter: "\\ea76" });
+  Codicon.x = new Codicon("x", { fontCharacter: "\\ea76" });
+  Codicon.repoSync = new Codicon("repo-sync", { fontCharacter: "\\ea77" });
+  Codicon.sync = new Codicon("sync", { fontCharacter: "\\ea77" });
+  Codicon.clone = new Codicon("clone", { fontCharacter: "\\ea78" });
+  Codicon.desktopDownload = new Codicon("desktop-download", { fontCharacter: "\\ea78" });
+  Codicon.beaker = new Codicon("beaker", { fontCharacter: "\\ea79" });
+  Codicon.microscope = new Codicon("microscope", { fontCharacter: "\\ea79" });
+  Codicon.vm = new Codicon("vm", { fontCharacter: "\\ea7a" });
+  Codicon.deviceDesktop = new Codicon("device-desktop", { fontCharacter: "\\ea7a" });
+  Codicon.file = new Codicon("file", { fontCharacter: "\\ea7b" });
+  Codicon.fileText = new Codicon("file-text", { fontCharacter: "\\ea7b" });
+  Codicon.more = new Codicon("more", { fontCharacter: "\\ea7c" });
+  Codicon.ellipsis = new Codicon("ellipsis", { fontCharacter: "\\ea7c" });
+  Codicon.kebabHorizontal = new Codicon("kebab-horizontal", { fontCharacter: "\\ea7c" });
+  Codicon.mailReply = new Codicon("mail-reply", { fontCharacter: "\\ea7d" });
+  Codicon.reply = new Codicon("reply", { fontCharacter: "\\ea7d" });
+  Codicon.organization = new Codicon("organization", { fontCharacter: "\\ea7e" });
+  Codicon.organizationFilled = new Codicon("organization-filled", { fontCharacter: "\\ea7e" });
+  Codicon.organizationOutline = new Codicon("organization-outline", { fontCharacter: "\\ea7e" });
+  Codicon.newFile = new Codicon("new-file", { fontCharacter: "\\ea7f" });
+  Codicon.fileAdd = new Codicon("file-add", { fontCharacter: "\\ea7f" });
+  Codicon.newFolder = new Codicon("new-folder", { fontCharacter: "\\ea80" });
+  Codicon.fileDirectoryCreate = new Codicon("file-directory-create", { fontCharacter: "\\ea80" });
+  Codicon.trash = new Codicon("trash", { fontCharacter: "\\ea81" });
+  Codicon.trashcan = new Codicon("trashcan", { fontCharacter: "\\ea81" });
+  Codicon.history = new Codicon("history", { fontCharacter: "\\ea82" });
+  Codicon.clock = new Codicon("clock", { fontCharacter: "\\ea82" });
+  Codicon.folder = new Codicon("folder", { fontCharacter: "\\ea83" });
+  Codicon.fileDirectory = new Codicon("file-directory", { fontCharacter: "\\ea83" });
+  Codicon.symbolFolder = new Codicon("symbol-folder", { fontCharacter: "\\ea83" });
+  Codicon.logoGithub = new Codicon("logo-github", { fontCharacter: "\\ea84" });
+  Codicon.markGithub = new Codicon("mark-github", { fontCharacter: "\\ea84" });
+  Codicon.github = new Codicon("github", { fontCharacter: "\\ea84" });
+  Codicon.terminal = new Codicon("terminal", { fontCharacter: "\\ea85" });
+  Codicon.console = new Codicon("console", { fontCharacter: "\\ea85" });
+  Codicon.repl = new Codicon("repl", { fontCharacter: "\\ea85" });
+  Codicon.zap = new Codicon("zap", { fontCharacter: "\\ea86" });
+  Codicon.symbolEvent = new Codicon("symbol-event", { fontCharacter: "\\ea86" });
+  Codicon.error = new Codicon("error", { fontCharacter: "\\ea87" });
+  Codicon.stop = new Codicon("stop", { fontCharacter: "\\ea87" });
+  Codicon.variable = new Codicon("variable", { fontCharacter: "\\ea88" });
+  Codicon.symbolVariable = new Codicon("symbol-variable", { fontCharacter: "\\ea88" });
+  Codicon.array = new Codicon("array", { fontCharacter: "\\ea8a" });
+  Codicon.symbolArray = new Codicon("symbol-array", { fontCharacter: "\\ea8a" });
+  Codicon.symbolModule = new Codicon("symbol-module", { fontCharacter: "\\ea8b" });
+  Codicon.symbolPackage = new Codicon("symbol-package", { fontCharacter: "\\ea8b" });
+  Codicon.symbolNamespace = new Codicon("symbol-namespace", { fontCharacter: "\\ea8b" });
+  Codicon.symbolObject = new Codicon("symbol-object", { fontCharacter: "\\ea8b" });
+  Codicon.symbolMethod = new Codicon("symbol-method", { fontCharacter: "\\ea8c" });
+  Codicon.symbolFunction = new Codicon("symbol-function", { fontCharacter: "\\ea8c" });
+  Codicon.symbolConstructor = new Codicon("symbol-constructor", { fontCharacter: "\\ea8c" });
+  Codicon.symbolBoolean = new Codicon("symbol-boolean", { fontCharacter: "\\ea8f" });
+  Codicon.symbolNull = new Codicon("symbol-null", { fontCharacter: "\\ea8f" });
+  Codicon.symbolNumeric = new Codicon("symbol-numeric", { fontCharacter: "\\ea90" });
+  Codicon.symbolNumber = new Codicon("symbol-number", { fontCharacter: "\\ea90" });
+  Codicon.symbolStructure = new Codicon("symbol-structure", { fontCharacter: "\\ea91" });
+  Codicon.symbolStruct = new Codicon("symbol-struct", { fontCharacter: "\\ea91" });
+  Codicon.symbolParameter = new Codicon("symbol-parameter", { fontCharacter: "\\ea92" });
+  Codicon.symbolTypeParameter = new Codicon("symbol-type-parameter", { fontCharacter: "\\ea92" });
+  Codicon.symbolKey = new Codicon("symbol-key", { fontCharacter: "\\ea93" });
+  Codicon.symbolText = new Codicon("symbol-text", { fontCharacter: "\\ea93" });
+  Codicon.symbolReference = new Codicon("symbol-reference", { fontCharacter: "\\ea94" });
+  Codicon.goToFile = new Codicon("go-to-file", { fontCharacter: "\\ea94" });
+  Codicon.symbolEnum = new Codicon("symbol-enum", { fontCharacter: "\\ea95" });
+  Codicon.symbolValue = new Codicon("symbol-value", { fontCharacter: "\\ea95" });
+  Codicon.symbolRuler = new Codicon("symbol-ruler", { fontCharacter: "\\ea96" });
+  Codicon.symbolUnit = new Codicon("symbol-unit", { fontCharacter: "\\ea96" });
+  Codicon.activateBreakpoints = new Codicon("activate-breakpoints", { fontCharacter: "\\ea97" });
+  Codicon.archive = new Codicon("archive", { fontCharacter: "\\ea98" });
+  Codicon.arrowBoth = new Codicon("arrow-both", { fontCharacter: "\\ea99" });
+  Codicon.arrowDown = new Codicon("arrow-down", { fontCharacter: "\\ea9a" });
+  Codicon.arrowLeft = new Codicon("arrow-left", { fontCharacter: "\\ea9b" });
+  Codicon.arrowRight = new Codicon("arrow-right", { fontCharacter: "\\ea9c" });
+  Codicon.arrowSmallDown = new Codicon("arrow-small-down", { fontCharacter: "\\ea9d" });
+  Codicon.arrowSmallLeft = new Codicon("arrow-small-left", { fontCharacter: "\\ea9e" });
+  Codicon.arrowSmallRight = new Codicon("arrow-small-right", { fontCharacter: "\\ea9f" });
+  Codicon.arrowSmallUp = new Codicon("arrow-small-up", { fontCharacter: "\\eaa0" });
+  Codicon.arrowUp = new Codicon("arrow-up", { fontCharacter: "\\eaa1" });
+  Codicon.bell = new Codicon("bell", { fontCharacter: "\\eaa2" });
+  Codicon.bold = new Codicon("bold", { fontCharacter: "\\eaa3" });
+  Codicon.book = new Codicon("book", { fontCharacter: "\\eaa4" });
+  Codicon.bookmark = new Codicon("bookmark", { fontCharacter: "\\eaa5" });
+  Codicon.debugBreakpointConditionalUnverified = new Codicon("debug-breakpoint-conditional-unverified", { fontCharacter: "\\eaa6" });
+  Codicon.debugBreakpointConditional = new Codicon("debug-breakpoint-conditional", { fontCharacter: "\\eaa7" });
+  Codicon.debugBreakpointConditionalDisabled = new Codicon("debug-breakpoint-conditional-disabled", { fontCharacter: "\\eaa7" });
+  Codicon.debugBreakpointDataUnverified = new Codicon("debug-breakpoint-data-unverified", { fontCharacter: "\\eaa8" });
+  Codicon.debugBreakpointData = new Codicon("debug-breakpoint-data", { fontCharacter: "\\eaa9" });
+  Codicon.debugBreakpointDataDisabled = new Codicon("debug-breakpoint-data-disabled", { fontCharacter: "\\eaa9" });
+  Codicon.debugBreakpointLogUnverified = new Codicon("debug-breakpoint-log-unverified", { fontCharacter: "\\eaaa" });
+  Codicon.debugBreakpointLog = new Codicon("debug-breakpoint-log", { fontCharacter: "\\eaab" });
+  Codicon.debugBreakpointLogDisabled = new Codicon("debug-breakpoint-log-disabled", { fontCharacter: "\\eaab" });
+  Codicon.briefcase = new Codicon("briefcase", { fontCharacter: "\\eaac" });
+  Codicon.broadcast = new Codicon("broadcast", { fontCharacter: "\\eaad" });
+  Codicon.browser = new Codicon("browser", { fontCharacter: "\\eaae" });
+  Codicon.bug = new Codicon("bug", { fontCharacter: "\\eaaf" });
+  Codicon.calendar = new Codicon("calendar", { fontCharacter: "\\eab0" });
+  Codicon.caseSensitive = new Codicon("case-sensitive", { fontCharacter: "\\eab1" });
+  Codicon.check = new Codicon("check", { fontCharacter: "\\eab2" });
+  Codicon.checklist = new Codicon("checklist", { fontCharacter: "\\eab3" });
+  Codicon.chevronDown = new Codicon("chevron-down", { fontCharacter: "\\eab4" });
+  Codicon.dropDownButton = new Codicon("drop-down-button", Codicon.chevronDown.definition);
+  Codicon.chevronLeft = new Codicon("chevron-left", { fontCharacter: "\\eab5" });
+  Codicon.chevronRight = new Codicon("chevron-right", { fontCharacter: "\\eab6" });
+  Codicon.chevronUp = new Codicon("chevron-up", { fontCharacter: "\\eab7" });
+  Codicon.chromeClose = new Codicon("chrome-close", { fontCharacter: "\\eab8" });
+  Codicon.chromeMaximize = new Codicon("chrome-maximize", { fontCharacter: "\\eab9" });
+  Codicon.chromeMinimize = new Codicon("chrome-minimize", { fontCharacter: "\\eaba" });
+  Codicon.chromeRestore = new Codicon("chrome-restore", { fontCharacter: "\\eabb" });
+  Codicon.circleOutline = new Codicon("circle-outline", { fontCharacter: "\\eabc" });
+  Codicon.debugBreakpointUnverified = new Codicon("debug-breakpoint-unverified", { fontCharacter: "\\eabc" });
+  Codicon.circleSlash = new Codicon("circle-slash", { fontCharacter: "\\eabd" });
+  Codicon.circuitBoard = new Codicon("circuit-board", { fontCharacter: "\\eabe" });
+  Codicon.clearAll = new Codicon("clear-all", { fontCharacter: "\\eabf" });
+  Codicon.clippy = new Codicon("clippy", { fontCharacter: "\\eac0" });
+  Codicon.closeAll = new Codicon("close-all", { fontCharacter: "\\eac1" });
+  Codicon.cloudDownload = new Codicon("cloud-download", { fontCharacter: "\\eac2" });
+  Codicon.cloudUpload = new Codicon("cloud-upload", { fontCharacter: "\\eac3" });
+  Codicon.code = new Codicon("code", { fontCharacter: "\\eac4" });
+  Codicon.collapseAll = new Codicon("collapse-all", { fontCharacter: "\\eac5" });
+  Codicon.colorMode = new Codicon("color-mode", { fontCharacter: "\\eac6" });
+  Codicon.commentDiscussion = new Codicon("comment-discussion", { fontCharacter: "\\eac7" });
+  Codicon.compareChanges = new Codicon("compare-changes", { fontCharacter: "\\eafd" });
+  Codicon.creditCard = new Codicon("credit-card", { fontCharacter: "\\eac9" });
+  Codicon.dash = new Codicon("dash", { fontCharacter: "\\eacc" });
+  Codicon.dashboard = new Codicon("dashboard", { fontCharacter: "\\eacd" });
+  Codicon.database = new Codicon("database", { fontCharacter: "\\eace" });
+  Codicon.debugContinue = new Codicon("debug-continue", { fontCharacter: "\\eacf" });
+  Codicon.debugDisconnect = new Codicon("debug-disconnect", { fontCharacter: "\\ead0" });
+  Codicon.debugPause = new Codicon("debug-pause", { fontCharacter: "\\ead1" });
+  Codicon.debugRestart = new Codicon("debug-restart", { fontCharacter: "\\ead2" });
+  Codicon.debugStart = new Codicon("debug-start", { fontCharacter: "\\ead3" });
+  Codicon.debugStepInto = new Codicon("debug-step-into", { fontCharacter: "\\ead4" });
+  Codicon.debugStepOut = new Codicon("debug-step-out", { fontCharacter: "\\ead5" });
+  Codicon.debugStepOver = new Codicon("debug-step-over", { fontCharacter: "\\ead6" });
+  Codicon.debugStop = new Codicon("debug-stop", { fontCharacter: "\\ead7" });
+  Codicon.debug = new Codicon("debug", { fontCharacter: "\\ead8" });
+  Codicon.deviceCameraVideo = new Codicon("device-camera-video", { fontCharacter: "\\ead9" });
+  Codicon.deviceCamera = new Codicon("device-camera", { fontCharacter: "\\eada" });
+  Codicon.deviceMobile = new Codicon("device-mobile", { fontCharacter: "\\eadb" });
+  Codicon.diffAdded = new Codicon("diff-added", { fontCharacter: "\\eadc" });
+  Codicon.diffIgnored = new Codicon("diff-ignored", { fontCharacter: "\\eadd" });
+  Codicon.diffModified = new Codicon("diff-modified", { fontCharacter: "\\eade" });
+  Codicon.diffRemoved = new Codicon("diff-removed", { fontCharacter: "\\eadf" });
+  Codicon.diffRenamed = new Codicon("diff-renamed", { fontCharacter: "\\eae0" });
+  Codicon.diff = new Codicon("diff", { fontCharacter: "\\eae1" });
+  Codicon.discard = new Codicon("discard", { fontCharacter: "\\eae2" });
+  Codicon.editorLayout = new Codicon("editor-layout", { fontCharacter: "\\eae3" });
+  Codicon.emptyWindow = new Codicon("empty-window", { fontCharacter: "\\eae4" });
+  Codicon.exclude = new Codicon("exclude", { fontCharacter: "\\eae5" });
+  Codicon.extensions = new Codicon("extensions", { fontCharacter: "\\eae6" });
+  Codicon.eyeClosed = new Codicon("eye-closed", { fontCharacter: "\\eae7" });
+  Codicon.fileBinary = new Codicon("file-binary", { fontCharacter: "\\eae8" });
+  Codicon.fileCode = new Codicon("file-code", { fontCharacter: "\\eae9" });
+  Codicon.fileMedia = new Codicon("file-media", { fontCharacter: "\\eaea" });
+  Codicon.filePdf = new Codicon("file-pdf", { fontCharacter: "\\eaeb" });
+  Codicon.fileSubmodule = new Codicon("file-submodule", { fontCharacter: "\\eaec" });
+  Codicon.fileSymlinkDirectory = new Codicon("file-symlink-directory", { fontCharacter: "\\eaed" });
+  Codicon.fileSymlinkFile = new Codicon("file-symlink-file", { fontCharacter: "\\eaee" });
+  Codicon.fileZip = new Codicon("file-zip", { fontCharacter: "\\eaef" });
+  Codicon.files = new Codicon("files", { fontCharacter: "\\eaf0" });
+  Codicon.filter = new Codicon("filter", { fontCharacter: "\\eaf1" });
+  Codicon.flame = new Codicon("flame", { fontCharacter: "\\eaf2" });
+  Codicon.foldDown = new Codicon("fold-down", { fontCharacter: "\\eaf3" });
+  Codicon.foldUp = new Codicon("fold-up", { fontCharacter: "\\eaf4" });
+  Codicon.fold = new Codicon("fold", { fontCharacter: "\\eaf5" });
+  Codicon.folderActive = new Codicon("folder-active", { fontCharacter: "\\eaf6" });
+  Codicon.folderOpened = new Codicon("folder-opened", { fontCharacter: "\\eaf7" });
+  Codicon.gear = new Codicon("gear", { fontCharacter: "\\eaf8" });
+  Codicon.gift = new Codicon("gift", { fontCharacter: "\\eaf9" });
+  Codicon.gistSecret = new Codicon("gist-secret", { fontCharacter: "\\eafa" });
+  Codicon.gist = new Codicon("gist", { fontCharacter: "\\eafb" });
+  Codicon.gitCommit = new Codicon("git-commit", { fontCharacter: "\\eafc" });
+  Codicon.gitCompare = new Codicon("git-compare", { fontCharacter: "\\eafd" });
+  Codicon.gitMerge = new Codicon("git-merge", { fontCharacter: "\\eafe" });
+  Codicon.githubAction = new Codicon("github-action", { fontCharacter: "\\eaff" });
+  Codicon.githubAlt = new Codicon("github-alt", { fontCharacter: "\\eb00" });
+  Codicon.globe = new Codicon("globe", { fontCharacter: "\\eb01" });
+  Codicon.grabber = new Codicon("grabber", { fontCharacter: "\\eb02" });
+  Codicon.graph = new Codicon("graph", { fontCharacter: "\\eb03" });
+  Codicon.gripper = new Codicon("gripper", { fontCharacter: "\\eb04" });
+  Codicon.heart = new Codicon("heart", { fontCharacter: "\\eb05" });
+  Codicon.home = new Codicon("home", { fontCharacter: "\\eb06" });
+  Codicon.horizontalRule = new Codicon("horizontal-rule", { fontCharacter: "\\eb07" });
+  Codicon.hubot = new Codicon("hubot", { fontCharacter: "\\eb08" });
+  Codicon.inbox = new Codicon("inbox", { fontCharacter: "\\eb09" });
+  Codicon.issueClosed = new Codicon("issue-closed", { fontCharacter: "\\eba4" });
+  Codicon.issueReopened = new Codicon("issue-reopened", { fontCharacter: "\\eb0b" });
+  Codicon.issues = new Codicon("issues", { fontCharacter: "\\eb0c" });
+  Codicon.italic = new Codicon("italic", { fontCharacter: "\\eb0d" });
+  Codicon.jersey = new Codicon("jersey", { fontCharacter: "\\eb0e" });
+  Codicon.json = new Codicon("json", { fontCharacter: "\\eb0f" });
+  Codicon.kebabVertical = new Codicon("kebab-vertical", { fontCharacter: "\\eb10" });
+  Codicon.key = new Codicon("key", { fontCharacter: "\\eb11" });
+  Codicon.law = new Codicon("law", { fontCharacter: "\\eb12" });
+  Codicon.lightbulbAutofix = new Codicon("lightbulb-autofix", { fontCharacter: "\\eb13" });
+  Codicon.linkExternal = new Codicon("link-external", { fontCharacter: "\\eb14" });
+  Codicon.link = new Codicon("link", { fontCharacter: "\\eb15" });
+  Codicon.listOrdered = new Codicon("list-ordered", { fontCharacter: "\\eb16" });
+  Codicon.listUnordered = new Codicon("list-unordered", { fontCharacter: "\\eb17" });
+  Codicon.liveShare = new Codicon("live-share", { fontCharacter: "\\eb18" });
+  Codicon.loading = new Codicon("loading", { fontCharacter: "\\eb19" });
+  Codicon.location = new Codicon("location", { fontCharacter: "\\eb1a" });
+  Codicon.mailRead = new Codicon("mail-read", { fontCharacter: "\\eb1b" });
+  Codicon.mail = new Codicon("mail", { fontCharacter: "\\eb1c" });
+  Codicon.markdown = new Codicon("markdown", { fontCharacter: "\\eb1d" });
+  Codicon.megaphone = new Codicon("megaphone", { fontCharacter: "\\eb1e" });
+  Codicon.mention = new Codicon("mention", { fontCharacter: "\\eb1f" });
+  Codicon.milestone = new Codicon("milestone", { fontCharacter: "\\eb20" });
+  Codicon.mortarBoard = new Codicon("mortar-board", { fontCharacter: "\\eb21" });
+  Codicon.move = new Codicon("move", { fontCharacter: "\\eb22" });
+  Codicon.multipleWindows = new Codicon("multiple-windows", { fontCharacter: "\\eb23" });
+  Codicon.mute = new Codicon("mute", { fontCharacter: "\\eb24" });
+  Codicon.noNewline = new Codicon("no-newline", { fontCharacter: "\\eb25" });
+  Codicon.note = new Codicon("note", { fontCharacter: "\\eb26" });
+  Codicon.octoface = new Codicon("octoface", { fontCharacter: "\\eb27" });
+  Codicon.openPreview = new Codicon("open-preview", { fontCharacter: "\\eb28" });
+  Codicon.package_ = new Codicon("package", { fontCharacter: "\\eb29" });
+  Codicon.paintcan = new Codicon("paintcan", { fontCharacter: "\\eb2a" });
+  Codicon.pin = new Codicon("pin", { fontCharacter: "\\eb2b" });
+  Codicon.play = new Codicon("play", { fontCharacter: "\\eb2c" });
+  Codicon.run = new Codicon("run", { fontCharacter: "\\eb2c" });
+  Codicon.plug = new Codicon("plug", { fontCharacter: "\\eb2d" });
+  Codicon.preserveCase = new Codicon("preserve-case", { fontCharacter: "\\eb2e" });
+  Codicon.preview = new Codicon("preview", { fontCharacter: "\\eb2f" });
+  Codicon.project = new Codicon("project", { fontCharacter: "\\eb30" });
+  Codicon.pulse = new Codicon("pulse", { fontCharacter: "\\eb31" });
+  Codicon.question = new Codicon("question", { fontCharacter: "\\eb32" });
+  Codicon.quote = new Codicon("quote", { fontCharacter: "\\eb33" });
+  Codicon.radioTower = new Codicon("radio-tower", { fontCharacter: "\\eb34" });
+  Codicon.reactions = new Codicon("reactions", { fontCharacter: "\\eb35" });
+  Codicon.references = new Codicon("references", { fontCharacter: "\\eb36" });
+  Codicon.refresh = new Codicon("refresh", { fontCharacter: "\\eb37" });
+  Codicon.regex = new Codicon("regex", { fontCharacter: "\\eb38" });
+  Codicon.remoteExplorer = new Codicon("remote-explorer", { fontCharacter: "\\eb39" });
+  Codicon.remote = new Codicon("remote", { fontCharacter: "\\eb3a" });
+  Codicon.remove = new Codicon("remove", { fontCharacter: "\\eb3b" });
+  Codicon.replaceAll = new Codicon("replace-all", { fontCharacter: "\\eb3c" });
+  Codicon.replace = new Codicon("replace", { fontCharacter: "\\eb3d" });
+  Codicon.repoClone = new Codicon("repo-clone", { fontCharacter: "\\eb3e" });
+  Codicon.repoForcePush = new Codicon("repo-force-push", { fontCharacter: "\\eb3f" });
+  Codicon.repoPull = new Codicon("repo-pull", { fontCharacter: "\\eb40" });
+  Codicon.repoPush = new Codicon("repo-push", { fontCharacter: "\\eb41" });
+  Codicon.report = new Codicon("report", { fontCharacter: "\\eb42" });
+  Codicon.requestChanges = new Codicon("request-changes", { fontCharacter: "\\eb43" });
+  Codicon.rocket = new Codicon("rocket", { fontCharacter: "\\eb44" });
+  Codicon.rootFolderOpened = new Codicon("root-folder-opened", { fontCharacter: "\\eb45" });
+  Codicon.rootFolder = new Codicon("root-folder", { fontCharacter: "\\eb46" });
+  Codicon.rss = new Codicon("rss", { fontCharacter: "\\eb47" });
+  Codicon.ruby = new Codicon("ruby", { fontCharacter: "\\eb48" });
+  Codicon.saveAll = new Codicon("save-all", { fontCharacter: "\\eb49" });
+  Codicon.saveAs = new Codicon("save-as", { fontCharacter: "\\eb4a" });
+  Codicon.save = new Codicon("save", { fontCharacter: "\\eb4b" });
+  Codicon.screenFull = new Codicon("screen-full", { fontCharacter: "\\eb4c" });
+  Codicon.screenNormal = new Codicon("screen-normal", { fontCharacter: "\\eb4d" });
+  Codicon.searchStop = new Codicon("search-stop", { fontCharacter: "\\eb4e" });
+  Codicon.server = new Codicon("server", { fontCharacter: "\\eb50" });
+  Codicon.settingsGear = new Codicon("settings-gear", { fontCharacter: "\\eb51" });
+  Codicon.settings = new Codicon("settings", { fontCharacter: "\\eb52" });
+  Codicon.shield = new Codicon("shield", { fontCharacter: "\\eb53" });
+  Codicon.smiley = new Codicon("smiley", { fontCharacter: "\\eb54" });
+  Codicon.sortPrecedence = new Codicon("sort-precedence", { fontCharacter: "\\eb55" });
+  Codicon.splitHorizontal = new Codicon("split-horizontal", { fontCharacter: "\\eb56" });
+  Codicon.splitVertical = new Codicon("split-vertical", { fontCharacter: "\\eb57" });
+  Codicon.squirrel = new Codicon("squirrel", { fontCharacter: "\\eb58" });
+  Codicon.starFull = new Codicon("star-full", { fontCharacter: "\\eb59" });
+  Codicon.starHalf = new Codicon("star-half", { fontCharacter: "\\eb5a" });
+  Codicon.symbolClass = new Codicon("symbol-class", { fontCharacter: "\\eb5b" });
+  Codicon.symbolColor = new Codicon("symbol-color", { fontCharacter: "\\eb5c" });
+  Codicon.symbolCustomColor = new Codicon("symbol-customcolor", { fontCharacter: "\\eb5c" });
+  Codicon.symbolConstant = new Codicon("symbol-constant", { fontCharacter: "\\eb5d" });
+  Codicon.symbolEnumMember = new Codicon("symbol-enum-member", { fontCharacter: "\\eb5e" });
+  Codicon.symbolField = new Codicon("symbol-field", { fontCharacter: "\\eb5f" });
+  Codicon.symbolFile = new Codicon("symbol-file", { fontCharacter: "\\eb60" });
+  Codicon.symbolInterface = new Codicon("symbol-interface", { fontCharacter: "\\eb61" });
+  Codicon.symbolKeyword = new Codicon("symbol-keyword", { fontCharacter: "\\eb62" });
+  Codicon.symbolMisc = new Codicon("symbol-misc", { fontCharacter: "\\eb63" });
+  Codicon.symbolOperator = new Codicon("symbol-operator", { fontCharacter: "\\eb64" });
+  Codicon.symbolProperty = new Codicon("symbol-property", { fontCharacter: "\\eb65" });
+  Codicon.wrench = new Codicon("wrench", { fontCharacter: "\\eb65" });
+  Codicon.wrenchSubaction = new Codicon("wrench-subaction", { fontCharacter: "\\eb65" });
+  Codicon.symbolSnippet = new Codicon("symbol-snippet", { fontCharacter: "\\eb66" });
+  Codicon.tasklist = new Codicon("tasklist", { fontCharacter: "\\eb67" });
+  Codicon.telescope = new Codicon("telescope", { fontCharacter: "\\eb68" });
+  Codicon.textSize = new Codicon("text-size", { fontCharacter: "\\eb69" });
+  Codicon.threeBars = new Codicon("three-bars", { fontCharacter: "\\eb6a" });
+  Codicon.thumbsdown = new Codicon("thumbsdown", { fontCharacter: "\\eb6b" });
+  Codicon.thumbsup = new Codicon("thumbsup", { fontCharacter: "\\eb6c" });
+  Codicon.tools = new Codicon("tools", { fontCharacter: "\\eb6d" });
+  Codicon.triangleDown = new Codicon("triangle-down", { fontCharacter: "\\eb6e" });
+  Codicon.triangleLeft = new Codicon("triangle-left", { fontCharacter: "\\eb6f" });
+  Codicon.triangleRight = new Codicon("triangle-right", { fontCharacter: "\\eb70" });
+  Codicon.triangleUp = new Codicon("triangle-up", { fontCharacter: "\\eb71" });
+  Codicon.twitter = new Codicon("twitter", { fontCharacter: "\\eb72" });
+  Codicon.unfold = new Codicon("unfold", { fontCharacter: "\\eb73" });
+  Codicon.unlock = new Codicon("unlock", { fontCharacter: "\\eb74" });
+  Codicon.unmute = new Codicon("unmute", { fontCharacter: "\\eb75" });
+  Codicon.unverified = new Codicon("unverified", { fontCharacter: "\\eb76" });
+  Codicon.verified = new Codicon("verified", { fontCharacter: "\\eb77" });
+  Codicon.versions = new Codicon("versions", { fontCharacter: "\\eb78" });
+  Codicon.vmActive = new Codicon("vm-active", { fontCharacter: "\\eb79" });
+  Codicon.vmOutline = new Codicon("vm-outline", { fontCharacter: "\\eb7a" });
+  Codicon.vmRunning = new Codicon("vm-running", { fontCharacter: "\\eb7b" });
+  Codicon.watch = new Codicon("watch", { fontCharacter: "\\eb7c" });
+  Codicon.whitespace = new Codicon("whitespace", { fontCharacter: "\\eb7d" });
+  Codicon.wholeWord = new Codicon("whole-word", { fontCharacter: "\\eb7e" });
+  Codicon.window = new Codicon("window", { fontCharacter: "\\eb7f" });
+  Codicon.wordWrap = new Codicon("word-wrap", { fontCharacter: "\\eb80" });
+  Codicon.zoomIn = new Codicon("zoom-in", { fontCharacter: "\\eb81" });
+  Codicon.zoomOut = new Codicon("zoom-out", { fontCharacter: "\\eb82" });
+  Codicon.listFilter = new Codicon("list-filter", { fontCharacter: "\\eb83" });
+  Codicon.listFlat = new Codicon("list-flat", { fontCharacter: "\\eb84" });
+  Codicon.listSelection = new Codicon("list-selection", { fontCharacter: "\\eb85" });
+  Codicon.selection = new Codicon("selection", { fontCharacter: "\\eb85" });
+  Codicon.listTree = new Codicon("list-tree", { fontCharacter: "\\eb86" });
+  Codicon.debugBreakpointFunctionUnverified = new Codicon("debug-breakpoint-function-unverified", { fontCharacter: "\\eb87" });
+  Codicon.debugBreakpointFunction = new Codicon("debug-breakpoint-function", { fontCharacter: "\\eb88" });
+  Codicon.debugBreakpointFunctionDisabled = new Codicon("debug-breakpoint-function-disabled", { fontCharacter: "\\eb88" });
+  Codicon.debugStackframeActive = new Codicon("debug-stackframe-active", { fontCharacter: "\\eb89" });
+  Codicon.circleSmallFilled = new Codicon("circle-small-filled", { fontCharacter: "\\eb8a" });
+  Codicon.debugStackframeDot = new Codicon("debug-stackframe-dot", Codicon.circleSmallFilled.definition);
+  Codicon.debugStackframe = new Codicon("debug-stackframe", { fontCharacter: "\\eb8b" });
+  Codicon.debugStackframeFocused = new Codicon("debug-stackframe-focused", { fontCharacter: "\\eb8b" });
+  Codicon.debugBreakpointUnsupported = new Codicon("debug-breakpoint-unsupported", { fontCharacter: "\\eb8c" });
+  Codicon.symbolString = new Codicon("symbol-string", { fontCharacter: "\\eb8d" });
+  Codicon.debugReverseContinue = new Codicon("debug-reverse-continue", { fontCharacter: "\\eb8e" });
+  Codicon.debugStepBack = new Codicon("debug-step-back", { fontCharacter: "\\eb8f" });
+  Codicon.debugRestartFrame = new Codicon("debug-restart-frame", { fontCharacter: "\\eb90" });
+  Codicon.callIncoming = new Codicon("call-incoming", { fontCharacter: "\\eb92" });
+  Codicon.callOutgoing = new Codicon("call-outgoing", { fontCharacter: "\\eb93" });
+  Codicon.menu = new Codicon("menu", { fontCharacter: "\\eb94" });
+  Codicon.expandAll = new Codicon("expand-all", { fontCharacter: "\\eb95" });
+  Codicon.feedback = new Codicon("feedback", { fontCharacter: "\\eb96" });
+  Codicon.groupByRefType = new Codicon("group-by-ref-type", { fontCharacter: "\\eb97" });
+  Codicon.ungroupByRefType = new Codicon("ungroup-by-ref-type", { fontCharacter: "\\eb98" });
+  Codicon.account = new Codicon("account", { fontCharacter: "\\eb99" });
+  Codicon.bellDot = new Codicon("bell-dot", { fontCharacter: "\\eb9a" });
+  Codicon.debugConsole = new Codicon("debug-console", { fontCharacter: "\\eb9b" });
+  Codicon.library = new Codicon("library", { fontCharacter: "\\eb9c" });
+  Codicon.output = new Codicon("output", { fontCharacter: "\\eb9d" });
+  Codicon.runAll = new Codicon("run-all", { fontCharacter: "\\eb9e" });
+  Codicon.syncIgnored = new Codicon("sync-ignored", { fontCharacter: "\\eb9f" });
+  Codicon.pinned = new Codicon("pinned", { fontCharacter: "\\eba0" });
+  Codicon.githubInverted = new Codicon("github-inverted", { fontCharacter: "\\eba1" });
+  Codicon.debugAlt = new Codicon("debug-alt", { fontCharacter: "\\eb91" });
+  Codicon.serverProcess = new Codicon("server-process", { fontCharacter: "\\eba2" });
+  Codicon.serverEnvironment = new Codicon("server-environment", { fontCharacter: "\\eba3" });
+  Codicon.pass = new Codicon("pass", { fontCharacter: "\\eba4" });
+  Codicon.stopCircle = new Codicon("stop-circle", { fontCharacter: "\\eba5" });
+  Codicon.playCircle = new Codicon("play-circle", { fontCharacter: "\\eba6" });
+  Codicon.record = new Codicon("record", { fontCharacter: "\\eba7" });
+  Codicon.debugAltSmall = new Codicon("debug-alt-small", { fontCharacter: "\\eba8" });
+  Codicon.vmConnect = new Codicon("vm-connect", { fontCharacter: "\\eba9" });
+  Codicon.cloud = new Codicon("cloud", { fontCharacter: "\\ebaa" });
+  Codicon.merge = new Codicon("merge", { fontCharacter: "\\ebab" });
+  Codicon.exportIcon = new Codicon("export", { fontCharacter: "\\ebac" });
+  Codicon.graphLeft = new Codicon("graph-left", { fontCharacter: "\\ebad" });
+  Codicon.magnet = new Codicon("magnet", { fontCharacter: "\\ebae" });
+  Codicon.notebook = new Codicon("notebook", { fontCharacter: "\\ebaf" });
+  Codicon.redo = new Codicon("redo", { fontCharacter: "\\ebb0" });
+  Codicon.checkAll = new Codicon("check-all", { fontCharacter: "\\ebb1" });
+  Codicon.pinnedDirty = new Codicon("pinned-dirty", { fontCharacter: "\\ebb2" });
+  Codicon.passFilled = new Codicon("pass-filled", { fontCharacter: "\\ebb3" });
+  Codicon.circleLargeFilled = new Codicon("circle-large-filled", { fontCharacter: "\\ebb4" });
+  Codicon.circleLargeOutline = new Codicon("circle-large-outline", { fontCharacter: "\\ebb5" });
+  Codicon.combine = new Codicon("combine", { fontCharacter: "\\ebb6" });
+  Codicon.gather = new Codicon("gather", { fontCharacter: "\\ebb6" });
+  Codicon.table = new Codicon("table", { fontCharacter: "\\ebb7" });
+  Codicon.variableGroup = new Codicon("variable-group", { fontCharacter: "\\ebb8" });
+  Codicon.typeHierarchy = new Codicon("type-hierarchy", { fontCharacter: "\\ebb9" });
+  Codicon.typeHierarchySub = new Codicon("type-hierarchy-sub", { fontCharacter: "\\ebba" });
+  Codicon.typeHierarchySuper = new Codicon("type-hierarchy-super", { fontCharacter: "\\ebbb" });
+  Codicon.gitPullRequestCreate = new Codicon("git-pull-request-create", { fontCharacter: "\\ebbc" });
+  Codicon.runAbove = new Codicon("run-above", { fontCharacter: "\\ebbd" });
+  Codicon.runBelow = new Codicon("run-below", { fontCharacter: "\\ebbe" });
+  Codicon.notebookTemplate = new Codicon("notebook-template", { fontCharacter: "\\ebbf" });
+  Codicon.debugRerun = new Codicon("debug-rerun", { fontCharacter: "\\ebc0" });
+  Codicon.workspaceTrusted = new Codicon("workspace-trusted", { fontCharacter: "\\ebc1" });
+  Codicon.workspaceUntrusted = new Codicon("workspace-untrusted", { fontCharacter: "\\ebc2" });
+  Codicon.workspaceUnspecified = new Codicon("workspace-unspecified", { fontCharacter: "\\ebc3" });
+  Codicon.terminalCmd = new Codicon("terminal-cmd", { fontCharacter: "\\ebc4" });
+  Codicon.terminalDebian = new Codicon("terminal-debian", { fontCharacter: "\\ebc5" });
+  Codicon.terminalLinux = new Codicon("terminal-linux", { fontCharacter: "\\ebc6" });
+  Codicon.terminalPowershell = new Codicon("terminal-powershell", { fontCharacter: "\\ebc7" });
+  Codicon.terminalTmux = new Codicon("terminal-tmux", { fontCharacter: "\\ebc8" });
+  Codicon.terminalUbuntu = new Codicon("terminal-ubuntu", { fontCharacter: "\\ebc9" });
+  Codicon.terminalBash = new Codicon("terminal-bash", { fontCharacter: "\\ebca" });
+  Codicon.arrowSwap = new Codicon("arrow-swap", { fontCharacter: "\\ebcb" });
+  Codicon.copy = new Codicon("copy", { fontCharacter: "\\ebcc" });
+  Codicon.personAdd = new Codicon("person-add", { fontCharacter: "\\ebcd" });
+  Codicon.filterFilled = new Codicon("filter-filled", { fontCharacter: "\\ebce" });
+  Codicon.wand = new Codicon("wand", { fontCharacter: "\\ebcf" });
+  Codicon.debugLineByLine = new Codicon("debug-line-by-line", { fontCharacter: "\\ebd0" });
+  Codicon.inspect = new Codicon("inspect", { fontCharacter: "\\ebd1" });
+  Codicon.layers = new Codicon("layers", { fontCharacter: "\\ebd2" });
+  Codicon.layersDot = new Codicon("layers-dot", { fontCharacter: "\\ebd3" });
+  Codicon.layersActive = new Codicon("layers-active", { fontCharacter: "\\ebd4" });
+  Codicon.compass = new Codicon("compass", { fontCharacter: "\\ebd5" });
+  Codicon.compassDot = new Codicon("compass-dot", { fontCharacter: "\\ebd6" });
+  Codicon.compassActive = new Codicon("compass-active", { fontCharacter: "\\ebd7" });
+  Codicon.azure = new Codicon("azure", { fontCharacter: "\\ebd8" });
+  Codicon.issueDraft = new Codicon("issue-draft", { fontCharacter: "\\ebd9" });
+  Codicon.gitPullRequestClosed = new Codicon("git-pull-request-closed", { fontCharacter: "\\ebda" });
+  Codicon.gitPullRequestDraft = new Codicon("git-pull-request-draft", { fontCharacter: "\\ebdb" });
+  Codicon.debugAll = new Codicon("debug-all", { fontCharacter: "\\ebdc" });
+  Codicon.debugCoverage = new Codicon("debug-coverage", { fontCharacter: "\\ebdd" });
+  Codicon.runErrors = new Codicon("run-errors", { fontCharacter: "\\ebde" });
+  Codicon.folderLibrary = new Codicon("folder-library", { fontCharacter: "\\ebdf" });
+  Codicon.debugContinueSmall = new Codicon("debug-continue-small", { fontCharacter: "\\ebe0" });
+  Codicon.beakerStop = new Codicon("beaker-stop", { fontCharacter: "\\ebe1" });
+  Codicon.graphLine = new Codicon("graph-line", { fontCharacter: "\\ebe2" });
+  Codicon.graphScatter = new Codicon("graph-scatter", { fontCharacter: "\\ebe3" });
+  Codicon.pieChart = new Codicon("pie-chart", { fontCharacter: "\\ebe4" });
+  Codicon.bracket = new Codicon("bracket", Codicon.json.definition);
+  Codicon.bracketDot = new Codicon("bracket-dot", { fontCharacter: "\\ebe5" });
+  Codicon.bracketError = new Codicon("bracket-error", { fontCharacter: "\\ebe6" });
+  Codicon.lockSmall = new Codicon("lock-small", { fontCharacter: "\\ebe7" });
+  Codicon.azureDevops = new Codicon("azure-devops", { fontCharacter: "\\ebe8" });
+  Codicon.verifiedFilled = new Codicon("verified-filled", { fontCharacter: "\\ebe9" });
+  Codicon.newLine = new Codicon("newline", { fontCharacter: "\\ebea" });
+  Codicon.layout = new Codicon("layout", { fontCharacter: "\\ebeb" });
+  Codicon.layoutActivitybarLeft = new Codicon("layout-activitybar-left", { fontCharacter: "\\ebec" });
+  Codicon.layoutActivitybarRight = new Codicon("layout-activitybar-right", { fontCharacter: "\\ebed" });
+  Codicon.layoutPanelLeft = new Codicon("layout-panel-left", { fontCharacter: "\\ebee" });
+  Codicon.layoutPanelCenter = new Codicon("layout-panel-center", { fontCharacter: "\\ebef" });
+  Codicon.layoutPanelJustify = new Codicon("layout-panel-justify", { fontCharacter: "\\ebf0" });
+  Codicon.layoutPanelRight = new Codicon("layout-panel-right", { fontCharacter: "\\ebf1" });
+  Codicon.layoutPanel = new Codicon("layout-panel", { fontCharacter: "\\ebf2" });
+  Codicon.layoutSidebarLeft = new Codicon("layout-sidebar-left", { fontCharacter: "\\ebf3" });
+  Codicon.layoutSidebarRight = new Codicon("layout-sidebar-right", { fontCharacter: "\\ebf4" });
+  Codicon.layoutStatusbar = new Codicon("layout-statusbar", { fontCharacter: "\\ebf5" });
+  Codicon.layoutMenubar = new Codicon("layout-menubar", { fontCharacter: "\\ebf6" });
+  Codicon.layoutCentered = new Codicon("layout-centered", { fontCharacter: "\\ebf7" });
+  Codicon.layoutSidebarRightOff = new Codicon("layout-sidebar-right-off", { fontCharacter: "\\ec00" });
+  Codicon.layoutPanelOff = new Codicon("layout-panel-off", { fontCharacter: "\\ec01" });
+  Codicon.layoutSidebarLeftOff = new Codicon("layout-sidebar-left-off", { fontCharacter: "\\ec02" });
+  Codicon.target = new Codicon("target", { fontCharacter: "\\ebf8" });
+  Codicon.indent = new Codicon("indent", { fontCharacter: "\\ebf9" });
+  Codicon.recordSmall = new Codicon("record-small", { fontCharacter: "\\ebfa" });
+  Codicon.errorSmall = new Codicon("error-small", { fontCharacter: "\\ebfb" });
+  Codicon.arrowCircleDown = new Codicon("arrow-circle-down", { fontCharacter: "\\ebfc" });
+  Codicon.arrowCircleLeft = new Codicon("arrow-circle-left", { fontCharacter: "\\ebfd" });
+  Codicon.arrowCircleRight = new Codicon("arrow-circle-right", { fontCharacter: "\\ebfe" });
+  Codicon.arrowCircleUp = new Codicon("arrow-circle-up", { fontCharacter: "\\ebff" });
+  Codicon.heartFilled = new Codicon("heart-filled", { fontCharacter: "\\ec04" });
+  Codicon.map = new Codicon("map", { fontCharacter: "\\ec05" });
+  Codicon.mapFilled = new Codicon("map-filled", { fontCharacter: "\\ec06" });
+  Codicon.circleSmall = new Codicon("circle-small", { fontCharacter: "\\ec07" });
+  Codicon.bellSlash = new Codicon("bell-slash", { fontCharacter: "\\ec08" });
+  Codicon.bellSlashDot = new Codicon("bell-slash-dot", { fontCharacter: "\\ec09" });
+  Codicon.commentUnresolved = new Codicon("comment-unresolved", { fontCharacter: "\\ec0a" });
+  Codicon.gitPullRequestGoToChanges = new Codicon("git-pull-request-go-to-changes", { fontCharacter: "\\ec0b" });
+  Codicon.gitPullRequestNewChanges = new Codicon("git-pull-request-new-changes", { fontCharacter: "\\ec0c" });
+  Codicon.dialogError = new Codicon("dialog-error", Codicon.error.definition);
+  Codicon.dialogWarning = new Codicon("dialog-warning", Codicon.warning.definition);
+  Codicon.dialogInfo = new Codicon("dialog-info", Codicon.info.definition);
+  Codicon.dialogClose = new Codicon("dialog-close", Codicon.close.definition);
+  Codicon.treeItemExpanded = new Codicon("tree-item-expanded", Codicon.chevronDown.definition);
+  Codicon.treeFilterOnTypeOn = new Codicon("tree-filter-on-type-on", Codicon.listFilter.definition);
+  Codicon.treeFilterOnTypeOff = new Codicon("tree-filter-on-type-off", Codicon.listSelection.definition);
+  Codicon.treeFilterClear = new Codicon("tree-filter-clear", Codicon.close.definition);
+  Codicon.treeItemLoading = new Codicon("tree-item-loading", Codicon.loading.definition);
+  Codicon.menuSelection = new Codicon("menu-selection", Codicon.check.definition);
+  Codicon.menuSubmenu = new Codicon("menu-submenu", Codicon.chevronRight.definition);
+  Codicon.menuBarMore = new Codicon("menubar-more", Codicon.more.definition);
+  Codicon.scrollbarButtonLeft = new Codicon("scrollbar-button-left", Codicon.triangleLeft.definition);
+  Codicon.scrollbarButtonRight = new Codicon("scrollbar-button-right", Codicon.triangleRight.definition);
+  Codicon.scrollbarButtonUp = new Codicon("scrollbar-button-up", Codicon.triangleUp.definition);
+  Codicon.scrollbarButtonDown = new Codicon("scrollbar-button-down", Codicon.triangleDown.definition);
+  Codicon.toolBarMore = new Codicon("toolbar-more", Codicon.more.definition);
+  Codicon.quickInputBack = new Codicon("quick-input-back", Codicon.arrowLeft.definition);
+  var CSSIcon;
+  (function(CSSIcon2) {
+    CSSIcon2.iconNameSegment = "[A-Za-z0-9]+";
+    CSSIcon2.iconNameExpression = "[A-Za-z0-9-]+";
+    CSSIcon2.iconModifierExpression = "~[A-Za-z]+";
+    CSSIcon2.iconNameCharacter = "[A-Za-z0-9~-]";
+    const cssIconIdRegex = new RegExp(`^(${CSSIcon2.iconNameExpression})(${CSSIcon2.iconModifierExpression})?$`);
+    function asClassNameArray(icon) {
+      if (icon instanceof Codicon) {
+        return ["codicon", "codicon-" + icon.id];
+      }
+      const match = cssIconIdRegex.exec(icon.id);
+      if (!match) {
+        return asClassNameArray(Codicon.error);
+      }
+      const [, id, modifier] = match;
+      const classNames = ["codicon", "codicon-" + id];
+      if (modifier) {
+        classNames.push("codicon-modifier-" + modifier.substr(1));
+      }
+      return classNames;
+    }
+    CSSIcon2.asClassNameArray = asClassNameArray;
+    function asClassName(icon) {
+      return asClassNameArray(icon).join(" ");
+    }
+    CSSIcon2.asClassName = asClassName;
+    function asCSSSelector(icon) {
+      return "." + asClassNameArray(icon).join(".");
+    }
+    CSSIcon2.asCSSSelector = asCSSSelector;
+  })(CSSIcon || (CSSIcon = {}));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/tokenizationRegistry.js
+  var __awaiter = function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve2) {
+        resolve2(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve2, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve2(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var TokenizationRegistry = class {
+    constructor() {
+      this._map = /* @__PURE__ */ new Map();
+      this._factories = /* @__PURE__ */ new Map();
+      this._onDidChange = new Emitter();
+      this.onDidChange = this._onDidChange.event;
+      this._colorMap = null;
+    }
+    fire(languages) {
+      this._onDidChange.fire({
+        changedLanguages: languages,
+        changedColorMap: false
+      });
+    }
+    register(language, support) {
+      this._map.set(language, support);
+      this.fire([language]);
+      return toDisposable(() => {
+        if (this._map.get(language) !== support) {
+          return;
+        }
+        this._map.delete(language);
+        this.fire([language]);
+      });
+    }
+    registerFactory(languageId, factory) {
+      var _a3;
+      (_a3 = this._factories.get(languageId)) === null || _a3 === void 0 ? void 0 : _a3.dispose();
+      const myData = new TokenizationSupportFactoryData(this, languageId, factory);
+      this._factories.set(languageId, myData);
+      return toDisposable(() => {
+        const v = this._factories.get(languageId);
+        if (!v || v !== myData) {
+          return;
+        }
+        this._factories.delete(languageId);
+        v.dispose();
+      });
+    }
+    getOrCreate(languageId) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const tokenizationSupport = this.get(languageId);
+        if (tokenizationSupport) {
+          return tokenizationSupport;
+        }
+        const factory = this._factories.get(languageId);
+        if (!factory || factory.isResolved) {
+          return null;
+        }
+        yield factory.resolve();
+        return this.get(languageId);
+      });
+    }
+    get(language) {
+      return this._map.get(language) || null;
+    }
+    isResolved(languageId) {
+      const tokenizationSupport = this.get(languageId);
+      if (tokenizationSupport) {
+        return true;
+      }
+      const factory = this._factories.get(languageId);
+      if (!factory || factory.isResolved) {
+        return true;
+      }
+      return false;
+    }
+    setColorMap(colorMap) {
+      this._colorMap = colorMap;
+      this._onDidChange.fire({
+        changedLanguages: Array.from(this._map.keys()),
+        changedColorMap: true
+      });
+    }
+    getColorMap() {
+      return this._colorMap;
+    }
+    getDefaultBackground() {
+      if (this._colorMap && this._colorMap.length > 2) {
+        return this._colorMap[
+          2
+          /* ColorId.DefaultBackground */
+        ];
+      }
+      return null;
+    }
+  };
+  var TokenizationSupportFactoryData = class extends Disposable {
+    constructor(_registry, _languageId, _factory) {
+      super();
+      this._registry = _registry;
+      this._languageId = _languageId;
+      this._factory = _factory;
+      this._isDisposed = false;
+      this._resolvePromise = null;
+      this._isResolved = false;
+    }
+    get isResolved() {
+      return this._isResolved;
+    }
+    dispose() {
+      this._isDisposed = true;
+      super.dispose();
+    }
+    resolve() {
+      return __awaiter(this, void 0, void 0, function* () {
+        if (!this._resolvePromise) {
+          this._resolvePromise = this._create();
+        }
+        return this._resolvePromise;
+      });
+    }
+    _create() {
+      return __awaiter(this, void 0, void 0, function* () {
+        const value = yield Promise.resolve(this._factory.createTokenizationSupport());
+        this._isResolved = true;
+        if (value && !this._isDisposed) {
+          this._register(this._registry.register(this._languageId, value));
+        }
+      });
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/languages.js
+  var Token = class {
+    constructor(offset, type, language) {
+      this._tokenBrand = void 0;
+      this.offset = offset;
+      this.type = type;
+      this.language = language;
+    }
+    toString() {
+      return "(" + this.offset + ", " + this.type + ")";
+    }
+  };
+  var CompletionItemKinds;
+  (function(CompletionItemKinds2) {
+    const byKind = /* @__PURE__ */ new Map();
+    byKind.set(0, Codicon.symbolMethod);
+    byKind.set(1, Codicon.symbolFunction);
+    byKind.set(2, Codicon.symbolConstructor);
+    byKind.set(3, Codicon.symbolField);
+    byKind.set(4, Codicon.symbolVariable);
+    byKind.set(5, Codicon.symbolClass);
+    byKind.set(6, Codicon.symbolStruct);
+    byKind.set(7, Codicon.symbolInterface);
+    byKind.set(8, Codicon.symbolModule);
+    byKind.set(9, Codicon.symbolProperty);
+    byKind.set(10, Codicon.symbolEvent);
+    byKind.set(11, Codicon.symbolOperator);
+    byKind.set(12, Codicon.symbolUnit);
+    byKind.set(13, Codicon.symbolValue);
+    byKind.set(15, Codicon.symbolEnum);
+    byKind.set(14, Codicon.symbolConstant);
+    byKind.set(15, Codicon.symbolEnum);
+    byKind.set(16, Codicon.symbolEnumMember);
+    byKind.set(17, Codicon.symbolKeyword);
+    byKind.set(27, Codicon.symbolSnippet);
+    byKind.set(18, Codicon.symbolText);
+    byKind.set(19, Codicon.symbolColor);
+    byKind.set(20, Codicon.symbolFile);
+    byKind.set(21, Codicon.symbolReference);
+    byKind.set(22, Codicon.symbolCustomColor);
+    byKind.set(23, Codicon.symbolFolder);
+    byKind.set(24, Codicon.symbolTypeParameter);
+    byKind.set(25, Codicon.account);
+    byKind.set(26, Codicon.issues);
+    function toIcon(kind) {
+      let codicon = byKind.get(kind);
+      if (!codicon) {
+        console.info("No codicon found for CompletionItemKind " + kind);
+        codicon = Codicon.symbolProperty;
+      }
+      return codicon;
+    }
+    CompletionItemKinds2.toIcon = toIcon;
+    const data = /* @__PURE__ */ new Map();
+    data.set(
+      "method",
+      0
+      /* CompletionItemKind.Method */
+    );
+    data.set(
+      "function",
+      1
+      /* CompletionItemKind.Function */
+    );
+    data.set(
+      "constructor",
+      2
+      /* CompletionItemKind.Constructor */
+    );
+    data.set(
+      "field",
+      3
+      /* CompletionItemKind.Field */
+    );
+    data.set(
+      "variable",
+      4
+      /* CompletionItemKind.Variable */
+    );
+    data.set(
+      "class",
+      5
+      /* CompletionItemKind.Class */
+    );
+    data.set(
+      "struct",
+      6
+      /* CompletionItemKind.Struct */
+    );
+    data.set(
+      "interface",
+      7
+      /* CompletionItemKind.Interface */
+    );
+    data.set(
+      "module",
+      8
+      /* CompletionItemKind.Module */
+    );
+    data.set(
+      "property",
+      9
+      /* CompletionItemKind.Property */
+    );
+    data.set(
+      "event",
+      10
+      /* CompletionItemKind.Event */
+    );
+    data.set(
+      "operator",
+      11
+      /* CompletionItemKind.Operator */
+    );
+    data.set(
+      "unit",
+      12
+      /* CompletionItemKind.Unit */
+    );
+    data.set(
+      "value",
+      13
+      /* CompletionItemKind.Value */
+    );
+    data.set(
+      "constant",
+      14
+      /* CompletionItemKind.Constant */
+    );
+    data.set(
+      "enum",
+      15
+      /* CompletionItemKind.Enum */
+    );
+    data.set(
+      "enum-member",
+      16
+      /* CompletionItemKind.EnumMember */
+    );
+    data.set(
+      "enumMember",
+      16
+      /* CompletionItemKind.EnumMember */
+    );
+    data.set(
+      "keyword",
+      17
+      /* CompletionItemKind.Keyword */
+    );
+    data.set(
+      "snippet",
+      27
+      /* CompletionItemKind.Snippet */
+    );
+    data.set(
+      "text",
+      18
+      /* CompletionItemKind.Text */
+    );
+    data.set(
+      "color",
+      19
+      /* CompletionItemKind.Color */
+    );
+    data.set(
+      "file",
+      20
+      /* CompletionItemKind.File */
+    );
+    data.set(
+      "reference",
+      21
+      /* CompletionItemKind.Reference */
+    );
+    data.set(
+      "customcolor",
+      22
+      /* CompletionItemKind.Customcolor */
+    );
+    data.set(
+      "folder",
+      23
+      /* CompletionItemKind.Folder */
+    );
+    data.set(
+      "type-parameter",
+      24
+      /* CompletionItemKind.TypeParameter */
+    );
+    data.set(
+      "typeParameter",
+      24
+      /* CompletionItemKind.TypeParameter */
+    );
+    data.set(
+      "account",
+      25
+      /* CompletionItemKind.User */
+    );
+    data.set(
+      "issue",
+      26
+      /* CompletionItemKind.Issue */
+    );
+    function fromString(value, strict) {
+      let res = data.get(value);
+      if (typeof res === "undefined" && !strict) {
+        res = 9;
+      }
+      return res;
+    }
+    CompletionItemKinds2.fromString = fromString;
+  })(CompletionItemKinds || (CompletionItemKinds = {}));
+  var InlineCompletionTriggerKind;
+  (function(InlineCompletionTriggerKind3) {
+    InlineCompletionTriggerKind3[InlineCompletionTriggerKind3["Automatic"] = 0] = "Automatic";
+    InlineCompletionTriggerKind3[InlineCompletionTriggerKind3["Explicit"] = 1] = "Explicit";
+  })(InlineCompletionTriggerKind || (InlineCompletionTriggerKind = {}));
+  var SignatureHelpTriggerKind;
+  (function(SignatureHelpTriggerKind3) {
+    SignatureHelpTriggerKind3[SignatureHelpTriggerKind3["Invoke"] = 1] = "Invoke";
+    SignatureHelpTriggerKind3[SignatureHelpTriggerKind3["TriggerCharacter"] = 2] = "TriggerCharacter";
+    SignatureHelpTriggerKind3[SignatureHelpTriggerKind3["ContentChange"] = 3] = "ContentChange";
+  })(SignatureHelpTriggerKind || (SignatureHelpTriggerKind = {}));
+  var DocumentHighlightKind;
+  (function(DocumentHighlightKind3) {
+    DocumentHighlightKind3[DocumentHighlightKind3["Text"] = 0] = "Text";
+    DocumentHighlightKind3[DocumentHighlightKind3["Read"] = 1] = "Read";
+    DocumentHighlightKind3[DocumentHighlightKind3["Write"] = 2] = "Write";
+  })(DocumentHighlightKind || (DocumentHighlightKind = {}));
+  var SymbolKinds;
+  (function(SymbolKinds2) {
+    const byKind = /* @__PURE__ */ new Map();
+    byKind.set(0, Codicon.symbolFile);
+    byKind.set(1, Codicon.symbolModule);
+    byKind.set(2, Codicon.symbolNamespace);
+    byKind.set(3, Codicon.symbolPackage);
+    byKind.set(4, Codicon.symbolClass);
+    byKind.set(5, Codicon.symbolMethod);
+    byKind.set(6, Codicon.symbolProperty);
+    byKind.set(7, Codicon.symbolField);
+    byKind.set(8, Codicon.symbolConstructor);
+    byKind.set(9, Codicon.symbolEnum);
+    byKind.set(10, Codicon.symbolInterface);
+    byKind.set(11, Codicon.symbolFunction);
+    byKind.set(12, Codicon.symbolVariable);
+    byKind.set(13, Codicon.symbolConstant);
+    byKind.set(14, Codicon.symbolString);
+    byKind.set(15, Codicon.symbolNumber);
+    byKind.set(16, Codicon.symbolBoolean);
+    byKind.set(17, Codicon.symbolArray);
+    byKind.set(18, Codicon.symbolObject);
+    byKind.set(19, Codicon.symbolKey);
+    byKind.set(20, Codicon.symbolNull);
+    byKind.set(21, Codicon.symbolEnumMember);
+    byKind.set(22, Codicon.symbolStruct);
+    byKind.set(23, Codicon.symbolEvent);
+    byKind.set(24, Codicon.symbolOperator);
+    byKind.set(25, Codicon.symbolTypeParameter);
+    function toIcon(kind) {
+      let icon = byKind.get(kind);
+      if (!icon) {
+        console.info("No codicon found for SymbolKind " + kind);
+        icon = Codicon.symbolProperty;
+      }
+      return icon;
+    }
+    SymbolKinds2.toIcon = toIcon;
+  })(SymbolKinds || (SymbolKinds = {}));
+  var FoldingRangeKind = class {
+    /**
+     * Creates a new {@link FoldingRangeKind}.
+     *
+     * @param value of the kind.
+     */
+    constructor(value) {
+      this.value = value;
+    }
+  };
+  FoldingRangeKind.Comment = new FoldingRangeKind("comment");
+  FoldingRangeKind.Imports = new FoldingRangeKind("imports");
+  FoldingRangeKind.Region = new FoldingRangeKind("region");
+  var Command;
+  (function(Command2) {
+    function is(obj) {
+      if (!obj || typeof obj !== "object") {
+        return false;
+      }
+      return typeof obj.id === "string" && typeof obj.title === "string";
+    }
+    Command2.is = is;
+  })(Command || (Command = {}));
+  var InlayHintKind;
+  (function(InlayHintKind3) {
+    InlayHintKind3[InlayHintKind3["Type"] = 1] = "Type";
+    InlayHintKind3[InlayHintKind3["Parameter"] = 2] = "Parameter";
+  })(InlayHintKind || (InlayHintKind = {}));
+  var TokenizationRegistry2 = new TokenizationRegistry();
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/standalone/standaloneEnums.js
+  var AccessibilitySupport;
+  (function(AccessibilitySupport2) {
+    AccessibilitySupport2[AccessibilitySupport2["Unknown"] = 0] = "Unknown";
+    AccessibilitySupport2[AccessibilitySupport2["Disabled"] = 1] = "Disabled";
+    AccessibilitySupport2[AccessibilitySupport2["Enabled"] = 2] = "Enabled";
+  })(AccessibilitySupport || (AccessibilitySupport = {}));
+  var CodeActionTriggerType;
+  (function(CodeActionTriggerType2) {
+    CodeActionTriggerType2[CodeActionTriggerType2["Invoke"] = 1] = "Invoke";
+    CodeActionTriggerType2[CodeActionTriggerType2["Auto"] = 2] = "Auto";
+  })(CodeActionTriggerType || (CodeActionTriggerType = {}));
+  var CompletionItemInsertTextRule;
+  (function(CompletionItemInsertTextRule2) {
+    CompletionItemInsertTextRule2[CompletionItemInsertTextRule2["KeepWhitespace"] = 1] = "KeepWhitespace";
+    CompletionItemInsertTextRule2[CompletionItemInsertTextRule2["InsertAsSnippet"] = 4] = "InsertAsSnippet";
+  })(CompletionItemInsertTextRule || (CompletionItemInsertTextRule = {}));
+  var CompletionItemKind;
+  (function(CompletionItemKind2) {
+    CompletionItemKind2[CompletionItemKind2["Method"] = 0] = "Method";
+    CompletionItemKind2[CompletionItemKind2["Function"] = 1] = "Function";
+    CompletionItemKind2[CompletionItemKind2["Constructor"] = 2] = "Constructor";
+    CompletionItemKind2[CompletionItemKind2["Field"] = 3] = "Field";
+    CompletionItemKind2[CompletionItemKind2["Variable"] = 4] = "Variable";
+    CompletionItemKind2[CompletionItemKind2["Class"] = 5] = "Class";
+    CompletionItemKind2[CompletionItemKind2["Struct"] = 6] = "Struct";
+    CompletionItemKind2[CompletionItemKind2["Interface"] = 7] = "Interface";
+    CompletionItemKind2[CompletionItemKind2["Module"] = 8] = "Module";
+    CompletionItemKind2[CompletionItemKind2["Property"] = 9] = "Property";
+    CompletionItemKind2[CompletionItemKind2["Event"] = 10] = "Event";
+    CompletionItemKind2[CompletionItemKind2["Operator"] = 11] = "Operator";
+    CompletionItemKind2[CompletionItemKind2["Unit"] = 12] = "Unit";
+    CompletionItemKind2[CompletionItemKind2["Value"] = 13] = "Value";
+    CompletionItemKind2[CompletionItemKind2["Constant"] = 14] = "Constant";
+    CompletionItemKind2[CompletionItemKind2["Enum"] = 15] = "Enum";
+    CompletionItemKind2[CompletionItemKind2["EnumMember"] = 16] = "EnumMember";
+    CompletionItemKind2[CompletionItemKind2["Keyword"] = 17] = "Keyword";
+    CompletionItemKind2[CompletionItemKind2["Text"] = 18] = "Text";
+    CompletionItemKind2[CompletionItemKind2["Color"] = 19] = "Color";
+    CompletionItemKind2[CompletionItemKind2["File"] = 20] = "File";
+    CompletionItemKind2[CompletionItemKind2["Reference"] = 21] = "Reference";
+    CompletionItemKind2[CompletionItemKind2["Customcolor"] = 22] = "Customcolor";
+    CompletionItemKind2[CompletionItemKind2["Folder"] = 23] = "Folder";
+    CompletionItemKind2[CompletionItemKind2["TypeParameter"] = 24] = "TypeParameter";
+    CompletionItemKind2[CompletionItemKind2["User"] = 25] = "User";
+    CompletionItemKind2[CompletionItemKind2["Issue"] = 26] = "Issue";
+    CompletionItemKind2[CompletionItemKind2["Snippet"] = 27] = "Snippet";
+  })(CompletionItemKind || (CompletionItemKind = {}));
+  var CompletionItemTag;
+  (function(CompletionItemTag2) {
+    CompletionItemTag2[CompletionItemTag2["Deprecated"] = 1] = "Deprecated";
+  })(CompletionItemTag || (CompletionItemTag = {}));
+  var CompletionTriggerKind;
+  (function(CompletionTriggerKind2) {
+    CompletionTriggerKind2[CompletionTriggerKind2["Invoke"] = 0] = "Invoke";
+    CompletionTriggerKind2[CompletionTriggerKind2["TriggerCharacter"] = 1] = "TriggerCharacter";
+    CompletionTriggerKind2[CompletionTriggerKind2["TriggerForIncompleteCompletions"] = 2] = "TriggerForIncompleteCompletions";
+  })(CompletionTriggerKind || (CompletionTriggerKind = {}));
+  var ContentWidgetPositionPreference;
+  (function(ContentWidgetPositionPreference2) {
+    ContentWidgetPositionPreference2[ContentWidgetPositionPreference2["EXACT"] = 0] = "EXACT";
+    ContentWidgetPositionPreference2[ContentWidgetPositionPreference2["ABOVE"] = 1] = "ABOVE";
+    ContentWidgetPositionPreference2[ContentWidgetPositionPreference2["BELOW"] = 2] = "BELOW";
+  })(ContentWidgetPositionPreference || (ContentWidgetPositionPreference = {}));
+  var CursorChangeReason;
+  (function(CursorChangeReason2) {
+    CursorChangeReason2[CursorChangeReason2["NotSet"] = 0] = "NotSet";
+    CursorChangeReason2[CursorChangeReason2["ContentFlush"] = 1] = "ContentFlush";
+    CursorChangeReason2[CursorChangeReason2["RecoverFromMarkers"] = 2] = "RecoverFromMarkers";
+    CursorChangeReason2[CursorChangeReason2["Explicit"] = 3] = "Explicit";
+    CursorChangeReason2[CursorChangeReason2["Paste"] = 4] = "Paste";
+    CursorChangeReason2[CursorChangeReason2["Undo"] = 5] = "Undo";
+    CursorChangeReason2[CursorChangeReason2["Redo"] = 6] = "Redo";
+  })(CursorChangeReason || (CursorChangeReason = {}));
+  var DefaultEndOfLine;
+  (function(DefaultEndOfLine2) {
+    DefaultEndOfLine2[DefaultEndOfLine2["LF"] = 1] = "LF";
+    DefaultEndOfLine2[DefaultEndOfLine2["CRLF"] = 2] = "CRLF";
+  })(DefaultEndOfLine || (DefaultEndOfLine = {}));
+  var DocumentHighlightKind2;
+  (function(DocumentHighlightKind3) {
+    DocumentHighlightKind3[DocumentHighlightKind3["Text"] = 0] = "Text";
+    DocumentHighlightKind3[DocumentHighlightKind3["Read"] = 1] = "Read";
+    DocumentHighlightKind3[DocumentHighlightKind3["Write"] = 2] = "Write";
+  })(DocumentHighlightKind2 || (DocumentHighlightKind2 = {}));
+  var EditorAutoIndentStrategy;
+  (function(EditorAutoIndentStrategy2) {
+    EditorAutoIndentStrategy2[EditorAutoIndentStrategy2["None"] = 0] = "None";
+    EditorAutoIndentStrategy2[EditorAutoIndentStrategy2["Keep"] = 1] = "Keep";
+    EditorAutoIndentStrategy2[EditorAutoIndentStrategy2["Brackets"] = 2] = "Brackets";
+    EditorAutoIndentStrategy2[EditorAutoIndentStrategy2["Advanced"] = 3] = "Advanced";
+    EditorAutoIndentStrategy2[EditorAutoIndentStrategy2["Full"] = 4] = "Full";
+  })(EditorAutoIndentStrategy || (EditorAutoIndentStrategy = {}));
+  var EditorOption;
+  (function(EditorOption2) {
+    EditorOption2[EditorOption2["acceptSuggestionOnCommitCharacter"] = 0] = "acceptSuggestionOnCommitCharacter";
+    EditorOption2[EditorOption2["acceptSuggestionOnEnter"] = 1] = "acceptSuggestionOnEnter";
+    EditorOption2[EditorOption2["accessibilitySupport"] = 2] = "accessibilitySupport";
+    EditorOption2[EditorOption2["accessibilityPageSize"] = 3] = "accessibilityPageSize";
+    EditorOption2[EditorOption2["ariaLabel"] = 4] = "ariaLabel";
+    EditorOption2[EditorOption2["autoClosingBrackets"] = 5] = "autoClosingBrackets";
+    EditorOption2[EditorOption2["autoClosingDelete"] = 6] = "autoClosingDelete";
+    EditorOption2[EditorOption2["autoClosingOvertype"] = 7] = "autoClosingOvertype";
+    EditorOption2[EditorOption2["autoClosingQuotes"] = 8] = "autoClosingQuotes";
+    EditorOption2[EditorOption2["autoIndent"] = 9] = "autoIndent";
+    EditorOption2[EditorOption2["automaticLayout"] = 10] = "automaticLayout";
+    EditorOption2[EditorOption2["autoSurround"] = 11] = "autoSurround";
+    EditorOption2[EditorOption2["bracketPairColorization"] = 12] = "bracketPairColorization";
+    EditorOption2[EditorOption2["guides"] = 13] = "guides";
+    EditorOption2[EditorOption2["codeLens"] = 14] = "codeLens";
+    EditorOption2[EditorOption2["codeLensFontFamily"] = 15] = "codeLensFontFamily";
+    EditorOption2[EditorOption2["codeLensFontSize"] = 16] = "codeLensFontSize";
+    EditorOption2[EditorOption2["colorDecorators"] = 17] = "colorDecorators";
+    EditorOption2[EditorOption2["columnSelection"] = 18] = "columnSelection";
+    EditorOption2[EditorOption2["comments"] = 19] = "comments";
+    EditorOption2[EditorOption2["contextmenu"] = 20] = "contextmenu";
+    EditorOption2[EditorOption2["copyWithSyntaxHighlighting"] = 21] = "copyWithSyntaxHighlighting";
+    EditorOption2[EditorOption2["cursorBlinking"] = 22] = "cursorBlinking";
+    EditorOption2[EditorOption2["cursorSmoothCaretAnimation"] = 23] = "cursorSmoothCaretAnimation";
+    EditorOption2[EditorOption2["cursorStyle"] = 24] = "cursorStyle";
+    EditorOption2[EditorOption2["cursorSurroundingLines"] = 25] = "cursorSurroundingLines";
+    EditorOption2[EditorOption2["cursorSurroundingLinesStyle"] = 26] = "cursorSurroundingLinesStyle";
+    EditorOption2[EditorOption2["cursorWidth"] = 27] = "cursorWidth";
+    EditorOption2[EditorOption2["disableLayerHinting"] = 28] = "disableLayerHinting";
+    EditorOption2[EditorOption2["disableMonospaceOptimizations"] = 29] = "disableMonospaceOptimizations";
+    EditorOption2[EditorOption2["domReadOnly"] = 30] = "domReadOnly";
+    EditorOption2[EditorOption2["dragAndDrop"] = 31] = "dragAndDrop";
+    EditorOption2[EditorOption2["dropIntoEditor"] = 32] = "dropIntoEditor";
+    EditorOption2[EditorOption2["emptySelectionClipboard"] = 33] = "emptySelectionClipboard";
+    EditorOption2[EditorOption2["experimental"] = 34] = "experimental";
+    EditorOption2[EditorOption2["extraEditorClassName"] = 35] = "extraEditorClassName";
+    EditorOption2[EditorOption2["fastScrollSensitivity"] = 36] = "fastScrollSensitivity";
+    EditorOption2[EditorOption2["find"] = 37] = "find";
+    EditorOption2[EditorOption2["fixedOverflowWidgets"] = 38] = "fixedOverflowWidgets";
+    EditorOption2[EditorOption2["folding"] = 39] = "folding";
+    EditorOption2[EditorOption2["foldingStrategy"] = 40] = "foldingStrategy";
+    EditorOption2[EditorOption2["foldingHighlight"] = 41] = "foldingHighlight";
+    EditorOption2[EditorOption2["foldingImportsByDefault"] = 42] = "foldingImportsByDefault";
+    EditorOption2[EditorOption2["foldingMaximumRegions"] = 43] = "foldingMaximumRegions";
+    EditorOption2[EditorOption2["unfoldOnClickAfterEndOfLine"] = 44] = "unfoldOnClickAfterEndOfLine";
+    EditorOption2[EditorOption2["fontFamily"] = 45] = "fontFamily";
+    EditorOption2[EditorOption2["fontInfo"] = 46] = "fontInfo";
+    EditorOption2[EditorOption2["fontLigatures"] = 47] = "fontLigatures";
+    EditorOption2[EditorOption2["fontSize"] = 48] = "fontSize";
+    EditorOption2[EditorOption2["fontWeight"] = 49] = "fontWeight";
+    EditorOption2[EditorOption2["formatOnPaste"] = 50] = "formatOnPaste";
+    EditorOption2[EditorOption2["formatOnType"] = 51] = "formatOnType";
+    EditorOption2[EditorOption2["glyphMargin"] = 52] = "glyphMargin";
+    EditorOption2[EditorOption2["gotoLocation"] = 53] = "gotoLocation";
+    EditorOption2[EditorOption2["hideCursorInOverviewRuler"] = 54] = "hideCursorInOverviewRuler";
+    EditorOption2[EditorOption2["hover"] = 55] = "hover";
+    EditorOption2[EditorOption2["inDiffEditor"] = 56] = "inDiffEditor";
+    EditorOption2[EditorOption2["inlineSuggest"] = 57] = "inlineSuggest";
+    EditorOption2[EditorOption2["letterSpacing"] = 58] = "letterSpacing";
+    EditorOption2[EditorOption2["lightbulb"] = 59] = "lightbulb";
+    EditorOption2[EditorOption2["lineDecorationsWidth"] = 60] = "lineDecorationsWidth";
+    EditorOption2[EditorOption2["lineHeight"] = 61] = "lineHeight";
+    EditorOption2[EditorOption2["lineNumbers"] = 62] = "lineNumbers";
+    EditorOption2[EditorOption2["lineNumbersMinChars"] = 63] = "lineNumbersMinChars";
+    EditorOption2[EditorOption2["linkedEditing"] = 64] = "linkedEditing";
+    EditorOption2[EditorOption2["links"] = 65] = "links";
+    EditorOption2[EditorOption2["matchBrackets"] = 66] = "matchBrackets";
+    EditorOption2[EditorOption2["minimap"] = 67] = "minimap";
+    EditorOption2[EditorOption2["mouseStyle"] = 68] = "mouseStyle";
+    EditorOption2[EditorOption2["mouseWheelScrollSensitivity"] = 69] = "mouseWheelScrollSensitivity";
+    EditorOption2[EditorOption2["mouseWheelZoom"] = 70] = "mouseWheelZoom";
+    EditorOption2[EditorOption2["multiCursorMergeOverlapping"] = 71] = "multiCursorMergeOverlapping";
+    EditorOption2[EditorOption2["multiCursorModifier"] = 72] = "multiCursorModifier";
+    EditorOption2[EditorOption2["multiCursorPaste"] = 73] = "multiCursorPaste";
+    EditorOption2[EditorOption2["occurrencesHighlight"] = 74] = "occurrencesHighlight";
+    EditorOption2[EditorOption2["overviewRulerBorder"] = 75] = "overviewRulerBorder";
+    EditorOption2[EditorOption2["overviewRulerLanes"] = 76] = "overviewRulerLanes";
+    EditorOption2[EditorOption2["padding"] = 77] = "padding";
+    EditorOption2[EditorOption2["parameterHints"] = 78] = "parameterHints";
+    EditorOption2[EditorOption2["peekWidgetDefaultFocus"] = 79] = "peekWidgetDefaultFocus";
+    EditorOption2[EditorOption2["definitionLinkOpensInPeek"] = 80] = "definitionLinkOpensInPeek";
+    EditorOption2[EditorOption2["quickSuggestions"] = 81] = "quickSuggestions";
+    EditorOption2[EditorOption2["quickSuggestionsDelay"] = 82] = "quickSuggestionsDelay";
+    EditorOption2[EditorOption2["readOnly"] = 83] = "readOnly";
+    EditorOption2[EditorOption2["renameOnType"] = 84] = "renameOnType";
+    EditorOption2[EditorOption2["renderControlCharacters"] = 85] = "renderControlCharacters";
+    EditorOption2[EditorOption2["renderFinalNewline"] = 86] = "renderFinalNewline";
+    EditorOption2[EditorOption2["renderLineHighlight"] = 87] = "renderLineHighlight";
+    EditorOption2[EditorOption2["renderLineHighlightOnlyWhenFocus"] = 88] = "renderLineHighlightOnlyWhenFocus";
+    EditorOption2[EditorOption2["renderValidationDecorations"] = 89] = "renderValidationDecorations";
+    EditorOption2[EditorOption2["renderWhitespace"] = 90] = "renderWhitespace";
+    EditorOption2[EditorOption2["revealHorizontalRightPadding"] = 91] = "revealHorizontalRightPadding";
+    EditorOption2[EditorOption2["roundedSelection"] = 92] = "roundedSelection";
+    EditorOption2[EditorOption2["rulers"] = 93] = "rulers";
+    EditorOption2[EditorOption2["scrollbar"] = 94] = "scrollbar";
+    EditorOption2[EditorOption2["scrollBeyondLastColumn"] = 95] = "scrollBeyondLastColumn";
+    EditorOption2[EditorOption2["scrollBeyondLastLine"] = 96] = "scrollBeyondLastLine";
+    EditorOption2[EditorOption2["scrollPredominantAxis"] = 97] = "scrollPredominantAxis";
+    EditorOption2[EditorOption2["selectionClipboard"] = 98] = "selectionClipboard";
+    EditorOption2[EditorOption2["selectionHighlight"] = 99] = "selectionHighlight";
+    EditorOption2[EditorOption2["selectOnLineNumbers"] = 100] = "selectOnLineNumbers";
+    EditorOption2[EditorOption2["showFoldingControls"] = 101] = "showFoldingControls";
+    EditorOption2[EditorOption2["showUnused"] = 102] = "showUnused";
+    EditorOption2[EditorOption2["snippetSuggestions"] = 103] = "snippetSuggestions";
+    EditorOption2[EditorOption2["smartSelect"] = 104] = "smartSelect";
+    EditorOption2[EditorOption2["smoothScrolling"] = 105] = "smoothScrolling";
+    EditorOption2[EditorOption2["stickyTabStops"] = 106] = "stickyTabStops";
+    EditorOption2[EditorOption2["stopRenderingLineAfter"] = 107] = "stopRenderingLineAfter";
+    EditorOption2[EditorOption2["suggest"] = 108] = "suggest";
+    EditorOption2[EditorOption2["suggestFontSize"] = 109] = "suggestFontSize";
+    EditorOption2[EditorOption2["suggestLineHeight"] = 110] = "suggestLineHeight";
+    EditorOption2[EditorOption2["suggestOnTriggerCharacters"] = 111] = "suggestOnTriggerCharacters";
+    EditorOption2[EditorOption2["suggestSelection"] = 112] = "suggestSelection";
+    EditorOption2[EditorOption2["tabCompletion"] = 113] = "tabCompletion";
+    EditorOption2[EditorOption2["tabIndex"] = 114] = "tabIndex";
+    EditorOption2[EditorOption2["unicodeHighlighting"] = 115] = "unicodeHighlighting";
+    EditorOption2[EditorOption2["unusualLineTerminators"] = 116] = "unusualLineTerminators";
+    EditorOption2[EditorOption2["useShadowDOM"] = 117] = "useShadowDOM";
+    EditorOption2[EditorOption2["useTabStops"] = 118] = "useTabStops";
+    EditorOption2[EditorOption2["wordSeparators"] = 119] = "wordSeparators";
+    EditorOption2[EditorOption2["wordWrap"] = 120] = "wordWrap";
+    EditorOption2[EditorOption2["wordWrapBreakAfterCharacters"] = 121] = "wordWrapBreakAfterCharacters";
+    EditorOption2[EditorOption2["wordWrapBreakBeforeCharacters"] = 122] = "wordWrapBreakBeforeCharacters";
+    EditorOption2[EditorOption2["wordWrapColumn"] = 123] = "wordWrapColumn";
+    EditorOption2[EditorOption2["wordWrapOverride1"] = 124] = "wordWrapOverride1";
+    EditorOption2[EditorOption2["wordWrapOverride2"] = 125] = "wordWrapOverride2";
+    EditorOption2[EditorOption2["wrappingIndent"] = 126] = "wrappingIndent";
+    EditorOption2[EditorOption2["wrappingStrategy"] = 127] = "wrappingStrategy";
+    EditorOption2[EditorOption2["showDeprecated"] = 128] = "showDeprecated";
+    EditorOption2[EditorOption2["inlayHints"] = 129] = "inlayHints";
+    EditorOption2[EditorOption2["editorClassName"] = 130] = "editorClassName";
+    EditorOption2[EditorOption2["pixelRatio"] = 131] = "pixelRatio";
+    EditorOption2[EditorOption2["tabFocusMode"] = 132] = "tabFocusMode";
+    EditorOption2[EditorOption2["layoutInfo"] = 133] = "layoutInfo";
+    EditorOption2[EditorOption2["wrappingInfo"] = 134] = "wrappingInfo";
+  })(EditorOption || (EditorOption = {}));
+  var EndOfLinePreference;
+  (function(EndOfLinePreference2) {
+    EndOfLinePreference2[EndOfLinePreference2["TextDefined"] = 0] = "TextDefined";
+    EndOfLinePreference2[EndOfLinePreference2["LF"] = 1] = "LF";
+    EndOfLinePreference2[EndOfLinePreference2["CRLF"] = 2] = "CRLF";
+  })(EndOfLinePreference || (EndOfLinePreference = {}));
+  var EndOfLineSequence;
+  (function(EndOfLineSequence2) {
+    EndOfLineSequence2[EndOfLineSequence2["LF"] = 0] = "LF";
+    EndOfLineSequence2[EndOfLineSequence2["CRLF"] = 1] = "CRLF";
+  })(EndOfLineSequence || (EndOfLineSequence = {}));
+  var IndentAction;
+  (function(IndentAction2) {
+    IndentAction2[IndentAction2["None"] = 0] = "None";
+    IndentAction2[IndentAction2["Indent"] = 1] = "Indent";
+    IndentAction2[IndentAction2["IndentOutdent"] = 2] = "IndentOutdent";
+    IndentAction2[IndentAction2["Outdent"] = 3] = "Outdent";
+  })(IndentAction || (IndentAction = {}));
+  var InjectedTextCursorStops;
+  (function(InjectedTextCursorStops3) {
+    InjectedTextCursorStops3[InjectedTextCursorStops3["Both"] = 0] = "Both";
+    InjectedTextCursorStops3[InjectedTextCursorStops3["Right"] = 1] = "Right";
+    InjectedTextCursorStops3[InjectedTextCursorStops3["Left"] = 2] = "Left";
+    InjectedTextCursorStops3[InjectedTextCursorStops3["None"] = 3] = "None";
+  })(InjectedTextCursorStops || (InjectedTextCursorStops = {}));
+  var InlayHintKind2;
+  (function(InlayHintKind3) {
+    InlayHintKind3[InlayHintKind3["Type"] = 1] = "Type";
+    InlayHintKind3[InlayHintKind3["Parameter"] = 2] = "Parameter";
+  })(InlayHintKind2 || (InlayHintKind2 = {}));
+  var InlineCompletionTriggerKind2;
+  (function(InlineCompletionTriggerKind3) {
+    InlineCompletionTriggerKind3[InlineCompletionTriggerKind3["Automatic"] = 0] = "Automatic";
+    InlineCompletionTriggerKind3[InlineCompletionTriggerKind3["Explicit"] = 1] = "Explicit";
+  })(InlineCompletionTriggerKind2 || (InlineCompletionTriggerKind2 = {}));
+  var KeyCode;
+  (function(KeyCode2) {
+    KeyCode2[KeyCode2["DependsOnKbLayout"] = -1] = "DependsOnKbLayout";
+    KeyCode2[KeyCode2["Unknown"] = 0] = "Unknown";
+    KeyCode2[KeyCode2["Backspace"] = 1] = "Backspace";
+    KeyCode2[KeyCode2["Tab"] = 2] = "Tab";
+    KeyCode2[KeyCode2["Enter"] = 3] = "Enter";
+    KeyCode2[KeyCode2["Shift"] = 4] = "Shift";
+    KeyCode2[KeyCode2["Ctrl"] = 5] = "Ctrl";
+    KeyCode2[KeyCode2["Alt"] = 6] = "Alt";
+    KeyCode2[KeyCode2["PauseBreak"] = 7] = "PauseBreak";
+    KeyCode2[KeyCode2["CapsLock"] = 8] = "CapsLock";
+    KeyCode2[KeyCode2["Escape"] = 9] = "Escape";
+    KeyCode2[KeyCode2["Space"] = 10] = "Space";
+    KeyCode2[KeyCode2["PageUp"] = 11] = "PageUp";
+    KeyCode2[KeyCode2["PageDown"] = 12] = "PageDown";
+    KeyCode2[KeyCode2["End"] = 13] = "End";
+    KeyCode2[KeyCode2["Home"] = 14] = "Home";
+    KeyCode2[KeyCode2["LeftArrow"] = 15] = "LeftArrow";
+    KeyCode2[KeyCode2["UpArrow"] = 16] = "UpArrow";
+    KeyCode2[KeyCode2["RightArrow"] = 17] = "RightArrow";
+    KeyCode2[KeyCode2["DownArrow"] = 18] = "DownArrow";
+    KeyCode2[KeyCode2["Insert"] = 19] = "Insert";
+    KeyCode2[KeyCode2["Delete"] = 20] = "Delete";
+    KeyCode2[KeyCode2["Digit0"] = 21] = "Digit0";
+    KeyCode2[KeyCode2["Digit1"] = 22] = "Digit1";
+    KeyCode2[KeyCode2["Digit2"] = 23] = "Digit2";
+    KeyCode2[KeyCode2["Digit3"] = 24] = "Digit3";
+    KeyCode2[KeyCode2["Digit4"] = 25] = "Digit4";
+    KeyCode2[KeyCode2["Digit5"] = 26] = "Digit5";
+    KeyCode2[KeyCode2["Digit6"] = 27] = "Digit6";
+    KeyCode2[KeyCode2["Digit7"] = 28] = "Digit7";
+    KeyCode2[KeyCode2["Digit8"] = 29] = "Digit8";
+    KeyCode2[KeyCode2["Digit9"] = 30] = "Digit9";
+    KeyCode2[KeyCode2["KeyA"] = 31] = "KeyA";
+    KeyCode2[KeyCode2["KeyB"] = 32] = "KeyB";
+    KeyCode2[KeyCode2["KeyC"] = 33] = "KeyC";
+    KeyCode2[KeyCode2["KeyD"] = 34] = "KeyD";
+    KeyCode2[KeyCode2["KeyE"] = 35] = "KeyE";
+    KeyCode2[KeyCode2["KeyF"] = 36] = "KeyF";
+    KeyCode2[KeyCode2["KeyG"] = 37] = "KeyG";
+    KeyCode2[KeyCode2["KeyH"] = 38] = "KeyH";
+    KeyCode2[KeyCode2["KeyI"] = 39] = "KeyI";
+    KeyCode2[KeyCode2["KeyJ"] = 40] = "KeyJ";
+    KeyCode2[KeyCode2["KeyK"] = 41] = "KeyK";
+    KeyCode2[KeyCode2["KeyL"] = 42] = "KeyL";
+    KeyCode2[KeyCode2["KeyM"] = 43] = "KeyM";
+    KeyCode2[KeyCode2["KeyN"] = 44] = "KeyN";
+    KeyCode2[KeyCode2["KeyO"] = 45] = "KeyO";
+    KeyCode2[KeyCode2["KeyP"] = 46] = "KeyP";
+    KeyCode2[KeyCode2["KeyQ"] = 47] = "KeyQ";
+    KeyCode2[KeyCode2["KeyR"] = 48] = "KeyR";
+    KeyCode2[KeyCode2["KeyS"] = 49] = "KeyS";
+    KeyCode2[KeyCode2["KeyT"] = 50] = "KeyT";
+    KeyCode2[KeyCode2["KeyU"] = 51] = "KeyU";
+    KeyCode2[KeyCode2["KeyV"] = 52] = "KeyV";
+    KeyCode2[KeyCode2["KeyW"] = 53] = "KeyW";
+    KeyCode2[KeyCode2["KeyX"] = 54] = "KeyX";
+    KeyCode2[KeyCode2["KeyY"] = 55] = "KeyY";
+    KeyCode2[KeyCode2["KeyZ"] = 56] = "KeyZ";
+    KeyCode2[KeyCode2["Meta"] = 57] = "Meta";
+    KeyCode2[KeyCode2["ContextMenu"] = 58] = "ContextMenu";
+    KeyCode2[KeyCode2["F1"] = 59] = "F1";
+    KeyCode2[KeyCode2["F2"] = 60] = "F2";
+    KeyCode2[KeyCode2["F3"] = 61] = "F3";
+    KeyCode2[KeyCode2["F4"] = 62] = "F4";
+    KeyCode2[KeyCode2["F5"] = 63] = "F5";
+    KeyCode2[KeyCode2["F6"] = 64] = "F6";
+    KeyCode2[KeyCode2["F7"] = 65] = "F7";
+    KeyCode2[KeyCode2["F8"] = 66] = "F8";
+    KeyCode2[KeyCode2["F9"] = 67] = "F9";
+    KeyCode2[KeyCode2["F10"] = 68] = "F10";
+    KeyCode2[KeyCode2["F11"] = 69] = "F11";
+    KeyCode2[KeyCode2["F12"] = 70] = "F12";
+    KeyCode2[KeyCode2["F13"] = 71] = "F13";
+    KeyCode2[KeyCode2["F14"] = 72] = "F14";
+    KeyCode2[KeyCode2["F15"] = 73] = "F15";
+    KeyCode2[KeyCode2["F16"] = 74] = "F16";
+    KeyCode2[KeyCode2["F17"] = 75] = "F17";
+    KeyCode2[KeyCode2["F18"] = 76] = "F18";
+    KeyCode2[KeyCode2["F19"] = 77] = "F19";
+    KeyCode2[KeyCode2["NumLock"] = 78] = "NumLock";
+    KeyCode2[KeyCode2["ScrollLock"] = 79] = "ScrollLock";
+    KeyCode2[KeyCode2["Semicolon"] = 80] = "Semicolon";
+    KeyCode2[KeyCode2["Equal"] = 81] = "Equal";
+    KeyCode2[KeyCode2["Comma"] = 82] = "Comma";
+    KeyCode2[KeyCode2["Minus"] = 83] = "Minus";
+    KeyCode2[KeyCode2["Period"] = 84] = "Period";
+    KeyCode2[KeyCode2["Slash"] = 85] = "Slash";
+    KeyCode2[KeyCode2["Backquote"] = 86] = "Backquote";
+    KeyCode2[KeyCode2["BracketLeft"] = 87] = "BracketLeft";
+    KeyCode2[KeyCode2["Backslash"] = 88] = "Backslash";
+    KeyCode2[KeyCode2["BracketRight"] = 89] = "BracketRight";
+    KeyCode2[KeyCode2["Quote"] = 90] = "Quote";
+    KeyCode2[KeyCode2["OEM_8"] = 91] = "OEM_8";
+    KeyCode2[KeyCode2["IntlBackslash"] = 92] = "IntlBackslash";
+    KeyCode2[KeyCode2["Numpad0"] = 93] = "Numpad0";
+    KeyCode2[KeyCode2["Numpad1"] = 94] = "Numpad1";
+    KeyCode2[KeyCode2["Numpad2"] = 95] = "Numpad2";
+    KeyCode2[KeyCode2["Numpad3"] = 96] = "Numpad3";
+    KeyCode2[KeyCode2["Numpad4"] = 97] = "Numpad4";
+    KeyCode2[KeyCode2["Numpad5"] = 98] = "Numpad5";
+    KeyCode2[KeyCode2["Numpad6"] = 99] = "Numpad6";
+    KeyCode2[KeyCode2["Numpad7"] = 100] = "Numpad7";
+    KeyCode2[KeyCode2["Numpad8"] = 101] = "Numpad8";
+    KeyCode2[KeyCode2["Numpad9"] = 102] = "Numpad9";
+    KeyCode2[KeyCode2["NumpadMultiply"] = 103] = "NumpadMultiply";
+    KeyCode2[KeyCode2["NumpadAdd"] = 104] = "NumpadAdd";
+    KeyCode2[KeyCode2["NUMPAD_SEPARATOR"] = 105] = "NUMPAD_SEPARATOR";
+    KeyCode2[KeyCode2["NumpadSubtract"] = 106] = "NumpadSubtract";
+    KeyCode2[KeyCode2["NumpadDecimal"] = 107] = "NumpadDecimal";
+    KeyCode2[KeyCode2["NumpadDivide"] = 108] = "NumpadDivide";
+    KeyCode2[KeyCode2["KEY_IN_COMPOSITION"] = 109] = "KEY_IN_COMPOSITION";
+    KeyCode2[KeyCode2["ABNT_C1"] = 110] = "ABNT_C1";
+    KeyCode2[KeyCode2["ABNT_C2"] = 111] = "ABNT_C2";
+    KeyCode2[KeyCode2["AudioVolumeMute"] = 112] = "AudioVolumeMute";
+    KeyCode2[KeyCode2["AudioVolumeUp"] = 113] = "AudioVolumeUp";
+    KeyCode2[KeyCode2["AudioVolumeDown"] = 114] = "AudioVolumeDown";
+    KeyCode2[KeyCode2["BrowserSearch"] = 115] = "BrowserSearch";
+    KeyCode2[KeyCode2["BrowserHome"] = 116] = "BrowserHome";
+    KeyCode2[KeyCode2["BrowserBack"] = 117] = "BrowserBack";
+    KeyCode2[KeyCode2["BrowserForward"] = 118] = "BrowserForward";
+    KeyCode2[KeyCode2["MediaTrackNext"] = 119] = "MediaTrackNext";
+    KeyCode2[KeyCode2["MediaTrackPrevious"] = 120] = "MediaTrackPrevious";
+    KeyCode2[KeyCode2["MediaStop"] = 121] = "MediaStop";
+    KeyCode2[KeyCode2["MediaPlayPause"] = 122] = "MediaPlayPause";
+    KeyCode2[KeyCode2["LaunchMediaPlayer"] = 123] = "LaunchMediaPlayer";
+    KeyCode2[KeyCode2["LaunchMail"] = 124] = "LaunchMail";
+    KeyCode2[KeyCode2["LaunchApp2"] = 125] = "LaunchApp2";
+    KeyCode2[KeyCode2["Clear"] = 126] = "Clear";
+    KeyCode2[KeyCode2["MAX_VALUE"] = 127] = "MAX_VALUE";
+  })(KeyCode || (KeyCode = {}));
+  var MarkerSeverity;
+  (function(MarkerSeverity2) {
+    MarkerSeverity2[MarkerSeverity2["Hint"] = 1] = "Hint";
+    MarkerSeverity2[MarkerSeverity2["Info"] = 2] = "Info";
+    MarkerSeverity2[MarkerSeverity2["Warning"] = 4] = "Warning";
+    MarkerSeverity2[MarkerSeverity2["Error"] = 8] = "Error";
+  })(MarkerSeverity || (MarkerSeverity = {}));
+  var MarkerTag;
+  (function(MarkerTag2) {
+    MarkerTag2[MarkerTag2["Unnecessary"] = 1] = "Unnecessary";
+    MarkerTag2[MarkerTag2["Deprecated"] = 2] = "Deprecated";
+  })(MarkerTag || (MarkerTag = {}));
+  var MinimapPosition;
+  (function(MinimapPosition3) {
+    MinimapPosition3[MinimapPosition3["Inline"] = 1] = "Inline";
+    MinimapPosition3[MinimapPosition3["Gutter"] = 2] = "Gutter";
+  })(MinimapPosition || (MinimapPosition = {}));
+  var MouseTargetType;
+  (function(MouseTargetType2) {
+    MouseTargetType2[MouseTargetType2["UNKNOWN"] = 0] = "UNKNOWN";
+    MouseTargetType2[MouseTargetType2["TEXTAREA"] = 1] = "TEXTAREA";
+    MouseTargetType2[MouseTargetType2["GUTTER_GLYPH_MARGIN"] = 2] = "GUTTER_GLYPH_MARGIN";
+    MouseTargetType2[MouseTargetType2["GUTTER_LINE_NUMBERS"] = 3] = "GUTTER_LINE_NUMBERS";
+    MouseTargetType2[MouseTargetType2["GUTTER_LINE_DECORATIONS"] = 4] = "GUTTER_LINE_DECORATIONS";
+    MouseTargetType2[MouseTargetType2["GUTTER_VIEW_ZONE"] = 5] = "GUTTER_VIEW_ZONE";
+    MouseTargetType2[MouseTargetType2["CONTENT_TEXT"] = 6] = "CONTENT_TEXT";
+    MouseTargetType2[MouseTargetType2["CONTENT_EMPTY"] = 7] = "CONTENT_EMPTY";
+    MouseTargetType2[MouseTargetType2["CONTENT_VIEW_ZONE"] = 8] = "CONTENT_VIEW_ZONE";
+    MouseTargetType2[MouseTargetType2["CONTENT_WIDGET"] = 9] = "CONTENT_WIDGET";
+    MouseTargetType2[MouseTargetType2["OVERVIEW_RULER"] = 10] = "OVERVIEW_RULER";
+    MouseTargetType2[MouseTargetType2["SCROLLBAR"] = 11] = "SCROLLBAR";
+    MouseTargetType2[MouseTargetType2["OVERLAY_WIDGET"] = 12] = "OVERLAY_WIDGET";
+    MouseTargetType2[MouseTargetType2["OUTSIDE_EDITOR"] = 13] = "OUTSIDE_EDITOR";
+  })(MouseTargetType || (MouseTargetType = {}));
+  var OverlayWidgetPositionPreference;
+  (function(OverlayWidgetPositionPreference2) {
+    OverlayWidgetPositionPreference2[OverlayWidgetPositionPreference2["TOP_RIGHT_CORNER"] = 0] = "TOP_RIGHT_CORNER";
+    OverlayWidgetPositionPreference2[OverlayWidgetPositionPreference2["BOTTOM_RIGHT_CORNER"] = 1] = "BOTTOM_RIGHT_CORNER";
+    OverlayWidgetPositionPreference2[OverlayWidgetPositionPreference2["TOP_CENTER"] = 2] = "TOP_CENTER";
+  })(OverlayWidgetPositionPreference || (OverlayWidgetPositionPreference = {}));
+  var OverviewRulerLane;
+  (function(OverviewRulerLane3) {
+    OverviewRulerLane3[OverviewRulerLane3["Left"] = 1] = "Left";
+    OverviewRulerLane3[OverviewRulerLane3["Center"] = 2] = "Center";
+    OverviewRulerLane3[OverviewRulerLane3["Right"] = 4] = "Right";
+    OverviewRulerLane3[OverviewRulerLane3["Full"] = 7] = "Full";
+  })(OverviewRulerLane || (OverviewRulerLane = {}));
+  var PositionAffinity;
+  (function(PositionAffinity2) {
+    PositionAffinity2[PositionAffinity2["Left"] = 0] = "Left";
+    PositionAffinity2[PositionAffinity2["Right"] = 1] = "Right";
+    PositionAffinity2[PositionAffinity2["None"] = 2] = "None";
+    PositionAffinity2[PositionAffinity2["LeftOfInjectedText"] = 3] = "LeftOfInjectedText";
+    PositionAffinity2[PositionAffinity2["RightOfInjectedText"] = 4] = "RightOfInjectedText";
+  })(PositionAffinity || (PositionAffinity = {}));
+  var RenderLineNumbersType;
+  (function(RenderLineNumbersType2) {
+    RenderLineNumbersType2[RenderLineNumbersType2["Off"] = 0] = "Off";
+    RenderLineNumbersType2[RenderLineNumbersType2["On"] = 1] = "On";
+    RenderLineNumbersType2[RenderLineNumbersType2["Relative"] = 2] = "Relative";
+    RenderLineNumbersType2[RenderLineNumbersType2["Interval"] = 3] = "Interval";
+    RenderLineNumbersType2[RenderLineNumbersType2["Custom"] = 4] = "Custom";
+  })(RenderLineNumbersType || (RenderLineNumbersType = {}));
+  var RenderMinimap;
+  (function(RenderMinimap2) {
+    RenderMinimap2[RenderMinimap2["None"] = 0] = "None";
+    RenderMinimap2[RenderMinimap2["Text"] = 1] = "Text";
+    RenderMinimap2[RenderMinimap2["Blocks"] = 2] = "Blocks";
+  })(RenderMinimap || (RenderMinimap = {}));
+  var ScrollType;
+  (function(ScrollType2) {
+    ScrollType2[ScrollType2["Smooth"] = 0] = "Smooth";
+    ScrollType2[ScrollType2["Immediate"] = 1] = "Immediate";
+  })(ScrollType || (ScrollType = {}));
+  var ScrollbarVisibility;
+  (function(ScrollbarVisibility2) {
+    ScrollbarVisibility2[ScrollbarVisibility2["Auto"] = 1] = "Auto";
+    ScrollbarVisibility2[ScrollbarVisibility2["Hidden"] = 2] = "Hidden";
+    ScrollbarVisibility2[ScrollbarVisibility2["Visible"] = 3] = "Visible";
+  })(ScrollbarVisibility || (ScrollbarVisibility = {}));
+  var SelectionDirection;
+  (function(SelectionDirection2) {
+    SelectionDirection2[SelectionDirection2["LTR"] = 0] = "LTR";
+    SelectionDirection2[SelectionDirection2["RTL"] = 1] = "RTL";
+  })(SelectionDirection || (SelectionDirection = {}));
+  var SignatureHelpTriggerKind2;
+  (function(SignatureHelpTriggerKind3) {
+    SignatureHelpTriggerKind3[SignatureHelpTriggerKind3["Invoke"] = 1] = "Invoke";
+    SignatureHelpTriggerKind3[SignatureHelpTriggerKind3["TriggerCharacter"] = 2] = "TriggerCharacter";
+    SignatureHelpTriggerKind3[SignatureHelpTriggerKind3["ContentChange"] = 3] = "ContentChange";
+  })(SignatureHelpTriggerKind2 || (SignatureHelpTriggerKind2 = {}));
+  var SymbolKind;
+  (function(SymbolKind2) {
+    SymbolKind2[SymbolKind2["File"] = 0] = "File";
+    SymbolKind2[SymbolKind2["Module"] = 1] = "Module";
+    SymbolKind2[SymbolKind2["Namespace"] = 2] = "Namespace";
+    SymbolKind2[SymbolKind2["Package"] = 3] = "Package";
+    SymbolKind2[SymbolKind2["Class"] = 4] = "Class";
+    SymbolKind2[SymbolKind2["Method"] = 5] = "Method";
+    SymbolKind2[SymbolKind2["Property"] = 6] = "Property";
+    SymbolKind2[SymbolKind2["Field"] = 7] = "Field";
+    SymbolKind2[SymbolKind2["Constructor"] = 8] = "Constructor";
+    SymbolKind2[SymbolKind2["Enum"] = 9] = "Enum";
+    SymbolKind2[SymbolKind2["Interface"] = 10] = "Interface";
+    SymbolKind2[SymbolKind2["Function"] = 11] = "Function";
+    SymbolKind2[SymbolKind2["Variable"] = 12] = "Variable";
+    SymbolKind2[SymbolKind2["Constant"] = 13] = "Constant";
+    SymbolKind2[SymbolKind2["String"] = 14] = "String";
+    SymbolKind2[SymbolKind2["Number"] = 15] = "Number";
+    SymbolKind2[SymbolKind2["Boolean"] = 16] = "Boolean";
+    SymbolKind2[SymbolKind2["Array"] = 17] = "Array";
+    SymbolKind2[SymbolKind2["Object"] = 18] = "Object";
+    SymbolKind2[SymbolKind2["Key"] = 19] = "Key";
+    SymbolKind2[SymbolKind2["Null"] = 20] = "Null";
+    SymbolKind2[SymbolKind2["EnumMember"] = 21] = "EnumMember";
+    SymbolKind2[SymbolKind2["Struct"] = 22] = "Struct";
+    SymbolKind2[SymbolKind2["Event"] = 23] = "Event";
+    SymbolKind2[SymbolKind2["Operator"] = 24] = "Operator";
+    SymbolKind2[SymbolKind2["TypeParameter"] = 25] = "TypeParameter";
+  })(SymbolKind || (SymbolKind = {}));
+  var SymbolTag;
+  (function(SymbolTag2) {
+    SymbolTag2[SymbolTag2["Deprecated"] = 1] = "Deprecated";
+  })(SymbolTag || (SymbolTag = {}));
+  var TextEditorCursorBlinkingStyle;
+  (function(TextEditorCursorBlinkingStyle2) {
+    TextEditorCursorBlinkingStyle2[TextEditorCursorBlinkingStyle2["Hidden"] = 0] = "Hidden";
+    TextEditorCursorBlinkingStyle2[TextEditorCursorBlinkingStyle2["Blink"] = 1] = "Blink";
+    TextEditorCursorBlinkingStyle2[TextEditorCursorBlinkingStyle2["Smooth"] = 2] = "Smooth";
+    TextEditorCursorBlinkingStyle2[TextEditorCursorBlinkingStyle2["Phase"] = 3] = "Phase";
+    TextEditorCursorBlinkingStyle2[TextEditorCursorBlinkingStyle2["Expand"] = 4] = "Expand";
+    TextEditorCursorBlinkingStyle2[TextEditorCursorBlinkingStyle2["Solid"] = 5] = "Solid";
+  })(TextEditorCursorBlinkingStyle || (TextEditorCursorBlinkingStyle = {}));
+  var TextEditorCursorStyle;
+  (function(TextEditorCursorStyle2) {
+    TextEditorCursorStyle2[TextEditorCursorStyle2["Line"] = 1] = "Line";
+    TextEditorCursorStyle2[TextEditorCursorStyle2["Block"] = 2] = "Block";
+    TextEditorCursorStyle2[TextEditorCursorStyle2["Underline"] = 3] = "Underline";
+    TextEditorCursorStyle2[TextEditorCursorStyle2["LineThin"] = 4] = "LineThin";
+    TextEditorCursorStyle2[TextEditorCursorStyle2["BlockOutline"] = 5] = "BlockOutline";
+    TextEditorCursorStyle2[TextEditorCursorStyle2["UnderlineThin"] = 6] = "UnderlineThin";
+  })(TextEditorCursorStyle || (TextEditorCursorStyle = {}));
+  var TrackedRangeStickiness;
+  (function(TrackedRangeStickiness2) {
+    TrackedRangeStickiness2[TrackedRangeStickiness2["AlwaysGrowsWhenTypingAtEdges"] = 0] = "AlwaysGrowsWhenTypingAtEdges";
+    TrackedRangeStickiness2[TrackedRangeStickiness2["NeverGrowsWhenTypingAtEdges"] = 1] = "NeverGrowsWhenTypingAtEdges";
+    TrackedRangeStickiness2[TrackedRangeStickiness2["GrowsOnlyWhenTypingBefore"] = 2] = "GrowsOnlyWhenTypingBefore";
+    TrackedRangeStickiness2[TrackedRangeStickiness2["GrowsOnlyWhenTypingAfter"] = 3] = "GrowsOnlyWhenTypingAfter";
+  })(TrackedRangeStickiness || (TrackedRangeStickiness = {}));
+  var WrappingIndent;
+  (function(WrappingIndent2) {
+    WrappingIndent2[WrappingIndent2["None"] = 0] = "None";
+    WrappingIndent2[WrappingIndent2["Same"] = 1] = "Same";
+    WrappingIndent2[WrappingIndent2["Indent"] = 2] = "Indent";
+    WrappingIndent2[WrappingIndent2["DeepIndent"] = 3] = "DeepIndent";
+  })(WrappingIndent || (WrappingIndent = {}));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/services/editorBaseApi.js
+  var KeyMod = class {
+    static chord(firstPart, secondPart) {
+      return KeyChord(firstPart, secondPart);
+    }
+  };
+  KeyMod.CtrlCmd = 2048;
+  KeyMod.Shift = 1024;
+  KeyMod.Alt = 512;
+  KeyMod.WinCtrl = 256;
+  function createMonacoBaseAPI() {
+    return {
+      editor: void 0,
+      languages: void 0,
+      CancellationTokenSource,
+      Emitter,
+      KeyCode,
+      KeyMod,
+      Position,
+      Range,
+      Selection,
+      SelectionDirection,
+      MarkerSeverity,
+      MarkerTag,
+      Uri: URI,
+      Token
+    };
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/core/wordCharacterClassifier.js
+  var WordCharacterClassifier = class extends CharacterClassifier {
+    constructor(wordSeparators) {
+      super(
+        0
+        /* WordCharacterClass.Regular */
+      );
+      for (let i = 0, len = wordSeparators.length; i < len; i++) {
+        this.set(
+          wordSeparators.charCodeAt(i),
+          2
+          /* WordCharacterClass.WordSeparator */
+        );
+      }
+      this.set(
+        32,
+        1
+        /* WordCharacterClass.Whitespace */
+      );
+      this.set(
+        9,
+        1
+        /* WordCharacterClass.Whitespace */
+      );
+    }
+  };
+  function once2(computeFn) {
+    const cache = {};
+    return (input) => {
+      if (!cache.hasOwnProperty(input)) {
+        cache[input] = computeFn(input);
+      }
+      return cache[input];
+    };
+  }
+  var getMapForWordSeparators = once2((input) => new WordCharacterClassifier(input));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/model.js
+  var OverviewRulerLane2;
+  (function(OverviewRulerLane3) {
+    OverviewRulerLane3[OverviewRulerLane3["Left"] = 1] = "Left";
+    OverviewRulerLane3[OverviewRulerLane3["Center"] = 2] = "Center";
+    OverviewRulerLane3[OverviewRulerLane3["Right"] = 4] = "Right";
+    OverviewRulerLane3[OverviewRulerLane3["Full"] = 7] = "Full";
+  })(OverviewRulerLane2 || (OverviewRulerLane2 = {}));
+  var MinimapPosition2;
+  (function(MinimapPosition3) {
+    MinimapPosition3[MinimapPosition3["Inline"] = 1] = "Inline";
+    MinimapPosition3[MinimapPosition3["Gutter"] = 2] = "Gutter";
+  })(MinimapPosition2 || (MinimapPosition2 = {}));
+  var InjectedTextCursorStops2;
+  (function(InjectedTextCursorStops3) {
+    InjectedTextCursorStops3[InjectedTextCursorStops3["Both"] = 0] = "Both";
+    InjectedTextCursorStops3[InjectedTextCursorStops3["Right"] = 1] = "Right";
+    InjectedTextCursorStops3[InjectedTextCursorStops3["Left"] = 2] = "Left";
+    InjectedTextCursorStops3[InjectedTextCursorStops3["None"] = 3] = "None";
+  })(InjectedTextCursorStops2 || (InjectedTextCursorStops2 = {}));
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/model/textModelSearch.js
+  function leftIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength) {
+    if (matchStartIndex === 0) {
+      return true;
+    }
+    const charBefore = text.charCodeAt(matchStartIndex - 1);
+    if (wordSeparators.get(charBefore) !== 0) {
+      return true;
+    }
+    if (charBefore === 13 || charBefore === 10) {
+      return true;
+    }
+    if (matchLength > 0) {
+      const firstCharInMatch = text.charCodeAt(matchStartIndex);
+      if (wordSeparators.get(firstCharInMatch) !== 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  function rightIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength) {
+    if (matchStartIndex + matchLength === textLength) {
+      return true;
+    }
+    const charAfter = text.charCodeAt(matchStartIndex + matchLength);
+    if (wordSeparators.get(charAfter) !== 0) {
+      return true;
+    }
+    if (charAfter === 13 || charAfter === 10) {
+      return true;
+    }
+    if (matchLength > 0) {
+      const lastCharInMatch = text.charCodeAt(matchStartIndex + matchLength - 1);
+      if (wordSeparators.get(lastCharInMatch) !== 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  function isValidMatch(wordSeparators, text, textLength, matchStartIndex, matchLength) {
+    return leftIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength) && rightIsWordBounday(wordSeparators, text, textLength, matchStartIndex, matchLength);
+  }
+  var Searcher = class {
+    constructor(wordSeparators, searchRegex) {
+      this._wordSeparators = wordSeparators;
+      this._searchRegex = searchRegex;
+      this._prevMatchStartIndex = -1;
+      this._prevMatchLength = 0;
+    }
+    reset(lastIndex) {
+      this._searchRegex.lastIndex = lastIndex;
+      this._prevMatchStartIndex = -1;
+      this._prevMatchLength = 0;
+    }
+    next(text) {
+      const textLength = text.length;
+      let m;
+      do {
+        if (this._prevMatchStartIndex + this._prevMatchLength === textLength) {
+          return null;
+        }
+        m = this._searchRegex.exec(text);
+        if (!m) {
+          return null;
+        }
+        const matchStartIndex = m.index;
+        const matchLength = m[0].length;
+        if (matchStartIndex === this._prevMatchStartIndex && matchLength === this._prevMatchLength) {
+          if (matchLength === 0) {
+            if (getNextCodePoint(text, textLength, this._searchRegex.lastIndex) > 65535) {
+              this._searchRegex.lastIndex += 2;
+            } else {
+              this._searchRegex.lastIndex += 1;
+            }
+            continue;
+          }
+          return null;
+        }
+        this._prevMatchStartIndex = matchStartIndex;
+        this._prevMatchLength = matchLength;
+        if (!this._wordSeparators || isValidMatch(this._wordSeparators, text, textLength, matchStartIndex, matchLength)) {
+          return m;
+        }
+      } while (m);
+      return null;
+    }
+  };
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/services/unicodeTextModelHighlighter.js
+  var UnicodeTextModelHighlighter = class {
+    static computeUnicodeHighlights(model, options, range) {
+      const startLine = range ? range.startLineNumber : 1;
+      const endLine = range ? range.endLineNumber : model.getLineCount();
+      const codePointHighlighter = new CodePointHighlighter(options);
+      const candidates = codePointHighlighter.getCandidateCodePoints();
+      let regex;
+      if (candidates === "allNonBasicAscii") {
+        regex = new RegExp("[^\\t\\n\\r\\x20-\\x7E]", "g");
+      } else {
+        regex = new RegExp(`${buildRegExpCharClassExpr(Array.from(candidates))}`, "g");
+      }
+      const searcher = new Searcher(null, regex);
+      const ranges = [];
+      let hasMore = false;
+      let m;
+      let ambiguousCharacterCount = 0;
+      let invisibleCharacterCount = 0;
+      let nonBasicAsciiCharacterCount = 0;
+      forLoop:
+        for (let lineNumber = startLine, lineCount = endLine; lineNumber <= lineCount; lineNumber++) {
+          const lineContent = model.getLineContent(lineNumber);
+          const lineLength = lineContent.length;
+          searcher.reset(0);
+          do {
+            m = searcher.next(lineContent);
+            if (m) {
+              let startIndex = m.index;
+              let endIndex = m.index + m[0].length;
+              if (startIndex > 0) {
+                const charCodeBefore = lineContent.charCodeAt(startIndex - 1);
+                if (isHighSurrogate(charCodeBefore)) {
+                  startIndex--;
+                }
+              }
+              if (endIndex + 1 < lineLength) {
+                const charCodeBefore = lineContent.charCodeAt(endIndex - 1);
+                if (isHighSurrogate(charCodeBefore)) {
+                  endIndex++;
+                }
+              }
+              const str = lineContent.substring(startIndex, endIndex);
+              const word = getWordAtText(startIndex + 1, DEFAULT_WORD_REGEXP, lineContent, 0);
+              const highlightReason = codePointHighlighter.shouldHighlightNonBasicASCII(str, word ? word.word : null);
+              if (highlightReason !== 0) {
+                if (highlightReason === 3) {
+                  ambiguousCharacterCount++;
+                } else if (highlightReason === 2) {
+                  invisibleCharacterCount++;
+                } else if (highlightReason === 1) {
+                  nonBasicAsciiCharacterCount++;
+                } else {
+                  assertNever(highlightReason);
+                }
+                const MAX_RESULT_LENGTH = 1e3;
+                if (ranges.length >= MAX_RESULT_LENGTH) {
+                  hasMore = true;
+                  break forLoop;
+                }
+                ranges.push(new Range(lineNumber, startIndex + 1, lineNumber, endIndex + 1));
+              }
+            }
+          } while (m);
+        }
+      return {
+        ranges,
+        hasMore,
+        ambiguousCharacterCount,
+        invisibleCharacterCount,
+        nonBasicAsciiCharacterCount
+      };
+    }
+    static computeUnicodeHighlightReason(char, options) {
+      const codePointHighlighter = new CodePointHighlighter(options);
+      const reason = codePointHighlighter.shouldHighlightNonBasicASCII(char, null);
+      switch (reason) {
+        case 0:
+          return null;
+        case 2:
+          return {
+            kind: 1
+            /* UnicodeHighlighterReasonKind.Invisible */
+          };
+        case 3: {
+          const codePoint = char.codePointAt(0);
+          const primaryConfusable = codePointHighlighter.ambiguousCharacters.getPrimaryConfusable(codePoint);
+          const notAmbiguousInLocales = AmbiguousCharacters.getLocales().filter((l) => !AmbiguousCharacters.getInstance(/* @__PURE__ */ new Set([...options.allowedLocales, l])).isAmbiguous(codePoint));
+          return { kind: 0, confusableWith: String.fromCodePoint(primaryConfusable), notAmbiguousInLocales };
+        }
+        case 1:
+          return {
+            kind: 2
+            /* UnicodeHighlighterReasonKind.NonBasicAscii */
+          };
+      }
+    }
+  };
+  function buildRegExpCharClassExpr(codePoints, flags) {
+    const src = `[${escapeRegExpCharacters(codePoints.map((i) => String.fromCodePoint(i)).join(""))}]`;
+    return src;
+  }
+  var CodePointHighlighter = class {
+    constructor(options) {
+      this.options = options;
+      this.allowedCodePoints = new Set(options.allowedCodePoints);
+      this.ambiguousCharacters = AmbiguousCharacters.getInstance(new Set(options.allowedLocales));
+    }
+    getCandidateCodePoints() {
+      if (this.options.nonBasicASCII) {
+        return "allNonBasicAscii";
+      }
+      const set = /* @__PURE__ */ new Set();
+      if (this.options.invisibleCharacters) {
+        for (const cp of InvisibleCharacters.codePoints) {
+          if (!isAllowedInvisibleCharacter(String.fromCodePoint(cp))) {
+            set.add(cp);
+          }
+        }
+      }
+      if (this.options.ambiguousCharacters) {
+        for (const cp of this.ambiguousCharacters.getConfusableCodePoints()) {
+          set.add(cp);
+        }
+      }
+      for (const cp of this.allowedCodePoints) {
+        set.delete(cp);
+      }
+      return set;
+    }
+    shouldHighlightNonBasicASCII(character, wordContext) {
+      const codePoint = character.codePointAt(0);
+      if (this.allowedCodePoints.has(codePoint)) {
+        return 0;
+      }
+      if (this.options.nonBasicASCII) {
+        return 1;
+      }
+      let hasBasicASCIICharacters = false;
+      let hasNonConfusableNonBasicAsciiCharacter = false;
+      if (wordContext) {
+        for (const char of wordContext) {
+          const codePoint2 = char.codePointAt(0);
+          const isBasicASCII2 = isBasicASCII(char);
+          hasBasicASCIICharacters = hasBasicASCIICharacters || isBasicASCII2;
+          if (!isBasicASCII2 && !this.ambiguousCharacters.isAmbiguous(codePoint2) && !InvisibleCharacters.isInvisibleCharacter(codePoint2)) {
+            hasNonConfusableNonBasicAsciiCharacter = true;
+          }
+        }
+      }
+      if (
+        /* Don't allow mixing weird looking characters with ASCII */
+        !hasBasicASCIICharacters && /* Is there an obviously weird looking character? */
+        hasNonConfusableNonBasicAsciiCharacter
+      ) {
+        return 0;
+      }
+      if (this.options.invisibleCharacters) {
+        if (!isAllowedInvisibleCharacter(character) && InvisibleCharacters.isInvisibleCharacter(codePoint)) {
+          return 2;
+        }
+      }
+      if (this.options.ambiguousCharacters) {
+        if (this.ambiguousCharacters.isAmbiguous(codePoint)) {
+          return 3;
+        }
+      }
+      return 0;
+    }
+  };
+  function isAllowedInvisibleCharacter(character) {
+    return character === " " || character === "\n" || character === "	";
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/common/services/editorSimpleWorker.js
+  var __awaiter2 = function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve2) {
+        resolve2(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve2, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve2(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var MirrorModel = class extends MirrorTextModel {
+    get uri() {
+      return this._uri;
+    }
+    get eol() {
+      return this._eol;
+    }
+    getValue() {
+      return this.getText();
+    }
+    getLinesContent() {
+      return this._lines.slice(0);
+    }
+    getLineCount() {
+      return this._lines.length;
+    }
+    getLineContent(lineNumber) {
+      return this._lines[lineNumber - 1];
+    }
+    getWordAtPosition(position, wordDefinition) {
+      const wordAtText = getWordAtText(position.column, ensureValidWordDefinition(wordDefinition), this._lines[position.lineNumber - 1], 0);
+      if (wordAtText) {
+        return new Range(position.lineNumber, wordAtText.startColumn, position.lineNumber, wordAtText.endColumn);
+      }
+      return null;
+    }
+    words(wordDefinition) {
+      const lines = this._lines;
+      const wordenize = this._wordenize.bind(this);
+      let lineNumber = 0;
+      let lineText = "";
+      let wordRangesIdx = 0;
+      let wordRanges = [];
+      return {
+        *[Symbol.iterator]() {
+          while (true) {
+            if (wordRangesIdx < wordRanges.length) {
+              const value = lineText.substring(wordRanges[wordRangesIdx].start, wordRanges[wordRangesIdx].end);
+              wordRangesIdx += 1;
+              yield value;
+            } else {
+              if (lineNumber < lines.length) {
+                lineText = lines[lineNumber];
+                wordRanges = wordenize(lineText, wordDefinition);
+                wordRangesIdx = 0;
+                lineNumber += 1;
+              } else {
+                break;
+              }
+            }
+          }
+        }
+      };
+    }
+    getLineWords(lineNumber, wordDefinition) {
+      const content = this._lines[lineNumber - 1];
+      const ranges = this._wordenize(content, wordDefinition);
+      const words = [];
+      for (const range of ranges) {
+        words.push({
+          word: content.substring(range.start, range.end),
+          startColumn: range.start + 1,
+          endColumn: range.end + 1
+        });
+      }
+      return words;
+    }
+    _wordenize(content, wordDefinition) {
+      const result = [];
+      let match;
+      wordDefinition.lastIndex = 0;
+      while (match = wordDefinition.exec(content)) {
+        if (match[0].length === 0) {
+          break;
+        }
+        result.push({ start: match.index, end: match.index + match[0].length });
+      }
+      return result;
+    }
+    getValueInRange(range) {
+      range = this._validateRange(range);
+      if (range.startLineNumber === range.endLineNumber) {
+        return this._lines[range.startLineNumber - 1].substring(range.startColumn - 1, range.endColumn - 1);
+      }
+      const lineEnding = this._eol;
+      const startLineIndex = range.startLineNumber - 1;
+      const endLineIndex = range.endLineNumber - 1;
+      const resultLines = [];
+      resultLines.push(this._lines[startLineIndex].substring(range.startColumn - 1));
+      for (let i = startLineIndex + 1; i < endLineIndex; i++) {
+        resultLines.push(this._lines[i]);
+      }
+      resultLines.push(this._lines[endLineIndex].substring(0, range.endColumn - 1));
+      return resultLines.join(lineEnding);
+    }
+    offsetAt(position) {
+      position = this._validatePosition(position);
+      this._ensureLineStarts();
+      return this._lineStarts.getPrefixSum(position.lineNumber - 2) + (position.column - 1);
+    }
+    positionAt(offset) {
+      offset = Math.floor(offset);
+      offset = Math.max(0, offset);
+      this._ensureLineStarts();
+      const out = this._lineStarts.getIndexOf(offset);
+      const lineLength = this._lines[out.index].length;
+      return {
+        lineNumber: 1 + out.index,
+        column: 1 + Math.min(out.remainder, lineLength)
+      };
+    }
+    _validateRange(range) {
+      const start = this._validatePosition({ lineNumber: range.startLineNumber, column: range.startColumn });
+      const end = this._validatePosition({ lineNumber: range.endLineNumber, column: range.endColumn });
+      if (start.lineNumber !== range.startLineNumber || start.column !== range.startColumn || end.lineNumber !== range.endLineNumber || end.column !== range.endColumn) {
+        return {
+          startLineNumber: start.lineNumber,
+          startColumn: start.column,
+          endLineNumber: end.lineNumber,
+          endColumn: end.column
+        };
+      }
+      return range;
+    }
+    _validatePosition(position) {
+      if (!Position.isIPosition(position)) {
+        throw new Error("bad position");
+      }
+      let { lineNumber, column } = position;
+      let hasChanged = false;
+      if (lineNumber < 1) {
+        lineNumber = 1;
+        column = 1;
+        hasChanged = true;
+      } else if (lineNumber > this._lines.length) {
+        lineNumber = this._lines.length;
+        column = this._lines[lineNumber - 1].length + 1;
+        hasChanged = true;
+      } else {
+        const maxCharacter = this._lines[lineNumber - 1].length + 1;
+        if (column < 1) {
+          column = 1;
+          hasChanged = true;
+        } else if (column > maxCharacter) {
+          column = maxCharacter;
+          hasChanged = true;
+        }
+      }
+      if (!hasChanged) {
+        return position;
+      } else {
+        return { lineNumber, column };
+      }
+    }
+  };
+  var EditorSimpleWorker = class {
+    constructor(host, foreignModuleFactory) {
+      this._host = host;
+      this._models = /* @__PURE__ */ Object.create(null);
+      this._foreignModuleFactory = foreignModuleFactory;
+      this._foreignModule = null;
+    }
+    dispose() {
+      this._models = /* @__PURE__ */ Object.create(null);
+    }
+    _getModel(uri) {
+      return this._models[uri];
+    }
+    _getModels() {
+      const all = [];
+      Object.keys(this._models).forEach((key) => all.push(this._models[key]));
+      return all;
+    }
+    acceptNewModel(data) {
+      this._models[data.url] = new MirrorModel(URI.parse(data.url), data.lines, data.EOL, data.versionId);
+    }
+    acceptModelChanged(strURL, e) {
+      if (!this._models[strURL]) {
+        return;
+      }
+      const model = this._models[strURL];
+      model.onEvents(e);
+    }
+    acceptRemovedModel(strURL) {
+      if (!this._models[strURL]) {
+        return;
+      }
+      delete this._models[strURL];
+    }
+    computeUnicodeHighlights(url, options, range) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const model = this._getModel(url);
+        if (!model) {
+          return { ranges: [], hasMore: false, ambiguousCharacterCount: 0, invisibleCharacterCount: 0, nonBasicAsciiCharacterCount: 0 };
+        }
+        return UnicodeTextModelHighlighter.computeUnicodeHighlights(model, options, range);
+      });
+    }
+    // ---- BEGIN diff --------------------------------------------------------------------------
+    computeDiff(originalUrl, modifiedUrl, ignoreTrimWhitespace, maxComputationTime) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const original = this._getModel(originalUrl);
+        const modified = this._getModel(modifiedUrl);
+        if (!original || !modified) {
+          return null;
+        }
+        return EditorSimpleWorker.computeDiff(original, modified, ignoreTrimWhitespace, maxComputationTime);
+      });
+    }
+    static computeDiff(originalTextModel, modifiedTextModel, ignoreTrimWhitespace, maxComputationTime) {
+      const originalLines = originalTextModel.getLinesContent();
+      const modifiedLines = modifiedTextModel.getLinesContent();
+      const diffComputer = new DiffComputer(originalLines, modifiedLines, {
+        shouldComputeCharChanges: true,
+        shouldPostProcessCharChanges: true,
+        shouldIgnoreTrimWhitespace: ignoreTrimWhitespace,
+        shouldMakePrettyDiff: true,
+        maxComputationTime
+      });
+      const diffResult = diffComputer.computeDiff();
+      const identical = diffResult.changes.length > 0 ? false : this._modelsAreIdentical(originalTextModel, modifiedTextModel);
+      return {
+        quitEarly: diffResult.quitEarly,
+        identical,
+        changes: diffResult.changes
+      };
+    }
+    static _modelsAreIdentical(original, modified) {
+      const originalLineCount = original.getLineCount();
+      const modifiedLineCount = modified.getLineCount();
+      if (originalLineCount !== modifiedLineCount) {
+        return false;
+      }
+      for (let line = 1; line <= originalLineCount; line++) {
+        const originalLine = original.getLineContent(line);
+        const modifiedLine = modified.getLineContent(line);
+        if (originalLine !== modifiedLine) {
+          return false;
+        }
+      }
+      return true;
+    }
+    computeMoreMinimalEdits(modelUrl, edits) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const model = this._getModel(modelUrl);
+        if (!model) {
+          return edits;
+        }
+        const result = [];
+        let lastEol = void 0;
+        edits = edits.slice(0).sort((a, b) => {
+          if (a.range && b.range) {
+            return Range.compareRangesUsingStarts(a.range, b.range);
+          }
+          const aRng = a.range ? 0 : 1;
+          const bRng = b.range ? 0 : 1;
+          return aRng - bRng;
+        });
+        for (let { range, text, eol } of edits) {
+          if (typeof eol === "number") {
+            lastEol = eol;
+          }
+          if (Range.isEmpty(range) && !text) {
+            continue;
+          }
+          const original = model.getValueInRange(range);
+          text = text.replace(/\r\n|\n|\r/g, model.eol);
+          if (original === text) {
+            continue;
+          }
+          if (Math.max(text.length, original.length) > EditorSimpleWorker._diffLimit) {
+            result.push({ range, text });
+            continue;
+          }
+          const changes = stringDiff(original, text, false);
+          const editOffset = model.offsetAt(Range.lift(range).getStartPosition());
+          for (const change of changes) {
+            const start = model.positionAt(editOffset + change.originalStart);
+            const end = model.positionAt(editOffset + change.originalStart + change.originalLength);
+            const newEdit = {
+              text: text.substr(change.modifiedStart, change.modifiedLength),
+              range: { startLineNumber: start.lineNumber, startColumn: start.column, endLineNumber: end.lineNumber, endColumn: end.column }
+            };
+            if (model.getValueInRange(newEdit.range) !== newEdit.text) {
+              result.push(newEdit);
+            }
+          }
+        }
+        if (typeof lastEol === "number") {
+          result.push({ eol: lastEol, text: "", range: { startLineNumber: 0, startColumn: 0, endLineNumber: 0, endColumn: 0 } });
+        }
+        return result;
+      });
+    }
+    // ---- END minimal edits ---------------------------------------------------------------
+    computeLinks(modelUrl) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const model = this._getModel(modelUrl);
+        if (!model) {
+          return null;
+        }
+        return computeLinks(model);
+      });
+    }
+    textualSuggest(modelUrls, leadingWord, wordDef, wordDefFlags) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const sw = new StopWatch(true);
+        const wordDefRegExp = new RegExp(wordDef, wordDefFlags);
+        const seen = /* @__PURE__ */ new Set();
+        outer:
+          for (const url of modelUrls) {
+            const model = this._getModel(url);
+            if (!model) {
+              continue;
+            }
+            for (const word of model.words(wordDefRegExp)) {
+              if (word === leadingWord || !isNaN(Number(word))) {
+                continue;
+              }
+              seen.add(word);
+              if (seen.size > EditorSimpleWorker._suggestionsLimit) {
+                break outer;
+              }
+            }
+          }
+        return { words: Array.from(seen), duration: sw.elapsed() };
+      });
+    }
+    // ---- END suggest --------------------------------------------------------------------------
+    //#region -- word ranges --
+    computeWordRanges(modelUrl, range, wordDef, wordDefFlags) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const model = this._getModel(modelUrl);
+        if (!model) {
+          return /* @__PURE__ */ Object.create(null);
+        }
+        const wordDefRegExp = new RegExp(wordDef, wordDefFlags);
+        const result = /* @__PURE__ */ Object.create(null);
+        for (let line = range.startLineNumber; line < range.endLineNumber; line++) {
+          const words = model.getLineWords(line, wordDefRegExp);
+          for (const word of words) {
+            if (!isNaN(Number(word.word))) {
+              continue;
+            }
+            let array = result[word.word];
+            if (!array) {
+              array = [];
+              result[word.word] = array;
+            }
+            array.push({
+              startLineNumber: line,
+              startColumn: word.startColumn,
+              endLineNumber: line,
+              endColumn: word.endColumn
+            });
+          }
+        }
+        return result;
+      });
+    }
+    //#endregion
+    navigateValueSet(modelUrl, range, up, wordDef, wordDefFlags) {
+      return __awaiter2(this, void 0, void 0, function* () {
+        const model = this._getModel(modelUrl);
+        if (!model) {
+          return null;
+        }
+        const wordDefRegExp = new RegExp(wordDef, wordDefFlags);
+        if (range.startColumn === range.endColumn) {
+          range = {
+            startLineNumber: range.startLineNumber,
+            startColumn: range.startColumn,
+            endLineNumber: range.endLineNumber,
+            endColumn: range.endColumn + 1
+          };
+        }
+        const selectionText = model.getValueInRange(range);
+        const wordRange = model.getWordAtPosition({ lineNumber: range.startLineNumber, column: range.startColumn }, wordDefRegExp);
+        if (!wordRange) {
+          return null;
+        }
+        const word = model.getValueInRange(wordRange);
+        const result = BasicInplaceReplace.INSTANCE.navigateValueSet(range, selectionText, wordRange, word, up);
+        return result;
+      });
+    }
+    // ---- BEGIN foreign module support --------------------------------------------------------------------------
+    loadForeignModule(moduleId, createData, foreignHostMethods) {
+      const proxyMethodRequest = (method, args) => {
+        return this._host.fhr(method, args);
+      };
+      const foreignHost = createProxyObject(foreignHostMethods, proxyMethodRequest);
+      const ctx = {
+        host: foreignHost,
+        getMirrorModels: () => {
+          return this._getModels();
+        }
+      };
+      if (this._foreignModuleFactory) {
+        this._foreignModule = this._foreignModuleFactory(ctx, createData);
+        return Promise.resolve(getAllMethodNames(this._foreignModule));
+      }
+      return Promise.reject(new Error(`Unexpected usage`));
+    }
+    // foreign method request
+    fmr(method, args) {
+      if (!this._foreignModule || typeof this._foreignModule[method] !== "function") {
+        return Promise.reject(new Error("Missing requestHandler or method: " + method));
+      }
+      try {
+        return Promise.resolve(this._foreignModule[method].apply(this._foreignModule, args));
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+  };
+  EditorSimpleWorker._diffLimit = 1e5;
+  EditorSimpleWorker._suggestionsLimit = 1e4;
+  if (typeof importScripts === "function") {
+    globals.monaco = createMonacoBaseAPI();
+  }
+
+  // node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/editor.worker.js
+  var initialized = false;
+  function initialize(foreignModule) {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+    const simpleWorker = new SimpleWorkerServer((msg) => {
+      self.postMessage(msg);
+    }, (host) => new EditorSimpleWorker(host, foreignModule));
+    self.onmessage = (e) => {
+      simpleWorker.onmessage(e.data);
+    };
+  }
+  self.onmessage = (e) => {
+    if (!initialized) {
+      initialize(null);
+    }
+  };
+})();
