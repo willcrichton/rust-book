@@ -40,7 +40,7 @@ prompt.distractors = [
     "`(_, n)`"
 ]
 context = """ 
-The pattern `(_, n)` is not valid because `a` is an array of tuples, not a tuple itself.
+The pattern `(_, n)` is not valid because `a` is a length one array of tuples, not a tuple itself.
 """
 
 [[questions]]
