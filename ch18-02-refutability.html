@@ -158,7 +158,7 @@ to match. Patterns that can fail to match for some possible value are
 <ul>
 <li>In the expression <code>if let Some(x) = a_value</code>, then <code>Some(x)</code> is refutable. If the value in the <code>a_value</code> variable is <code>None</code> rather than
 <code>Some</code>, the <code>Some(x)</code> pattern will not match. </li>
-<li>In the expression <code>let &amp;[x, ..] = a_slice</code>, then <code>&amp;[x, ..]</code> is refutable. If the value in the <code>a_slice</code> variable has zero elements, the <code>&amp;[x, ..]</code> pattern will not match.</li>
+<li>In the expression <code>if let &amp;[x, ..] = a_slice</code>, then <code>&amp;[x, ..]</code> is refutable. If the value in the <code>a_slice</code> variable has zero elements, the <code>&amp;[x, ..]</code> pattern will not match.</li>
 </ul>
 <!-- END INTERVENTION: 3c29eb2d-cbe9-4a2c-99b8-aa5c6467c8b4 -->
 <p>Function parameters, <code>let</code> statements, and <code>for</code> loops can only accept
