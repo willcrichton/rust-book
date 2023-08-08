@@ -29572,8 +29572,7 @@ var __publicField = (obj, key, value) => {
       return "read";
     } else if (c2 === "W") {
       return "write";
-    }
-    if (c2 == "O") {
+    } else if (c2 == "O") {
       return "own";
     } else {
       return "flow";

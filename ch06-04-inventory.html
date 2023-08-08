@@ -170,7 +170,7 @@ fn make_exciting(s: &str) -> String {
 <hr />
 <p>A few important caveats about this experimental technology:</p>
 <p><strong>PLATFORM COMPATIBILITY:</strong> the in-browser IDE does not work on touch-screens. The in-browser IDE has only been tested to work on Google Chrome 109 and Firefox 107. It definitely does not work in Safari.</p>
-<p><strong>MEMORY USAGE:</strong> the in-browser IDE uses a <a href="https://rustwasm.github.io/book/">WebAssembly</a> build of <a href="https://github.com/rust-lang/rust-analyzer">rust-analyzer</a>, which can take up a fair amount of memory. Each instance of the IDE appears to take around ~300 MB. </p>
+<p><strong>MEMORY USAGE:</strong> the in-browser IDE uses a <a href="https://rustwasm.github.io/book/">WebAssembly</a> build of <a href="https://github.com/rust-lang/rust-analyzer">rust-analyzer</a>, which can take up a fair amount of memory. Each instance of the IDE appears to take around ~300 MB. (Note: we have also received some reports of &gt;10GB memory usage.)</p>
 <p><strong>SCROLLING:</strong> the in-browser IDE will &quot;eat&quot; your cursor if your cursor intersects with the editor while scrolling. If you're having trouble scrolling the page, try moving your cursor onto the rightmost scrollbar.</p>
 <p><strong>LOAD TIMES:</strong> the IDE may take up to 15 seconds to initialize for a new program. It will say &quot;Loading...&quot; as you interact with code in the editor.</p>
 <h3 id="the-quiz"><a class="header" href="#the-quiz">The Quiz</a></h3>

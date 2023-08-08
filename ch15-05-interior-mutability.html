@@ -714,8 +714,7 @@ than transferring ownership from <code>value</code> to <code>a</code> or having 
 can both refer to <code>a</code>, which is what we did in Listing 15-18.</p>
 <p>After we’ve created the lists in <code>a</code>, <code>b</code>, and <code>c</code>, we want to add 10 to the
 value in <code>value</code>. We do this by calling <code>borrow_mut</code> on <code>value</code>, which uses the
-automatic dereferencing feature we discussed in Chapter 5 (see the section
-<a href="ch05-03-method-syntax.html#wheres-the---operator">“Where’s the <code>-&gt;</code> Operator?”</a><!-- ignore -->) to
+automatic dereferencing feature we discussed in Chapter 4 to
 dereference the <code>Rc&lt;T&gt;</code> to the inner <code>RefCell&lt;T&gt;</code> value. The <code>borrow_mut</code>
 method returns a <code>RefMut&lt;T&gt;</code> smart pointer, and we use the dereference operator
 on it and change the inner value.</p>
