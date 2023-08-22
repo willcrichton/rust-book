@@ -31500,7 +31500,6 @@ var __publicField = (obj, key, value) => {
     ]
   };
   let renderArrows = (containerRef, stepContainerRef, arrowContainerRef) => {
-    reactExports.useContext(ConfigContext);
     reactExports.useEffect(() => {
       let container = containerRef.current;
       let stepContainer = stepContainerRef.current;
