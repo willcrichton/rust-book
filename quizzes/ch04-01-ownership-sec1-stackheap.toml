@@ -36,25 +36,3 @@ answer.answer = "2"
 context = """
 The two boxes contain the two copies of the number 15. The assignment `let b = a` copies the heap pointer, but not the number on the heap.
 """
-
-[[questions]]
-id = "b09820e6-7938-49d5-9147-ab76987d37fd"
-type = "ShortAnswer"
-prompt.prompt = """
-Consider the execution of the following snippet, with an intermediate state shown:
-
-```aquascope,interpreter
-#fn main() {
-let mut a = Box::new([0, 1, 2, 3, 4, 5]);
-let mut b = a;`[]`
-b[0] = 6;
-#}
-```
-
-In the final state of the snippet, what is the value of `a[0]`? Write your answer as a digit, e.g. 0 or 1.
-"""
-answer.answer = "6"
-context = """
-Because `b` and `a` point to the same data, a change to one will affect the other. `a[0]` has the value 6.
-Note that Rust will not allow you to actually access `a[0]`, as we will discuss shortly.
-"""

@@ -45,7 +45,8 @@ prompt.distractors = [
   "The struct is more syntactically verbose to construct than the enum"
 ]
 context = """
-It's perfectly fine to have structs contain `Option` types as fields. But if your data structure has invariants like "exactly one of two optional fields should be `Some`",
+It's perfectly fine to have structs contain `Option` types as fields (the question asked for which is **NOT** a valid reason).
+But if your data structure has invariants like "exactly one of two optional fields should be `Some`",
 then that invariant is better ensured by use of an enum.
 """
 

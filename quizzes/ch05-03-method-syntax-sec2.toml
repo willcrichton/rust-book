@@ -6,7 +6,7 @@ Say you have a variable `v` of type `&mut Vec<i32>`, and you want to call the `l
 following signature:
 
 ```
-impl<T> Vec<T> {
+impl Vec<i32> {
   fn len(&self) -> usize {
     /* ... */
   }

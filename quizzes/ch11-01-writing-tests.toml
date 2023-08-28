@@ -60,5 +60,5 @@ fn test() {
   """
 ]
 context = """
-`should_err` does not exist in Rust --- any test that returns a `Result` must return `Ok` to pass.
+`should_err` does not exist in Rust &mdash; any test that returns a `Result` must return `Ok` to pass.
 """

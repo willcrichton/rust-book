@@ -25,11 +25,11 @@ impl Post {
 }
 ```
 
-Which of the following are valid reasons to prefer the struct/trait representation over the enum representation?
+Which of the following are good reasons to prefer the struct/trait representation over the enum representation?
 """
 answer.answer = [
     "An API client could add a new state to the system",
-    "Adding a new state does not require modifying methods on other states"
+    "Adding a new state does not require modifying methods on every other state"
 ]
 prompt.distractors = [
     "The use of `match` is slower at runtime than dynamic dispatch",

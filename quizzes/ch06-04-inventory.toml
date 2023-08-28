@@ -156,7 +156,7 @@ a caller could not call `make_separator` on a substring of a bigger string. It w
 they could not use a string literal like `make_separator("Rust")`.
 
 The most idiomatic solution to this problem uses a construct you haven't seen yet: [`Cow`](https://doc.rust-lang.org/std/borrow/enum.Cow.html).
-The copy-on-write smart pointer would enable this function to return *either* an owned string *or* a string reference without a type error.
+The clone-on-write smart pointer would enable this function to return *either* an owned string *or* a string reference without a type error.
 """
 
 [[questions]]

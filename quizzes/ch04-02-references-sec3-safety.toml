@@ -36,8 +36,7 @@ answer.doesCompile = false
 answer.lineNumber = 6
 context = """
 It is illegal to use a mutable reference to a value (`s3`) while an immutable reference 
-is live (`s2`). The last line of the error is the `println` on line 6, because if you 
-deleted that line, then this program would compile.
+is live (`s2`).
 """
 
 [[questions]]
@@ -70,7 +69,6 @@ possibly cause undefined behavior if executed. If none of these programs could c
 then check "None of these programs" .
 """
 answer.answer = [
-
 """
 ```
 let v = vec![1, 2, 3];

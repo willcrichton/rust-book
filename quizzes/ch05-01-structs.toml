@@ -18,7 +18,7 @@ fn main() {
 answer.doesCompile = true
 answer.stdout = "2"
 context = """ 
-The `..a` syntax is a shallow copy of each field, so the second `a.x += 1` has no effect on `b`.
+The `..a` syntax copies each field of `a` into `b` (except `y`), so the second `a.x += 1` has no effect on `b`.
 """
 
 [[questions]]

@@ -59,7 +59,7 @@ prompt.distractors = [
 context = """
 Two mutable references to disjoint indices is reasonable because the borrow checker doesn't understand when indices are disjoint. See: [`slice::split_at_mut`](https://doc.rust-lang.org/stable/std/primitive.slice.html#method.split_at_mut).
 
-Allowing values to be uninitialized is reasonable because the borrow checker adopts a conservative policy that values must always initialized, but it's sometimes useful to work with uninitialized values. See [`MaybeUninit`](https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html) and the [`take_mut`](https://docs.rs/take_mut/0.2.2/take_mut/index.html) crate.
+Allowing values to be uninitialized is reasonable because the borrow checker adopts a conservative policy that values must be always initialized, but it's sometimes useful to work with uninitialized values. See [`MaybeUninit`](https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html) and the [`take_mut`](https://docs.rs/take_mut/0.2.2/take_mut/index.html) crate.
 
 Having a struct hold a reference to itself is reasonable because the borrow checker cannot
 reason about the lifetime of self-references. See the [`std::pin`](https://doc.rust-lang.org/stable/std/pin/index.html) module.

@@ -42,7 +42,7 @@ prompt.distractors = [
 ]
 context = """
 Procedural macros are the only way to create a custom derive. Procedural macros
-are also useful when you need code to analyze the macro user's syntax --- declarative
+are also useful when you need code to analyze the macro user's syntax &mdash; declarative
 macros only permit shuffling around the input, not e.g. computing its size.
 
 Declarative macros can generate variable-length sequences of code, and can wrap/produce

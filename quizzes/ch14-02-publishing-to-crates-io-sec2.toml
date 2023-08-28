@@ -33,6 +33,6 @@ Adding documentation to public functions is certainly recommended, but not requi
 want Rust to treat undocumented code as an error, you can add the following statement at the root of your library:
 
 ```
-#![deny(rustdoc::missing_docs)]
+#![deny(missing_docs)]
 ```
 """

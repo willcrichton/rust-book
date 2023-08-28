@@ -11,7 +11,8 @@ fn main() {
 answer.doesCompile = false
 answer.lineNumber = 3
 context = """
-An array can only contain elements of a single type.
+An array can only contain elements of a single type. The syntax `[message, 100]` creates an array with two elements.
+The variable `message` is a string, and the constant `100` is a number.
 """
 
 [[questions]]
@@ -20,13 +21,13 @@ type = "Tracing"
 prompt.program = """
 fn main() {
   let t = ([1; 2], [3; 4]);
-  let (a, _) = t;
+  let (a, b) = t;
   println!("{}", a[0] + t.1[0]); 
 }
 """
 answer.doesCompile = true
 answer.stdout = "4"
 context = """
-The syntax `[x; y]` declares an array with `y` copies of the value `x`. The syntax `(a, _)` destructures `t` and binds `a` to `[1; 2]`. 
+The syntax `[x; y]` declares an array with `y` copies of the value `x`. The syntax `(a, b)` destructures `t` and binds `a` to `[1; 2]`. 
 The syntax `t.1` refers to the second element of `t`, which is `[3; 4]`.
 """

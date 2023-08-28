@@ -207,7 +207,7 @@ the iterator and returns an optional reference to the previous element, either `
 This detail is relevant to safely using vectors. For example, say we wanted to duplicate a vector in-place, such as `[1, 2]` becoming `[1, 2, 1, 2]`.
 A naive implementation might look like this, annotated with the permissions inferred by the compiler:
 
-```aquascope,permissions,stepper,boundaries
+```aquascope,permissions,stepper,boundaries,shouldFail
 fn dup_in_place(v: &mut Vec<i32>) {
     for n_ref in v.iter() {`(focus,paths:*v)`
         v.push(*n_ref);`{}`

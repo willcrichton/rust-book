@@ -241,7 +241,7 @@ Rust's permissions are designed to prevent undefined behavior. For example, one 
 
 ```aquascope,interpreter,shouldFail,horizontal
 #fn main() {
-let v = vec![1, 2, 3];
+let mut v = vec![1, 2, 3];
 let n = &v[0];`[]`
 v.push(4);`[]`
 println!("{n}");`[]`

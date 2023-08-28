@@ -2,7 +2,7 @@
 id = "3da96b29-d975-4cd8-a8eb-b1a6bd9b5c0a"
 type = "MultipleChoice"
 prompt.prompt = """
-Which of the following is NOT a reason to wrap unit tests in `#[cfg(test)] mod tests { ... }`?
+Which of the following is NOT a good reason to wrap unit tests in `#[cfg(test)] mod tests { ... }`?
 """
 answer.answer = "It gives your tests access to private functions"
 prompt.distractors = [

@@ -16,7 +16,7 @@ Write your answer as a digit. For example, if the correct expression is `*y`, th
 answer.answer = "3"
 context = """
 `***y` is the correct expression. `y` has the type `Box<&Box<i32>>`. It is a heap pointer to a stack reference 
-to a heap pointer. Therefore `y` must be dereferenced three times for each layer of indirection.
+to a heap pointer. Therefore `y` must be dereferenced three times, once for each layer of indirection.
 """
 
 [[questions]]

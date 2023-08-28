@@ -5,7 +5,7 @@ prompt.prompt = """
 Which of the following is NOT a valid kind of fix to the issue of returning a stack reference from a function?
 """
 answer.answer = "Extend the lifetime of the stack frame"
-prompt.distractors = ["Use a reference-counted pointer", "Move ownership of the returned value", "Expect a mutable slot from the caller"]
+prompt.distractors = ["Use a reference-counted pointer", "Take ownership of the returned value", "Expect a mutable slot from the caller"]
 context = """
 A stack frame cannot have its lifetime extended, so that is not a valid solution.
 """

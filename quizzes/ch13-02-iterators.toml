@@ -55,7 +55,7 @@ fn main() {
 answer.doesCompile = true
 answer.stdout = "4 2"
 context = """
-The order of iterators matters --- a filter and a map is not the same as a map and a filter!
+The order of iterators matters &mdash; a filter and a map is not the same as a map and a filter!
 
 You might wonder why the first filter uses `*x` and the second filter does not. 
 `v.iter()` produces an `Iterator<Item = &i32>`. The `.filter()` call takes an `Iterator<Item = T>` as input,

@@ -135,18 +135,18 @@ As a running example, we are going to look at programs using the vector data str
 
 ```aquascope,interpreter,horizontal
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];`[]`
-vec.push(4);`[]`
+let mut v: Vec<i32> = vec![1, 2, 3];`[]`
+v.push(4);`[]`
 #}
 ```
 
-The macro `vec!` creates a vector with the elements between the brackets. The vector `vec` has type `Vec<i32>`. The syntax `<i32>` means the elements of the vector have type `i32`.
+The macro `vec!` creates a vector with the elements between the brackets. The vector `v` has type `Vec<i32>`. The syntax `<i32>` means the elements of the vector have type `i32`.
 
-One important implementation detail is that `vec` allocates a heap array of a certain *capacity*. We can peek into `Vec`'s internals and see this detail for ourselves:
+One important implementation detail is that `v` allocates a heap array of a certain *capacity*. We can peek into `Vec`'s internals and see this detail for ourselves:
 
 ```aquascope,interpreter,horizontal,concreteTypes
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];`[]`
+let mut v: Vec<i32> = vec![1, 2, 3];`[]`
 #}
 ```
 
@@ -158,16 +158,16 @@ To tie this back to memory safety, let's bring references into the mix. Say we c
 
 ```aquascope,interpreter,shouldFail,horizontal
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];
-let num: &i32 = &vec[2];`[]`
-vec.push(4);`[]`
+let mut v: Vec<i32> = vec![1, 2, 3];
+let num: &i32 = &v[2];`[]`
+v.push(4);`[]`
 println!("Third element is {}", *num);`[]`
 #}
 ```
 
-Initially, `vec` points to an array with 3 elements on the heap. Then `num` is created as a reference to the third element, as seen at L1. However, the operation `vec.push(4)` resizes `vec`. The resize will deallocate the previous array and allocate a new, bigger array. In the process, `num` is left pointing to invalid memory. Therefore at L3, dereferencing `*num` reads invalid memory, causing undefined behavior.
+Initially, `v` points to an array with 3 elements on the heap. Then `num` is created as a reference to the third element, as seen at L1. However, the operation `v.push(4)` resizes `v`. The resize will deallocate the previous array and allocate a new, bigger array. In the process, `num` is left pointing to invalid memory. Therefore at L3, dereferencing `*num` reads invalid memory, causing undefined behavior.
 
-In more abstract terms, the issue is that the vector `vec` is both aliased (by the reference `num`) and mutated (by the operation `vec.push(4)`). So to avoid these kinds of issues, Rust follows a basic principle:
+In more abstract terms, the issue is that the vector `v` is both aliased (by the reference `num`) and mutated (by the operation `v.push(4)`). So to avoid these kinds of issues, Rust follows a basic principle:
 
 > **Pointer Safety Principle**: data should never be aliased and mutated at the same time.
 
@@ -192,24 +192,24 @@ To illustrate this idea, let's look at the permissions on a variation of the pro
 
 ```aquascope,permissions,stepper
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];
-let num: &i32 = &vec[2];
+let mut v: Vec<i32> = vec![1, 2, 3];
+let num: &i32 = &v[2];
 println!("Third element is {}", *num);
-vec.push(4);
+v.push(4);
 #}
 ```
 
 Let's walk through each line:
 
-1. After `let mut vec = (...)`, the variable `vec` has been initialized (indicated by <i class="fa fa-level-up"></i>). It gains @Perm[gained]{read}@Perm[gained]{write}@Perm[gained]{own} permissions (the plus sign indicates gain).
-2. After `let num = &vec[2]`, the data in `vec` has been **borrowed** by `num` (indicated by <i class="fa fa-arrow-right"></i>). Three things happen:
-   - The borrow removes @Perm[lost]{write}@Perm[lost]{own} permissions from `vec` (the slash indicates loss). `vec` cannot be written or owned, but it can still be read.
+1. After `let mut v = (...)`, the variable `v` has been initialized (indicated by <i class="fa fa-level-up"></i>). It gains @Perm[gained]{read}@Perm[gained]{write}@Perm[gained]{own} permissions (the plus sign indicates gain).
+2. After `let num = &v[2]`, the data in `v` has been **borrowed** by `num` (indicated by <i class="fa fa-arrow-right"></i>). Three things happen:
+   - The borrow removes @Perm[lost]{write}@Perm[lost]{own} permissions from `v` (the slash indicates loss). `v` cannot be written or owned, but it can still be read.
    - The variable `num` has gained @Perm{read}@Perm{own} permissions. `num` is not writable (the missing @Perm{write} permission is shown as a dash <span class="perm write">‒</span>) because it was not marked `let mut`.
    - The **path** `*num` has gained the @Perm{read} permission.
-3. After `println!(...)`, then `num` is no longer in use, so `vec` is no longer borrowed. Therefore:
-   - `vec` regains its @Perm{write}@Perm{own} permissions (indicated by <i class="fa fa-rotate-left"></i>).
+3. After `println!(...)`, then `num` is no longer in use, so `v` is no longer borrowed. Therefore:
+   - `v` regains its @Perm{write}@Perm{own} permissions (indicated by <i class="fa fa-rotate-left"></i>).
    - `num` and `*num` have lost all of their permissions (indicated by <i class="fa fa-level-down"></i>).
-4. After `vec.push(4)`, then `vec` is no longer in use, and it loses all of its permissions.
+4. After `v.push(4)`, then `v` is no longer in use, and it loses all of its permissions.
 
 Next, let's explore a few nuances of the diagram. First, why do you see both `num` and `*num`? Because it's different to access data through a reference, versus to manipulate the reference itself. For example, say we declared a reference to a number with `let mut`:
 
@@ -232,15 +232,15 @@ More generally, permissions are defined on **paths** and not just variables. A p
 - Any combination of the above, like `*((*a)[0].1)`.
 
 
-Second, why do paths lose permissions when they become unused? Because some permissions are mutually exclusive. If `num = &vec[2]`, then `vec` cannot be mutated or dropped while `num` is in use. But that doesn't mean it's invalid to use `num` for more time. For example, if we add another `print` to the above program, then `num` simply loses its permissions later:
+Second, why do paths lose permissions when they become unused? Because some permissions are mutually exclusive. If `num = &v[2]`, then `v` cannot be mutated or dropped while `num` is in use. But that doesn't mean it's invalid to use `num` for more time. For example, if we add another `print` to the above program, then `num` simply loses its permissions later:
 
 ```aquascope,permissions,stepper
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];
-let num: &i32 = &vec[2];
+let mut v: Vec<i32> = vec![1, 2, 3];
+let num: &i32 = &v[2];
 println!("Third element is {}", *num);
 println!("Again, the third element is {}", *num);
-vec.push(4);
+v.push(4);
 #}
 ```
 
@@ -252,32 +252,32 @@ Rust uses these permissions in its **borrow checker**. The borrow checker looks 
 
 ```aquascope,permissions,boundaries,stepper,shouldFail
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];
-let num: &i32 = &vec[2];`{}`
+let mut v: Vec<i32> = vec![1, 2, 3];
+let num: &i32 = &v[2];`{}`
 vec.push(4);`{}`
 println!("Third element is {}", *num);
 #}
 ```
 
-Any time a path is used, Rust expects that path to have certain permissions depending on the operation. For example, the borrow `&vec[2]` requires that `vec` is readable. Therefore the @Perm{read} permission is shown between the operation `&` and the path `vec`. The letter is filled-in because `vec` has the read permission at that line.
+Any time a path is used, Rust expects that path to have certain permissions depending on the operation. For example, the borrow `&v[2]` requires that `v` is readable. Therefore the @Perm{read} permission is shown between the operation `&` and the path `v`. The letter is filled-in because `v` has the read permission at that line.
 
-By contrast, the mutating operation `vec.push(4)` requires that `vec` is readable and writable. Both @Perm{read} and @Perm{write} are shown. However, `vec` does not have write permissions (it is borrowed by `num`). So the letter @Perm[missing]{write} is hollow, indicating that the write permission is *expected* but `vec` does not have it.
+By contrast, the mutating operation `v.push(4)` requires that `v` is readable and writable. Both @Perm{read} and @Perm{write} are shown. However, `v` does not have write permissions (it is borrowed by `num`). So the letter @Perm[missing]{write} is hollow, indicating that the write permission is *expected* but `v` does not have it.
 
 If you try to compile this program, then the Rust compiler will return the following error:
 
 ```text
-error[E0502]: cannot borrow `vec` as mutable because it is also borrowed as immutable
+error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
  --> test.rs:4:1
   |
-3 | let num: &i32 = &vec[2];
-  |                  --- immutable borrow occurs here
-4 | vec.push(4);
-  | ^^^^^^^^^^^ mutable borrow occurs here
+3 | let num: &i32 = &v[2];
+  |                  - immutable borrow occurs here
+4 | v.push(4);
+  | ^^^^^^^^^ mutable borrow occurs here
 5 | println!("Third element is {}", *num);
   |                                 ---- immutable borrow later used here
 ```
 
-The error message explains that `vec` cannot be mutated while the reference `num` is in use. That's the surface-level reason &mdash; the underlying issue is that `num` could be invalidated by `push`. Rust catches that potential violation of memory safety.
+The error message explains that `v` cannot be mutated while the reference `num` is in use. That's the surface-level reason &mdash; the underlying issue is that `num` could be invalidated by `push`. Rust catches that potential violation of memory safety.
 
 
 ### Mutable References Provide Unique and Non-Owning Access to Data
@@ -288,8 +288,8 @@ The mechanism for this is **mutable references** (also called **unique reference
 
 ```aquascope,permissions,stepper,boundaries
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];
-let num: &mut i32 = &mut vec[2];
+let mut v: Vec<i32> = vec![1, 2, 3];
+let num: &mut i32 = &mut v[2];
 *num += 1;
 println!("Third element is {}", *num);
 println!("Vector is now {:?}", vec);
@@ -300,19 +300,19 @@ println!("Vector is now {:?}", vec);
 
 A mutable reference is created with the `&mut` operator. The type of `num` is written as `&mut i32`. Compared to immutable references, you can see two important differences in the permissions:
 
-1. When `num` was an immutable reference, `vec` still had the @Perm{read} permission. Now that `num` is a mutable reference, `vec` has lost _all_ permissions while `num` is in use.
+1. When `num` was an immutable reference, `v` still had the @Perm{read} permission. Now that `num` is a mutable reference, `v` has lost _all_ permissions while `num` is in use.
 2. When `num` was an immutable reference, the path `*num` only had the @Perm{read} permission. Now that `num` is a mutable reference, `*num` has also gained the @Perm{write} permission.
 
-The first observation is what makes mutable references *safe*. Mutable references allow mutation but prevent aliasing. The borrowed path `vec` becomes temporarily unusable, so effectively not an alias.
+The first observation is what makes mutable references *safe*. Mutable references allow mutation but prevent aliasing. The borrowed path `v` becomes temporarily unusable, so effectively not an alias.
 
-The second observation is what makes mutable references *useful*. `vec[2]` can be mutated through `*num`. For example, `*num += 1` mutates `vec[2]`. Note that `*num` has the @Perm{write} permission, but `num` does not. `num` refers to the mutable reference itself, e.g. `num` cannot be reassigned to a *different* mutable reference.
+The second observation is what makes mutable references *useful*. `v[2]` can be mutated through `*num`. For example, `*num += 1` mutates `v[2]`. Note that `*num` has the @Perm{write} permission, but `num` does not. `num` refers to the mutable reference itself, e.g. `num` cannot be reassigned to a *different* mutable reference.
 
 Mutable references can also be temporarily "downgraded" to read-only references. For example:
 
 ```aquascope,permissions,stepper,boundaries
 #fn main() {
-let mut vec: Vec<i32> = vec![1, 2, 3];
-let num: &mut i32 = &mut vec[2];`(focus,paths:*num)`
+let mut v: Vec<i32> = vec![1, 2, 3];
+let num: &mut i32 = &mut v[2];`(focus,paths:*num)`
 let num2: &i32 = &*num;`(focus,paths:*num)`
 println!("{} {}", *num, *num2);
 #}
@@ -381,7 +381,7 @@ The key idea is that in this example, Rust knows how long `s_ref` lives. But Rus
 ```aquascope,permissions,boundaries,showFlows
 fn first(strings: &Vec<String>) -> &String {
     let s_ref = &strings[0];
-    return s_ref;`{}`
+    s_ref`{}`
 }
 ```
 
