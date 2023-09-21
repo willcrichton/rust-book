@@ -3783,3 +3783,12 @@
   content: "?";
   vertical-align: middle;
 }
+.mdbook-quiz .multipart-context {
+  padding-left: 1em;
+}
+.mdbook-quiz .multipart-context .multipart-context-content {
+  border: 1px solid var(--theme-popup-border);
+  padding: 0.5em;
+  background-color: var(--theme-popup-bg);
+  margin-bottom: 1em;
+}
