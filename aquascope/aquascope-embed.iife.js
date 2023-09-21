@@ -29601,7 +29601,7 @@ var __publicField = (obj, key, value) => {
       update(points, transactions) {
         for (let e2 of transactions.effects) {
           if (e2.is(ty)) {
-            return RangeSet.of(transform(e2.value), true);
+            return RangeSet.of(transform(e2.value, transactions.newDoc), true);
           }
         }
         return transactions.docChanged ? RangeSet.of([]) : points;
@@ -29610,17 +29610,17 @@ var __publicField = (obj, key, value) => {
     });
   }
   const loanFactsStateType = StateEffect.define();
-  const loanFactsField = genStateField(loanFactsStateType, (ts) => ts.flatMap(loanFactsToDecoration));
-  function loanFactsToDecoration({ refinerTag, regionTag, refinerPoint, region }) {
+  const loanFactsField = genStateField(loanFactsStateType, (ts, text) => ts.flatMap((t2) => loanFactsToDecoration(t2, text)));
+  function loanFactsToDecoration({ refinerTag, regionTag, refinerPoint, region }, text) {
     let loanDeco = Decoration.mark({
       class: "aquascope-loan",
       tagName: refinerTag
-    }).range(refinerPoint.start, refinerPoint.end);
-    let regionDecos = region.refined_ranges.filter((range) => range.start != range.end).map((range) => {
+    }).range(linecolToPosition(refinerPoint.start, text), linecolToPosition(refinerPoint.end, text));
+    let regionDecos = region.refined_ranges.filter((range) => !_.isEqual(range.start, range.end)).map((range) => {
       let highlightedRange = Decoration.mark({
         class: "aquascope-live-region",
         tagName: regionTag
-      }).range(range.start, range.end);
+      }).range(linecolToPosition(range.start, text), linecolToPosition(range.end, text));
       return highlightedRange;
     });
     return [loanDeco, ...regionDecos];
@@ -29742,6 +29742,7 @@ var __publicField = (obj, key, value) => {
     });
     return { setEffect, field };
   };
+  let linecolToPosition = (p2, t2) => t2.line(p2.line + 1).from + p2.column;
   let PermChar$1 = ({ content: content2, names, act, showit, hideit }) => {
     let name2 = permName(content2);
     name2 = name2.charAt(0).toUpperCase() + name2.slice(1);
@@ -29840,14 +29841,15 @@ var __publicField = (obj, key, value) => {
         toi(this.boundary.expected.drop),
         toi(this.boundary.expecting_flow !== void 0)
       ].reduce((a2, b2) => a2 + b2, 0);
-      this.line = view.state.doc.lineAt(boundary.location);
+      this.line = view.state.doc.lineAt(linecolToPosition(boundary.location, view.state.doc));
     }
     eq(other) {
       return this.boundary.location === other.boundary.location;
     }
     toDOM(view) {
       var _a2;
-      let precedingText = view.state.sliceDoc(this.boundary.location - 1, this.boundary.location);
+      let location = linecolToPosition(this.boundary.location, view.state.doc);
+      let precedingText = view.state.sliceDoc(location - 1, location);
       let container = document.createElement("div");
       container.classList.add("permission-stack");
       container.classList.add(`stack-size-${this.numDisplayed}`);
@@ -29866,7 +29868,7 @@ var __publicField = (obj, key, value) => {
   function makeBoundaryDecorations(view, facts, boundaries, annotations) {
     return boundaries.map((b2) => Decoration.widget({
       widget: new BoundaryPointWidget(view, facts, b2, annotations)
-    }).range(b2.location));
+    }).range(linecolToPosition(b2.location, view.state.doc)));
   }
   var leaderLine_min = { exports: {} };
   /*! LeaderLine v1.1.5 (c) anseki https://anseki.github.io/leader-line/ */
@@ -31190,11 +31192,13 @@ var __publicField = (obj, key, value) => {
   var leaderLine_minExports = leaderLine_min.exports;
   const LeaderLine = /* @__PURE__ */ getDefaultExportFromCjs(leaderLine_minExports);
   let ConfigContext = React.createContext({});
-  let CodeContext$1 = React.createContext("");
+  let CodeContext$1 = React.createContext(void 0);
   let PathContext = React.createContext([]);
   let ErrorContext = React.createContext(void 0);
-  let codeRange = (code2, range) => {
-    return code2.slice(range.start, range.end);
+  let codeRange = (view, range) => {
+    let start = linecolToPosition(range.start, view.state.doc);
+    let end = linecolToPosition(range.end, view.state.doc);
+    return view.state.doc.sliceString(start, end);
   };
   let AbbreviatedView = ({ value }) => {
     let pathCtx = reactExports.useContext(PathContext);
@@ -31690,13 +31694,13 @@ var __publicField = (obj, key, value) => {
       )
     );
   };
-  let filterSteps = (steps, marks) => {
+  let filterSteps = (view, steps, marks) => {
     let stepsRev = [...steps].reverse();
     let indexedMarks = marks.map((idx) => {
       let stepRevIdx = stepsRev.findIndex((step) => {
         let frame = _.last(step.stack.frames);
-        let markInFrame = frame.body_span.start <= idx && idx <= frame.body_span.end;
-        let markAfterLoc = idx > frame.location.start;
+        let markInFrame = linecolToPosition(frame.body_span.start, view.state.doc) <= idx && idx <= linecolToPosition(frame.body_span.end, view.state.doc);
+        let markAfterLoc = idx > linecolToPosition(frame.location.start, view.state.doc);
         return markInFrame && markAfterLoc;
       });
       if (stepRevIdx == -1)
@@ -31736,12 +31740,12 @@ var __publicField = (obj, key, value) => {
     }
   }
   let markerField = makeDecorationField();
-  function renderInterpreter(view, container, trace, contents, config, annotations) {
+  function renderInterpreter(view, container, trace, config, annotations) {
     let root = client.createRoot(container);
     let marks = (annotations == null ? void 0 : annotations.state_locations) || [];
     let widgetRanges;
     if (marks.length > 0) {
-      let [sortedMarks, filteredSteps] = filterSteps(trace.steps, marks);
+      let [sortedMarks, filteredSteps] = filterSteps(view, trace.steps, marks);
       widgetRanges = sortedMarks;
       trace.steps = filteredSteps;
     } else {
@@ -31755,7 +31759,7 @@ var __publicField = (obj, key, value) => {
     });
     root.render(React.createElement(
       CodeContext$1.Provider,
-      { value: contents },
+      { value: view },
       React.createElement(InterpreterView, { trace, config })
     ));
   }
@@ -31982,7 +31986,7 @@ var __publicField = (obj, key, value) => {
       this.step = step;
       this.facts = facts;
       this.annotations = annotations;
-      this.line = view.state.doc.lineAt(stepLocation(step));
+      this.line = view.state.doc.lineAt(linecolToPosition(stepLocation(step), view.state.doc));
     }
     eq(other) {
       return this.line.number === other.line.number;
@@ -32015,7 +32019,7 @@ var __publicField = (obj, key, value) => {
     return stateSteps.map((step) => Decoration.widget({
       widget: new PermissionStepLineWidget(view, step, facts, annotations),
       side: 1
-    }).range(stepLocation(step)));
+    }).range(linecolToPosition(stepLocation(step), view.state.doc)));
   }
   function makePermissionsDecorations(view, results, annotations) {
     let stepDecos = [];
@@ -32206,8 +32210,7 @@ fn main() {
         this.view.destroy();
         this.metaContainer.unmount();
       }
-      let contents = this.view.state.doc.toJSON().join("\n");
-      renderInterpreter(this.view, this.interpreterContainer, trace, contents, config, annotations);
+      renderInterpreter(this.view, this.interpreterContainer, trace, config, annotations);
     }
     async renderOperation(operation, { response, config, annotations } = {}) {
       console.debug(`Rendering operation: ${operation}`);

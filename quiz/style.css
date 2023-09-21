@@ -3439,10 +3439,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  /* This property ensures that the bottom bar on webkit-based mobile browsers
-   * doesn't overlap with the bottom of the quiz window. See:
-   * https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/ */
-  min-height: -webkit-fill-available;
+  height: 100dvh;
   z-index: 999;
   padding: 0 10rem;
   box-sizing: border-box;
@@ -3492,7 +3489,9 @@
   height: 0;
   width: 50%;
   font-size: 0.8em;
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 @media (max-width: 799px) {
   .mdbook-quiz .exit-explanation {
