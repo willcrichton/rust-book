@@ -3792,3 +3792,7 @@
   background-color: var(--theme-popup-bg);
   margin-bottom: 1em;
 }
+.mdbook-quiz .rotate-arrow {
+  transform: rotate(-90deg);
+  display: inline-block;
+}
