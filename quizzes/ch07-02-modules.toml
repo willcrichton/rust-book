@@ -2,7 +2,7 @@
 id = "23c95879-aae2-4121-bf89-21278f7b6ec6"
 type = "MultipleChoice"
 prompt.prompt = """
-Which of the following is NOT benefit of using modules?
+Which of the following is NO benefit of using modules?
 """
 answer.answer = "Modules boost the runtime performance of interdependent code within the same module"
 prompt.distractors = [
