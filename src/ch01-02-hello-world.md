@@ -133,7 +133,7 @@ Third, you see the `"Hello, world!"` string. We pass this string as an argument
 to `println!`, and the string is printed to the screen.
 
 Fourth, we end the line with a semicolon (`;`), which indicates that this
-expression is over and the next one is ready to begin. Most lines of Rust code
+statement is over and the next one is ready to begin. Most lines of Rust code
 end with a semicolon.
 
 ### Compiling and Running Are Separate Steps
