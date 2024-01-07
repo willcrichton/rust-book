@@ -138,6 +138,8 @@ fn stringify_name_with_title(name: &Vec<String>) -> String {
 }
 ```
 
+This solution works becauase [`slice::join`] already copies the data in `name` into the string `full`.
+
 In general, writing Rust functions is a careful balance of asking for the *right* level of permissions. For this example, it's most idiomatic to only expect the read permission on `name`.
 
 {{#quiz ../quizzes/ch04-03-fixing-ownership-errors-sec1-idioms.toml}}
@@ -455,6 +457,7 @@ When fixing an ownership error, you should ask yourself: is my program actually 
 [split_at_mut]: https://doc.rust-lang.org/std/primitive.slice.html#method.split_at_mut
 [unsafe]: ch19-01-unsafe-rust.html
 [`Vec::remove`]: https://doc.rust-lang.org/std/vec/struct.Vec.html#method.remove
+[`slice::join`]: https://doc.rust-lang.org/std/primitive.slice.html#method.join
 [iterators]: ch13-02-iterators.html
 [closures]: ch13-01-closures.html
 
