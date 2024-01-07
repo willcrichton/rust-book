@@ -247,10 +247,15 @@ use it, as shown here:
 Before the loop, we declare a variable named `counter` and initialize it to
 `0`. Then we declare a variable named `result` to hold the value returned from
 the loop. On every iteration of the loop, we add `1` to the `counter` variable,
-and then check whether the `counter` is equal to `10`. When it is, we use the
-`break` keyword with the value `counter * 2`. After the loop, we use a
-semicolon to end the statement that assigns the value to `result`. Finally, we
+and then check whether the `counter` is equal to `10`. 
+When it is, we use the `break` keyword with the value `counter * 2`. 
+After the loop, we use a semicolon to end the statement that assigns the value to `result`. Finally, we
 print the value in `result`, which in this case is `20`.
+
+> *Note:* the semicolon after `break counter * 2` is technically optional. `break` is very similar to `return`,
+> in that both can optionally take an expression as an argument, both cause a change in control flow.
+> Code after a `break` or `return` is never executed, so the Rust compiler treats a `break` expression and
+> a `return` expression as having the value unit, or `()`.
 
 #### Loop Labels to Disambiguate Between Multiple Loops
 
