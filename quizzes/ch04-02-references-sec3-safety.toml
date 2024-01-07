@@ -100,7 +100,8 @@ println!("{}", k);
 context = """
 As we saw earlier in the section, `v.push(n)` can cause `v` to reallocate its internal contents, invalidating any references to the elements of `v` on the heap.
 Therefore calling `give_and_take(&v, 4)` will cause previously-created element references to point to invalid memory. The two programs that bind `let n = &v[0]`
-before `give_and_take` are candidates for undefined behavior.
+before `give_and_take` are candidates for undefined behavior. `let v2 = &v` is not a candidate because a reference to the container `v` is not actually invalidated 
+by mutating `v`.
 
 The program that does `println!("{}", n)` will cause undefined behavior by reading the invalid memory. The program that does `println!("{}", k)` will not cause undefined
 behavior, because it does not use the invalidated reference.
