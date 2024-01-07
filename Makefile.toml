@@ -6,8 +6,19 @@ QUIZ_DEV_MODE = "yes"
 script = "mdbook serve --open"
 
 [tasks.watch-js]
-script = "cd js-extensions && pnpm watch"
+script = "pnpm watch"
+cwd = "js-extensions"
 
 [tasks.watch.run_task]
 name = ["watch-book", "watch-js"]
 parallel = true
+
+[tasks.build-js]
+script = "pnpm init-repo"
+cwd = "js-extensions"
+
+[tasks.build-mdbook]
+script = "mdbook build"
+
+[tasks.build]
+dependencies = ["build-js", "build-mdbook"]

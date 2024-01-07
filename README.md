@@ -46,6 +46,16 @@ Finally, you need [pnpm](https://pnpm.io/installation).
 
 ## Building
 
+### With cargo-make
+
+If you have [`cargo-make`] installed, then run:
+
+```bash
+$ cargo make install
+```
+
+### Without cargo-make
+
 First, build the Javascript extensions.
 
 ```bash
@@ -59,6 +69,8 @@ Then to build the book, type:
 ```bash
 $ mdbook build
 ```
+
+### Output
 
 The output will be in the `book` subdirectory. To check it out, open it in
 your web browser.
@@ -122,3 +134,5 @@ which is provided in `ci/dictionary.txt`. If the script produces a false
 positive (say, you used word `BTreeMap` which the script considers invalid),
 you need to add this word to `ci/dictionary.txt` (keep the sorted order for
 consistency).
+
+[`cargo-make`]: https://github.com/sagiegurari/cargo-make
