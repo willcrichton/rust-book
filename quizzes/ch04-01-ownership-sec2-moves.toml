@@ -71,7 +71,7 @@ fn move_a_box(b: Box<i32>) {
 Below are four snippets which are rejected by the Rust compiler. 
 Imagine that Rust instead allowed these snippets to compile and run. 
 Select each snippet that would cause undefined behavior, or select 
-"None of the above" if none of these snippets would cause undefined behavior.
+"None of these snippets" if none of these snippets would cause undefined behavior.
 """
 answer.answer = [
 """
@@ -105,7 +105,7 @@ println!("{}", b);
 move_a_box(b2);
 ```
 """,
-"None of the above"
+"None of these snippets"
 ]
 context = """
 The key idea is that when a box is passed to `move_a_box`, its memory is deallocated after `move_a_box` ends.
