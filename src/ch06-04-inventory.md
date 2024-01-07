@@ -27,7 +27,7 @@ fn make_exciting(s: &str) -> String {
 
 A few important caveats about this experimental technology:
 
-**PLATFORM COMPATIBILITY:** the in-browser IDE does not work on touch-screens. The in-browser IDE has only been tested to work on Google Chrome 109 and Firefox 107. It definitely does not work in Safari.
+**PLATFORM COMPATIBILITY:** the in-browser IDE does not work on touch-screens. The in-browser IDE has only been tested to work on Google Chrome 109 and Firefox 107. It might not work in older verisons of Safari.
 
 **MEMORY USAGE:** the in-browser IDE uses a [WebAssembly](https://rustwasm.github.io/book/) build of [rust-analyzer](https://github.com/rust-lang/rust-analyzer), which can take up a fair amount of memory. Each instance of the IDE appears to take around ~300 MB. (Note: we have also received some reports of >10GB memory usage.)
 
