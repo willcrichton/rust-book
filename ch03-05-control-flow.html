@@ -412,10 +412,16 @@ use it, as shown here:</p>
 <p>Before the loop, we declare a variable named <code>counter</code> and initialize it to
 <code>0</code>. Then we declare a variable named <code>result</code> to hold the value returned from
 the loop. On every iteration of the loop, we add <code>1</code> to the <code>counter</code> variable,
-and then check whether the <code>counter</code> is equal to <code>10</code>. When it is, we use the
-<code>break</code> keyword with the value <code>counter * 2</code>. After the loop, we use a
-semicolon to end the statement that assigns the value to <code>result</code>. Finally, we
+and then check whether the <code>counter</code> is equal to <code>10</code>. 
+When it is, we use the <code>break</code> keyword with the value <code>counter * 2</code>. 
+After the loop, we use a semicolon to end the statement that assigns the value to <code>result</code>. Finally, we
 print the value in <code>result</code>, which in this case is <code>20</code>.</p>
+<blockquote>
+<p><em>Note:</em> the semicolon after <code>break counter * 2</code> is technically optional. <code>break</code> is very similar to <code>return</code>,
+in that both can optionally take an expression as an argument, both cause a change in control flow.
+Code after a <code>break</code> or <code>return</code> is never executed, so the Rust compiler treats a <code>break</code> expression and
+a <code>return</code> expression as having the value unit, or <code>()</code>.</p>
+</blockquote>
 <h4 id="loop-labels-to-disambiguate-between-multiple-loops"><a class="header" href="#loop-labels-to-disambiguate-between-multiple-loops">Loop Labels to Disambiguate Between Multiple Loops</a></h4>
 <p>If you have loops within loops, <code>break</code> and <code>continue</code> apply to the innermost
 loop at that point. You can optionally specify a <em>loop label</em> on a loop that
