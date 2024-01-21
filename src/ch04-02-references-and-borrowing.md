@@ -232,7 +232,7 @@ More generally, permissions are defined on **paths** and not just variables. A p
 - Any combination of the above, like `*((*a)[0].1)`.
 
 
-Second, why do paths lose permissions when they become unused? Because some permissions are mutually exclusive. If `num = &v[2]`, then `v` cannot be mutated or dropped while `num` is in use. But that doesn't mean it's invalid to use `num` for more time. For example, if we add another `print` to the above program, then `num` simply loses its permissions later:
+Second, why do paths lose permissions when they become unused? Because some permissions are mutually exclusive. If you write `num = &v[2]`, then `v` cannot be mutated or dropped while `num` is in use. But that doesn't mean it's invalid to use `num` again. For example, if we add another `println!` to the above program, then `num` simply loses its permissions one line later:
 
 ```aquascope,permissions,stepper
 #fn main() {
@@ -243,6 +243,9 @@ println!("Again, the third element is {}", *num);
 v.push(4);
 #}
 ```
+
+It's only a problem if you attempt to use `num` again **after** mutating `v`. Let's look at this in more detail.
+
 
 ### The Borrow Checker Finds Permission Violations
 
