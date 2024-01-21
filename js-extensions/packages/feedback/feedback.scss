@@ -117,9 +117,10 @@
   border-right: 1px solid var(--popper-bg-hover);
 }
 
+
 .ReactModal__Overlay {
   z-index: 101; // must be >= #menu-bar z-index
-
+  background-color: rgba($color: rgb(57, 57, 57), $alpha: 0.1);
   textarea {
     font-family: 'Open Sans', sans-serif;
     min-width: 250px;
