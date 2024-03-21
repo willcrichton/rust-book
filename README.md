@@ -51,7 +51,7 @@ Finally, you need [pnpm](https://pnpm.io/installation).
 If you have [`cargo-make`] installed, then run:
 
 ```bash
-$ cargo make install
+$ cargo make build
 ```
 
 ### Without cargo-make
