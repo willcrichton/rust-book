@@ -477,8 +477,9 @@ second arm doesn’t have a match guard and therefore matches any `Some` variant
 
 There is no way to express the `if x % 2 == 0` condition within a pattern, so
 the match guard gives us the ability to express this logic. The downside of
-this additional expressiveness is that the compiler doesn't try to check for
-exhaustiveness when match guard expressions are involved.
+this additional expressiveness is that arms with match guards don't "count" towards
+exhaustiveness. So even if we added `Some(x) if x % 2 == 1` as an additional arm, we would still
+need the un-guarded `Some(x)` arm.
 
 In Listing 18-11, we mentioned that we could use match guards to solve our
 pattern-shadowing problem. Recall that we created a new variable inside the
