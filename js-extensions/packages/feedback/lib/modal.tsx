@@ -13,7 +13,13 @@ const modalStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    background: "var(--theme-popup-bg)",    
+    borderColor: "var(--theme-popup-border)",
+    color: "var(--fg)",
   },
+  overlay: {
+    backgroundColor: "color-mix(in srgb, var(--bg) 80%, transparent)"
+  }
 };
 
 type FeedbackModalProps = {
