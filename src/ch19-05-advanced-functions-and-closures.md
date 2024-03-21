@@ -93,8 +93,7 @@ Closures are represented by traits, which means you can’t return closures
 directly. In most cases where you might want to return a trait, you can instead
 use the concrete type that implements the trait as the return type of the
 function. However, you can’t do that with closures because they don’t have a
-concrete type that is returnable; you’re not allowed to use the function
-pointer `fn` as a return type, for example.
+concrete type that is returnable.
 
 The following code tries to return a closure directly, but it won’t compile:
 
