@@ -138,7 +138,7 @@ fn stringify_name_with_title(name: &Vec<String>) -> String {
 }
 ```
 
-This solution works becauase [`slice::join`] already copies the data in `name` into the string `full`.
+This solution works because [`slice::join`] already copies the data in `name` into the string `full`.
 
 In general, writing Rust functions is a careful balance of asking for the *right* level of permissions. For this example, it's most idiomatic to only expect the read permission on `name`.
 
