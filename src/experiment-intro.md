@@ -50,4 +50,4 @@ _Interested in participating in other experiments about making Rust easier to le
 
 ## 4. Acknowledgments
 
-Niko Matsakis and Amazon Web Services provided funding for this experiment. Carol Nichols and the Rust Foundation helped publicize the experiment. TRPL is the product of many peoples' hard work before we started this experiment.
+Niko Matsakis and Amazon Web Services provided funding for this experiment. Carol Nichols and the Rust Foundation helped publicize the experiment. TRPL is the product of many people's hard work before we started this experiment.
