@@ -686,8 +686,9 @@ equal to 0. Rust would then go to the second arm, which would match because the
 second arm doesn’t have a match guard and therefore matches any <code>Some</code> variant.</p>
 <p>There is no way to express the <code>if x % 2 == 0</code> condition within a pattern, so
 the match guard gives us the ability to express this logic. The downside of
-this additional expressiveness is that the compiler doesn't try to check for
-exhaustiveness when match guard expressions are involved.</p>
+this additional expressiveness is that arms with match guards don't &quot;count&quot; towards
+exhaustiveness. So even if we added <code>Some(x) if x % 2 == 1</code> as an additional arm, we would still
+need the un-guarded <code>Some(x)</code> arm.</p>
 <p>In Listing 18-11, we mentioned that we could use match guards to solve our
 pattern-shadowing problem. Recall that we created a new variable inside the
 pattern in the <code>match</code> expression instead of using the variable outside the
