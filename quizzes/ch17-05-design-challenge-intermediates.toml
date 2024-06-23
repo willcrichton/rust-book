@@ -2,7 +2,7 @@
 q = """
 **Context:** You are designing a serialization library that converts Rust data types into formats like JSON.
 
-**Functionality:** A `Serialize` trait that can be implemented by serializable types, and a `to_string` function that converts serializable types into JSON.
+**Functionality:** A `Serialize` trait that can be implemented by serializable types, and a `to_json` function that converts serializable types into JSON.
 
 **Designs:** Below are several proposed designs to implement the functionality.
 
@@ -21,7 +21,7 @@ fn value_to_json(value: Value) -> String {
 	/* .. */
 }
 
-pub fn to_json(data: impl Serialize) -> String { 
+pub fn to_json(data: impl Serialize) -> String {
     let value = data.serialize();
     value_to_json(value)
 }
@@ -42,7 +42,7 @@ impl Serializer for JsonSerializer {
 	/* .. */
 }
 
-pub fn to_json(data: impl Serialize) -> String { 
+pub fn to_json(data: impl Serialize) -> String {
 	let mut serializer = JsonSerializer { buffer: String::new() };
 	data.serialize(&mut serializer);
 	serializer.buffer
@@ -100,7 +100,7 @@ prompt.distractors = ["2"]
 prompt.sortAnswers = true
 answer.answer = ["1"]
 context = """
-With Option 1, there is only a single instantiation of `Serialize` that converts a type `T` into a `Value`. Because Option 2 is generic over serializers `S`, 
+With Option 1, there is only a single instantiation of `Serialize` that converts a type `T` into a `Value`. Because Option 2 is generic over serializers `S`,
 then every time `T::serialize` is called with a new `S`, the Rust compiler will monomorphize a new instance of `T::serialize` which would increase the size of
 the binary by comparison to Option 1.
 """
