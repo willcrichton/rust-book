@@ -218,7 +218,7 @@ let x = 5;
 ```
 
 Second, the `five` function has no parameters and defines the type of the
-return value, but the body of the function is a lonely `5` with no semicolon
+return value. The body of the function is a lonely `5` with no semicolon
 because it’s an expression whose value we want to return.
 
 Let’s look at another example:
