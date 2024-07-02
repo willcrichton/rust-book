@@ -6,7 +6,7 @@ Here's an example of what a question will look like. It will start out by descri
 
 > **Context:** You are designing an application with a global configuration, e.g. containing command-line flags.
 >
-> **Functionality:** The application need to pass immutable references to this configuration throughout the application.
+> **Functionality:** The application needs to pass immutable references to this configuration throughout the application.
 >
 > **Designs:** Below are several proposed designs to implement the functionality.
 >
