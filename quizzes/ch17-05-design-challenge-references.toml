@@ -75,13 +75,13 @@ context = """
 ```
 let asset = {
     let manager = get_manager();
-    manager.load("some/path");
+    manager.load("some/path")
 };
 process_asset(asset);
 let another_asset = {
     let manager = get_manager();
     manager.load("another/path")
-}
+};
 ```
 
 In this case, the lifetime of the value returned by `load` must not be tied to the lifetime of the `AssetManager`. Options 1 and 2
