@@ -395,6 +395,15 @@ index in a tuple is 0.</p>
 corresponding type are both written <code>()</code> and represent an empty value or an
 empty return type. Expressions implicitly return the unit value if they don’t
 return any other value.</p>
+<p>Additionally, we can modify individual elements of a mutable tuple. For example:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut x: (i32, i32) = (1, 2);
+    x.0 = 0;
+    x.1 += 5;
+}</code></pre></pre>
+<p>This program sets the first element to zero and adds five to the second element.
+The final value of <code>x</code> is <code>(0, 7)</code>.</p>
 <h4 id="the-array-type"><a class="header" href="#the-array-type">The Array Type</a></h4>
 <p>Another way to have a collection of multiple values is with an <em>array</em>. Unlike
 a tuple, every element of an array must have the same type. Unlike arrays in
