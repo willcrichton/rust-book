@@ -75,16 +75,10 @@ prompt.distractors = [
 println!("{}", make_separator("Hello world!"));
 ```
 """,
-"""
-```
-let s = make_separator("");
-```
-""",
 "None of these programs",
 ]
 context = """
-First, the caller must pass an empty string to trigger the problematic if-condition. This returns a dangling pointer.
-Second, the caller must use the result of `make_separator`, e.g. via `println`.
+The caller must pass an empty string to trigger the problematic if-condition. This returns a dangling pointer.
 """
 
 [[questions]]

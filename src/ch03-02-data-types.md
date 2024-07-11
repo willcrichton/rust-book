@@ -258,6 +258,21 @@ corresponding type are both written `()` and represent an empty value or an
 empty return type. Expressions implicitly return the unit value if they don’t
 return any other value.
 
+Additionally, we can modify individual elements of a mutable tuple. For example:
+
+<span class="filename">Filename: src/main.rs</span>
+
+```rust
+fn main() {
+    let mut x: (i32, i32) = (1, 2);
+    x.0 = 0;
+    x.1 += 5;
+}
+```
+
+This program sets the first element to zero and adds five to the second element.
+The final value of `x` is `(0, 7)`.
+
 #### The Array Type
 
 Another way to have a collection of multiple values is with an *array*. Unlike
