@@ -211,7 +211,7 @@ Let's walk through each line:
    - `num` and `*num` have lost all of their permissions (indicated by <i class="fa fa-level-down"></i>).
 4. After `v.push(4)`, then `v` is no longer in use, and it loses all of its permissions.
 
-Next, let's explore a few nuances of the diagram. First, why do you see both `num` and `*num`? Because it's different to access data through a reference, versus to manipulate the reference itself. For example, say we declared a reference to a number with `let mut`:
+Next, let's explore a few nuances of the diagram. First, why do you see both `num` and `*num`? Because accessing data through a reference is not the same as manipulating the reference itself. For example, say we declared a reference to a number with `let mut`:
 
 ```aquascope,permissions,stepper
 #fn main() {
