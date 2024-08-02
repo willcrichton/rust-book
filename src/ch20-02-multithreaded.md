@@ -236,8 +236,7 @@ has on its parameter. The documentation shows us the following:
 ```rust,ignore
 pub fn spawn<F, T>(f: F) -> JoinHandle<T>
     where
-        F: FnOnce() -> T,
-        F: Send + 'static,
+        F: FnOnce() -> T + Send + 'static,
         T: Send + 'static,
 ```
 
