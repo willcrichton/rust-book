@@ -52,7 +52,7 @@ USER root
 
 RUN echo \
   && cp -a /opt/rust-book/book/* /var/www/html/ \
-  && rm /-rf /opt/rust-book
+  && rm -rf /opt/rust-book
 
 # Set the proper mimetype on mjs files else the quiz is not loaded properly
 RUN echo \
