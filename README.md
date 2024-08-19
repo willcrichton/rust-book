@@ -30,7 +30,7 @@ You can now build a portable container with the book inside, handy for situation
 It's recommended to take a shallow clone of this repository when building a Docker container.
 
 ```bash
-git clone git@github.com:cognitive-engineering-lab/rust-book --depth 1
+git clone https://github.com/cognitive-engineering-lab/rust-book.git --depth 1
 ```
 
 Build the container:
