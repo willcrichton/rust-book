@@ -35,7 +35,7 @@ Hence, we give a new requirement:
 
 > Select each design option that satisfies the following requirement:
 >
-> **Requirement:** The configuration reference must be sharable between multiple threads.
+> **Requirement:** The configuration reference must be shareable between multiple threads.
 >
 > **Answer:**
 >

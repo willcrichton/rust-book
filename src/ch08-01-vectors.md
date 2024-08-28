@@ -164,7 +164,7 @@ to use a `for` loop to get immutable references to each element in a vector of
 <span class="caption">Listing 8-7: Accessing each element in a vector by
 iterating over the elements using a `for` loop</span>
 
-To read the number that `n_ref` refers to, we have to use the `*` dereference operator to get to the value in `n_ref` before we can add 1 to it, as covered in ["Derefencing a Pointer Accesses Its Data"][deref].
+To read the number that `n_ref` refers to, we have to use the `*` dereference operator to get to the value in `n_ref` before we can add 1 to it, as covered in ["Dereferencing a Pointer Accesses Its Data"][deref].
 
 We can also iterate over mutable references to each element in a mutable vector
 in order to make changes to all the elements. The `for` loop in Listing 8-8
