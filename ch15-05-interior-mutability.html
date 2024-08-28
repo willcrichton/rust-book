@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -225,13 +226,16 @@ you can’t borrow it mutably. For example, this code won’t compile:</p>
 error[E0596]: cannot borrow `x` as mutable, as it is not declared as mutable
  --&gt; src/main.rs:3:13
   |
-2 |     let x = 5;
-  |         - help: consider changing this to be mutable: `mut x`
 3 |     let y = &amp;mut x;
   |             ^^^^^^ cannot borrow as mutable
+  |
+help: consider changing this to be mutable
+  |
+2 |     let mut x = 5;
+  |         +++
 
 For more information about this error, try `rustc --explain E0596`.
-error: could not compile `borrowing` due to previous error
+error: could not compile `borrowing` (bin &quot;borrowing&quot;) due to 1 previous error
 </code></pre>
 <p>However, there are situations in which it would be useful for a value to mutate
 itself in its methods but appear immutable to other code. Code outside the
@@ -420,15 +424,20 @@ of should now have one message in it.</p>
 error[E0596]: cannot borrow `self.sent_messages` as mutable, as it is behind a `&amp;` reference
   --&gt; src/lib.rs:58:13
    |
-2  |     fn send(&amp;self, msg: &amp;str);
-   |             ----- help: consider changing that to be a mutable reference: `&amp;mut self`
-...
 58 |             self.sent_messages.push(String::from(message));
-   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `self` is a `&amp;` reference, so the data it refers to cannot be borrowed as mutable
+   |             ^^^^^^^^^^^^^^^^^^ `self` is a `&amp;` reference, so the data it refers to cannot be borrowed as mutable
+   |
+help: consider changing this to be a mutable reference in the `impl` method and the `trait` definition
+   |
+2  ~     fn send(&amp;mut self, msg: &amp;str);
+3  | }
+ ...
+56 |     impl Messenger for MockMessenger {
+57 ~         fn send(&amp;mut self, message: &amp;str) {
+   |
 
 For more information about this error, try `rustc --explain E0596`.
-error: could not compile `limit-tracker` due to previous error
-warning: build failed, waiting for other jobs to finish...
+error: could not compile `limit-tracker` (lib test) due to 1 previous error
 </code></pre>
 <p>We can’t modify the <code>MockMessenger</code> to keep track of the messages, because the
 <code>send</code> method takes an immutable reference to <code>self</code>. We also can’t take the
@@ -633,7 +642,7 @@ which isn’t allowed. When we run the tests for our library, the code in Listin
 15-23 will compile without any errors, but the test will fail:</p>
 <pre><code class="language-console">$ cargo test
    Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
-    Finished test [unoptimized + debuginfo] target(s) in 0.91s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.91s
      Running unittests src/lib.rs (target/debug/deps/limit_tracker-e599811fa246dbde)
 
 running 1 test
@@ -642,7 +651,8 @@ test tests::it_sends_an_over_75_percent_warning_message ... FAILED
 failures:
 
 ---- tests::it_sends_an_over_75_percent_warning_message stdout ----
-thread 'tests::it_sends_an_over_75_percent_warning_message' panicked at 'already borrowed: BorrowMutError', src/lib.rs:60:53
+thread 'tests::it_sends_an_over_75_percent_warning_message' panicked at src/lib.rs:60:53:
+already borrowed: BorrowMutError
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -698,9 +708,9 @@ fn main() {
 
     *value.borrow_mut() += 10;
 
-    println!(&quot;a after = {:?}&quot;, a);
-    println!(&quot;b after = {:?}&quot;, b);
-    println!(&quot;c after = {:?}&quot;, c);
+    println!(&quot;a after = {a:?}&quot;);
+    println!(&quot;b after = {b:?}&quot;);
+    println!(&quot;c after = {c:?}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 15-24: Using <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> to create a
 <code>List</code> that we can mutate</span></p>
@@ -722,7 +732,7 @@ on it and change the inner value.</p>
 value of 15 rather than 5:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.63s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.63s
      Running `target/debug/cons-list`
 a after = Cons(RefCell { value: 15 }, Nil)
 b after = Cons(RefCell { value: 3 }, Cons(RefCell { value: 15 }, Nil))
@@ -737,7 +747,7 @@ structures. Note that <code>RefCell&lt;T&gt;</code> does not work for multithrea
 <code>Mutex&lt;T&gt;</code> is the thread-safe version of <code>RefCell&lt;T&gt;</code> and we’ll discuss
 <code>Mutex&lt;T&gt;</code> in Chapter 16.</p>
 <div class="quiz-placeholder" data-quiz-name="ch15-05-interior-mutability"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The main idea of interior mutability is taking a value of type `&amp;T` and being able to \nsafely mutate data within `T`.\n&quot;,&quot;id&quot;:&quot;01904807-74c7-41ad-8d8b-cfb30e5ce10c&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Allowing data to be mutated through an immutable reference&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Wrapping `unsafe` code in a safe API&quot;,&quot;Allowing data on the inside of a data structure to be mutated&quot;,&quot;Using the borrow checker to enforce memory safety at runtime&quot;],&quot;prompt&quot;:&quot;Which of the following best describes the concept of *interior mutability* in Rust?\n&quot;}},{&quot;context&quot;:&quot;Here a `RefCell` is useful to mutate an internal field even though `some_method` takes\nan immutable reference as input. If the internal field is just an integer, an even better choice of type\nwould be `Cell&lt;usize&gt;` or `AtomicUsize`.\n&quot;,&quot;id&quot;:&quot;380cd865-76c5-419c-8961-af4c59d2ab71&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`RefCell&lt;usize&gt;`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`Rc&lt;usize&gt;`&quot;,&quot;`Box&lt;usize&gt;`&quot;,&quot;None, `usize` is fine&quot;],&quot;prompt&quot;:&quot;Consider an API that tracks the number of calls to a particular method:\n\n```\nstruct Api {\n    count: ???\n}\n\nimpl Api {\n    fn some_method(&amp;self) {\n        // increment count\n        // rest of the method...\n    }    \n}\n```\n\nSay the count is represented as a `usize`. Which of the following would be the most appropriate wrapper type\nto use for this situation?\n&quot;}},{&quot;context&quot;:&quot;The `BadRefCell` allows us to have two mutable references to the underlying data at the same time,\nwhich permits a memory safety violation like reallocating a vector while holding a reference to its contents.\n&quot;,&quot;id&quot;:&quot;d4ae1b8e-79a7-4485-828f-fb30cdeb29d5&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;```\nlet v1 = v.borrow_mut();\nlet n = &amp;v1[0];\nv.borrow_mut().push(0);\nprintln!(\&quot;{n}\&quot;);\n```\n&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;```\ndrop(v.borrow_mut());\ndrop(v.borrow_mut());\n```\n&quot;,&quot;```\nlet v1 = v.borrow_mut();\nlet v2 = v.borrow_mut();\nv1.push(0);\nv2.push(0);\n```\n&quot;,&quot;```\nv.borrow_mut().push(0);\nlet n = v.borrow_mut()[0];\nprintln!(\&quot;{n}\&quot;);\n```\n&quot;],&quot;prompt&quot;:&quot;Consider the following incorrect implementation of a `RefCell` that does not check\nwhether the interior value is borrowed:\n\n```\nuse std::cell::UnsafeCell;\nstruct BadRefCell&lt;T&gt;(UnsafeCell&lt;T&gt;);\nimpl&lt;T&gt; BadRefCell&lt;T&gt; {\n    pub fn borrow_mut(&amp;self) -&gt; &amp;mut T {\n        unsafe { &amp;mut *self.0.get() }\n    }\n}\n```\n\nNow say we have a `BadRefCell` like this:\n\n```\nlet v = BadRefCell(UnsafeCell::new(vec![1, 2, 3]));\n```\n\nWhich of the following snippets would violate memory safety using this API?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

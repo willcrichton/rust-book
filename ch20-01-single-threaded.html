@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -249,10 +250,10 @@ of scope and is dropped at the end of the loop, the connection is closed as
 part of the <code>drop</code> implementation. Browsers sometimes deal with closed
 connections by retrying, because the problem might be temporary. The important
 factor is that we’ve successfully gotten a handle to a TCP connection!</p>
-<p>Remember to stop the program by pressing <span class="keystroke">ctrl-c</span>
-when you’re done running a particular version of the code. Then restart the
-program by invoking the <code>cargo run</code> command after you’ve made each set of code
-changes to make sure you’re running the newest code.</p>
+<p>Remember to stop the program by pressing <kbd>ctrl</kbd>-<kbd>c</kbd> when
+you’re done running a particular version of the code. Then restart the program
+by invoking the <code>cargo run</code> command after you’ve made each set of code changes
+to make sure you’re running the newest code.</p>
 <h3 id="reading-the-request"><a class="header" href="#reading-the-request">Reading the Request</a></h3>
 <p>Let’s implement the functionality to read the request from the browser! To
 separate the concerns of first getting a connection and then taking some action
@@ -284,7 +285,7 @@ fn handle_connection(mut stream: TcpStream) {
         .take_while(|line| !line.is_empty())
         .collect();
 
-    println!(&quot;Request: {:#?}&quot;, http_request);
+    println!(&quot;Request: {http_request:#?}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 20-2: Reading from the <code>TcpStream</code> and printing
 the data</span></p>
@@ -705,7 +706,7 @@ uses the <code>status_line</code> and <code>filename</code> variables. This make
 the difference between the two cases, and it means we have only one place to
 update the code if we want to change how the file reading and response writing
 work. The behavior of the code in Listing 20-9 will be the same as that in
-Listing 20-8.</p>
+Listing 20-7.</p>
 <p>Awesome! We now have a simple web server in approximately 40 lines of Rust code
 that responds to one request with a page of content and responds to all other
 requests with a 404 response.</p>

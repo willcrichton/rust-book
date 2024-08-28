@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -158,7 +159,7 @@ help manage multiple related packages that are developed in tandem.</p>
 <p>A <em>workspace</em> is a set of packages that share the same <em>Cargo.lock</em> and output
 directory. Let’s make a project using a workspace—we’ll use trivial code so we
 can concentrate on the structure of the workspace. There are multiple ways to
-structure a workspace, so we'll just show one common way. We’ll have a
+structure a workspace, so we’ll just show one common way. We’ll have a
 workspace containing a binary and two libraries. The binary, which will provide
 the main functionality, will depend on the two libraries. One library will
 provide an <code>add_one</code> function, and a second library an <code>add_two</code> function.
@@ -263,15 +264,16 @@ we need to be explicit about the dependency relationships.</p>
 <code>adder</code> crate. Open the <em>adder/src/main.rs</em> file and add a <code>use</code> line at the
 top to bring the new <code>add_one</code> library crate into scope. Then change the <code>main</code>
 function to call the <code>add_one</code> function, as in Listing 14-7.</p>
-<p><span class="filename">Filename: adder/src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: adder/src/main.rs</span>
 <pre><code class="language-rust ignore">use add_one;
 
 fn main() {
     let num = 10;
     println!(&quot;Hello, world! {num} plus one is {}!&quot;, add_one::add_one(num));
 }</code></pre>
-<p><span class="caption">Listing 14-7: Using the <code>add_one</code> library crate from the
-<code>adder</code> crate</span></p>
+<figcaption>Listing 14-7: Using the <code>add_one</code> library crate from the <code>adder</code> crate</figcaption>
+</figure>
 <p>Let’s build the workspace by running <code>cargo build</code> in the top-level <em>add</em>
 directory!</p>
 <!-- manual-regeneration
@@ -366,10 +368,14 @@ error[E0432]: unresolved import `rand`
 <p>To fix this, edit the <em>Cargo.toml</em> file for the <code>adder</code> package and indicate
 that <code>rand</code> is a dependency for it as well. Building the <code>adder</code> package will
 add <code>rand</code> to the list of dependencies for <code>adder</code> in <em>Cargo.lock</em>, but no
-additional copies of <code>rand</code> will be downloaded. Cargo has ensured that every
+additional copies of <code>rand</code> will be downloaded. Cargo will ensure that every
 crate in every package in the workspace using the <code>rand</code> package will be using
-the same version, saving us space and ensuring that the crates in the workspace
-will be compatible with each other.</p>
+the same version as long as they specify compatible versions of <code>rand</code>, saving
+us space and ensuring that the crates in the workspace will be compatible with
+each other.</p>
+<p>If crates in the workspace specify incompatible versions of the same dependency,
+Cargo will resolve each of them, but will still try to resolve as few versions
+as possible.</p>
 <p>Note that Cargo only ensures compatibility within the rules of <a href="https://semver.org/">Semantic Versioning</a>.
 For example, say a workspace has one crate that depends on <code>rand</code> 0.8.0, and another crate
 that depends on <code>rand</code> 0.8.1. The semver rules say that 0.8.1 is compatible with 0.8.0,
@@ -464,7 +470,8 @@ smaller, individual components than one big blob of code. Furthermore, keeping
 the crates in a workspace can make coordination between crates easier if they
 are often changed at the same time.</p>
 <div class="quiz-placeholder" data-quiz-name="ch14-03-cargo-workspaces"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;From the perspective of `a`, `b` is an external crate like any other, so you don't use a prefix to access its items.\n&quot;,&quot;id&quot;:&quot;20846719-fe7b-48b8-abfd-9c5f1174472f&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`b::f`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`crates::b::f`&quot;,&quot;`workspace::b::f`&quot;,&quot;`super::b::f`&quot;],&quot;prompt&quot;:&quot;Consider a workspace with the following structure:\n\n```\n├── Cargo.lock\n├── Cargo.toml\n└── crates\n    ├── a\n    |   ├── lib.rs\n    |   └── Cargo.toml\n    └── b\n        ├── lib.rs\n        └── Cargo.toml\n```\n\nWith the following content in each file:\n\n```\n// crates/b/lib.rs\npub fn f() {}\n```\n\n```toml\n# crates/a/Cargo.toml\n[dependencies]\nb = {path = \&quot;../b\&quot;}\n```\n\nWhich of the following is the correct path to refer to `f` inside of `a/lib.rs`?\n&quot;}},{&quot;context&quot;:&quot;According to the rules of semantic versioning, `a` and `c` will both share the latest patch of the minor version `0.8`.\n`b` will use the latest patch of the minor version `0.7`. So two versions in total will be used.\n&quot;,&quot;id&quot;:&quot;bc8a69b2-d9a8-4438-8657-391c3fda5ed9&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;2&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Consider a workspace with three packages `a`, `b`, and `c`. Their respective manifests are:\n\n```toml\n# a/Cargo.toml\n[dependencies]\nrand = \&quot;0.8.4\&quot;\n\n# b/Cargo.toml\n[dependencies]\nrand = \&quot;0.7.3\&quot;\n\n# c/Cargo.toml\n[dependencies]\nrand = \&quot;0.8.5\&quot;\n```\n\nHow many different versions of `rand` will be used when compiling all packages in the workspace? \nWrite your answer as a digit, e.g. 0, 1, so on.\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

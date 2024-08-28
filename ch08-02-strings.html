@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -179,7 +180,7 @@ used heavily in Rust’s standard library, and both <code>String</code> and stri
 are UTF-8 encoded.</p>
 <h3 id="creating-a-new-string"><a class="header" href="#creating-a-new-string">Creating a New String</a></h3>
 <p>Many of the same operations available with <code>Vec&lt;T&gt;</code> are available with <code>String</code>
-as well, because <code>String</code> is actually implemented as a wrapper around a vector
+as well because <code>String</code> is actually implemented as a wrapper around a vector
 of bytes with some extra guarantees, restrictions, and capabilities. An example
 of a function that works the same way with <code>Vec&lt;T&gt;</code> and <code>String</code> is the <code>new</code>
 function to create an instance, shown in Listing 8-11.</p>
@@ -187,9 +188,9 @@ function to create an instance, shown in Listing 8-11.</p>
 </span>    let mut s = String::new();
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-11: Creating a new, empty <code>String</code></span></p>
-<p>This line creates a new empty string called <code>s</code>, which we can then load data
-into. Often, we’ll have some initial data that we want to start the string
-with. For that, we use the <code>to_string</code> method, which is available on any type
+<p>This line creates a new, empty string called <code>s</code>, into which we can then load
+data. Often, we’ll have some initial data with which we want to start the
+string. For that, we use the <code>to_string</code> method, which is available on any type
 that implements the <code>Display</code> trait, as string literals do. Listing 8-12 shows
 two examples.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
@@ -204,7 +205,7 @@ two examples.</p>
 <code>String</code> from a string literal</span></p>
 <p>This code creates a string containing <code>initial contents</code>.</p>
 <p>We can also use the function <code>String::from</code> to create a <code>String</code> from a string
-literal. The code in Listing 8-13 is equivalent to the code from Listing 8-12
+literal. The code in Listing 8-13 is equivalent to the code in Listing 8-12
 that uses <code>to_string</code>.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let s = String::from(&quot;initial contents&quot;);
@@ -214,7 +215,7 @@ a <code>String</code> from a string literal</span></p>
 <p>Because strings are used for so many things, we can use many different generic
 APIs for strings, providing us with a lot of options. Some of them can seem
 redundant, but they all have their place! In this case, <code>String::from</code> and
-<code>to_string</code> do the same thing, so which you choose is a matter of style and
+<code>to_string</code> do the same thing, so which one you choose is a matter of style and
 readability.</p>
 <p>Remember that strings are UTF-8 encoded, so we can include any properly encoded
 data in them, as shown in Listing 8-14.</p>
@@ -222,7 +223,7 @@ data in them, as shown in Listing 8-14.</p>
 </span>    let hello = String::from(&quot;السلام عليكم&quot;);
     let hello = String::from(&quot;Dobrý den&quot;);
     let hello = String::from(&quot;Hello&quot;);
-    let hello = String::from(&quot;שָׁלוֹם&quot;);
+    let hello = String::from(&quot;שלום&quot;);
     let hello = String::from(&quot;नमस्ते&quot;);
     let hello = String::from(&quot;こんにちは&quot;);
     let hello = String::from(&quot;안녕하세요&quot;);
@@ -262,7 +263,7 @@ contents to a <code>String</code></span></p>
 <p>If the <code>push_str</code> method took ownership of <code>s2</code>, we wouldn’t be able to print
 its value on the last line. However, this code works as we’d expect!</p>
 <p>The <code>push</code> method takes a single character as a parameter and adds it to the
-<code>String</code>. Listing 8-17 adds the letter “l” to a <code>String</code> using the <code>push</code>
+<code>String</code>. Listing 8-17 adds the letter <em>l</em> to a <code>String</code> using the <code>push</code>
 method.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let mut s = String::from(&quot;lo&quot;);
@@ -287,11 +288,11 @@ with the signature of the method that’s called when we use the <code>+</code> 
 The <code>+</code> operator uses the <code>add</code> method, whose signature looks something like
 this:</p>
 <pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
-<p>In the standard library, you'll see <code>add</code> defined using generics and associated
+<p>In the standard library, you’ll see <code>add</code> defined using generics and associated
 types. Here, we’ve substituted in concrete types, which is what happens when we
 call this method with <code>String</code> values. We’ll discuss generics in Chapter 10.
-This signature gives us the clues we need to understand the tricky bits of the
-<code>+</code> operator.</p>
+This signature gives us the clues we need in order to understand the tricky
+bits of the <code>+</code> operator.</p>
 <p>First, <code>s2</code> has an <code>&amp;</code>, meaning that we’re adding a <em>reference</em> of the second
 string to the first string. This is because of the <code>s</code> parameter in the <code>add</code>
 function: we can only add a <code>&amp;str</code> to a <code>String</code>; we can’t add two <code>String</code>
@@ -306,12 +307,12 @@ after this operation.</p>
 <!-- BEGIN INTERVENTION: f1ab2171-96f0-4380-b16d-9055a9a00415 -->
 <p>Second, we can see in the signature that <code>add</code> takes ownership of <code>self</code>,
 because <code>self</code> does <em>not</em> have an <code>&amp;</code>. This means <code>s1</code> in Listing 8-18 will be
-moved into the <code>add</code> call and will no longer be valid after that. So although
+moved into the <code>add</code> call and will no longer be valid after that. So, although
 <code>let s3 = s1 + &amp;s2;</code> looks like it will copy both strings and create a new one,
 this statement instead does the following:</p>
 <ol>
 <li><code>add</code> takes ownership of <code>s1</code>,</li>
-<li>it appends a copy of the contents of <code>s2</code> to <code>s1</code>, </li>
+<li>it appends a copy of the contents of <code>s2</code> to <code>s1</code>,</li>
 <li>and then it returns back ownership of <code>s1</code>.</li>
 </ol>
 <p>If <code>s1</code> has enough capacity for <code>s2</code>, then no memory allocations occur. However, if <code>s1</code> does not have enough capacity for <code>s2</code>, then <code>s1</code> will internally make a larger memory allocation to fit both strings.</p>
@@ -326,8 +327,8 @@ gets unwieldy:</p>
     let s = s1 + &quot;-&quot; + &amp;s2 + &quot;-&quot; + &amp;s3;
 <span class="boring">}</span></code></pre></pre>
 <p>At this point, <code>s</code> will be <code>tic-tac-toe</code>. With all of the <code>+</code> and <code>&quot;</code>
-characters, it’s difficult to see what’s going on. For more complicated string
-combining, we can instead use the <code>format!</code> macro:</p>
+characters, it’s difficult to see what’s going on. For combining strings in
+more complicated ways, we can instead use the <code>format!</code> macro:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let s1 = String::from(&quot;tic&quot;);
     let s2 = String::from(&quot;tac&quot;);
@@ -355,23 +356,21 @@ String</span></p>
 <p>This code will result in the following error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
-error[E0277]: the type `String` cannot be indexed by `{integer}`
- --&gt; src/main.rs:3:13
+error[E0277]: the type `str` cannot be indexed by `{integer}`
+ --&gt; src/main.rs:3:16
   |
 3 |     let h = s1[0];
-  |             ^^^^^ `String` cannot be indexed by `{integer}`
+  |                ^ string indices are ranges of `usize`
   |
-  = help: the trait `Index&lt;{integer}&gt;` is not implemented for `String`
-  = help: the following other types implement trait `Index&lt;Idx&gt;`:
-            &lt;String as Index&lt;RangeFrom&lt;usize&gt;&gt;&gt;
-            &lt;String as Index&lt;RangeFull&gt;&gt;
-            &lt;String as Index&lt;RangeInclusive&lt;usize&gt;&gt;&gt;
-            &lt;String as Index&lt;RangeTo&lt;usize&gt;&gt;&gt;
-            &lt;String as Index&lt;RangeToInclusive&lt;usize&gt;&gt;&gt;
-            &lt;String as Index&lt;std::ops::Range&lt;usize&gt;&gt;&gt;
+  = help: the trait `SliceIndex&lt;str&gt;` is not implemented for `{integer}`, which is required by `String: Index&lt;_&gt;`
+  = note: you can use `.chars().nth()` or `.bytes().nth()`
+          for more information, see chapter 8 in The Book: &lt;https://doc.rust-lang.org/book/ch08-02-strings.html#indexing-into-strings&gt;
+  = help: the trait `SliceIndex&lt;[_]&gt;` is implemented for `usize`
+  = help: for that trait implementation, expected `[_]`, found `str`
+  = note: required for `String` to implement `Index&lt;{integer}&gt;`
 
 For more information about this error, try `rustc --explain E0277`.
-error: could not compile `collections` due to previous error
+error: could not compile `collections` (bin &quot;collections&quot;) due to 1 previous error
 </code></pre>
 <p>The error and the note tell the story: Rust strings don’t support indexing. But
 why not? To answer that question, we need to discuss how Rust stores strings in
@@ -383,7 +382,7 @@ encoded UTF-8 example strings from Listing 8-14. First, this one:</p>
 </span><span class="boring">    let hello = String::from(&quot;السلام عليكم&quot;);
 </span><span class="boring">    let hello = String::from(&quot;Dobrý den&quot;);
 </span><span class="boring">    let hello = String::from(&quot;Hello&quot;);
-</span><span class="boring">    let hello = String::from(&quot;שָׁלוֹם&quot;);
+</span><span class="boring">    let hello = String::from(&quot;שלום&quot;);
 </span><span class="boring">    let hello = String::from(&quot;नमस्ते&quot;);
 </span><span class="boring">    let hello = String::from(&quot;こんにちは&quot;);
 </span><span class="boring">    let hello = String::from(&quot;안녕하세요&quot;);
@@ -392,15 +391,15 @@ encoded UTF-8 example strings from Listing 8-14. First, this one:</p>
 </span><span class="boring">    let hello = String::from(&quot;Здравствуйте&quot;);
 </span>    let hello = String::from(&quot;Hola&quot;);
 <span class="boring">}</span></code></pre></pre>
-<p>In this case, <code>len</code> will be 4, which means the vector storing the string “Hola”
-is 4 bytes long. Each of these letters takes 1 byte when encoded in UTF-8. The
-following line, however, may surprise you. (Note that this string begins with
-the capital Cyrillic letter Ze, not the Arabic number 3.)</p>
+<p>In this case, <code>len</code> will be <code>4</code>, which means the vector storing the string
+<code>&quot;Hola&quot;</code> is 4 bytes long. Each of these letters takes one byte when encoded in
+UTF-8. The following line, however, may surprise you (note that this string
+begins with the capital Cyrillic letter <em>Ze</em>, not the number 3):</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span><span class="boring">    let hello = String::from(&quot;السلام عليكم&quot;);
 </span><span class="boring">    let hello = String::from(&quot;Dobrý den&quot;);
 </span><span class="boring">    let hello = String::from(&quot;Hello&quot;);
-</span><span class="boring">    let hello = String::from(&quot;שָׁלוֹם&quot;);
+</span><span class="boring">    let hello = String::from(&quot;שלום&quot;);
 </span><span class="boring">    let hello = String::from(&quot;नमस्ते&quot;);
 </span><span class="boring">    let hello = String::from(&quot;こんにちは&quot;);
 </span><span class="boring">    let hello = String::from(&quot;안녕하세요&quot;);
@@ -409,11 +408,12 @@ the capital Cyrillic letter Ze, not the Arabic number 3.)</p>
 </span>    let hello = String::from(&quot;Здравствуйте&quot;);
 <span class="boring">    let hello = String::from(&quot;Hola&quot;);
 </span><span class="boring">}</span></code></pre></pre>
-<p>Asked how long the string is, you might say 12. In fact, Rust’s answer is 24:
-that’s the number of bytes it takes to encode “Здравствуйте” in UTF-8, because
-each Unicode scalar value in that string takes 2 bytes of storage. Therefore,
-an index into the string’s bytes will not always correlate to a valid Unicode
-scalar value. To demonstrate, consider this invalid Rust code:</p>
+<p>If you were asked how long the string is, you might say 12. In fact, Rust’s
+answer is 24: that’s the number of bytes it takes to encode “Здравствуйте” in
+UTF-8, because each Unicode scalar value in that string takes 2 bytes of
+storage. Therefore, an index into the string’s bytes will not always correlate
+to a valid Unicode scalar value. To demonstrate, consider this invalid Rust
+code:</p>
 <pre><code class="language-rust ignore does_not_compile">let hello = &quot;Здравствуйте&quot;;
 let answer = &amp;hello[0];</code></pre>
 <p>You already know that <code>answer</code> will not be <code>З</code>, the first letter. When encoded
@@ -468,26 +468,27 @@ range to create a string slice containing particular bytes:</p>
 
 let s = &amp;hello[0..4];
 <span class="boring">}</span></code></pre></pre>
-<p>Here, <code>s</code> will be a <code>&amp;str</code> that contains the first 4 bytes of the string.
-Earlier, we mentioned that each of these characters was 2 bytes, which means
+<p>Here, <code>s</code> will be a <code>&amp;str</code> that contains the first four bytes of the string.
+Earlier, we mentioned that each of these characters was two bytes, which means
 <code>s</code> will be <code>Зд</code>.</p>
 <p>If we were to try to slice only part of a character’s bytes with something like
 <code>&amp;hello[0..1]</code>, Rust would panic at runtime in the same way as if an invalid
 index were accessed in a vector:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.43s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
      Running `target/debug/collections`
-thread 'main' panicked at 'byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`', src/main.rs:4:14
+thread 'main' panicked at src/main.rs:4:19:
+byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>You should use ranges to create string slices with caution, because doing so
-can crash your program.</p>
+<p>You should use caution when creating string slices with ranges, because doing
+so can crash your program.</p>
 <h3 id="methods-for-iterating-over-strings"><a class="header" href="#methods-for-iterating-over-strings">Methods for Iterating Over Strings</a></h3>
 <p>The best way to operate on pieces of strings is to be explicit about whether
 you want characters or bytes. For individual Unicode scalar values, use the
-<code>chars</code> method. Calling <code>chars</code> on “Зд” separates out and returns two values
-of type <code>char</code>, and you can iterate over the result to access each element:</p>
+<code>chars</code> method. Calling <code>chars</code> on “Зд” separates out and returns two values of
+type <code>char</code>, and you can iterate over the result to access each element:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for c in &quot;Зд&quot;.chars() {
@@ -513,8 +514,8 @@ appropriate for your domain:</p>
 180
 </code></pre>
 <p>But be sure to remember that valid Unicode scalar values may be made up of more
-than 1 byte.</p>
-<p>Getting grapheme clusters from strings as with the Devanagari script is
+than one byte.</p>
+<p>Getting grapheme clusters from strings, as with the Devanagari script, is
 complex, so this functionality is not provided by the standard library. Crates
 are available on <a href="https://crates.io/">crates.io</a><!-- ignore --> if this is the
 functionality you need.</p>
@@ -523,7 +524,7 @@ functionality you need.</p>
 different choices about how to present this complexity to the programmer. Rust
 has chosen to make the correct handling of <code>String</code> data the default behavior
 for all Rust programs, which means programmers have to put more thought into
-handling UTF-8 data upfront. This trade-off exposes more of the complexity of
+handling UTF-8 data up front. This trade-off exposes more of the complexity of
 strings than is apparent in other programming languages, but it prevents you
 from having to handle errors involving non-ASCII characters later in your
 development life cycle.</p>
@@ -534,7 +535,7 @@ correctly. Be sure to check out the documentation for useful methods like
 string with another string.</p>
 <p>Let’s switch to something a bit less complex: hash maps!</p>
 <div class="quiz-placeholder" data-quiz-name="ch08-02-string-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;A UTF-8 string can be interpreted as a sequence of bytes, characters, or grapheme clusters. None of these is necessarily the \&quot;default\&quot; way\nof interpreting a string, so a default indexing operation does not make sense.\n&quot;,&quot;id&quot;:&quot;da6daf92-5b2c-4f8d-97de-6905dbc77936&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Indexing strings is ambiguous because strings represent several granularities of sequenced data&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Indexing strings is unsafe because it can cause a segfault or buffer overflow&quot;,&quot;Indexing strings is inefficient because string are null-terminated so their length cannot be efficiently computed&quot;,&quot;Indexing strings would make Rust too easy to use, and Rust developers need job security&quot;],&quot;prompt&quot;:&quot;Which statement is the best explanation for why Rust does not allow string indexing?&quot;}},{&quot;context&quot;:&quot;`&amp;str` is a promise that the byte sequence it points to will always be valid UTF-8. Therefore a programmer who wants to e.g. print out\nan `&amp;str` never needs to check if it is valid, or worry about accidentally interpreting an invalid string.\n&quot;,&quot;id&quot;:&quot;9366278e-a3f5-4759-ac72-e3c7d248da44&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`&amp;str` points to bytes that can always be interpreted as UTF-8, whereas `&amp;[u8]` can be any byte sequence&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`&amp;str` always points to data stored in the program binary, whereas `&amp;[u8]` can be stored anywhere in memory&quot;,&quot;`&amp;str` cannot be further sliced, while `&amp;[u8]` can be sliced again&quot;,&quot;`&amp;str` can be constructed from a `String`, while `&amp;[u8]` can only come from a `Vec`&quot;],&quot;prompt&quot;:&quot;Which statement best describes the difference between the types of a string slice `&amp;str` and a byte slice `&amp;[u8]`?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

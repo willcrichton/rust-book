@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -186,10 +187,10 @@ running this code or reading further.</p>
     match x {
         Some(50) =&gt; println!(&quot;Got 50&quot;),
         Some(y) =&gt; println!(&quot;Matched, y = {y}&quot;),
-        _ =&gt; println!(&quot;Default case, x = {:?}&quot;, x),
+        _ =&gt; println!(&quot;Default case, x = {x:?}&quot;),
     }
 
-    println!(&quot;at the end: x = {:?}, y = {y}&quot;, x);
+    println!(&quot;at the end: x = {x:?}, y = {y}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-11: A <code>match</code> expression with an arm that
 introduces a shadowed variable <code>y</code></span></p>
@@ -351,7 +352,7 @@ containing a 0, so this code will print <code>On the y axis at 7</code>.</p>
 first matching pattern, so even though <code>Point { x: 0, y: 0}</code> is on the <code>x</code> axis
 and the <code>y</code> axis, this code would only print <code>On the x axis at 0</code>.</p>
 <h4 id="destructuring-enums"><a class="header" href="#destructuring-enums">Destructuring Enums</a></h4>
-<p>We've destructured enums in this book (for example, Listing 6-5 in Chapter 6),
+<p>We’ve destructured enums in this book (for example, Listing 6-5 in Chapter 6),
 but haven’t yet explicitly discussed that the pattern to destructure an enum
 corresponds to the way the data stored within the enum is defined. As an
 example, in Listing 18-15 we use the <code>Message</code> enum from Listing 6-2 and write
@@ -378,7 +379,7 @@ fn main() {
             println!(&quot;Text message: {text}&quot;);
         }
         Message::ChangeColor(r, g, b) =&gt; {
-            println!(&quot;Change the color to red {r}, green {g}, and blue {b}&quot;,)
+            println!(&quot;Change the color to red {r}, green {g}, and blue {b}&quot;)
         }
     }
 }</code></pre></pre>
@@ -467,7 +468,7 @@ expression, but we can also use it in any pattern, including function
 parameters, as shown in Listing 18-17.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn foo(_: i32, y: i32) {
-    println!(&quot;This code only uses the y parameter: {}&quot;, y);
+    println!(&quot;This code only uses the y parameter: {y}&quot;);
 }
 
 fn main() {
@@ -479,7 +480,7 @@ and will print <code>This code only uses the y parameter: 4</code>.</p>
 <p>In most cases when you no longer need a particular function parameter, you
 would change the signature so it doesn’t include the unused parameter. Ignoring
 a function parameter can be especially useful in cases when, for example,
-you're implementing a trait where you need a certain type signature but the
+you’re implementing a trait where you need a certain type signature but the
 function body in your implementation doesn’t need one of the parameters. You
 then avoid getting a compiler warning about unused function parameters, as you
 would if you used a name instead.</p>
@@ -503,7 +504,7 @@ setting but can unset the setting and give it a value if it is currently unset.<
         }
     }
 
-    println!(&quot;setting is {:?}&quot;, setting_value);
+    println!(&quot;setting is {setting_value:?}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-18: Using an underscore within patterns that
 match <code>Some</code> variants when we don’t need to use the value inside the
@@ -560,7 +561,7 @@ distinction matters, Listing 18-21 will provide us with an error.</p>
         println!(&quot;found a string&quot;);
     }
 
-    println!(&quot;{:?}&quot;, s);
+    println!(&quot;{s:?}&quot;);
 <span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 18-21: An unused variable starting with an
 underscore still binds the value, which might take ownership of the value</span></p>
@@ -575,7 +576,7 @@ because <code>s</code> doesn’t get moved into <code>_</code>.</p>
         println!(&quot;found a string&quot;);
     }
 
-    println!(&quot;{:?}&quot;, s);
+    println!(&quot;{s:?}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-22: Using an underscore does not bind the
 value</span></p>
@@ -598,7 +599,7 @@ the values in the <code>y</code> and <code>z</code> fields.</p>
     let origin = Point { x: 0, y: 0, z: 0 };
 
     match origin {
-        Point { x, .. } =&gt; println!(&quot;x is {}&quot;, x),
+        Point { x, .. } =&gt; println!(&quot;x is {x}&quot;),
     }
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-23: Ignoring all fields of a <code>Point</code> except
@@ -633,7 +634,7 @@ compile.</p>
 
     match numbers {
         (.., second, ..) =&gt; {
-            println!(&quot;Some numbers: {}&quot;, second)
+            println!(&quot;Some numbers: {second}&quot;)
         },
     }
 }</code></pre>
@@ -650,7 +651,7 @@ error: `..` can only be used once per tuple pattern
   |          |
   |          previously used here
 
-error: could not compile `patterns` due to previous error
+error: could not compile `patterns` (bin &quot;patterns&quot;) due to 1 previous error
 </code></pre>
 <p>It’s impossible for Rust to determine how many values in the tuple to ignore
 before matching a value with <code>second</code> and then how many further values to
@@ -670,8 +671,8 @@ guard of <code>if x % 2 == 0</code> (which will be true if the number is even).<
 </span>    let num = Some(4);
 
     match num {
-        Some(x) if x % 2 == 0 =&gt; println!(&quot;The number {} is even&quot;, x),
-        Some(x) =&gt; println!(&quot;The number {} is odd&quot;, x),
+        Some(x) if x % 2 == 0 =&gt; println!(&quot;The number {x} is even&quot;),
+        Some(x) =&gt; println!(&quot;The number {x} is odd&quot;),
         None =&gt; (),
     }
 <span class="boring">}</span></code></pre></pre>
@@ -686,7 +687,7 @@ equal to 0. Rust would then go to the second arm, which would match because the
 second arm doesn’t have a match guard and therefore matches any <code>Some</code> variant.</p>
 <p>There is no way to express the <code>if x % 2 == 0</code> condition within a pattern, so
 the match guard gives us the ability to express this logic. The downside of
-this additional expressiveness is that arms with match guards don't &quot;count&quot; towards
+this additional expressiveness is that arms with match guards don’t “count” towards
 exhaustiveness. So even if we added <code>Some(x) if x % 2 == 1</code> as an additional arm, we would still
 need the un-guarded <code>Some(x)</code> arm.</p>
 <p>In Listing 18-11, we mentioned that we could use match guards to solve our
@@ -703,10 +704,10 @@ problem.</p>
     match x {
         Some(50) =&gt; println!(&quot;Got 50&quot;),
         Some(n) if n == y =&gt; println!(&quot;Matched, n = {n}&quot;),
-        _ =&gt; println!(&quot;Default case, x = {:?}&quot;, x),
+        _ =&gt; println!(&quot;Default case, x = {x:?}&quot;),
     }
 
-    println!(&quot;at the end: x = {:?}, y = {y}&quot;, x);
+    println!(&quot;at the end: x = {x:?}, y = {y}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 18-27: Using a match guard to test for equality
 with an outer variable</span></p>
@@ -771,11 +772,11 @@ field, but for this example we’ll use a different name.</p>
     match msg {
         Message::Hello {
             id: id_variable @ 3..=7,
-        } =&gt; println!(&quot;Found an id in range: {}&quot;, id_variable),
+        } =&gt; println!(&quot;Found an id in range: {id_variable}&quot;),
         Message::Hello { id: 10..=12 } =&gt; {
             println!(&quot;Found an id in another range&quot;)
         }
-        Message::Hello { id } =&gt; println!(&quot;Found some other id: {}&quot;, id),
+        Message::Hello { id } =&gt; println!(&quot;Found some other id: {id}&quot;),
     }
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-29: Using <code>@</code> to bind to a value in a pattern
@@ -804,7 +805,7 @@ destructuring of values into smaller parts at the same time as assigning to
 variables. We can create simple or complex patterns to suit our needs.</p>
 <p>Next, for the penultimate chapter of the book, we’ll look at some advanced
 aspects of a variety of Rust’s features.</p>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

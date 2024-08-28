@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -179,7 +180,7 @@ include the ability to:</p>
 <li>Call an unsafe function or method</li>
 <li>Access or modify a mutable static variable</li>
 <li>Implement an unsafe trait</li>
-<li>Access fields of <code>union</code>s</li>
+<li>Access fields of a <code>union</code></li>
 </ul>
 <p>It’s important to understand that <code>unsafe</code> doesn’t turn off the borrow checker
 or disable any other of Rust’s safety checks: if you use a reference in unsafe
@@ -310,7 +311,7 @@ body:</p>
 try to call <code>dangerous</code> without the <code>unsafe</code> block, we’ll get an error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
-error[E0133]: call to unsafe function is unsafe and requires unsafe function or block
+error[E0133]: call to unsafe function `dangerous` is unsafe and requires unsafe function or block
  --&gt; src/main.rs:4:5
   |
 4 |     dangerous();
@@ -319,7 +320,7 @@ error[E0133]: call to unsafe function is unsafe and requires unsafe function or 
   = note: consult the function's documentation for information on how to avoid undefined behavior
 
 For more information about this error, try `rustc --explain E0133`.
-error: could not compile `unsafe-example` due to previous error
+error: could not compile `unsafe-example` (bin &quot;unsafe-example&quot;) due to 1 previous error
 </code></pre>
 <p>With the <code>unsafe</code> block, we’re asserting to Rust that we’ve read the function’s
 documentation, we understand how to use it properly, and we’ve verified that
@@ -388,9 +389,11 @@ error[E0499]: cannot borrow `*values` as mutable more than once at a time
   |     |     |                   second mutable borrow occurs here
   |     |     first mutable borrow occurs here
   |     returning this value requires that `*values` is borrowed for `'1`
+  |
+  = help: use `.split_at_mut(position)` to obtain two mutable non-overlapping sub-slices
 
 For more information about this error, try `rustc --explain E0499`.
-error: could not compile `unsafe-example` due to previous error
+error: could not compile `unsafe-example` (bin &quot;unsafe-example&quot;) due to 1 previous error
 </code></pre>
 <p>Rust’s borrow checker can’t understand that we’re borrowing different parts of
 the slice; it only knows that we’re borrowing from the same slice twice.
@@ -492,7 +495,7 @@ functions from another language we want to call. The <code>&quot;C&quot;</code> 
 <em>application binary interface (ABI)</em> the external function uses: the ABI
 defines how to call the function at the assembly level. The <code>&quot;C&quot;</code> ABI is the
 most common and follows the C programming language’s ABI.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h4 id="calling-rust-functions-from-other-languages"><a class="header" href="#calling-rust-functions-from-other-languages">Calling Rust Functions from Other Languages</a></h4>
 <p>We can also use <code>extern</code> to create an interface that allows other languages
 to call Rust functions. Instead of creating a whole <code>extern</code> block, we add
@@ -514,7 +517,7 @@ pub extern &quot;C&quot; fn call_from_c() {
 }
 <span class="boring">}</span></code></pre></pre>
 <p>This usage of <code>extern</code> does not require <code>unsafe</code>.</p>
-</blockquote>
+</section>
 <h3 id="accessing-or-modifying-a-mutable-static-variable"><a class="header" href="#accessing-or-modifying-a-mutable-static-variable">Accessing or Modifying a Mutable Static Variable</a></h3>
 <p>In this book, we’ve not yet talked about <em>global variables</em>, which Rust does
 support but can be problematic with Rust’s ownership rules. If two threads are
@@ -526,7 +529,7 @@ value.</p>
 <pre><pre class="playground"><code class="language-rust">static HELLO_WORLD: &amp;str = &quot;Hello, world!&quot;;
 
 fn main() {
-    println!(&quot;name is: {}&quot;, HELLO_WORLD);
+    println!(&quot;name is: {HELLO_WORLD}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 19-9: Defining and using an immutable static
 variable</span></p>
@@ -558,7 +561,7 @@ fn main() {
     add_to_count(3);
 
     unsafe {
-        println!(&quot;COUNTER: {}&quot;, COUNTER);
+        println!(&quot;COUNTER: {COUNTER}&quot;);
     }
 }</code></pre></pre>
 <p><span class="caption">Listing 19-10: Reading from or writing to a mutable
@@ -616,7 +619,7 @@ correct because the compiler can’t help uphold memory safety. When you have a
 reason to use <code>unsafe</code> code, you can do so, and having the explicit <code>unsafe</code>
 annotation makes it easier to track down the source of problems when they occur.</p>
 <div class="quiz-placeholder" data-quiz-name="ch19-01-unsafe-rust"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;`unsafe` blocks enable you to dereference raw pointers and call `unsafe` functions. However,\n`unsafe` does not disable the borrow checker (operations on safe references are still checked).\nA reference can be converted to a raw pointer in normal safe code.\n&quot;,&quot;id&quot;:&quot;05a7959b-4fe7-4ee6-9c25-bfa9a4e72535&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;Dereferencing a raw pointer&quot;,&quot;Calling a function marked as `unsafe`&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Disabling the borrow checker&quot;,&quot;Converting a reference to a raw pointer&quot;],&quot;prompt&quot;:&quot;Which of the following are \&quot;superpowers\&quot; that Rust enables inside an `unsafe` block?\n&quot;}},{&quot;context&quot;:&quot;This program is dangerous! It compiles correctly and executes without issue\nbecause `Vec` has enough capacity such that `v.push(4)` does not resize it. However,\nif the capacity were 3, then `n` would point to deallocated memory.\n&quot;,&quot;id&quot;:&quot;7d50567d-d73c-47d4-922f-480e8d1b7919&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;0&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let mut v = Vec::with_capacity(4);\n    for i in 0 .. 3 { \n        v.push(i); \n    }\n    let n = &amp;v[0] as *const i32;\n    v.push(4);\n    println!(\&quot;{}\&quot;, unsafe { *n });\n}\n&quot;}},{&quot;context&quot;:&quot;Two mutable references to disjoint indices is reasonable because the borrow checker doesn't understand when indices are disjoint. See: [`slice::split_at_mut`](https://doc.rust-lang.org/stable/std/primitive.slice.html#method.split_at_mut).\n\nAllowing values to be uninitialized is reasonable because the borrow checker adopts a conservative policy that values must be always initialized, but it's sometimes useful to work with uninitialized values. See [`MaybeUninit`](https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html) and the [`take_mut`](https://docs.rs/take_mut/0.2.2/take_mut/index.html) crate.\n\nHaving a struct hold a reference to itself is reasonable because the borrow checker cannot\nreason about the lifetime of self-references. See the [`std::pin`](https://doc.rust-lang.org/stable/std/pin/index.html) module.\n\nHowever, returning a pointer to a stack-allocated variable is *never* valid to do with unsafe\ncode. The only appropriate workaround is to use garbage collection, e.g. returning an `Rc&lt;T&gt;`\ninstead of `&amp;T`.\n&quot;,&quot;id&quot;:&quot;015941ed-d375-4070-a8dc-2f368584b302&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;Getting two mutable references to disjoint indices in an array&quot;,&quot;Allowing values to be uninitialized when they are not being read&quot;,&quot;Having a reference to one field of a struct sit in another field of the same struct&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Returning a pointer to a stack-allocated variable out of a function&quot;],&quot;prompt&quot;:&quot;Which of the following are situations where using `unsafe` code (or a safe wrapper around `unsafe` code) \nis an idiomatic method for working around the borrow checker?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

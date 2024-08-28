@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -159,7 +160,7 @@ signature of the function where we would usually specify the data types of the
 parameters and return value. Doing so makes our code more flexible and provides
 more functionality to callers of our function while preventing code duplication.</p>
 <p>Continuing with our <code>largest</code> function, Listing 10-4 shows two functions that
-both find the largest value in a slice. We'll then combine these into a single
+both find the largest value in a slice. We’ll then combine these into a single
 function that uses generics.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn largest_i32(list: &amp;[i32]) -&gt; &amp;i32 {
@@ -190,17 +191,17 @@ fn main() {
     let number_list = vec![34, 50, 25, 100, 65];
 
     let result = largest_i32(&amp;number_list);
-    println!(&quot;The largest number is {}&quot;, result);
+    println!(&quot;The largest number is {result}&quot;);
 <span class="boring">    assert_eq!(*result, 100);
 </span>
     let char_list = vec!['y', 'm', 'a', 'q'];
 
     let result = largest_char(&amp;char_list);
-    println!(&quot;The largest char is {}&quot;, result);
+    println!(&quot;The largest char is {result}&quot;);
 <span class="boring">    assert_eq!(*result, 'y');
 </span>}</code></pre></pre>
 <p><span class="caption">Listing 10-4: Two functions that differ only in their
-names and the types in their signatures</span></p>
+names and in the types in their signatures</span></p>
 <p>The <code>largest_i32</code> function is the one we extracted in Listing 10-3 that finds
 the largest <code>i32</code> in a slice. The <code>largest_char</code> function finds the largest
 <code>char</code> in a slice. The function bodies have the same code, so let’s eliminate
@@ -208,15 +209,15 @@ the duplication by introducing a generic type parameter in a single function.</p
 <p>To parameterize the types in a new single function, we need to name the type
 parameter, just as we do for the value parameters to a function. You can use
 any identifier as a type parameter name. But we’ll use <code>T</code> because, by
-convention, type parameter names in Rust are short, often just a letter, and
-Rust’s type-naming convention is UpperCamelCase. Short for “type,” <code>T</code> is the
+convention, type parameter names in Rust are short, often just one letter, and
+Rust’s type-naming convention is UpperCamelCase. Short for <em>type</em>, <code>T</code> is the
 default choice of most Rust programmers.</p>
 <p>When we use a parameter in the body of the function, we have to declare the
 parameter name in the signature so the compiler knows what that name means.
 Similarly, when we use a type parameter name in a function signature, we have
 to declare the type parameter name before we use it. To define the generic
-<code>largest</code> function, place type name declarations inside angle brackets, <code>&lt;&gt;</code>,
-between the name of the function and the parameter list, like this:</p>
+<code>largest</code> function, we place type name declarations inside angle brackets,
+<code>&lt;&gt;</code>, between the name of the function and the parameter list, like this:</p>
 <pre><code class="language-rust ignore">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {</code></pre>
 <p>We read this definition as: the function <code>largest</code> is generic over some type
 <code>T</code>. This function has one parameter named <code>list</code>, which is a slice of values
@@ -243,15 +244,15 @@ fn main() {
     let number_list = vec![34, 50, 25, 100, 65];
 
     let result = largest(&amp;number_list);
-    println!(&quot;The largest number is {}&quot;, result);
+    println!(&quot;The largest number is {result}&quot;);
 
     let char_list = vec!['y', 'm', 'a', 'q'];
 
     let result = largest(&amp;char_list);
-    println!(&quot;The largest char is {}&quot;, result);
+    println!(&quot;The largest char is {result}&quot;);
 }</code></pre>
 <p><span class="caption">Listing 10-5: The <code>largest</code> function using generic type
-parameters; this doesn’t yet compile</span></p>
+parameters; this doesn’t compile yet</span></p>
 <p>If we compile this code right now, we’ll get this error:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
@@ -269,7 +270,7 @@ help: consider restricting type parameter `T`
   |             ++++++++++++++++++++++
 
 For more information about this error, try `rustc --explain E0369`.
-error: could not compile `chapter10` due to previous error
+error: could not compile `chapter10` (bin &quot;chapter10&quot;) due to 1 previous error
 </code></pre>
 <!-- BEGIN INTERVENTION: 0aad53ff-89d7-4d14-8e3d-c17809220252 -->
 <p>The issue above is that when <code>largest</code> takes a slice <code>&amp;[T]</code> as input, the function cannot assume <em>anything</em> about the type <code>T</code>. It could be <code>i32</code>, it could be <code>String</code>, it could be <a href="https://doc.rust-lang.org/std/fs/struct.File.html"><code>File</code></a>. However, <code>largest</code> requires that <code>T</code> is something you can compare with <code>&gt;</code> (i.e. that <code>T</code> implements <code>PartialOrd</code>, a trait which we will discuss in the next section). Some types like <code>i32</code> and <code>String</code> are comparable, but other types like <code>File</code> are not comparable.</p>
@@ -293,9 +294,10 @@ fn main() {
 <p><span class="caption">Listing 10-6: A <code>Point&lt;T&gt;</code> struct that holds <code>x</code> and <code>y</code>
 values of type <code>T</code></span></p>
 <p>The syntax for using generics in struct definitions is similar to that used in
-function definitions. First, we declare the name of the type parameter inside
-angle brackets just after the name of the struct. Then we use the generic type
-in the struct definition where we would otherwise specify concrete data types.</p>
+function definitions. First we declare the name of the type parameter inside
+angle brackets just after the name of the struct. Then we use the generic
+type in the struct definition where we would otherwise specify concrete data
+types.</p>
 <p>Note that because we’ve used only one generic type to define <code>Point&lt;T&gt;</code>, this
 definition says that the <code>Point&lt;T&gt;</code> struct is generic over some type <code>T</code>, and
 the fields <code>x</code> and <code>y</code> are <em>both</em> that same type, whatever that type may be. If
@@ -312,9 +314,9 @@ fn main() {
 }</code></pre>
 <p><span class="caption">Listing 10-7: The fields <code>x</code> and <code>y</code> must be the same
 type because both have the same generic data type <code>T</code>.</span></p>
-<p>In this example, when we assign the integer value 5 to <code>x</code>, we let the compiler
-know that the generic type <code>T</code> will be an integer for this instance of
-<code>Point&lt;T&gt;</code>. Then when we specify 4.0 for <code>y</code>, which we’ve defined to have the
+<p>In this example, when we assign the integer value <code>5</code> to <code>x</code>, we let the
+compiler know that the generic type <code>T</code> will be an integer for this instance of
+<code>Point&lt;T&gt;</code>. Then when we specify <code>4.0</code> for <code>y</code>, which we’ve defined to have the
 same type as <code>x</code>, we’ll get a type mismatch error like this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
@@ -325,7 +327,7 @@ error[E0308]: mismatched types
   |                                      ^^^ expected integer, found floating-point number
 
 For more information about this error, try `rustc --explain E0308`.
-error: could not compile `chapter10` due to previous error
+error: could not compile `chapter10` (bin &quot;chapter10&quot;) due to 1 previous error
 </code></pre>
 <p>To define a <code>Point</code> struct where <code>x</code> and <code>y</code> are both generics but could have
 different types, we can use multiple generic type parameters. For example, in
@@ -346,7 +348,7 @@ fn main() {
 that <code>x</code> and <code>y</code> can be values of different types</span></p>
 <p>Now all the instances of <code>Point</code> shown are allowed! You can use as many generic
 type parameters in a definition as you want, but using more than a few makes
-your code hard to read. If you're finding you need lots of generic types in
+your code hard to read. If you’re finding you need lots of generic types in
 your code, it could indicate that your code needs restructuring into smaller
 pieces.</p>
 <h3 id="in-enum-definitions"><a class="header" href="#in-enum-definitions">In Enum Definitions</a></h3>
@@ -388,7 +390,7 @@ definitions that differ only in the types of the values they hold, you can
 avoid duplication by using generic types instead.</p>
 <h3 id="in-method-definitions"><a class="header" href="#in-method-definitions">In Method Definitions</a></h3>
 <p>We can implement methods on structs and enums (as we did in Chapter 5) and use
-generic types in their definitions, too. Listing 10-9 shows the <code>Point&lt;T&gt;</code>
+generic types in their definitions too. Listing 10-9 shows the <code>Point&lt;T&gt;</code>
 struct we defined in Listing 10-6 with a method named <code>x</code> implemented on it.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">struct Point&lt;T&gt; {
@@ -454,7 +456,7 @@ struct with a particular concrete type for the generic type parameter <code>T</c
 method; other instances of <code>Point&lt;T&gt;</code> where <code>T</code> is not of type <code>f32</code> will not
 have this method defined. The method measures how far our point is from the
 point at coordinates (0.0, 0.0) and uses mathematical operations that are
-available only for floating point types.</p>
+available only for floating-point types.</p>
 <!-- BEGIN INTERVENTION: 694bb2d0-f2e6-4b0b-a3e7-2d9f9e8b3d09 -->
 <p>You cannot simultaneously implement specific <em>and</em> generic methods of the same name this way. For example, if you implemented a general <code>distance_from_origin</code> for all types <code>T</code> and a specific <code>distance_from_origin</code> for <code>f32</code>, then the compiler will reject your program: Rust does not know which implementation to use when you call <code>Point&lt;f32&gt;::distance_from_origin</code>. More generally, Rust does not have inheritance-like mechanisms for specializing methods as you might find in an object-oriented language, with one exception (default trait methods) discussed in the next section.</p>
 <!-- END INTERVENTION -->
@@ -493,19 +495,19 @@ from its struct’s definition</span></p>
 and an <code>f64</code> for <code>y</code> (with value <code>10.4</code>). The <code>p2</code> variable is a <code>Point</code> struct
 that has a string slice for <code>x</code> (with value <code>&quot;Hello&quot;</code>) and a <code>char</code> for <code>y</code>
 (with value <code>c</code>). Calling <code>mixup</code> on <code>p1</code> with the argument <code>p2</code> gives us <code>p3</code>,
-which will have an <code>i32</code> for <code>x</code>, because <code>x</code> came from <code>p1</code>. The <code>p3</code> variable
-will have a <code>char</code> for <code>y</code>, because <code>y</code> came from <code>p2</code>. The <code>println!</code> macro
+which will have an <code>i32</code> for <code>x</code> because <code>x</code> came from <code>p1</code>. The <code>p3</code> variable
+will have a <code>char</code> for <code>y</code> because <code>y</code> came from <code>p2</code>. The <code>println!</code> macro
 call will print <code>p3.x = 5, p3.y = c</code>.</p>
 <p>The purpose of this example is to demonstrate a situation in which some generic
 parameters are declared with <code>impl</code> and some are declared with the method
 definition. Here, the generic parameters <code>X1</code> and <code>Y1</code> are declared after
 <code>impl</code> because they go with the struct definition. The generic parameters <code>X2</code>
-and <code>Y2</code> are declared after <code>fn mixup</code>, because they’re only relevant to the
+and <code>Y2</code> are declared after <code>fn mixup</code> because they’re only relevant to the
 method.</p>
 <h3 id="performance-of-code-using-generics"><a class="header" href="#performance-of-code-using-generics">Performance of Code Using Generics</a></h3>
 <p>You might be wondering whether there is a runtime cost when using generic type
-parameters. The good news is that using generic types won't make your program run
-any slower than it would with concrete types.</p>
+parameters. The good news is that using generic types won’t make your program
+run any slower than it would with concrete types.</p>
 <p>Rust accomplishes this by performing monomorphization of the code using
 generics at compile time. <em>Monomorphization</em> is the process of turning generic
 code into specific code by filling in the concrete types that are used when
@@ -550,7 +552,7 @@ runs, it performs just as it would if we had duplicated each definition by
 hand. The process of monomorphization makes Rust’s generics extremely efficient
 at runtime.</p>
 <div class="quiz-placeholder" data-quiz-name="ch10-01-generics"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The only possible function (without unsafe code) that has the signature `T -&gt; T` is the identity function:\n\n```\nfn mystery&lt;T&gt;(x: T) -&gt; T {\n  x\n}\n```\n\nThe function could of course panic or print, but the return value can only be the input. `mystery` does not know\nwhat type `T` is, so there is no way for `mystery` to generate or mutate a value of `T`.\nSee [Theorems for free!](https://dl.acm.org/doi/pdf/10.1145/99370.99404) for more examples of this idea.\n\n**3 really is the correct answer! If you disagree with the answer, please don't submit a bug report!**\n&quot;,&quot;id&quot;:&quot;0aad53ff-89d7-4d14-8e3d-c17809220252&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;3&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Imagine using a third-party function whose implementation you don't know, but whose type signature is this:\n\n```\nfn mystery&lt;T&gt;(x: T) -&gt; T {\n  // ????\n}\n```\n\nThen you call `mystery` like this:\n\n```\nlet y = mystery(3);\n```\n\nAssuming `mystery` uses no unsafe code, then the value of `y` must be :\n&quot;}},{&quot;context&quot;:&quot;If a type is generic (like `T`), we cannot assume anything about it, including the ability to turn it into a string. Therefore `println!(\&quot;{x}\&quot;)` is invalid\nbecause `x: &amp;T`.\n&quot;,&quot;id&quot;:&quot;40ae0cfe-3567-4d05-b0d9-54d612a2d654&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:3},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn print_slice&lt;T&gt;(v: &amp;[T]) {\n  for x in v {\n    println!(\&quot;{x}\&quot;);\n  }\n}\n\nfn main() {\n  print_slice(&amp;[1, 2, 3]);\n}\n&quot;}},{&quot;context&quot;:&quot;These definitions of `f` conflict, and there is no way for Rust to determine which `f` should be used when `p.f()` is called. Therefore this is a compiler error.\n&quot;,&quot;id&quot;:&quot;694bb2d0-f2e6-4b0b-a3e7-2d9f9e8b3d09&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:8},&quot;prompt&quot;:{&quot;program&quot;:&quot;struct Point&lt;T&gt; { x: T, y: T }\n\nimpl Point&lt;i32&gt; {\n  fn f(&amp;self) -&gt; &amp;i32 { &amp;self.y }\n}\n\nimpl&lt;T&gt; Point&lt;T&gt; {\n  fn f(&amp;self) -&gt; &amp;T { &amp;self.x }\n}\n\nfn main() {\n  let p: Point&lt;i32&gt; = Point { x: 1, y: 2 };\n  println!(\&quot;{}\&quot;, p.f());\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -203,7 +204,7 @@ fn main() {
         *num = 6;
     }
 
-    println!(&quot;m = {:?}&quot;, m);
+    println!(&quot;m = {m:?}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 16-12: Exploring the API of <code>Mutex&lt;T&gt;</code> in a
 single-threaded context for simplicity</span></p>
@@ -276,23 +277,34 @@ program.</p>
 <p>We hinted that this example wouldn’t compile. Now let’s find out why!</p>
 <pre><code class="language-console">$ cargo run
    Compiling shared-state v0.1.0 (file:///projects/shared-state)
-error[E0382]: use of moved value: `counter`
-  --&gt; src/main.rs:9:36
+error[E0382]: borrow of moved value: `counter`
+  --&gt; src/main.rs:21:29
    |
 5  |     let counter = Mutex::new(0);
    |         ------- move occurs because `counter` has type `Mutex&lt;i32&gt;`, which does not implement the `Copy` trait
 ...
+8  |     for _ in 0..10 {
+   |     -------------- inside of this loop
 9  |         let handle = thread::spawn(move || {
-   |                                    ^^^^^^^ value moved into closure here, in previous iteration of loop
-10 |             let mut num = counter.lock().unwrap();
-   |                           ------- use occurs due to use in closure
+   |                                    ------- value moved into closure here, in previous iteration of loop
+...
+21 |     println!(&quot;Result: {}&quot;, *counter.lock().unwrap());
+   |                             ^^^^^^^ value borrowed here after move
+   |
+help: consider moving the expression out of the loop so it is only moved once
+   |
+8  ~     let mut value = counter.lock();
+9  ~     for _ in 0..10 {
+10 |         let handle = thread::spawn(move || {
+11 ~             let mut num = value.unwrap();
+   |
 
 For more information about this error, try `rustc --explain E0382`.
-error: could not compile `shared-state` due to previous error
+error: could not compile `shared-state` (bin &quot;shared-state&quot;) due to 1 previous error
 </code></pre>
 <p>The error message states that the <code>counter</code> value was moved in the previous
 iteration of the loop. Rust is telling us that we can’t move the ownership
-of lock <code>counter</code> into multiple threads. Let’s fix the compiler error with a
+of <code>counter</code> into multiple threads. Let’s fix the compiler error with a
 multiple-ownership method we discussed in Chapter 15.</p>
 <h4 id="multiple-ownership-with-multiple-threads"><a class="header" href="#multiple-ownership-with-multiple-threads">Multiple Ownership with Multiple Threads</a></h4>
 <p>In Chapter 15, we gave a value multiple owners by using the smart pointer
@@ -326,7 +338,7 @@ fn main() {
 }</code></pre>
 <p><span class="caption">Listing 16-14: Attempting to use <code>Rc&lt;T&gt;</code> to allow
 multiple threads to own the <code>Mutex&lt;T&gt;</code></span></p>
-<p>Once again, we compile and get... different errors! The compiler is teaching us
+<p>Once again, we compile and get… different errors! The compiler is teaching us
 a lot.</p>
 <pre><code class="language-console">$ cargo run
    Compiling shared-state v0.1.0 (file:///projects/shared-state)
@@ -336,7 +348,7 @@ error[E0277]: `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
 11 |           let handle = thread::spawn(move || {
    |                        ------------- ^------
    |                        |             |
-   |  ______________________|_____________within this `[closure@src/main.rs:11:36: 11:43]`
+   |  ______________________|_____________within this `{closure@src/main.rs:11:36: 11:43}`
    | |                      |
    | |                      required by a bound introduced by this call
 12 | |             let mut num = counter.lock().unwrap();
@@ -345,19 +357,17 @@ error[E0277]: `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
 15 | |         });
    | |_________^ `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
    |
-   = help: within `[closure@src/main.rs:11:36: 11:43]`, the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`
+   = help: within `{closure@src/main.rs:11:36: 11:43}`, the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`, which is required by `{closure@src/main.rs:11:36: 11:43}: Send`
 note: required because it's used within this closure
   --&gt; src/main.rs:11:36
    |
 11 |         let handle = thread::spawn(move || {
    |                                    ^^^^^^^
 note: required by a bound in `spawn`
-  --&gt; /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/std/src/thread/mod.rs:704:8
-   |
-   = note: required by this bound in `spawn`
+  --&gt; /rustc/129f3b9964af4d4a709d1383930ade12dfe7c081/library/std/src/thread/mod.rs:691:1
 
 For more information about this error, try `rustc --explain E0277`.
-error: could not compile `shared-state` due to previous error
+error: could not compile `shared-state` (bin &quot;shared-state&quot;) due to 1 previous error
 </code></pre>
 <p>Wow, that error message is very wordy! Here’s the important part to focus on:
 <code>`Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely</code>. The compiler is
@@ -452,7 +462,7 @@ useful information.</p>
 <p>We’ll round out this chapter by talking about the <code>Send</code> and <code>Sync</code> traits and
 how we can use them with custom types.</p>
 <div class="quiz-placeholder" data-quiz-name="ch16-03-shared-state"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The `Mutex&lt;T&gt;` design ensures that a mutex's data can only be accessed when the mutex is locked, and conversely\nthat the mutex is unlocked once the data is no longer accessible.\n&quot;,&quot;id&quot;:&quot;ceb96826-6c98-40e1-bff4-0bb61f35679d&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;To prevent accessing a mutex's data without locking the mutex&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;To require fewer calls to mutex methods&quot;,&quot;To improve the efficiency of concurrent programs with mutexes&quot;,&quot;To prevent a mutex's data from being moved between threads&quot;],&quot;prompt&quot;:&quot;In some concurrency APIs, a mutex is separate from the data it guards. For example, imagine a hypothetical Mutex API like this:\n\n```\nlet mut data = Vec::new();\nlet mx: Mutex = Mutex::new();\n{\n    let _guard = mx.lock();\n    data.push(0);\n}\n```\n\nWhich of the following best describes why Rust uses `Mutex&lt;T&gt;` instead of just `Mutex`?\n&quot;}},{&quot;context&quot;:&quot;An `Arc` is still not safe to use if its data contains a reference, since the reference could (in theory)\nbe invalidated before all threads containing the `Arc` finish executing.\n&quot;,&quot;id&quot;:&quot;e5ac0c92-4694-4647-bd20-67825fe038b7&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:7},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::{sync::Arc, thread};\n\nfn main() {\n    let s = String::from(\&quot;Hello world\&quot;);\n    let a = Arc::new(&amp;s);\n    let a2 = Arc::clone(&amp;a);\n    let t = thread::spawn(move || a2.len());\n    let len = t.join().unwrap();\n    println!(\&quot;{} {}\&quot;, a, len);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

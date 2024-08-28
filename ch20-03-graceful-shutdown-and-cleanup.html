@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -152,10 +153,10 @@
 <p>The code in Listing 20-20 is responding to requests asynchronously through the
 use of a thread pool, as we intended. We get some warnings about the <code>workers</code>,
 <code>id</code>, and <code>thread</code> fields that we’re not using in a direct way that reminds us
-we’re not cleaning up anything. When we use the less elegant <span
-class="keystroke">ctrl-c</span> method to halt the main thread, all other
-threads are stopped immediately as well, even if they’re in the middle of
-serving a request.</p>
+we’re not cleaning up anything. When we use the less elegant
+<kbd>ctrl</kbd>-<kbd>c</kbd> method to halt the main thread, all other threads
+are stopped immediately as well, even if they’re in the middle of serving a
+request.</p>
 <p>Next, then, we’ll implement the <code>Drop</code> trait to call <code>join</code> on each of the
 threads in the pool so they can finish the requests they’re working on before
 closing. Then we’ll implement a way to tell the threads they should stop
@@ -261,11 +262,11 @@ error[E0507]: cannot move out of `worker.thread` which is behind a mutable refer
    |             |
    |             move occurs because `worker.thread` has type `JoinHandle&lt;()&gt;`, which does not implement the `Copy` trait
    |
-note: this function takes ownership of the receiver `self`, which moves `worker.thread`
-  --&gt; /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/std/src/thread/mod.rs:1581:17
+note: `JoinHandle::&lt;T&gt;::join` takes ownership of the receiver `self`, which moves `worker.thread`
+  --&gt; /rustc/129f3b9964af4d4a709d1383930ade12dfe7c081/library/std/src/thread/mod.rs:1718:17
 
 For more information about this error, try `rustc --explain E0507`.
-error: could not compile `hello` due to previous error
+error: could not compile `hello` (lib) due to 1 previous error
 </code></pre>
 <p>The error tells us we can’t call <code>join</code> because we only have a mutable borrow
 of each <code>worker</code> and <code>join</code> takes ownership of its argument. To solve this
@@ -364,7 +365,7 @@ error[E0599]: no method named `join` found for enum `Option` in the current scop
    |                           ^^^^ method not found in `Option&lt;JoinHandle&lt;()&gt;&gt;`
    |
 note: the method `join` exists on the type `JoinHandle&lt;()&gt;`
-  --&gt; /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/std/src/thread/mod.rs:1581:5
+  --&gt; /rustc/129f3b9964af4d4a709d1383930ade12dfe7c081/library/std/src/thread/mod.rs:1718:5
 help: consider using `Option::expect` to unwrap the `JoinHandle&lt;()&gt;` value, panicking if the value is an `Option::None`
    |
 52 |             worker.thread.expect(&quot;REASON&quot;).join().unwrap();
@@ -374,7 +375,7 @@ error[E0308]: mismatched types
   --&gt; src/lib.rs:72:22
    |
 72 |         Worker { id, thread }
-   |                      ^^^^^^ expected enum `Option`, found struct `JoinHandle`
+   |                      ^^^^^^ expected `Option&lt;JoinHandle&lt;()&gt;&gt;`, found `JoinHandle&lt;_&gt;`
    |
    = note: expected enum `Option&lt;JoinHandle&lt;()&gt;&gt;`
             found struct `JoinHandle&lt;_&gt;`
@@ -385,7 +386,7 @@ help: try wrapping the expression in `Some`
 
 Some errors have detailed explanations: E0308, E0599.
 For more information about an error, try `rustc --explain E0308`.
-error: could not compile `hello` due to 2 previous errors
+error: could not compile `hello` (lib) due to 2 previous errors
 </code></pre>
 <p>Let’s address the second error, which points to the code at the end of
 <code>Worker::new</code>; we need to wrap the <code>thread</code> value in <code>Some</code> when we create a
@@ -767,12 +768,13 @@ finish when the <code>ThreadPool</code> <code>drop</code> implementation calls <
 before gracefully shutting down the server, as shown in Listing 20-25.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use hello::ThreadPool;
-</span><span class="boring">use std::fs;
-</span><span class="boring">use std::io::prelude::*;
-</span><span class="boring">use std::net::TcpListener;
-</span><span class="boring">use std::net::TcpStream;
-</span><span class="boring">use std::thread;
-</span><span class="boring">use std::time::Duration;
+</span><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{prelude::*, BufReader},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">    thread,
+</span><span class="boring">    time::Duration,
+</span><span class="boring">};
 </span><span class="boring">
 </span>fn main() {
     let listener = TcpListener::bind(&quot;127.0.0.1:7878&quot;).unwrap();
@@ -790,32 +792,25 @@ before gracefully shutting down the server, as shown in Listing 20-25.</p>
 }
 <span class="boring">
 </span><span class="boring">fn handle_connection(mut stream: TcpStream) {
-</span><span class="boring">    let mut buffer = [0; 1024];
-</span><span class="boring">    stream.read(&amp;mut buffer).unwrap();
+</span><span class="boring">    let buf_reader = BufReader::new(&amp;mut stream);
+</span><span class="boring">    let request_line = buf_reader.lines().next().unwrap().unwrap();
 </span><span class="boring">
-</span><span class="boring">    let get = b&quot;GET / HTTP/1.1\r\n&quot;;
-</span><span class="boring">    let sleep = b&quot;GET /sleep HTTP/1.1\r\n&quot;;
-</span><span class="boring">
-</span><span class="boring">    let (status_line, filename) = if buffer.starts_with(get) {
-</span><span class="boring">        (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;)
-</span><span class="boring">    } else if buffer.starts_with(sleep) {
-</span><span class="boring">        thread::sleep(Duration::from_secs(5));
-</span><span class="boring">        (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;)
-</span><span class="boring">    } else {
-</span><span class="boring">        (&quot;HTTP/1.1 404 NOT FOUND&quot;, &quot;404.html&quot;)
+</span><span class="boring">    let (status_line, filename) = match &amp;request_line[..] {
+</span><span class="boring">        &quot;GET / HTTP/1.1&quot; =&gt; (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;),
+</span><span class="boring">        &quot;GET /sleep HTTP/1.1&quot; =&gt; {
+</span><span class="boring">            thread::sleep(Duration::from_secs(5));
+</span><span class="boring">            (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;)
+</span><span class="boring">        }
+</span><span class="boring">        _ =&gt; (&quot;HTTP/1.1 404 NOT FOUND&quot;, &quot;404.html&quot;),
 </span><span class="boring">    };
 </span><span class="boring">
 </span><span class="boring">    let contents = fs::read_to_string(filename).unwrap();
+</span><span class="boring">    let length = contents.len();
 </span><span class="boring">
-</span><span class="boring">    let response = format!(
-</span><span class="boring">        &quot;{}\r\nContent-Length: {}\r\n\r\n{}&quot;,
-</span><span class="boring">        status_line,
-</span><span class="boring">        contents.len(),
-</span><span class="boring">        contents
-</span><span class="boring">    );
+</span><span class="boring">    let response =
+</span><span class="boring">        format!(&quot;{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}&quot;);
 </span><span class="boring">
 </span><span class="boring">    stream.write_all(response.as_bytes()).unwrap();
-</span><span class="boring">    stream.flush().unwrap();
 </span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 20-25: Shut down the server after serving two
 requests by exiting the loop</span></p>
@@ -873,12 +868,13 @@ shutdown of the server, which cleans up all the threads in the pool.</p>
 <p>Here’s the full code for reference:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore">use hello::ThreadPool;
-use std::fs;
-use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
-use std::thread;
-use std::time::Duration;
+use std::{
+    fs,
+    io::{prelude::*, BufReader},
+    net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
+};
 
 fn main() {
     let listener = TcpListener::bind(&quot;127.0.0.1:7878&quot;).unwrap();
@@ -896,32 +892,25 @@ fn main() {
 }
 
 fn handle_connection(mut stream: TcpStream) {
-    let mut buffer = [0; 1024];
-    stream.read(&amp;mut buffer).unwrap();
+    let buf_reader = BufReader::new(&amp;mut stream);
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
 
-    let get = b&quot;GET / HTTP/1.1\r\n&quot;;
-    let sleep = b&quot;GET /sleep HTTP/1.1\r\n&quot;;
-
-    let (status_line, filename) = if buffer.starts_with(get) {
-        (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;)
-    } else if buffer.starts_with(sleep) {
-        thread::sleep(Duration::from_secs(5));
-        (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;)
-    } else {
-        (&quot;HTTP/1.1 404 NOT FOUND&quot;, &quot;404.html&quot;)
+    let (status_line, filename) = match &amp;request_line[..] {
+        &quot;GET / HTTP/1.1&quot; =&gt; (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;),
+        &quot;GET /sleep HTTP/1.1&quot; =&gt; {
+            thread::sleep(Duration::from_secs(5));
+            (&quot;HTTP/1.1 200 OK&quot;, &quot;hello.html&quot;)
+        }
+        _ =&gt; (&quot;HTTP/1.1 404 NOT FOUND&quot;, &quot;404.html&quot;),
     };
 
     let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
 
-    let response = format!(
-        &quot;{}\r\nContent-Length: {}\r\n\r\n{}&quot;,
-        status_line,
-        contents.len(),
-        contents
-    );
+    let response =
+        format!(&quot;{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}&quot;);
 
     stream.write_all(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
 }</code></pre>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">use std::{

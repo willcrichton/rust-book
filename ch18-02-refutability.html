@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -157,7 +158,7 @@ to match. Patterns that can fail to match for some possible value are
 <!-- BEGIN INTERVENTION: 3c29eb2d-cbe9-4a2c-99b8-aa5c6467c8b4 -->
 <ul>
 <li>In the expression <code>if let Some(x) = a_value</code>, then <code>Some(x)</code> is refutable. If the value in the <code>a_value</code> variable is <code>None</code> rather than
-<code>Some</code>, the <code>Some(x)</code> pattern will not match. </li>
+<code>Some</code>, the <code>Some(x)</code> pattern will not match.</li>
 <li>In the expression <code>if let &amp;[x, ..] = a_slice</code>, then <code>&amp;[x, ..]</code> is refutable. If the value in the <code>a_slice</code> variable has zero elements, the <code>&amp;[x, ..]</code> pattern will not match.</li>
 </ul>
 <!-- END INTERVENTION: 3c29eb2d-cbe9-4a2c-99b8-aa5c6467c8b4 -->
@@ -190,7 +191,7 @@ do with a <code>None</code> value. At compile time, Rust will complain that we�
 use a refutable pattern where an irrefutable pattern is required:</p>
 <pre><code class="language-console">$ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
-error[E0005]: refutable pattern in local binding: `None` not covered
+error[E0005]: refutable pattern in local binding
  --&gt; src/main.rs:3:9
   |
 3 |     let Some(x) = some_option_value;
@@ -198,23 +199,14 @@ error[E0005]: refutable pattern in local binding: `None` not covered
   |
   = note: `let` bindings require an &quot;irrefutable pattern&quot;, like a `struct` or an `enum` with only one variant
   = note: for more information, visit https://doc.rust-lang.org/book/ch18-02-refutability.html
-note: `Option&lt;i32&gt;` defined here
- --&gt; /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/option.rs:518:1
-  |
-  = note: 
-/rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/option.rs:522:5: not covered
   = note: the matched value is of type `Option&lt;i32&gt;`
-help: you might want to use `if let` to ignore the variant that isn't matched
-  |
-3 |     let x = if let Some(x) = some_option_value { x } else { todo!() };
-  |     ++++++++++                                 ++++++++++++++++++++++
-help: alternatively, you might want to use let else to handle the variant that isn't matched
+help: you might want to use `let else` to handle the variant that isn't matched
   |
 3 |     let Some(x) = some_option_value else { todo!() };
   |                                     ++++++++++++++++
 
 For more information about this error, try `rustc --explain E0005`.
-error: could not compile `patterns` due to previous error
+error: could not compile `patterns` (bin &quot;patterns&quot;) due to 1 previous error
 </code></pre>
 <p>Because we didn’t cover (and couldn’t cover!) every valid value with the
 pattern <code>Some(x)</code>, Rust rightfully produces a compiler error.</p>
@@ -226,17 +218,18 @@ the code in the curly brackets, giving it a way to continue validly. Listing
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span><span class="boring">    let some_option_value: Option&lt;i32&gt; = None;
 </span>    if let Some(x) = some_option_value {
-        println!(&quot;{}&quot;, x);
+        println!(&quot;{x}&quot;);
     }
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-9: Using <code>if let</code> and a block with refutable
 patterns instead of <code>let</code></span></p>
-<p>We’ve given the code an out! This code is perfectly valid, although it means we
-cannot use an irrefutable pattern without receiving an error. If we give <code>if let</code> a pattern that will always match, such as <code>x</code>, as shown in Listing 18-10,
-the compiler will give a warning.</p>
+<p>We’ve given the code an out! This code is perfectly valid now. However,
+if we give <code>if let</code> an irrefutable pattern (a pattern that will always
+match), such as <code>x</code>, as shown in Listing 18-10, the compiler will give a
+warning.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    if let x = 5 {
-        println!(&quot;{}&quot;, x);
+        println!(&quot;{x}&quot;);
     };
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-10: Attempting to use an irrefutable pattern
@@ -256,7 +249,7 @@ warning: irrefutable `if let` pattern
   = note: `#[warn(irrefutable_let_patterns)]` on by default
 
 warning: `patterns` (bin &quot;patterns&quot;) generated 1 warning
-    Finished dev [unoptimized + debuginfo] target(s) in 0.39s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.39s
      Running `target/debug/patterns`
 5
 </code></pre>
@@ -269,7 +262,7 @@ this syntax isn’t particularly useful and could be replaced with a simpler
 and irrefutable patterns, let’s cover all the syntax we can use to create
 patterns.</p>
 <div class="quiz-placeholder" data-quiz-name="ch18-02-refutability"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;A pattern is refutable if there exists some value of the expected type that isn't matched by the pattern.\n&quot;,&quot;id&quot;:&quot;35e59c95-3d83-4277-8d88-a1986f4086d7&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Refutable patterns do not match some value of type `T`, while irrefutable patterns match all values of type `T`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Refutable patterns match some values of a different type `S`, while irrefutable patterns only match values of type `T`&quot;,&quot;Refutable patterns do not match any values of type `T`, while irrefutable patterns match some values of type `T`&quot;,&quot;Refutable patterns are patterns where `T` is an enum, while irrefutable patterns are patterns where `T` is not an enum&quot;],&quot;prompt&quot;:&quot;Consider pattern-matching on an expression of some type `T`.\nWhich of these statements best describes the difference between a refutable and an irrefutable pattern?\n&quot;}},{&quot;context&quot;:&quot; \nA slice does not have a fixed length, so any pattern which asserts that\n`x` must have at least one element is refutable.\n&quot;,&quot;id&quot;:&quot;3c29eb2d-cbe9-4a2c-99b8-aa5c6467c8b4&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;`&amp;[(x, y)]`&quot;,&quot;`&amp;[(x, y), ..]`&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`&amp;[..]`&quot;,&quot;`_`&quot;],&quot;prompt&quot;:&quot;Consider the following program:\n\n```\nlet x: &amp;[(i32, i32)] = &amp;[(0, 1)];\n```\n\nWhich of the following are **refutable** patterns for `x`?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

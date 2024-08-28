@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -155,11 +156,11 @@ newtypes are useful as types. Then we’ll move on to type aliases, a feature
 similar to newtypes but with slightly different semantics. We’ll also discuss
 the <code>!</code> type and dynamically sized types.</p>
 <h3 id="using-the-newtype-pattern-for-type-safety-and-abstraction"><a class="header" href="#using-the-newtype-pattern-for-type-safety-and-abstraction">Using the Newtype Pattern for Type Safety and Abstraction</a></h3>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: This section assumes you’ve read the earlier section <a href="ch19-03-advanced-traits.html#using-the-newtype-pattern-to-implement-external-traits-on-external-types">“Using the
 Newtype Pattern to Implement External Traits on External
 Types.”</a><!-- ignore --></p>
-</blockquote>
+</section>
 <p>The newtype pattern is also useful for tasks beyond those we’ve discussed so
 far, including statically enforcing that values are never confused and
 indicating the units of a value. You saw an example of using newtypes to
@@ -487,7 +488,7 @@ Because the type might not be <code>Sized</code>, we need to use it behind some 
 pointer. In this case, we’ve chosen a reference.</p>
 <p>Next, we’ll talk about functions and closures!</p>
 <div class="quiz-placeholder" data-quiz-name="ch19-04-advanced-types"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The `!` type is not an appropriate return type for this function because it only panics\nsome of the time, not all of the time.\n&quot;,&quot;id&quot;:&quot;d3d9197f-8baf-4ec5-9988-282c67636d3c&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:4},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn expect_none(x: Option&lt;i32&gt;) -&gt; ! {\n    match x {\n        Some(n) =&gt; panic!(\&quot;Expected none, found Some({n})\&quot;),\n        None =&gt; ()\n    }\n}\n\nfn main() {\n    println!(\&quot;{:?}\&quot;, expect_none(None));\n}\n&quot;}},{&quot;context&quot;:&quot;The call to `is_equal` passes values of type `&amp;str`. That means `T = str`. However, `str`\nis only allowed to be used in such a generic function if `T` is marked as `?Sized`.\n&quot;,&quot;id&quot;:&quot;5c5cb765-a561-459f-8223-9e72e824c5da&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn is_equal&lt;T: Eq&gt;(t1: &amp;T, t2: &amp;T) -&gt; bool {\n  t1 == t2\n}\n\nfn main() {\n  println!(\&quot;{}\&quot;, is_equal(\&quot;Hello\&quot;, \&quot;world\&quot;));\n}\n\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

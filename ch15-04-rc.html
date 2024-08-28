@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -215,7 +216,7 @@ error[E0382]: use of moved value: `a`
    |                              ^ value used here after move
 
 For more information about this error, try `rustc --explain E0382`.
-error: could not compile `cons-list` due to previous error
+error: could not compile `cons-list` (bin &quot;cons-list&quot;) due to 1 previous error
 </code></pre>
 <p>The <code>Cons</code> variants own the data they hold, so when we create the <code>b</code> list, <code>a</code>
 is moved into <code>b</code> and <code>b</code> owns <code>a</code>. Then, when we try to use <code>a</code> again when
@@ -301,7 +302,7 @@ also has a <code>weak_count</code>; we’ll see what <code>weak_count</code> is 
 <p>This code prints the following:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.45s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.45s
      Running `target/debug/cons-list`
 count after creating a = 1
 count after creating b = 2
@@ -328,7 +329,7 @@ section, we’ll discuss the interior mutability pattern and the <code>RefCell&l
 type that you can use in conjunction with an <code>Rc&lt;T&gt;</code> to work with this
 immutability restriction.</p>
 <div class="quiz-placeholder" data-quiz-name="ch15-04-rc"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Data inside an `Rc` cannot be mutated without the use of interior mutability (seen next section). `Rc` enforces this property\nby implementing the `Deref` trait, but not implementing the `DerefMut` trait.\n&quot;,&quot;id&quot;:&quot;e127342d-7ad2-4730-b930-774411e1872d&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:5},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::rc::Rc;\nfn main() {\n    let n = Rc::new(1);\n    let mut n2 = Rc::clone(&amp;n);\n    *n2 += 1;\n    println!(\&quot;{}\&quot;, n);\n}\n&quot;}},{&quot;context&quot;:&quot;The value inside a reference-counted pointer is only ever dropped once, so \&quot;drop\&quot; is only printed once.\nThe initial `drop(x)` decrements the reference count, but does not drop the value because `y` is still live.\nThen dropping `y` finds that the reference count is 0, and drops `Example`.\n&quot;,&quot;id&quot;:&quot;3b43eb45-3400-4555-b605-9ae1cde7c80c&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;A\nB\ndrop\nC\n&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::rc::Rc;\nstruct Example;\nimpl Drop for Example {\n    fn drop(&amp;mut self) {\n        println!(\&quot;drop\&quot;);\n    }\n}\nfn main() {\n    let x = Rc::new(Example);    \n    let y = Rc::clone(&amp;x);    \n    println!(\&quot;A\&quot;);\n    drop(x);\n    println!(\&quot;B\&quot;);\n    drop(y);    \n    println!(\&quot;C\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -249,10 +250,10 @@ allowing external code to read the <code>average</code> but not modify it.</p>
 in the future. For instance, we could use a <code>HashSet&lt;i32&gt;</code> instead of a
 <code>Vec&lt;i32&gt;</code> for the <code>list</code> field. As long as the signatures of the <code>add</code>,
 <code>remove</code>, and <code>average</code> public methods stay the same, code using
-<code>AveragedCollection</code> wouldn’t need to change. If we made <code>list</code> public instead,
-this wouldn’t necessarily be the case: <code>HashSet&lt;i32&gt;</code> and <code>Vec&lt;i32&gt;</code> have
-different methods for adding and removing items, so the external code would
-likely have to change if it were modifying <code>list</code> directly.</p>
+<code>AveragedCollection</code> wouldn’t need to change in order to compile. If we made
+<code>list</code> public instead, this wouldn’t necessarily be the case: <code>HashSet&lt;i32&gt;</code> and
+<code>Vec&lt;i32&gt;</code> have different methods for adding and removing items, so the external
+code would likely have to change if it were modifying <code>list</code> directly.</p>
 <p>If encapsulation is a required aspect for a language to be considered
 object-oriented, then Rust meets that requirement. The option to use <code>pub</code> or
 not for different parts of code enables encapsulation of implementation details.</p>
@@ -282,7 +283,7 @@ implementation of a method inherited from a parent class.</p>
 child type to be used in the same places as the parent type. This is also
 called <em>polymorphism</em>, which means that you can substitute multiple objects for
 each other at runtime if they share certain characteristics.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h3 id="polymorphism"><a class="header" href="#polymorphism">Polymorphism</a></h3>
 <p>To many people, polymorphism is synonymous with inheritance. But it’s
 actually a more general concept that refers to code that can work with data
@@ -290,7 +291,7 @@ of multiple types. For inheritance, those types are generally subclasses.</p>
 <p>Rust instead uses generics to abstract over different possible types and
 trait bounds to impose constraints on what those types must provide. This is
 sometimes called <em>bounded parametric polymorphism</em>.</p>
-</blockquote>
+</section>
 <p>Inheritance has recently fallen out of favor as a programming design solution
 in many programming languages because it’s often at risk of sharing more code
 than necessary. Subclasses shouldn’t always share all characteristics of their
@@ -304,7 +305,7 @@ restricting the flexibility of a program’s design.</p>
 instead of inheritance. Let’s look at how trait objects enable polymorphism in
 Rust.</p>
 <div class="quiz-placeholder" data-quiz-name="ch17-01-what-is-oo"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Rust contains objects (i.e. structs) and encapsulation (via the `pub` keyword), but not inheritance.\n&quot;,&quot;id&quot;:&quot;a4680619-9533-4cbb-a785-7b73570168af&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;Objects with methods&quot;,&quot;Encapsulation of private data&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Inheritance of superclass methods&quot;],&quot;prompt&quot;:&quot;Which of the following aspects of object-oriented programming does Rust implement?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

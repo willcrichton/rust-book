@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -149,14 +150,14 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="traits-defining-shared-behavior"><a class="header" href="#traits-defining-shared-behavior">Traits: Defining Shared Behavior</a></h2>
-<p>A <em>trait</em> defines functionality a particular type has and can share with other
-types. We can use traits to define shared behavior in an abstract way. We can
-use <em>trait bounds</em> to specify that a generic type can be any type that has
+<p>A <em>trait</em> defines the functionality a particular type has and can share with
+other types. We can use traits to define shared behavior in an abstract way. We
+can use <em>trait bounds</em> to specify that a generic type can be any type that has
 certain behavior.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: Traits are similar to a feature often called <em>interfaces</em> in other
 languages, although with some differences.</p>
-</blockquote>
+</section>
 <h3 id="defining-a-trait"><a class="header" href="#defining-a-trait">Defining a Trait</a></h3>
 <p>A type’s behavior consists of the methods we can call on that type. Different
 types share the same behavior if we can call the same methods on all of those
@@ -164,14 +165,14 @@ types. Trait definitions are a way to group method signatures together to
 define a set of behaviors necessary to accomplish some purpose.</p>
 <p>For example, let’s say we have multiple structs that hold various kinds and
 amounts of text: a <code>NewsArticle</code> struct that holds a news story filed in a
-particular location and a <code>Tweet</code> that can have at most 280 characters along
+particular location and a <code>Tweet</code> that can have, at most, 280 characters along
 with metadata that indicates whether it was a new tweet, a retweet, or a reply
 to another tweet.</p>
 <p>We want to make a media aggregator library crate named <code>aggregator</code> that can
 display summaries of data that might be stored in a <code>NewsArticle</code> or <code>Tweet</code>
-instance. To do this, we need a summary from each type, and we’ll request
-that summary by calling a <code>summarize</code> method on an instance. Listing 10-12
-shows the definition of a public <code>Summary</code> trait that expresses this behavior.</p>
+instance. To do this, we need a summary from each type, and we’ll request that
+summary by calling a <code>summarize</code> method on an instance. Listing 10-12 shows the
+definition of a public <code>Summary</code> trait that expresses this behavior.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait Summary {
     fn summarize(&amp;self) -&gt; String;
@@ -179,7 +180,7 @@ shows the definition of a public <code>Summary</code> trait that expresses this 
 <p><span class="caption">Listing 10-12: A <code>Summary</code> trait that consists of the
 behavior provided by a <code>summarize</code> method</span></p>
 <p>Here, we declare a trait using the <code>trait</code> keyword and then the trait’s name,
-which is <code>Summary</code> in this case. We’ve also declared the trait as <code>pub</code> so that
+which is <code>Summary</code> in this case. We also declare the trait as <code>pub</code> so that
 crates depending on this crate can make use of this trait too, as we’ll see in
 a few examples. Inside the curly brackets, we declare the method signatures
 that describe the behaviors of the types that implement this trait, which in
@@ -190,14 +191,14 @@ its own custom behavior for the body of the method. The compiler will enforce
 that any type that has the <code>Summary</code> trait will have the method <code>summarize</code>
 defined with this signature exactly.</p>
 <p>A trait can have multiple methods in its body: the method signatures are listed
-one per line and each line ends in a semicolon.</p>
+one per line, and each line ends in a semicolon.</p>
 <h3 id="implementing-a-trait-on-a-type"><a class="header" href="#implementing-a-trait-on-a-type">Implementing a Trait on a Type</a></h3>
 <p>Now that we’ve defined the desired signatures of the <code>Summary</code> trait’s methods,
 we can implement it on the types in our media aggregator. Listing 10-13 shows
 an implementation of the <code>Summary</code> trait on the <code>NewsArticle</code> struct that uses
 the headline, the author, and the location to create the return value of
 <code>summarize</code>. For the <code>Tweet</code> struct, we define <code>summarize</code> as the username
-followed by the entire text of the tweet, assuming that tweet content is
+followed by the entire text of the tweet, assuming that the tweet content is
 already limited to 280 characters.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Summary {
@@ -261,28 +262,28 @@ fn main() {
 <p>This code prints <code>1 new tweet: horse_ebooks: of course, as you probably already know, people</code>.</p>
 <p>Other crates that depend on the <code>aggregator</code> crate can also bring the <code>Summary</code>
 trait into scope to implement <code>Summary</code> on their own types. One restriction to
-note is that we can implement a trait on a type only if at least one of the
-trait or the type is local to our crate. For example, we can implement standard
+note is that we can implement a trait on a type only if either the trait or the
+type, or both, are local to our crate. For example, we can implement standard
 library traits like <code>Display</code> on a custom type like <code>Tweet</code> as part of our
-<code>aggregator</code> crate functionality, because the type <code>Tweet</code> is local to our
+<code>aggregator</code> crate functionality because the type <code>Tweet</code> is local to our
 <code>aggregator</code> crate. We can also implement <code>Summary</code> on <code>Vec&lt;T&gt;</code> in our
-<code>aggregator</code> crate, because the trait <code>Summary</code> is local to our <code>aggregator</code>
+<code>aggregator</code> crate because the trait <code>Summary</code> is local to our <code>aggregator</code>
 crate.</p>
 <p>But we can’t implement external traits on external types. For example, we can’t
-implement the <code>Display</code> trait on <code>Vec&lt;T&gt;</code> within our <code>aggregator</code> crate,
-because <code>Display</code> and <code>Vec&lt;T&gt;</code> are both defined in the standard library and
-aren’t local to our <code>aggregator</code> crate. This restriction is part of a property
-called <em>coherence</em>, and more specifically the <em>orphan rule</em>, so named because
-the parent type is not present. This rule ensures that other people’s code
-can’t break your code and vice versa. Without the rule, two crates could
-implement the same trait for the same type, and Rust wouldn’t know which
-implementation to use.</p>
+implement the <code>Display</code> trait on <code>Vec&lt;T&gt;</code> within our <code>aggregator</code> crate because
+<code>Display</code> and <code>Vec&lt;T&gt;</code> are both defined in the standard library and aren’t
+local to our <code>aggregator</code> crate. This restriction is part of a property called
+<em>coherence</em>, and more specifically the <em>orphan rule</em>, so named because the
+parent type is not present. This rule ensures that other people’s code can’t
+break your code and vice versa. Without the rule, two crates could implement
+the same trait for the same type, and Rust wouldn’t know which implementation
+to use.</p>
 <h3 id="default-implementations"><a class="header" href="#default-implementations">Default Implementations</a></h3>
 <p>Sometimes it’s useful to have default behavior for some or all of the methods
 in a trait instead of requiring implementations for all methods on every type.
 Then, as we implement the trait on a particular type, we can keep or override
 each method’s default behavior.</p>
-<p>In Listing 10-14 we specify a default string for the <code>summarize</code> method of the
+<p>In Listing 10-14, we specify a default string for the <code>summarize</code> method of the
 <code>Summary</code> trait instead of only defining the method signature, as we did in
 Listing 10-12.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
@@ -394,7 +395,8 @@ when we implement the trait on a type:</p>
 <code>Tweet</code> struct, and the default implementation of <code>summarize</code> will call the
 definition of <code>summarize_author</code> that we’ve provided. Because we’ve implemented
 <code>summarize_author</code>, the <code>Summary</code> trait has given us the behavior of the
-<code>summarize</code> method without requiring us to write any more code.</p>
+<code>summarize</code> method without requiring us to write any more code. Here’s what
+that looks like:</p>
 <pre><code class="language-rust ignore"><span class="boring">use aggregator::{self, Summary, Tweet};
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -415,7 +417,7 @@ overriding implementation of that same method.</p>
 <div class="quiz-placeholder" data-quiz-name="ch10-02-traits-sec1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The implementation of `MakeNoise` provides a specific implementation for `Dog` and uses the default implementation for `Cat`.\nTherefore calling `make_noise` on each prints `bark` and `(silence)`, respectively. \n&quot;,&quot;id&quot;:&quot;c4adb1a8-ca6a-43c1-ae34-54302f674ece&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;bark\n(silence)&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;trait MakeNoise {\n  fn make_noise(&amp;self) {\n    println!(\&quot;(silence)\&quot;);\n  }\n}\n\nstruct Dog {}\nstruct Cat {}\n\nimpl MakeNoise for Dog {\n  fn make_noise(&amp;self) {\n    println!(\&quot;bark\&quot;);\n  }\n}\n\nimpl MakeNoise for Cat {}\n\nfn main() {\n  let dog = Dog {};\n  let cat = Cat {};\n  dog.make_noise();\n  cat.make_noise();\n}\n&quot;}},{&quot;context&quot;:&quot;The \&quot;orphan rule\&quot; requires that you cannot implement an external trait for an external type, \nto ensure code doesn't break if two crates provide conflicting implementations.\n&quot;,&quot;id&quot;:&quot;783f2485-e5b9-483b-8368-064366c77285&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;You can implement an external trait for a local type&quot;,&quot;You can implement a local trait for an external type&quot;,&quot;You can implement a local trait for a local type&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;You can implement an external trait for an external type&quot;],&quot;prompt&quot;:&quot;The following are statements about what kinds of trait implementations are permitted by Rust. Select each statement which is true.&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h3 id="traits-as-parameters"><a class="header" href="#traits-as-parameters">Traits as Parameters</a></h3>
 <p>Now that you know how to define and implement traits, we can explore how to use
-traits to define functions that accept many different types. We'll use the
+traits to define functions that accept many different types. We’ll use the
 <code>Summary</code> trait we implemented on the <code>NewsArticle</code> and <code>Tweet</code> types in
 Listing 10-13 to define a <code>notify</code> function that calls the <code>summarize</code> method
 on its <code>item</code> parameter, which is of some type that implements the <code>Summary</code>
@@ -500,7 +502,7 @@ bounds, so functions with multiple generic type parameters can contain lots of
 trait bound information between the function’s name and its parameter list,
 making the function signature hard to read. For this reason, Rust has alternate
 syntax for specifying trait bounds inside a <code>where</code> clause after the function
-signature. So instead of writing this:</p>
+signature. So, instead of writing this:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: &amp;T, u: &amp;U) -&gt; i32 {</code></pre>
 <p>we can use a <code>where</code> clause, like this:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T, U&gt;(t: &amp;T, u: &amp;U) -&gt; i32
@@ -513,7 +515,7 @@ where
 <p>This function’s signature is less cluttered: the function name, parameter list,
 and return type are close together, similar to a function without lots of trait
 bounds.</p>
-<h3 id="returning-types-that-implement-traits"><a class="header" href="#returning-types-that-implement-traits">Returning Types that Implement Traits</a></h3>
+<h3 id="returning-types-that-implement-traits"><a class="header" href="#returning-types-that-implement-traits">Returning Types That Implement Traits</a></h3>
 <p>We can also use the <code>impl Trait</code> syntax in the return position to return a
 value of some type that implements a trait, as shown here:</p>
 <pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
@@ -666,7 +668,7 @@ impl&lt;T: Display + PartialOrd&gt; Pair&lt;T&gt; {
 generic type depending on trait bounds</span></p>
 <p>We can also conditionally implement a trait for any type that implements
 another trait. Implementations of a trait on any type that satisfies the trait
-bounds are called <em>blanket implementations</em> and are extensively used in the
+bounds are called <em>blanket implementations</em> and are used extensively in the
 Rust standard library. For example, the standard library implements the
 <code>ToString</code> trait on any type that implements the <code>Display</code> trait. The <code>impl</code>
 block in the standard library looks similar to this code:</p>
@@ -688,14 +690,14 @@ reduce duplication but also specify to the compiler that we want the generic
 type to have particular behavior. The compiler can then use the trait bound
 information to check that all the concrete types used with our code provide the
 correct behavior. In dynamically typed languages, we would get an error at
-runtime if we called a method on a type which didn’t define the method. But Rust
-moves these errors to compile time so we’re forced to fix the problems before
-our code is even able to run. Additionally, we don’t have to write code that
-checks for behavior at runtime because we’ve already checked at compile time.
-Doing so improves performance without having to give up the flexibility of
-generics.</p>
+runtime if we called a method on a type which didn’t define the method. But
+Rust moves these errors to compile time so we’re forced to fix the problems
+before our code is even able to run. Additionally, we don’t have to write code
+that checks for behavior at runtime because we’ve already checked at compile
+time. Doing so improves performance without having to give up the flexibility
+of generics.</p>
 <div class="quiz-placeholder" data-quiz-name="ch10-02-traits-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Because `displayable` returns `impl Display`, then we only know that `s2` is *some* type that implements `Display`, \nnot that it is a `String` which has a `push_str` method. Therefore we cannot call `s2.push_str(..)`. If the return\ntype of `displayable` was `-&gt; T`, then this program would compile.\n&quot;,&quot;id&quot;:&quot;a2a1546b-27bf-47d2-a1bc-86d777573f40&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:7},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::fmt::Display;\nfn displayable&lt;T: Display&gt;(t: T) -&gt; impl Display { t }\n\nfn main() {\n  let s = String::from(\&quot;hello\&quot;);\n  let mut s2 = displayable(s);\n  s2.push_str(\&quot; world\&quot;);\n  println!(\&quot;{s2}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;Because `clone` is called and the `{}` display brackets are used in a formatter, then `T` must be `Clone` and `Display`.\n&quot;,&quot;id&quot;:&quot;8b35f91c-ced2-4b8f-bf1c-90550f2b744b&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`Clone + Display`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;(no bounds)&quot;,&quot;`Clone`&quot;,&quot;`Clone + Display + Debug`&quot;],&quot;prompt&quot;:&quot;What is the smallest set of trait bounds on `T` needed to make this function type-check?\n```\nfn f&lt;T: /* ??? */&gt;(t: &amp;T) {\n  let t2 = t.clone();\n  println!(\&quot;{t2}\&quot;);\n}\n```\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

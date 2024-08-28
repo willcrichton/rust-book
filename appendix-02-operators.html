@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -180,7 +181,7 @@ overload that operator is listed.</p>
 <tr><td><code>-</code></td><td><code>- expr</code></td><td>Arithmetic negation</td><td><code>Neg</code></td></tr>
 <tr><td><code>-</code></td><td><code>expr - expr</code></td><td>Arithmetic subtraction</td><td><code>Sub</code></td></tr>
 <tr><td><code>-=</code></td><td><code>var -= expr</code></td><td>Arithmetic subtraction and assignment</td><td><code>SubAssign</code></td></tr>
-<tr><td><code>-&gt;</code></td><td><code>fn(...) -&gt; type</code>, <code>|...| -&gt; type</code></td><td>Function and closure return type</td><td></td></tr>
+<tr><td><code>-&gt;</code></td><td><code>fn(...) -&gt; type</code>, <code>|…| -&gt; type</code></td><td>Function and closure return type</td><td></td></tr>
 <tr><td><code>.</code></td><td><code>expr.ident</code></td><td>Member access</td><td></td></tr>
 <tr><td><code>..</code></td><td><code>..</code>, <code>expr..</code>, <code>..expr</code>, <code>expr..expr</code></td><td>Right-exclusive range literal</td><td><code>PartialOrd</code></td></tr>
 <tr><td><code>..=</code></td><td><code>..=expr</code>, <code>expr..=expr</code></td><td>Right-inclusive range literal</td><td><code>PartialOrd</code></td></tr>
@@ -230,7 +231,7 @@ locations.</p>
 <tr><td><code>br&quot;...&quot;</code>, <code>br#&quot;...&quot;#</code>, <code>br##&quot;...&quot;##</code>, etc.</td><td>Raw byte string literal, combination of raw and byte string literal</td></tr>
 <tr><td><code>'...'</code></td><td>Character literal</td></tr>
 <tr><td><code>b'...'</code></td><td>ASCII byte literal</td></tr>
-<tr><td><code>|...| expr</code></td><td>Closure</td></tr>
+<tr><td><code>|…| expr</code></td><td>Closure</td></tr>
 <tr><td><code>!</code></td><td>Always empty bottom type for diverging functions</td></tr>
 <tr><td><code>_</code></td><td>“Ignored” pattern binding; also used to make integer literals readable</td></tr>
 </tbody></table>

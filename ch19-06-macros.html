@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -227,11 +228,11 @@ macro_rules! vec {
 }</code></pre>
 <p><span class="caption">Listing 19-28: A simplified version of the <code>vec!</code> macro
 definition</span></p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: The actual definition of the <code>vec!</code> macro in the standard library
 includes code to preallocate the correct amount of memory up front. That code
 is an optimization that we don’t include here to make the example simpler.</p>
-</blockquote>
+</section>
 <p>The <code>#[macro_export]</code> annotation indicates that this macro should be made
 available whenever the crate in which the macro is defined is brought into
 scope. Without this annotation, the macro can’t be brought into scope.</p>
@@ -249,7 +250,7 @@ one arm.</p>
 <p>Valid pattern syntax in macro definitions is different than the pattern syntax
 covered in Chapter 18 because macro patterns are matched against Rust code
 structure rather than values. For example, declarative macros can match against expressions (<code>expr</code>), types (<code>ty</code>), and even entire items (<code>item</code>).
-Let's walk through what the pattern pieces in
+Let’s walk through what the pattern pieces in
 Listing 19-28 mean; for the full macro pattern syntax, see the <a href="https://doc.rust-lang.org/reference/macros-by-example.html">Rust
 Reference</a>.</p>
 <!-- END INTERVENTION: f4f664ef-4b0b-43ac-ba90-5051a4ef89fb -->
@@ -393,7 +394,7 @@ in a moment, so we need to add them as dependencies. Add the following to the
 proc-macro = true
 
 [dependencies]
-syn = &quot;1.0&quot;
+syn = &quot;2.0&quot;
 quote = &quot;1.0&quot;
 </code></pre>
 <p>To start defining the procedural macro, place the code in Listing 19-31 into
@@ -402,7 +403,6 @@ won’t compile until we add a definition for the <code>impl_hello_macro</code> 
 <p><span class="filename">Filename: hello_macro_derive/src/lib.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use proc_macro::TokenStream;
 use quote::quote;
-use syn;
 
 #[proc_macro_derive(HelloMacro)]
 pub fn hello_macro_derive(input: TokenStream) -&gt; TokenStream {
@@ -464,7 +464,7 @@ struct we get from parsing the <code>struct Pancakes;</code> string:</p>
 parsing the code that has the macro’s attribute in Listing 19-30</span></p>
 <p>The fields of this struct show that the Rust code we’ve parsed is a unit struct
 with the <code>ident</code> (identifier, meaning the name) of <code>Pancakes</code>. There are more
-fields on this struct for describing all sorts of Rust code; check the <a href="https://docs.rs/syn/1.0/syn/struct.DeriveInput.html"><code>syn</code>
+fields on this struct for describing all sorts of Rust code; check the <a href="https://docs.rs/syn/2.0/syn/struct.DeriveInput.html"><code>syn</code>
 documentation for <code>DeriveInput</code></a> for more information.</p>
 <p>Soon we’ll define the <code>impl_hello_macro</code> function, which is where we’ll build
 the new Rust code we want to include. But before we do, note that the output
@@ -485,7 +485,6 @@ into a <code>DeriveInput</code> instance, let’s generate the code that impleme
 <p><span class="filename">Filename: hello_macro_derive/src/lib.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use proc_macro::TokenStream;
 </span><span class="boring">use quote::quote;
-</span><span class="boring">use syn;
 </span><span class="boring">
 </span><span class="boring">#[proc_macro_derive(HelloMacro)]
 </span><span class="boring">pub fn hello_macro_derive(input: TokenStream) -&gt; TokenStream {
@@ -605,7 +604,8 @@ recognize these concepts and syntax. Use this chapter as a reference to guide
 you to solutions.</p>
 <p>Next, we’ll put everything we’ve discussed throughout the book into practice
 and do one more project!</p>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

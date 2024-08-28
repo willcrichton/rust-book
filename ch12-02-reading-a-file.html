@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -155,7 +156,8 @@ small amount of text over multiple lines with some repeated words. Listing 12-3
 has an Emily Dickinson poem that will work well! Create a file called
 <em>poem.txt</em> at the root level of your project, and enter the poem “I’m Nobody!
 Who are you?”</p>
-<p><span class="filename">Filename: poem.txt</span></p>
+<figure class="listing">
+<span class="file-name">Filename: poem.txt</span>
 <pre><code class="language-text">I'm nobody! Who are you?
 Are you nobody, too?
 Then there's a pair of us - don't tell!
@@ -166,11 +168,12 @@ How public, like a frog
 To tell your name the livelong day
 To an admiring bog!
 </code></pre>
-<p><span class="caption">Listing 12-3: A poem by Emily Dickinson makes a good test
-case</span></p>
+<figcaption>Listing 12-3: A poem by Emily Dickinson makes a good test case</figcaption>
+</figure>
 <p>With the text in place, edit <em>src/main.rs</em> and add code to read the file, as
 shown in Listing 12-4.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground">use std::env;
 use std::fs;
 
@@ -181,16 +184,16 @@ fn main() {
 </span><span class="boring">    let query = &amp;args[1];
 </span><span class="boring">    let file_path = &amp;args[2];
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;Searching for {}&quot;, query);
-</span>    println!(&quot;In file {}&quot;, file_path);
+</span><span class="boring">    println!(&quot;Searching for {query}&quot;);
+</span>    println!(&quot;In file {file_path}&quot;);
 
     let contents = fs::read_to_string(file_path)
         .expect(&quot;Should have been able to read the file&quot;);
 
     println!(&quot;With text:\n{contents}&quot;);
 }</code></pre>
-<p><span class="caption">Listing 12-4: Reading the contents of the file specified
-by the second argument</span></p>
+<figcaption>Listing 12-4: Reading the contents of the file specified by the second argument</figcaption>
+</figure>
 <p>First, we bring in a relevant part of the standard library with a <code>use</code>
 statement: we need <code>std::fs</code> to handle files.</p>
 <p>In <code>main</code>, the new statement <code>fs::read_to_string</code> takes the <code>file_path</code>, opens
@@ -203,7 +206,7 @@ we haven’t implemented the searching part yet) and the <em>poem.txt</em> file 
 second argument:</p>
 <pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep the poem.txt`
 Searching for the
 In file poem.txt

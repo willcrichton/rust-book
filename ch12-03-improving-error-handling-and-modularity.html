@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -168,12 +169,13 @@ reading the file fails, but the error message just prints <code>Should have been
 example, the file could be missing, or we might not have permission to open it.
 Right now, regardless of the situation, we’d print the same error message for
 everything, which wouldn’t give the user any information!</p>
-<p>Fourth, we use <code>expect</code> repeatedly to handle different errors, and if the user
-runs our program without specifying enough arguments, they’ll get an <code>index out of bounds</code> error from Rust that doesn’t clearly explain the problem. It would
-be best if all the error-handling code were in one place so future maintainers
-had only one place to consult the code if the error-handling logic needed to
-change. Having all the error-handling code in one place will also ensure that
-we’re printing messages that will be meaningful to our end users.</p>
+<p>Fourth, we use <code>expect</code> to handle an error, and if the user runs our program
+without specifying enough arguments, they’ll get an <code>index out of bounds</code> error
+from Rust that doesn’t clearly explain the problem. It would be best if all the
+error-handling code were in one place so future maintainers had only one place
+to consult the code if the error-handling logic needed to change. Having all the
+error-handling code in one place will also ensure that we’re printing messages
+that will be meaningful to our end users.</p>
 <p>Let’s address these four problems by refactoring our project.</p>
 <h3 id="separation-of-concerns-for-binary-projects"><a class="header" href="#separation-of-concerns-for-binary-projects">Separation of Concerns for Binary Projects</a></h3>
 <p>The organizational problem of allocating responsibility for multiple tasks to
@@ -208,7 +210,8 @@ it. Let’s rework our program by following this process.</p>
 <code>main</code> will call to prepare for moving the command line parsing logic to
 <em>src/lib.rs</em>. Listing 12-5 shows the new start of <code>main</code> that calls a new
 function <code>parse_config</code>, which we’ll define in <em>src/main.rs</em> for the moment.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -219,8 +222,8 @@ function <code>parse_config</code>, which we’ll define in <em>src/main.rs</em>
 
     // --snip--
 <span class="boring">
-</span><span class="boring">    println!(&quot;Searching for {}&quot;, query);
-</span><span class="boring">    println!(&quot;In file {}&quot;, file_path);
+</span><span class="boring">    println!(&quot;Searching for {query}&quot;);
+</span><span class="boring">    println!(&quot;In file {file_path}&quot;);
 </span><span class="boring">
 </span><span class="boring">    let contents = fs::read_to_string(file_path)
 </span><span class="boring">        .expect(&quot;Should have been able to read the file&quot;);
@@ -234,8 +237,8 @@ fn parse_config(args: &amp;[String]) -&gt; (&amp;str, &amp;str) {
 
     (query, file_path)
 }</code></pre>
-<p><span class="caption">Listing 12-5: Extracting a <code>parse_config</code> function from
-<code>main</code></span></p>
+<figcaption>Listing 12-5: Extracting a <code>parse_config</code> function from <code>main</code></figcaption>
+</figure>
 <p>We’re still collecting the command line arguments into a vector, but instead of
 assigning the argument value at index 1 to the variable <code>query</code> and the
 argument value at index 2 to the variable <code>file_path</code> within the <code>main</code>
@@ -263,7 +266,8 @@ struct fields a meaningful name. Doing so will make it easier for future
 maintainers of this code to understand how the different values relate to each
 other and what their purpose is.</p>
 <p>Listing 12-6 shows the improvements to the <code>parse_config</code> function.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -294,8 +298,8 @@ fn parse_config(args: &amp;[String]) -&gt; Config {
 
     Config { query, file_path }
 }</code></pre>
-<p><span class="caption">Listing 12-6: Refactoring <code>parse_config</code> to return an
-instance of a <code>Config</code> struct</span></p>
+<figcaption>Listing 12-6: Refactoring <code>parse_config</code> to return an instance of a <code>Config</code> struct</figcaption>
+</figure>
 <p>We’ve added a struct named <code>Config</code> defined to have fields named <code>query</code> and
 <code>file_path</code>. The signature of <code>parse_config</code> now indicates that it returns a
 <code>Config</code> value. In the body of <code>parse_config</code>, where we used to return
@@ -311,7 +315,7 @@ takes more time and memory than storing a reference to the string data.
 However, cloning the data also makes our code very straightforward because we
 don’t have to manage the lifetimes of the references; in this circumstance,
 giving up a little performance to gain simplicity is a worthwhile trade-off.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h3 id="the-trade-offs-of-using-clone"><a class="header" href="#the-trade-offs-of-using-clone">The Trade-Offs of Using <code>clone</code></a></h3>
 <p>There’s a tendency among many Rustaceans to avoid using <code>clone</code> to fix
 ownership problems because of its runtime cost. In
@@ -323,7 +327,7 @@ a working program that’s a bit inefficient than to try to hyperoptimize code
 on your first pass. As you become more experienced with Rust, it’ll be
 easier to start with the most efficient solution, but for now, it’s
 perfectly acceptable to call <code>clone</code>.</p>
-</blockquote>
+</section>
 <p>We’ve updated <code>main</code> so it places the instance of <code>Config</code> returned by
 <code>parse_config</code> into a variable named <code>config</code>, and we updated the code that
 previously used the separate <code>query</code> and <code>file_path</code> variables so it now uses
@@ -347,7 +351,8 @@ standard library, such as <code>String</code>, by calling <code>String::new</cod
 changing <code>parse_config</code> into a <code>new</code> function associated with <code>Config</code>, we’ll
 be able to create instances of <code>Config</code> by calling <code>Config::new</code>. Listing 12-7
 shows the changes we need to make.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -382,8 +387,8 @@ shows the changes we need to make.</p>
         Config { query, file_path }
     }
 }</code></pre>
-<p><span class="caption">Listing 12-7: Changing <code>parse_config</code> into
-<code>Config::new</code></span></p>
+<figcaption>Listing 12-7: Changing <code>parse_config</code> into <code>Config::new</code></figcaption>
+</figure>
 <p>We’ve updated <code>main</code> where we were calling <code>parse_config</code> to instead call
 <code>Config::new</code>. We’ve changed the name of <code>parse_config</code> to <code>new</code> and moved it
 within an <code>impl</code> block, which associates the <code>new</code> function with <code>Config</code>. Try
@@ -395,9 +400,10 @@ panic if the vector contains fewer than three items. Try running the program
 without any arguments; it will look like this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep`
-thread 'main' panicked at 'index out of bounds: the len is 1 but the index is 1', src/main.rs:27:21
+thread 'main' panicked at src/main.rs:27:21:
+index out of bounds: the len is 1 but the index is 1
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
 <p>The line <code>index out of bounds: the len is 1 but the index is 1</code> is an error
@@ -407,7 +413,8 @@ they should do instead. Let’s fix that now.</p>
 <p>In Listing 12-8, we add a check in the <code>new</code> function that will verify that the
 slice is long enough before accessing index 1 and 2. If the slice isn’t long
 enough, the program panics and displays a better error message.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -444,8 +451,8 @@ enough, the program panics and displays a better error message.</p>
 </span><span class="boring">        Config { query, file_path }
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-8: Adding a check for the number of
-arguments</span></p>
+<figcaption>Listing 12-8: Adding a check for the number of arguments</figcaption>
+</figure>
 <p>This code is similar to <a href="ch09-03-to-panic-or-not-to-panic.html#creating-custom-types-for-validation">the <code>Guess::new</code> function we wrote in Listing
 9-13</a><!-- ignore -->, where we called <code>panic!</code> when the
 <code>value</code> argument was out of the range of valid values. Instead of checking for
@@ -457,9 +464,10 @@ will be true, and we call the <code>panic!</code> macro to end the program immed
 arguments again to see what the error looks like now:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep`
-thread 'main' panicked at 'not enough arguments', src/main.rs:26:13
+thread 'main' panicked at src/main.rs:26:13:
+not enough arguments
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
 <p>This output is better: we now have a reasonable error message. However, we also
@@ -483,7 +491,8 @@ practical error for our users without the surrounding text about <code>thread 'm
 function we’re now calling <code>Config::build</code> and the body of the function needed
 to return a <code>Result</code>. Note that this won’t compile until we update <code>main</code> as
 well, which we’ll do in the next listing.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -518,8 +527,8 @@ well, which we’ll do in the next listing.</p>
         Ok(Config { query, file_path })
     }
 }</code></pre>
-<p><span class="caption">Listing 12-9: Returning a <code>Result</code> from
-<code>Config::build</code></span></p>
+<figcaption>Listing 12-9: Returning a <code>Result</code> from <code>Config::build</code></figcaption>
+</figure>
 <p>Our <code>build</code> function returns a <code>Result</code> with a <code>Config</code> instance in the success
 case and a <code>&amp;'static str</code> in the error case. Our error values will always be
 string literals that have the <code>'static</code> lifetime.</p>
@@ -539,7 +548,8 @@ Listing 12-10. We’ll also take the responsibility of exiting the command line
 tool with a nonzero error code away from <code>panic!</code> and instead implement it by
 hand. A nonzero exit status is a convention to signal to the process that
 called our program that the program exited with an error state.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span>use std::process;
@@ -580,8 +590,8 @@ fn main() {
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-10: Exiting with an error code if building a
-<code>Config</code> fails</span></p>
+<figcaption>Listing 12-10: Exiting with an error code if building a <code>Config</code> fails</figcaption>
+</figure>
 <p>In this listing, we’ve used a method we haven’t covered in detail yet:
 <code>unwrap_or_else</code>, which is defined on <code>Result&lt;T, E&gt;</code> by the standard library.
 Using <code>unwrap_or_else</code> allows us to define some custom, non-<code>panic!</code> error
@@ -604,7 +614,7 @@ number that was passed as the exit status code. This is similar to the
 extra output. Let’s try it:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.48s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
      Running `target/debug/minigrep`
 Problem parsing arguments: not enough arguments
 </code></pre>
@@ -620,7 +630,8 @@ inspection, and we’ll be able to write tests for all the other logic.</p>
 <p>Listing 12-11 shows the extracted <code>run</code> function. For now, we’re just making
 the small, incremental improvement of extracting the function. We’re still
 defining the function in <em>src/main.rs</em>.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">use std::process;
@@ -667,8 +678,8 @@ fn run(config: Config) {
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-11: Extracting a <code>run</code> function containing the
-rest of the program logic</span></p>
+<figcaption>Listing 12-11: Extracting a <code>run</code> function containing the rest of the program logic</figcaption>
+</figure>
 <p>The <code>run</code> function now contains all the remaining logic from <code>main</code>, starting
 from reading the file. The <code>run</code> function takes the <code>Config</code> instance as an
 argument.</p>
@@ -680,7 +691,8 @@ function will return a <code>Result&lt;T, E&gt;</code> when something goes wrong
 us further consolidate the logic around handling errors into <code>main</code> in a
 user-friendly way. Listing 12-12 shows the changes we need to make to the
 signature and body of <code>run</code>.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::fs;
 </span><span class="boring">use std::process;
@@ -728,8 +740,8 @@ signature and body of <code>run</code>.</p>
 </span><span class="boring">        Ok(Config { query, file_path })
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-12: Changing the <code>run</code> function to return
-<code>Result</code></span></p>
+<figcaption>Listing 12-12: Changing the <code>run</code> function to return <code>Result</code></figcaption>
+</figure>
 <p>We’ve made three significant changes here. First, we changed the return type of
 the <code>run</code> function to <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code>. This function previously
 returned the unit type, <code>()</code>, and we keep that as the value returned in the
@@ -753,7 +765,7 @@ which means we need to wrap the unit type value in the <code>Ok</code> value. Th
 the idiomatic way to indicate that we’re calling <code>run</code> for its side effects
 only; it doesn’t return a value we need.</p>
 <p>When you run this code, it will compile but will display a warning:</p>
-<pre><code class="language-console">$ cargo run the poem.txt
+<pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
 warning: unused `Result` that must be used
   --&gt; src/main.rs:19:5
@@ -763,9 +775,13 @@ warning: unused `Result` that must be used
    |
    = note: this `Result` may be an `Err` variant, which should be handled
    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+19 |     let _ = run(config);
+   |     +++++++
 
 warning: `minigrep` (bin &quot;minigrep&quot;) generated 1 warning
-    Finished dev [unoptimized + debuginfo] target(s) in 0.71s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.71s
      Running `target/debug/minigrep the poem.txt`
 Searching for the
 In file poem.txt
@@ -861,7 +877,8 @@ can test the code and have a <em>src/main.rs</em> file with fewer responsibiliti
 <p>The contents of <em>src/lib.rs</em> should have the signatures shown in Listing 12-13
 (we’ve omitted the bodies of the functions for brevity). Note that this won’t
 compile until we modify <em>src/main.rs</em> in Listing 12-14.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">use std::error::Error;
 use std::fs;
 
@@ -892,14 +909,15 @@ pub fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
 </span><span class="boring">
 </span><span class="boring">    Ok(())
 </span>}</code></pre>
-<p><span class="caption">Listing 12-13: Moving <code>Config</code> and <code>run</code> into
-<em>src/lib.rs</em></span></p>
+<figcaption>Listing 12-13: Moving <code>Config</code> and <code>run</code> into <em>src/lib.rs</em></figcaption>
+</figure>
 <p>We’ve made liberal use of the <code>pub</code> keyword: on <code>Config</code>, on its fields and its
 <code>build</code> method, and on the <code>run</code> function. We now have a library crate that has
 a public API we can test!</p>
 <p>Now we need to bring the code we moved to <em>src/lib.rs</em> into the scope of the
 binary crate in <em>src/main.rs</em>, as shown in Listing 12-14.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">use std::env;
 use std::process;
 
@@ -923,8 +941,8 @@ fn main() {
 </span><span class="boring">        process::exit(1);
 </span>    }
 }</code></pre>
-<p><span class="caption">Listing 12-14: Using the <code>minigrep</code> library crate in
-<em>src/main.rs</em></span></p>
+<figcaption>Listing 12-14: Using the <code>minigrep</code> library crate in <em>src/main.rs</em></figcaption>
+</figure>
 <p>We add a <code>use minigrep::Config</code> line to bring the <code>Config</code> type from the
 library crate into the binary crate’s scope, and we prefix the <code>run</code> function
 with our crate name. Now all the functionality should be connected and should

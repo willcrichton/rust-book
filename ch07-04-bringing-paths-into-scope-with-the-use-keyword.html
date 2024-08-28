@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -181,7 +182,7 @@ also check privacy, like any other paths.</p>
 <p>Note that <code>use</code> only creates the shortcut for the particular scope in which the
 <code>use</code> occurs. Listing 7-12 moves the <code>eat_at_restaurant</code> function into a new
 child module named <code>customer</code>, which is then a different scope than the <code>use</code>
-statement, so the function body won’t compile:</p>
+statement, so the function body won’t compile.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground test_harness does_not_compile ignore">mod front_of_house {
     pub mod hosting {
@@ -202,6 +203,17 @@ it’s in</span></p>
 <code>customer</code> module:</p>
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0433]: failed to resolve: use of undeclared crate or module `hosting`
+  --&gt; src/lib.rs:11:9
+   |
+11 |         hosting::add_to_waitlist();
+   |         ^^^^^^^ use of undeclared crate or module `hosting`
+   |
+help: consider importing this module through its public re-export
+   |
+10 +     use crate::hosting;
+   |
+
 warning: unused import: `crate::front_of_house::hosting`
  --&gt; src/lib.rs:7:5
   |
@@ -210,15 +222,9 @@ warning: unused import: `crate::front_of_house::hosting`
   |
   = note: `#[warn(unused_imports)]` on by default
 
-error[E0433]: failed to resolve: use of undeclared crate or module `hosting`
-  --&gt; src/lib.rs:11:9
-   |
-11 |         hosting::add_to_waitlist();
-   |         ^^^^^^^ use of undeclared crate or module `hosting`
-
 For more information about this error, try `rustc --explain E0433`.
 warning: `restaurant` (lib) generated 1 warning
-error: could not compile `restaurant` due to previous error; 1 warning emitted
+error: could not compile `restaurant` (lib) due to 1 previous error; 1 warning emitted
 </code></pre>
 <p>Notice there’s also a warning that the <code>use</code> is no longer used in its scope! To
 fix this problem, move the <code>use</code> within the <code>customer</code> module too, or reference
@@ -226,7 +232,7 @@ the shortcut in the parent module with <code>super::hosting</code> within the ch
 <code>customer</code> module.</p>
 <h3 id="creating-idiomatic-use-paths"><a class="header" href="#creating-idiomatic-use-paths">Creating Idiomatic <code>use</code> Paths</a></h3>
 <p>In Listing 7-11, you might have wondered why we specified <code>use crate::front_of_house::hosting</code> and then called <code>hosting::add_to_waitlist</code> in
-<code>eat_at_restaurant</code> rather than specifying the <code>use</code> path all the way out to
+<code>eat_at_restaurant</code>, rather than specifying the <code>use</code> path all the way out to
 the <code>add_to_waitlist</code> function to achieve the same result, as in Listing 7-13.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground test_harness">mod front_of_house {
@@ -242,9 +248,9 @@ pub fn eat_at_restaurant() {
 }</code></pre>
 <p><span class="caption">Listing 7-13: Bringing the <code>add_to_waitlist</code> function
 into scope with <code>use</code>, which is unidiomatic</span></p>
-<p>Although both Listing 7-11 and 7-13 accomplish the same task, Listing 7-11 is
-the idiomatic way to bring a function into scope with <code>use</code>. Bringing the
-function’s parent module into scope with <code>use</code> means we have to specify the
+<p>Although both Listing 7-11 and Listing 7-13 accomplish the same task, Listing
+7-11 is the idiomatic way to bring a function into scope with <code>use</code>. Bringing
+the function’s parent module into scope with <code>use</code> means we have to specify the
 parent module when calling the function. Specifying the parent module when
 calling the function makes it clear that the function isn’t locally defined
 while still minimizing repetition of the full path. The code in Listing 7-13 is
@@ -267,7 +273,7 @@ emerged, and folks have gotten used to reading and writing Rust code this way.</
 <p>The exception to this idiom is if we’re bringing two items with the same name
 into scope with <code>use</code> statements, because Rust doesn’t allow that. Listing 7-15
 shows how to bring two <code>Result</code> types into scope that have the same name but
-different parent modules and how to refer to them.</p>
+different parent modules, and how to refer to them.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">use std::fmt;
 use std::io;
@@ -285,7 +291,7 @@ fn function2() -&gt; io::Result&lt;()&gt; {
 the same scope requires using their parent modules.</span></p>
 <p>As you can see, using the parent modules distinguishes the two <code>Result</code> types.
 If instead we specified <code>use std::fmt::Result</code> and <code>use std::io::Result</code>, we’d
-have two <code>Result</code> types in the same scope and Rust wouldn’t know which one we
+have two <code>Result</code> types in the same scope, and Rust wouldn’t know which one we
 meant when we used <code>Result</code>.</p>
 <h3 id="providing-new-names-with-the-as-keyword"><a class="header" href="#providing-new-names-with-the-as-keyword">Providing New Names with the <code>as</code> Keyword</a></h3>
 <p>There’s another solution to the problem of bringing two types of the same name
@@ -315,8 +321,8 @@ considered idiomatic, so the choice is up to you!</p>
 <p>When we bring a name into scope with the <code>use</code> keyword, the name available in
 the new scope is private. To enable the code that calls our code to refer to
 that name as if it had been defined in that code’s scope, we can combine <code>pub</code>
-and <code>use</code>. This technique is called <em>re-exporting</em> because we’re bringing
-an item into scope but also making that item available for others to bring into
+and <code>use</code>. This technique is called <em>re-exporting</em> because we’re bringing an
+item into scope but also making that item available for others to bring into
 their scope.</p>
 <p>Listing 7-17 shows the code in Listing 7-11 with <code>use</code> in the root module
 changed to <code>pub use</code>.</p>
@@ -336,8 +342,9 @@ pub fn eat_at_restaurant() {
 from a new scope with <code>pub use</code></span></p>
 <p>Before this change, external code would have to call the <code>add_to_waitlist</code>
 function by using the path
-<code>restaurant::front_of_house::hosting::add_to_waitlist()</code>. Now that this <code>pub use</code> has re-exported the <code>hosting</code> module from the root module, external code
-can now use the path <code>restaurant::hosting::add_to_waitlist()</code> instead.</p>
+<code>restaurant::front_of_house::hosting::add_to_waitlist()</code>, which also would have
+required the <code>front_of_house</code> module to be marked as <code>pub</code>. Now that this <code>pub use</code> has re-exported the <code>hosting</code> module from the root module, external code
+can use the path <code>restaurant::hosting::add_to_waitlist()</code> instead.</p>
 <p>Re-exporting is useful when the internal structure of your code is different
 from how programmers calling your code would think about the domain. For
 example, in this restaurant metaphor, the people running the restaurant think
@@ -405,10 +412,10 @@ with <code>HashMap</code> we would use this line:</p>
 <p>This is an absolute path starting with <code>std</code>, the name of the standard library
 crate.</p>
 <h3 id="using-nested-paths-to-clean-up-large-use-lists"><a class="header" href="#using-nested-paths-to-clean-up-large-use-lists">Using Nested Paths to Clean Up Large <code>use</code> Lists</a></h3>
-<p>If we’re using multiple items defined in the same crate or same module,
-listing each item on its own line can take up a lot of vertical space in our
-files. For example, these two <code>use</code> statements we had in the Guessing Game in
-Listing 2-4 bring items from <code>std</code> into scope:</p>
+<p>If we’re using multiple items defined in the same crate or same module, listing
+each item on its own line can take up a lot of vertical space in our files. For
+example, these two <code>use</code> statements we had in the guessing game in Listing 2-4
+bring items from <code>std</code> into scope:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
 </span>// --snip--
@@ -514,7 +521,7 @@ is also sometimes used as part of the prelude pattern: see <a href="https://doc.
 library documentation</a><!-- ignore -->
 for more information on that pattern.</p>
 <div class="quiz-placeholder" data-quiz-name="ch07-04-use"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;`use` allows references to items in the used path that are shorter than without the `use`, reducing the verbosity of reference.\n&quot;,&quot;id&quot;:&quot;a162c2c8-aadf-4963-a997-02a1035f2459&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`use` reduces the verbosity of referring to items in the used path&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`use` copies the contents of an item from one module to another&quot;,&quot;`use` allows access to items that circumvents normal privacy rules&quot;,&quot;`use` indicates to the compiler that an item will be used and should be optimized&quot;],&quot;prompt&quot;:&quot;Which of the following statements best describes the function of the `use` keyword?&quot;}},{&quot;context&quot;:&quot;There are two paths to `a`: `parent::a` and `a`. There are no paths to `b`, because it is private. There are three paths to `c`:\n`parent::child::c`, `child::c`, `alias::c`.\n&quot;,&quot;id&quot;:&quot;eccc2099-9880-4628-8474-f1d55e2a4a4a&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;5&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Consider this module and `use` statement:\n\n```\npub mod parent {\n  pub fn a() {}\n  fn b() {}\n  pub mod child {\n    pub fn c() {}\n  }\n}\n\nfn main() {\n  use parent::{*, child as alias};\n  // ...\n}\n```\n\nInside `main`, what is the total number of paths that can refer to `a`, `b`, or `c` (not including those that use `self`, `super`, or `crate`)?\nWrite your answer as a digit such as 0 or 1. For example, if the only two valid paths were `a` and `parent::b`, then the answer would be 2.\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

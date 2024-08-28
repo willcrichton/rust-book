@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -158,7 +159,7 @@ deployed your code to production!</p>
 <p>Rust groups errors into two major categories: <em>recoverable</em> and <em>unrecoverable</em>
 errors. For a recoverable error, such as a <em>file not found</em> error, we most
 likely just want to report the problem to the user and retry the operation.
-Unrecoverable errors are always symptoms of bugs, like trying to access a
+Unrecoverable errors are always symptoms of bugs, such as trying to access a
 location beyond the end of an array, and so we want to immediately stop the
 program.</p>
 <p>Most languages don’t distinguish between these two kinds of errors and handle

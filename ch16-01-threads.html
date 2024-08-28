@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -190,13 +191,13 @@ use std::time::Duration;
 fn main() {
     thread::spawn(|| {
         for i in 1..10 {
-            println!(&quot;hi number {} from the spawned thread!&quot;, i);
+            println!(&quot;hi number {i} from the spawned thread!&quot;);
             thread::sleep(Duration::from_millis(1));
         }
     });
 
     for i in 1..5 {
-        println!(&quot;hi number {} from the main thread!&quot;, i);
+        println!(&quot;hi number {i} from the main thread!&quot;);
         thread::sleep(Duration::from_millis(1));
     }
 }</code></pre></pre>
@@ -247,13 +248,13 @@ use std::time::Duration;
 fn main() {
     let handle = thread::spawn(|| {
         for i in 1..10 {
-            println!(&quot;hi number {} from the spawned thread!&quot;, i);
+            println!(&quot;hi number {i} from the spawned thread!&quot;);
             thread::sleep(Duration::from_millis(1));
         }
     });
 
     for i in 1..5 {
-        println!(&quot;hi number {} from the main thread!&quot;, i);
+        println!(&quot;hi number {i} from the main thread!&quot;);
         thread::sleep(Duration::from_millis(1));
     }
 
@@ -294,7 +295,7 @@ use std::time::Duration;
 fn main() {
     let handle = thread::spawn(|| {
         for i in 1..10 {
-            println!(&quot;hi number {} from the spawned thread!&quot;, i);
+            println!(&quot;hi number {i} from the spawned thread!&quot;);
             thread::sleep(Duration::from_millis(1));
         }
     });
@@ -302,7 +303,7 @@ fn main() {
     handle.join().unwrap();
 
     for i in 1..5 {
-        println!(&quot;hi number {} from the main thread!&quot;, i);
+        println!(&quot;hi number {i} from the main thread!&quot;);
         thread::sleep(Duration::from_millis(1));
     }
 }</code></pre></pre>
@@ -328,7 +329,7 @@ hi number 4 from the main thread!
 <p>Small details, such as where <code>join</code> is called, can affect whether or not your
 threads run at the same time.</p>
 <h3 id="using-move-closures-with-threads"><a class="header" href="#using-move-closures-with-threads">Using <code>move</code> Closures with Threads</a></h3>
-<p>We'll often use the <code>move</code> keyword with closures passed to <code>thread::spawn</code>
+<p>We’ll often use the <code>move</code> keyword with closures passed to <code>thread::spawn</code>
 because the closure will then take ownership of the values it uses from the
 environment, thus transferring ownership of those values from one thread to
 another. In the <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">“Capturing References or Moving Ownership”</a><!-- ignore
@@ -347,7 +348,7 @@ fn main() {
     let v = vec![1, 2, 3];
 
     let handle = thread::spawn(|| {
-        println!(&quot;Here's a vector: {:?}&quot;, v);
+        println!(&quot;Here's a vector: {v:?}&quot;);
     });
 
     handle.join().unwrap();
@@ -365,15 +366,15 @@ error[E0373]: closure may outlive the current function, but it borrows `v`, whic
   |
 6 |     let handle = thread::spawn(|| {
   |                                ^^ may outlive borrowed value `v`
-7 |         println!(&quot;Here's a vector: {:?}&quot;, v);
-  |                                           - `v` is borrowed here
+7 |         println!(&quot;Here's a vector: {v:?}&quot;);
+  |                                     - `v` is borrowed here
   |
 note: function requires argument type to outlive `'static`
  --&gt; src/main.rs:6:18
   |
 6 |       let handle = thread::spawn(|| {
   |  __________________^
-7 | |         println!(&quot;Here's a vector: {:?}&quot;, v);
+7 | |         println!(&quot;Here's a vector: {v:?}&quot;);
 8 | |     });
   | |______^
 help: to force the closure to take ownership of `v` (and any other referenced variables), use the `move` keyword
@@ -382,7 +383,7 @@ help: to force the closure to take ownership of `v` (and any other referenced va
   |                                ++++
 
 For more information about this error, try `rustc --explain E0373`.
-error: could not compile `threads` due to previous error
+error: could not compile `threads` (bin &quot;threads&quot;) due to 1 previous error
 </code></pre>
 <p>Rust <em>infers</em> how to capture <code>v</code>, and because <code>println!</code> only needs a reference
 to <code>v</code>, the closure tries to borrow <code>v</code>. However, there’s a problem: Rust can’t
@@ -397,7 +398,7 @@ fn main() {
     let v = vec![1, 2, 3];
 
     let handle = thread::spawn(|| {
-        println!(&quot;Here's a vector: {:?}&quot;, v);
+        println!(&quot;Here's a vector: {v:?}&quot;);
     });
 
     drop(v); // oh no!
@@ -433,7 +434,7 @@ fn main() {
     let v = vec![1, 2, 3];
 
     let handle = thread::spawn(move || {
-        println!(&quot;Here's a vector: {:?}&quot;, v);
+        println!(&quot;Here's a vector: {v:?}&quot;);
     });
 
     handle.join().unwrap();
@@ -456,14 +457,14 @@ error[E0382]: use of moved value: `v`
 5  |
 6  |     let handle = thread::spawn(move || {
    |                                ------- value moved into closure here
-7  |         println!(&quot;Here's a vector: {:?}&quot;, v);
-   |                                           - variable moved due to use in closure
+7  |         println!(&quot;Here's a vector: {v:?}&quot;);
+   |                                     - variable moved due to use in closure
 ...
 10 |     drop(v); // oh no!
    |          ^ value used here after move
 
 For more information about this error, try `rustc --explain E0382`.
-error: could not compile `threads` due to previous error
+error: could not compile `threads` (bin &quot;threads&quot;) due to 1 previous error
 </code></pre>
 <p>Rust’s ownership rules have saved us again! We got an error from the code in
 Listing 16-3 because Rust was being conservative and only borrowing <code>v</code> for the
@@ -477,7 +478,7 @@ ownership rules.</p>
 <p>With a basic understanding of threads and the thread API, let’s look at what we
 can <em>do</em> with threads.</p>
 <div class="quiz-placeholder" data-quiz-name="ch16-01-threads"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The `move` keyword causes `n` to be copied into the closure, so the assignments\n`n = n + 1` within `thread::spawn` have no effect on the outer `n`.\n&quot;,&quot;id&quot;:&quot;53cb3740-2962-4379-a25f-a65e72812a95&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;2&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::thread;\nfn main() {\n    let mut n = 1;\n    let t = thread::spawn(move || {\n        n = n + 1;\n        thread::spawn(move || {\n            n = n + 1;\n        })\n    });\n    n = n + 1;\n    t.join().unwrap().join().unwrap();\n    println!(\&quot;{n}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;If a closure captures a reference to a value that lived less than `'static`, it's possible that the thread would live \nlonger than the value and violate memory safety. Note that [`thread::scope`](https://doc.rust-lang.org/std/thread/fn.scope.html) \ncan be used to allow threads to capture non-static references by statically limiting the lifetime of the thread.\n&quot;,&quot;id&quot;:&quot;c2a84e6d-8143-4944-bf20-b00e49144ac9&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Rust doesn't know how long a thread will run, so the thread's captures must live forever&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;The closure passed to `thread::spawn` is not allowed to take any arguments&quot;,&quot;The vector `v` contains values that do not outlive `'static`&quot;,&quot;A closure may only capture string constants of type `&amp;'static str`&quot;],&quot;prompt&quot;:&quot;Consider this example from the text where a vector is improperly captured by a thread:\n\n```\nuse std::thread;\n\nfn main() {\n    let v = vec![1, 2, 3];\n\n    let handle = thread::spawn(|| {\n        println!(\&quot;Here's a vector: {:?}\&quot;, v);\n    });\n\n    handle.join().unwrap();\n}\n```\n\nThe Rust compiler includes this diagnostic:\n\n```text\nnote: function requires argument type to outlive `'static`\n --&gt; src/main.rs:6:18\n  |\n6 |       let handle = thread::spawn(|| {\n  |  __________________^\n7 | |         println!(\&quot;Here's a vector: {:?}\&quot;, v);\n8 | |     });\n  | |______^\n```\n\nRecall that `'static` is the lifetime of references that are valid for the entire program's duration.\n\nWhich of the following best describes the note \&quot;function requires argument type to outlive `'static`\&quot;?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

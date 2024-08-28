@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -161,12 +162,12 @@ type. We’ll explore how implementing the <code>Deref</code> trait makes it pos
 smart pointers to work in ways similar to references. Then we’ll look at
 Rust’s <em>deref coercion</em> feature and how it lets us work with either references
 or smart pointers.</p>
-<blockquote>
-<p>Note: there’s one big difference between the <code>MyBox&lt;T&gt;</code> type we’re about to
+<section class="note" aria-role="note">
+<p>Note: There’s one big difference between the <code>MyBox&lt;T&gt;</code> type we’re about to
 build and the real <code>Box&lt;T&gt;</code>: our version will not store its data on the heap.
 We are focusing this example on <code>Deref</code>, so where the data is actually stored
 is less important than the pointer-like behavior.</p>
-</blockquote>
+</section>
 <!-- Old link, do not remove -->
 <p><a id="following-the-pointer-to-the-value-with-the-dereference-operator"></a></p>
 <h3 id="following-the-pointer-to-the-value"><a class="header" href="#following-the-pointer-to-the-value">Following the Pointer to the Value</a></h3>
@@ -201,20 +202,10 @@ error[E0277]: can't compare `{integer}` with `&amp;{integer}`
   |     ^^^^^^^^^^^^^^^^ no implementation for `{integer} == &amp;{integer}`
   |
   = help: the trait `PartialEq&lt;&amp;{integer}&gt;` is not implemented for `{integer}`
-  = help: the following other types implement trait `PartialEq&lt;Rhs&gt;`:
-            f32
-            f64
-            i128
-            i16
-            i32
-            i64
-            i8
-            isize
-          and 6 others
   = note: this error originates in the macro `assert_eq` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 For more information about this error, try `rustc --explain E0277`.
-error: could not compile `deref-example` due to previous error
+error: could not compile `deref-example` (bin &quot;deref-example&quot;) due to 1 previous error
 </code></pre>
 <p>Comparing a number and a reference to a number isn’t allowed because they’re
 different types. We must use the dereference operator to follow the reference
@@ -296,7 +287,7 @@ error[E0614]: type `MyBox&lt;{integer}&gt;` cannot be dereferenced
    |                   ^^
 
 For more information about this error, try `rustc --explain E0614`.
-error: could not compile `deref-example` due to previous error
+error: could not compile `deref-example` (bin &quot;deref-example&quot;) due to 1 previous error
 </code></pre>
 <p>Our <code>MyBox&lt;T&gt;</code> type can’t be dereferenced because we haven’t implemented that
 ability on our type. To enable dereferencing with the <code>*</code> operator, we
@@ -502,7 +493,7 @@ the borrowing rules don’t guarantee that. Therefore, Rust can’t make the
 assumption that converting an immutable reference to a mutable reference is
 possible.</p>
 <div class="quiz-placeholder" data-quiz-name="ch15-02-deref"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The `AccessLogger` will print \&quot;deref\&quot; every time `n` is dereferenced, which occurs twice.\nNote that copying `n` to `n2` does not dereference `n`.\n&quot;,&quot;id&quot;:&quot;f4971d37-55d5-48c5-9966-a28b54ed3bee&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;deref\nderef\n0 -1\n&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::ops::Deref;\n\n#[derive(Clone, Copy)]\nstruct AccessLogger(i32);\n\nimpl Deref for AccessLogger {\n    type Target = i32;\n    fn deref(&amp;self) -&gt; &amp;Self::Target {\n        println!(\&quot;deref\&quot;);\n        &amp;self.0\n    }\n}\n\nfn main() {\n  let n = AccessLogger(-1);\n  let x = *n + 1;\n  let n2 = n;\n  println!(\&quot;{} {}\&quot;, x, *n)\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

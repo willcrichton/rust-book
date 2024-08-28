@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -154,7 +155,7 @@ pattern is that we define a set of states a value can have internally. The
 states are represented by a set of <em>state objects</em>, and the value’s behavior
 changes based on its state. We’re going to work through an example of a blog
 post struct that has a field to hold its state, which will be a state object
-from the set &quot;draft&quot;, &quot;review&quot;, or &quot;published&quot;.</p>
+from the set “draft”, “review”, or “published”.</p>
 <p>The state objects share functionality: in Rust, of course, we use structs and
 traits rather than objects and inheritance. Each state object is responsible
 for its own behavior and for governing when it should change into another
@@ -734,7 +735,7 @@ related to the lifetime of the <code>post</code> argument.</p>
 <p>And we’re done—all of Listing 17-11 now works! We’ve implemented the state
 pattern with the rules of the blog post workflow. The logic related to the
 rules lives in the state objects rather than being scattered throughout <code>Post</code>.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h4 id="why-not-an-enum"><a class="header" href="#why-not-an-enum">Why Not An Enum?</a></h4>
 <p>You may have been wondering why we didn’t use an <code>enum</code> with the different
 possible post states as variants. That’s certainly a possible solution, try
@@ -742,7 +743,7 @@ it and compare the end results to see which you prefer! One disadvantage of
 using an enum is every place that checks the value of the enum will need a
 <code>match</code> expression or similar to handle every possible variant. This could
 get more repetitive than this trait object solution.</p>
-</blockquote>
+</section>
 <h3 id="trade-offs-of-the-state-pattern"><a class="header" href="#trade-offs-of-the-state-pattern">Trade-offs of the State Pattern</a></h3>
 <p>We’ve shown that Rust is capable of implementing the object-oriented state
 pattern to encapsulate the different kinds of behavior a post should have in
@@ -990,7 +991,7 @@ option.</p>
 lots of flexibility. We’ve looked at them briefly throughout the book but
 haven’t seen their full capability yet. Let’s go!</p>
 <div class="quiz-placeholder" data-quiz-name="ch17-03-oo-design-patterns"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The struct/trait approach is extensible in the sense that an API client could potentially\ncreate a new state (such as `Retracted`) without changing the core API functionality. When\nadding this state, the methods for other states do not need to be changed. Whereas with enums,\na client cannot add a new branch to the enum. Moreover, all `match` expressions must be updated\nwhen a state is added.\n\nA `match` is not likely to be slower than dynamic dispatch. A match is a simple branch based on\nan enum's tag, while dynamic dispatch requires a layer of indirection through a trait\nobject's virtual table with non-inlined function calls.\n\nAn API client cannot add a new *method* for existing states in the struct/trait approach, they \ncan only add new states. The methods are fixed by the API author's trait definition. Note that you could add a new method which only builds on existing methods via extension traits, such as:\n\n```\ntrait StateExt {\n    fn request_review_twice(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt;;\n}\n\nimpl&lt;S: State&gt; StateExt for S {\n    fn request_review_twice(self: Box&lt;Self&gt;) -&gt; Box&lt;dyn State&gt; {\n        self.request_review().request_review()\n    }\n}\n```\n\nBut these extensions cannot read the private data of the states.\n&quot;,&quot;id&quot;:&quot;d19f9e83-d4c2-41d5-9fc7-81db5135eb1e&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;An API client could add a new state to the system&quot;,&quot;Adding a new state does not require modifying methods on every other state&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;The use of `match` is slower at runtime than dynamic dispatch&quot;,&quot;An API client could add a new method for all states in the system&quot;],&quot;prompt&quot;:&quot;In the running example from this section, a blog post could have one of three states: `Draft`, `PendingReview`, and `Published`. In the example, each state was represented as a struct, and state transitions was represented as trait methods returning trait objects.\n\nAn alternative implementation could represent the states as an enum, like this:\n\n```\nenum BlogState {\n    Draft,\n    PendingReview,\n    Published\n}\n\nimpl Post {\n    fn request_review(&amp;mut self) {\n        use BlogState::*;\n        self.state = match self.state {\n            Draft =&gt; PendingReview,\n            PendingReview =&gt; PendingReview,\n            Published =&gt; Published\n        }\n    }\n}\n```\n\nWhich of the following are good reasons to prefer the struct/trait representation over the enum representation?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -166,10 +167,10 @@ separated by double colons (<code>::</code>).</p>
 This is the same as asking: what’s the path of the <code>add_to_waitlist</code> function?
 Listing 7-3 contains Listing 7-1 with some of the modules and functions
 removed.</p>
-<p>We’ll show two ways to call the <code>add_to_waitlist</code> function from a new function
-<code>eat_at_restaurant</code> defined in the crate root. These paths are correct, but
+<p>We’ll show two ways to call the <code>add_to_waitlist</code> function from a new function,
+<code>eat_at_restaurant</code>, defined in the crate root. These paths are correct, but
 there’s another problem remaining that will prevent this example from compiling
-as-is. We’ll explain why in a bit.</p>
+as is. We’ll explain why in a bit.</p>
 <p>The <code>eat_at_restaurant</code> function is part of our library crate’s public API, so
 we mark it with the <code>pub</code> keyword. In the <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">“Exposing Paths with the <code>pub</code>
 Keyword”</a><!-- ignore --> section, we’ll go into more detail about <code>pub</code>.</p>
@@ -204,25 +205,28 @@ filesystem equivalent would be using the path
 <code>front_of_house/hosting/add_to_waitlist</code>. Starting with a module name means
 that the path is relative.</p>
 <p>Choosing whether to use a relative or absolute path is a decision you’ll make
-based on your project, and depends on whether you’re more likely to move item
-definition code separately from or together with the code that uses the item.
-For example, if we move the <code>front_of_house</code> module and the <code>eat_at_restaurant</code>
-function into a module named <code>customer_experience</code>, we’d need to update the
-absolute path to <code>add_to_waitlist</code>, but the relative path would still be valid.
-However, if we moved the <code>eat_at_restaurant</code> function separately into a module
-named <code>dining</code>, the absolute path to the <code>add_to_waitlist</code> call would stay the
-same, but the relative path would need to be updated. Our preference in general
-is to specify absolute paths because it’s more likely we’ll want to move code
-definitions and item calls independently of each other.</p>
+based on your project, and it depends on whether you’re more likely to move
+item definition code separately from or together with the code that uses the
+item. For example, if we moved the <code>front_of_house</code> module and the
+<code>eat_at_restaurant</code> function into a module named <code>customer_experience</code>, we’d
+need to update the absolute path to <code>add_to_waitlist</code>, but the relative path
+would still be valid. However, if we moved the <code>eat_at_restaurant</code> function
+separately into a module named <code>dining</code>, the absolute path to the
+<code>add_to_waitlist</code> call would stay the same, but the relative path would need to
+be updated. Our preference in general is to specify absolute paths because it’s
+more likely we’ll want to move code definitions and item calls independently of
+each other.</p>
 <p>Let’s try to compile Listing 7-3 and find out why it won’t compile yet! The
-error we get is shown in Listing 7-4.</p>
+errors we get are shown in Listing 7-4.</p>
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
 error[E0603]: module `hosting` is private
  --&gt; src/lib.rs:9:28
   |
 9 |     crate::front_of_house::hosting::add_to_waitlist();
-  |                            ^^^^^^^ private module
+  |                            ^^^^^^^  --------------- function `add_to_waitlist` is not publicly re-exported
+  |                            |
+  |                            private module
   |
 note: the module `hosting` is defined here
  --&gt; src/lib.rs:2:5
@@ -234,7 +238,9 @@ error[E0603]: module `hosting` is private
   --&gt; src/lib.rs:12:21
    |
 12 |     front_of_house::hosting::add_to_waitlist();
-   |                     ^^^^^^^ private module
+   |                     ^^^^^^^  --------------- function `add_to_waitlist` is not publicly re-exported
+   |                     |
+   |                     private module
    |
 note: the module `hosting` is defined here
   --&gt; src/lib.rs:2:5
@@ -243,7 +249,7 @@ note: the module `hosting` is defined here
    |     ^^^^^^^^^^^
 
 For more information about this error, try `rustc --explain E0603`.
-error: could not compile `restaurant` due to 2 previous errors
+error: could not compile `restaurant` (lib) due to 2 previous errors
 </code></pre>
 <p><span class="caption">Listing 7-4: Compiler errors from building the code in
 Listing 7-3</span></p>
@@ -286,8 +292,8 @@ pub fn eat_at_restaurant() {
 }</code></pre>
 <p><span class="caption">Listing 7-5: Declaring the <code>hosting</code> module as <code>pub</code> to
 use it from <code>eat_at_restaurant</code></span></p>
-<p>Unfortunately, the code in Listing 7-5 still results in an error, as shown in
-Listing 7-6.</p>
+<p>Unfortunately, the code in Listing 7-5 still results in compiler errors, as
+shown in Listing 7-6.</p>
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
 error[E0603]: function `add_to_waitlist` is private
@@ -315,7 +321,7 @@ note: the function `add_to_waitlist` is defined here
    |         ^^^^^^^^^^^^^^^^^^^^
 
 For more information about this error, try `rustc --explain E0603`.
-error: could not compile `restaurant` due to 2 previous errors
+error: could not compile `restaurant` (lib) due to 2 previous errors
 </code></pre>
 <p><span class="caption">Listing 7-6: Compiler errors from building the code in
 Listing 7-5</span></p>
@@ -350,7 +356,7 @@ pub fn eat_at_restaurant() {
 and <code>fn add_to_waitlist</code> lets us call the function from
 <code>eat_at_restaurant</code></span></p>
 <p>Now the code will compile! To see why adding the <code>pub</code> keyword lets us use
-these paths in <code>add_to_waitlist</code> with respect to the privacy rules, let’s look
+these paths in <code>eat_at_restaurant</code> with respect to the privacy rules, let’s look
 at the absolute and the relative paths.</p>
 <p>In the absolute path, we start with <code>crate</code>, the root of our crate’s module
 tree. The <code>front_of_house</code> module is defined in the crate root. While
@@ -374,15 +380,15 @@ they can interact with your code. There are many considerations around managing
 changes to your public API to make it easier for people to depend on your
 crate. These considerations are out of the scope of this book; if you’re
 interested in this topic, see <a href="https://rust-lang.github.io/api-guidelines/">The Rust API Guidelines</a>.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h4 id="best-practices-for-packages-with-a-binary-and-a-library"><a class="header" href="#best-practices-for-packages-with-a-binary-and-a-library">Best Practices for Packages with a Binary and a Library</a></h4>
-<p>We mentioned a package can contain both a <em>src/main.rs</em> binary crate root as
-well as a <em>src/lib.rs</em> library crate root, and both crates will have the
-package name by default. Typically, packages with this pattern of containing
-both a library and a binary crate will have just enough code in the binary
-crate to start an executable that calls code with the library crate. This
-lets other projects benefit from the most functionality that the package
-provides, because the library crate’s code can be shared.</p>
+<p>We mentioned that a package can contain both a <em>src/main.rs</em> binary crate
+root as well as a <em>src/lib.rs</em> library crate root, and both crates will have
+the package name by default. Typically, packages with this pattern of
+containing both a library and a binary crate will have just enough code in the
+binary crate to start an executable that calls code within the library crate.
+This lets other projects benefit from most of the functionality that the
+package provides because the library crate’s code can be shared.</p>
 <p>The module tree should be defined in <em>src/lib.rs</em>. Then, any public items can
 be used in the binary crate by starting paths with the name of the package.
 The binary crate becomes a user of the library crate just like a completely
@@ -392,7 +398,7 @@ client!</p>
 <p>In <a href="ch12-00-an-io-project.html">Chapter 12</a><!-- ignore -->, we’ll demonstrate this organizational
 practice with a command-line program that will contain both a binary crate
 and a library crate.</p>
-</blockquote>
+</section>
 <div class="quiz-placeholder" data-quiz-name="ch07-03-paths-sec1"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;For example, an absolute path to item `b` in module `a` would be `crate::a::b`.\n&quot;,&quot;id&quot;:&quot;4e18f340-e336-43c5-9a95-79dec1f49945&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;crate&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the keyword you use at the start of an absolute path to an item in the current crate?&quot;}},{&quot;context&quot;:&quot;`b` is not accessible to `main` because the module `bar` is not marked as `pub`.\n&quot;,&quot;id&quot;:&quot;256d0ce2-da89-4b44-94da-177634fc633a&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:9},&quot;prompt&quot;:{&quot;program&quot;:&quot;pub mod foo {\n  fn a() { println!(\&quot;a\&quot;); }\n  mod bar {\n    pub fn b() { println!(\&quot;b\&quot;); }\n  }\n}\n\nfn main() {\n  foo::bar::b();\n}\n&quot;}},{&quot;context&quot;:&quot;It is valid within `foo` to use a relative path to refer to items within `bar`.\n&quot;,&quot;id&quot;:&quot;5e78e2e4-81dc-42b2-8527-f08b5117982f&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;b&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;pub mod foo {\n  pub mod bar {\n    pub fn b() { println!(\&quot;b\&quot;);  }\n  }\n  pub fn a() { bar::b(); }\n}\n\nfn main() {\n  foo::a();\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
 <h3 id="starting-relative-paths-with-super"><a class="header" href="#starting-relative-paths-with-super">Starting Relative Paths with <code>super</code></a></h3>
 <p>We can construct relative paths that begin in the parent module, rather than
@@ -400,13 +406,13 @@ the current module or the crate root, by using <code>super</code> at the start o
 path. This is like starting a filesystem path with the <code>..</code> syntax. Using
 <code>super</code> allows us to reference an item that we know is in the parent module,
 which can make rearranging the module tree easier when the module is closely
-related to the parent, but the parent might be moved elsewhere in the module
+related to the parent but the parent might be moved elsewhere in the module
 tree someday.</p>
 <p>Consider the code in Listing 7-8 that models the situation in which a chef
 fixes an incorrect order and personally brings it out to the customer. The
 function <code>fix_incorrect_order</code> defined in the <code>back_of_house</code> module calls the
 function <code>deliver_order</code> defined in the parent module by specifying the path to
-<code>deliver_order</code> starting with <code>super</code>:</p>
+<code>deliver_order</code>, starting with <code>super</code>.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground test_harness">fn deliver_order() {}
 
@@ -430,7 +436,7 @@ used <code>super</code> so we’ll have fewer places to update code in the futur
 code gets moved to a different module.</p>
 <h3 id="making-structs-and-enums-public"><a class="header" href="#making-structs-and-enums-public">Making Structs and Enums Public</a></h3>
 <p>We can also use <code>pub</code> to designate structs and enums as public, but there are a
-few details extra to the usage of <code>pub</code> with structs and enums. If we use <code>pub</code>
+few extra details to the usage of <code>pub</code> with structs and enums. If we use <code>pub</code>
 before a struct definition, we make the struct public, but the struct’s fields
 will still be private. We can make each field public or not on a case-by-case
 basis. In Listing 7-9, we’ve defined a public <code>back_of_house::Breakfast</code> struct
@@ -472,7 +478,7 @@ private fields</span></p>
 <p>Because the <code>toast</code> field in the <code>back_of_house::Breakfast</code> struct is public,
 in <code>eat_at_restaurant</code> we can write and read to the <code>toast</code> field using dot
 notation. Notice that we can’t use the <code>seasonal_fruit</code> field in
-<code>eat_at_restaurant</code> because <code>seasonal_fruit</code> is private. Try uncommenting the
+<code>eat_at_restaurant</code>, because <code>seasonal_fruit</code> is private. Try uncommenting the
 line modifying the <code>seasonal_fruit</code> field value to see what error you get!</p>
 <p>Also, note that because <code>back_of_house::Breakfast</code> has a private field, the
 struct needs to provide a public associated function that constructs an
@@ -507,7 +513,7 @@ being private by default unless annotated with <code>pub</code>.</p>
 our last module system feature: the <code>use</code> keyword. We’ll cover <code>use</code> by itself
 first, and then we’ll show how to combine <code>pub</code> and <code>use</code>.</p>
 <div class="quiz-placeholder" data-quiz-name="ch07-03-paths-sec2"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;`entry` uses the path `super::b::c::f`. `entry` is within the module `a`, so `super` refers to the parent module of `a`, which is the root crate. \nThen the child `b` of the root is the outermost module `b`, whose child `c` contains a function `f` that prints `\&quot;c2\&quot;`.\n&quot;,&quot;id&quot;:&quot;8ef2f170-71d9-4f17-a688-b99d8c8072a8&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;c2&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;pub mod a {\n  pub mod b {\n    pub fn f() { println!(\&quot;b1\&quot;); }\n    pub mod c {\n      pub fn f() { println!(\&quot;c1\&quot;); }\n    }\n  }\n  pub fn entry() { super::b::c::f(); }\n}\n\npub mod b {\n  pub fn f() { println!(\&quot;b2\&quot;); }\n  pub mod c {\n    pub fn f() { println!(\&quot;c2\&quot;); }\n  }\n}\n\nfn main() {\n  crate::a::entry();\n}\n&quot;}},{&quot;context&quot;:&quot;While the `Point` structure and the `origin` static method are both public, the field `i32` is not marked as pub. Therefore directly accessing `p.0` outside of\nthe `point` module is not allowed. This program would compile if line 3 were changed to `pub struct Point(pub i32, pub i32)`.\n&quot;,&quot;id&quot;:&quot;153b12b3-4fbc-449c-99a6-7a2cd469df0f&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:12},&quot;prompt&quot;:{&quot;program&quot;:&quot;pub mod point {\n  #[derive(Debug)]\n  pub struct Point(i32, i32);\n\n  impl Point {\n    pub fn origin() -&gt; Self { Point(0, 0) }\n  }\n}\n\nfn main() {\n  let mut p = point::Point::origin();\n  p.0 += 1;\n  println!(\&quot;{p:?}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

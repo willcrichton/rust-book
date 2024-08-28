@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -152,7 +153,7 @@
 <p>Now that you’ve installed Rust, it’s time to write your first Rust program.
 It’s traditional when learning a new language to write a little program that
 prints the text <code>Hello, world!</code> to the screen, so we’ll do the same here!</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: This book assumes basic familiarity with the command line. Rust makes
 no specific demands about your editing or tooling or where your code lives, so
 if you prefer to use an integrated development environment (IDE) instead of
@@ -160,7 +161,7 @@ the command line, feel free to use your favorite IDE. Many IDEs now have some
 degree of Rust support; check the IDE’s documentation for details. The Rust
 team has been focusing on enabling great IDE support via <code>rust-analyzer</code>. See
 <a href="appendix-04-useful-development-tools.html">Appendix D</a><!-- ignore --> for more details.</p>
-</blockquote>
+</section>
 <h3 id="creating-a-project-directory"><a class="header" href="#creating-a-project-directory">Creating a Project Directory</a></h3>
 <p>You’ll start by making a directory to store your Rust code. It doesn’t matter
 to Rust where your code lives, but for the exercises and projects in this book,
@@ -186,11 +187,13 @@ the <em>.rs</em> extension. If you’re using more than one word in your filenam
 convention is to use an underscore to separate them. For example, use
 <em>hello_world.rs</em> rather than <em>helloworld.rs</em>.</p>
 <p>Now open the <em>main.rs</em> file you just created and enter the code in Listing 1-1.</p>
-<p><span class="filename">Filename: main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: main.rs</span>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     println!(&quot;Hello, world!&quot;);
 }</code></pre></pre>
-<p><span class="caption">Listing 1-1: A program that prints <code>Hello, world!</code></span></p>
+<figcaption>Listing 1-1: A program that prints <code>Hello, world!</code></figcaption>
+</figure>
 <p>Save the file and go back to your terminal window in the
 <em>~/projects/hello_world</em> directory. On Linux or macOS, enter the following
 commands to compile and run the file:</p>
@@ -222,14 +225,14 @@ nothing. If there were parameters, they would go inside the parentheses <code>()
 <p>The function body is wrapped in <code>{}</code>. Rust requires curly brackets around all
 function bodies. It’s good style to place the opening curly bracket on the same
 line as the function declaration, adding one space in between.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: If you want to stick to a standard style across Rust projects, you can
 use an automatic formatter tool called <code>rustfmt</code> to format your code in a
 particular style (more on <code>rustfmt</code> in
 <a href="appendix-04-useful-development-tools.html">Appendix D</a><!-- ignore -->). The Rust team has included this tool
 with the standard Rust distribution, as <code>rustc</code> is, so it should already be
 installed on your computer!</p>
-</blockquote>
+</section>
 <p>The body of the <code>main</code> function holds the following code:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -291,7 +294,7 @@ grows, you’ll want to manage all the options and make it easy to share your
 code. Next, we’ll introduce you to the Cargo tool, which will help you write
 real-world Rust programs.</p>
 <div class="quiz-placeholder" data-quiz-name="ch01-02-hello-world"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;In your program, you add a main function like this:\n\n```\nfn main() {\n  // your code here\n}\n```\n&quot;,&quot;id&quot;:&quot;87c3b09e-84d3-49d7-8680-0b2d068a7fc5&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;main&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Every executable Rust program must contain a function with the name:&quot;}},{&quot;context&quot;:&quot;Running `rustc` checks and compiles your program, but does not execute it.\n&quot;,&quot;id&quot;:&quot;0d78d302-eb3d-4ac7-a1ac-f2d661810744&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`rustc` generates a binary executable named `hello`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`rustc` will print an error because this is an invalid program&quot;,&quot;`rustc` executes the program and prints out `Hello world!`&quot;,&quot;`rustc` reformats `hello.rs` according to the Rust style guide&quot;],&quot;prompt&quot;:&quot;Let's say you have the following program in a file `hello.rs`:\n\n```\nfn main() {\n  println!(\&quot;Hello world!\&quot;);\n}\n```\n\nSay you then run the command `rustc hello.rs` from the command-line. Which statement best describes what happens next?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -150,11 +151,11 @@
                     <main>
                         <h2 id="storing-keys-with-associated-values-in-hash-maps"><a class="header" href="#storing-keys-with-associated-values-in-hash-maps">Storing Keys with Associated Values in Hash Maps</a></h2>
 <p>The last of our common collections is the <em>hash map</em>. The type <code>HashMap&lt;K, V&gt;</code>
-stores a mapping of keys of type <code>K</code> to values of type <code>V</code> using a
-<em>hashing function</em>, which determines how it places these keys and values into
-memory. Many programming languages support this kind of data structure, but
-they often use a different name, such as hash, map, object, hash table,
-dictionary, or associative array, just to name a few.</p>
+stores a mapping of keys of type <code>K</code> to values of type <code>V</code> using a <em>hashing
+function</em>, which determines how it places these keys and values into memory.
+Many programming languages support this kind of data structure, but they often
+use a different name, such as <em>hash</em>, <em>map</em>, <em>object</em>, <em>hash table</em>,
+<em>dictionary</em>, or <em>associative array</em>, just to name a few.</p>
 <p>Hash maps are useful when you want to look up data not by using an index, as
 you can with vectors, but by using a key that can be of any type. For example,
 in a game, you could keep track of each team’s score in a hash map in which
@@ -164,7 +165,7 @@ name, you can retrieve its score.</p>
 are hiding in the functions defined on <code>HashMap&lt;K, V&gt;</code> by the standard library.
 As always, check the standard library documentation for more information.</p>
 <h3 id="creating-a-new-hash-map"><a class="header" href="#creating-a-new-hash-map">Creating a New Hash Map</a></h3>
-<p>One way to create an empty hash map is using <code>new</code> and adding elements with
+<p>One way to create an empty hash map is to use <code>new</code> and to add elements with
 <code>insert</code>. In Listing 8-20, we’re keeping track of the scores of two teams whose
 names are <em>Blue</em> and <em>Yellow</em>. The Blue team starts with 10 points, and the
 Yellow team starts with 50.</p>
@@ -185,8 +186,8 @@ automatically in the prelude. Hash maps also have less support from the
 standard library; there’s no built-in macro to construct them, for example.</p>
 <p>Just like vectors, hash maps store their data on the heap. This <code>HashMap</code> has
 keys of type <code>String</code> and values of type <code>i32</code>. Like vectors, hash maps are
-homogeneous: all of the keys must have the same type as each other, and all of
-the values must have the same type.</p>
+homogeneous: all of the keys must have the same type, and all of the values
+must have the same type.</p>
 <h3 id="accessing-values-in-a-hash-map"><a class="header" href="#accessing-values-in-a-hash-map">Accessing Values in a Hash Map</a></h3>
 <p>We can get a value out of the hash map by providing its key to the <code>get</code>
 method, as shown in Listing 8-21.</p>
@@ -207,9 +208,9 @@ stored in the hash map</span></p>
 result will be <code>10</code>. The <code>get</code> method returns an <code>Option&lt;&amp;V&gt;</code>; if there’s no
 value for that key in the hash map, <code>get</code> will return <code>None</code>. This program
 handles the <code>Option</code> by calling <code>copied</code> to get an <code>Option&lt;i32&gt;</code> rather than an
-<code>Option&lt;&amp;i32&gt;</code>, then <code>unwrap_or</code> to set <code>score</code> to zero if <code>scores</code> doesn't
+<code>Option&lt;&amp;i32&gt;</code>, then <code>unwrap_or</code> to set <code>score</code> to zero if <code>scores</code> doesn’t
 have an entry for the key.</p>
-<p>We can iterate over each key/value pair in a hash map in a similar manner as we
+<p>We can iterate over each key–value pair in a hash map in a similar manner as we
 do with vectors, using a <code>for</code> loop:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -255,8 +256,8 @@ Chapter 10.</p>
 <h3 id="updating-a-hash-map"><a class="header" href="#updating-a-hash-map">Updating a Hash Map</a></h3>
 <p>Although the number of key and value pairs is growable, each unique key can
 only have one value associated with it at a time (but not vice versa: for
-example, both the Blue team and the Yellow team could have value 10 stored in
-the <code>scores</code> hash map).</p>
+example, both the Blue team and the Yellow team could have the value <code>10</code>
+stored in the <code>scores</code> hash map).</p>
 <p>When you want to change the data in a hash map, you have to decide how to
 handle the case when a key already has a value assigned. You could replace the
 old value with the new value, completely disregarding the old value. You could
@@ -267,7 +268,7 @@ new value. Let’s look at how to do each of these!</p>
 <p>If we insert a key and a value into a hash map and then insert that same key
 with a different value, the value associated with that key will be replaced.
 Even though the code in Listing 8-23 calls <code>insert</code> twice, the hash map will
-only contain one key/value pair because we’re inserting the value for the Blue
+only contain one key–value pair because we’re inserting the value for the Blue
 team’s key both times.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -277,7 +278,7 @@ team’s key both times.</p>
     scores.insert(String::from(&quot;Blue&quot;), 10);
     scores.insert(String::from(&quot;Blue&quot;), 25);
 
-    println!(&quot;{:?}&quot;, scores);
+    println!(&quot;{scores:?}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-23: Replacing a value stored with a particular
 key</span></p>
@@ -287,14 +288,14 @@ overwritten.</p>
 <p><a id="only-inserting-a-value-if-the-key-has-no-value"></a></p>
 <h4 id="adding-a-key-and-value-only-if-a-key-isnt-present"><a class="header" href="#adding-a-key-and-value-only-if-a-key-isnt-present">Adding a Key and Value Only If a Key Isn’t Present</a></h4>
 <p>It’s common to check whether a particular key already exists in the hash map
-with a value then take the following actions: if the key does exist in the hash
-map, the existing value should remain the way it is. If the key doesn’t exist,
-insert it and a value for it.</p>
+with a value and then to take the following actions: if the key does exist in
+the hash map, the existing value should remain the way it is; if the key
+doesn’t exist, insert it and a value for it.</p>
 <p>Hash maps have a special API for this called <code>entry</code> that takes the key you
 want to check as a parameter. The return value of the <code>entry</code> method is an enum
 called <code>Entry</code> that represents a value that might or might not exist. Let’s say
 we want to check whether the key for the Yellow team has a value associated
-with it. If it doesn’t, we want to insert the value 50, and the same for the
+with it. If it doesn’t, we want to insert the value <code>50</code>, and the same for the
 Blue team. Using the <code>entry</code> API, the code looks like Listing 8-24.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -305,27 +306,27 @@ Blue team. Using the <code>entry</code> API, the code looks like Listing 8-24.</
     scores.entry(String::from(&quot;Yellow&quot;)).or_insert(50);
     scores.entry(String::from(&quot;Blue&quot;)).or_insert(50);
 
-    println!(&quot;{:?}&quot;, scores);
+    println!(&quot;{scores:?}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-24: Using the <code>entry</code> method to only insert if
 the key does not already have a value</span></p>
 <p>The <code>or_insert</code> method on <code>Entry</code> is defined to return a mutable reference to
-the value for the corresponding <code>Entry</code> key if that key exists, and if not,
+the value for the corresponding <code>Entry</code> key if that key exists, and if not, it
 inserts the parameter as the new value for this key and returns a mutable
 reference to the new value. This technique is much cleaner than writing the
 logic ourselves and, in addition, plays more nicely with the borrow checker.</p>
 <p>Running the code in Listing 8-24 will print <code>{&quot;Yellow&quot;: 50, &quot;Blue&quot;: 10}</code>. The
 first call to <code>entry</code> will insert the key for the Yellow team with the value
-50 because the Yellow team doesn’t have a value already. The second call to
+<code>50</code> because the Yellow team doesn’t have a value already. The second call to
 <code>entry</code> will not change the hash map because the Blue team already has the
-value 10.</p>
+value <code>10</code>.</p>
 <h4 id="updating-a-value-based-on-the-old-value"><a class="header" href="#updating-a-value-based-on-the-old-value">Updating a Value Based on the Old Value</a></h4>
 <p>Another common use case for hash maps is to look up a key’s value and then
 update it based on the old value. For instance, Listing 8-25 shows code that
 counts how many times each word appears in some text. We use a hash map with
 the words as keys and increment the value to keep track of how many times we’ve
 seen that word. If it’s the first time we’ve seen a word, we’ll first insert
-the value 0.</p>
+the value <code>0</code>.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
 
@@ -338,34 +339,34 @@ the value 0.</p>
         *count += 1;
     }
 
-    println!(&quot;{:?}&quot;, map);
+    println!(&quot;{map:?}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 8-25: Counting occurrences of words using a hash
 map that stores words and counts</span></p>
 <p>This code will print <code>{&quot;world&quot;: 2, &quot;hello&quot;: 1, &quot;wonderful&quot;: 1}</code>. You might see
-the same key/value pairs printed in a different order: recall from the
+the same key–value pairs printed in a different order: recall from the
 <a href="#accessing-values-in-a-hash-map">“Accessing Values in a Hash Map”</a><!-- ignore --> section that
 iterating over a hash map happens in an arbitrary order.</p>
-<p>The <code>split_whitespace</code> method returns an iterator over sub-slices, separated by
+<p>The <code>split_whitespace</code> method returns an iterator over subslices, separated by
 whitespace, of the value in <code>text</code>. The <code>or_insert</code> method returns a mutable
-reference (<code>&amp;mut V</code>) to the value for the specified key. Here we store that
+reference (<code>&amp;mut V</code>) to the value for the specified key. Here, we store that
 mutable reference in the <code>count</code> variable, so in order to assign to that value,
 we must first dereference <code>count</code> using the asterisk (<code>*</code>). The mutable
 reference goes out of scope at the end of the <code>for</code> loop, so all of these
 changes are safe and allowed by the borrowing rules.</p>
 <h3 id="hashing-functions"><a class="header" href="#hashing-functions">Hashing Functions</a></h3>
 <p>By default, <code>HashMap</code> uses a hashing function called <em>SipHash</em> that can provide
-resistance to Denial of Service (DoS) attacks involving hash
+resistance to denial-of-service (DoS) attacks involving hash
 tables<sup class="footnote-reference"><a href="#siphash">1</a></sup><!-- ignore -->. This is not the fastest hashing algorithm
 available, but the trade-off for better security that comes with the drop in
 performance is worth it. If you profile your code and find that the default
 hash function is too slow for your purposes, you can switch to another function
 by specifying a different hasher. A <em>hasher</em> is a type that implements the
 <code>BuildHasher</code> trait. We’ll talk about traits and how to implement them in
-Chapter 10. You don’t necessarily have to implement your own hasher from
-scratch; <a href="https://crates.io/">crates.io</a><!-- ignore --> has libraries shared by
-other Rust users that provide hashers implementing many common hashing
-algorithms.</p>
+<a href="ch10-02-traits.html">Chapter 10</a><!-- ignore -->. You don’t necessarily have to implement
+your own hasher from scratch; <a href="https://crates.io/">crates.io</a><!-- ignore -->
+has libraries shared by other Rust users that provide hashers implementing many
+common hashing algorithms.</p>
 <div class="footnote-definition" id="siphash"><sup class="footnote-definition-label">1</sup>
 <p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a></p>
 </div>
@@ -374,25 +375,25 @@ algorithms.</p>
 <p>Vectors, strings, and hash maps will provide a large amount of functionality
 necessary in programs when you need to store, access, and modify data. Here are
 some exercises you should now be equipped to solve:</p>
-<ul>
+<ol>
 <li>Given a list of integers, use a vector and return the median (when sorted,
-the value in the middle position) and mode (the value that occurs most often;
-a hash map will be helpful here) of the list.</li>
+the value in the middle position) and mode (the value that occurs most
+often; a hash map will be helpful here) of the list.</li>
 <li>Convert strings to pig latin. The first consonant of each word is moved to
-the end of the word and “ay” is added, so “first” becomes “irst-fay.” Words
-that start with a vowel have “hay” added to the end instead (“apple” becomes
-“apple-hay”). Keep in mind the details about UTF-8 encoding!</li>
+the end of the word and <em>ay</em> is added, so <em>first</em> becomes <em>irst-fay</em>. Words
+that start with a vowel have <em>hay</em> added to the end instead (<em>apple</em> becomes
+<em>apple-hay</em>). Keep in mind the details about UTF-8 encoding!</li>
 <li>Using a hash map and vectors, create a text interface to allow a user to add
-employee names to a department in a company. For example, “Add Sally to
+employee names to a department in a company; for example, “Add Sally to
 Engineering” or “Add Amir to Sales.” Then let the user retrieve a list of all
 people in a department or all people in the company by department, sorted
 alphabetically.</li>
-</ul>
+</ol>
 <p>The standard library API documentation describes methods that vectors, strings,
 and hash maps have that will be helpful for these exercises!</p>
-<p>We’re getting into more complex programs in which operations can fail, so, it’s
+<p>We’re getting into more complex programs in which operations can fail, so it’s
 a perfect time to discuss error handling. We’ll do that next!</p>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

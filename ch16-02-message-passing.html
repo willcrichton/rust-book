@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -154,7 +155,7 @@ passing</em>, where threads or actors communicate by sending each other messages
 containing data. Here’s the idea in a slogan from <a href="https://golang.org/doc/effective_go.html#concurrency">the Go language
 documentation</a>:
 “Do not communicate by sharing memory; instead, share memory by communicating.”</p>
-<p>To accomplish message-sending concurrency, Rust's standard library provides an
+<p>To accomplish message-sending concurrency, Rust’s standard library provides an
 implementation of <em>channels</em>. A channel is a general programming concept by
 which data is sent from one thread to another.</p>
 <p>You can imagine a channel in programming as being like a directional channel of
@@ -193,7 +194,7 @@ of the streams will end up in one river at the end. We’ll start with a single
 producer for now, but we’ll add multiple producers when we get this example
 working.</p>
 <p>The <code>mpsc::channel</code> function returns a tuple, the first element of which is the
-sending end--the transmitter--and the second element is the receiving end--the
+sending end—the transmitter—and the second element is the receiving end—the
 receiver. The abbreviations <code>tx</code> and <code>rx</code> are traditionally used in many fields
 for <em>transmitter</em> and <em>receiver</em> respectively, so we name our variables as such
 to indicate each end. We’re using a <code>let</code> statement with a pattern that
@@ -244,7 +245,7 @@ fn main() {
     });
 
     let received = rx.recv().unwrap();
-    println!(&quot;Got: {}&quot;, received);
+    println!(&quot;Got: {received}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 16-8: Receiving the value “hi” in the main thread
 and printing it</span></p>
@@ -289,11 +290,11 @@ fn main() {
     thread::spawn(move || {
         let val = String::from(&quot;hi&quot;);
         tx.send(val).unwrap();
-        println!(&quot;val is {}&quot;, val);
+        println!(&quot;val is {val}&quot;);
     });
 
     let received = rx.recv().unwrap();
-    println!(&quot;Got: {}&quot;, received);
+    println!(&quot;Got: {received}&quot;);
 }</code></pre>
 <p><span class="caption">Listing 16-9: Attempting to use <code>val</code> after we’ve sent it
 down the channel</span></p>
@@ -306,19 +307,19 @@ us an error if we try to compile the code in Listing 16-9:</p>
 <pre><code class="language-console">$ cargo run
    Compiling message-passing v0.1.0 (file:///projects/message-passing)
 error[E0382]: borrow of moved value: `val`
-  --&gt; src/main.rs:10:31
+  --&gt; src/main.rs:10:26
    |
 8  |         let val = String::from(&quot;hi&quot;);
    |             --- move occurs because `val` has type `String`, which does not implement the `Copy` trait
 9  |         tx.send(val).unwrap();
    |                 --- value moved here
-10 |         println!(&quot;val is {}&quot;, val);
-   |                               ^^^ value borrowed here after move
+10 |         println!(&quot;val is {val}&quot;);
+   |                          ^^^^^ value borrowed here after move
    |
    = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 For more information about this error, try `rustc --explain E0382`.
-error: could not compile `message-passing` due to previous error
+error: could not compile `message-passing` (bin &quot;message-passing&quot;) due to 1 previous error
 </code></pre>
 <p>Our concurrency mistake has caused a compile time error. The <code>send</code> function
 takes ownership of its parameter, and when the value is moved, the receiver
@@ -353,7 +354,7 @@ fn main() {
     });
 
     for received in rx {
-        println!(&quot;Got: {}&quot;, received);
+        println!(&quot;Got: {received}&quot;);
     }
 }</code></pre>
 <p><span class="caption">Listing 16-10: Sending multiple messages and pausing
@@ -423,7 +424,7 @@ so by cloning the transmitter, as shown in Listing 16-11:</p>
     });
 
     for received in rx {
-        println!(&quot;Got: {}&quot;, received);
+        println!(&quot;Got: {received}&quot;);
     }
 
     // --snip--
@@ -454,7 +455,7 @@ will be more nondeterministic and create different output each time.</p>
 <p>Now that we’ve looked at how channels work, let’s look at a different method of
 concurrency.</p>
 <div class="quiz-placeholder" data-quiz-name="ch16-02-message-passing"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;This is an example of how to use enums to send different kinds of messages over a channel.\nHere, the client increments a number, retrieves the number, then exits the server.\n&quot;,&quot;id&quot;:&quot;5b117680-87a5-4b18-abba-3415602477eb&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;1&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::{sync::mpsc, thread};\n\nenum ClientMessage { Incr, Get, Quit }\nenum ServerMessage { Get(usize) }\n\nfn main() {\n    let (server_tx, client_rx) = mpsc::channel();\n    let (client_tx, server_rx) = mpsc::channel();\n    let server = thread::spawn(move || {\n        let mut n = 0;\n        loop {\n            match server_rx.recv().unwrap() {\n                ClientMessage::Quit =&gt; break,\n                ClientMessage::Incr =&gt; n += 1,\n                ClientMessage::Get =&gt; server_tx.send(ServerMessage::Get(n)).unwrap()\n            }\n        }\n    });\n\n    for msg in [ClientMessage::Incr, ClientMessage::Get, ClientMessage::Quit] {\n        client_tx.send(msg).unwrap();\n    }\n\n    if let ServerMessage::Get(n) = client_rx.recv().unwrap() {\n        println!(\&quot;{}\&quot;, n)\n    }\n\n    server.join().unwrap();\n}\n\n&quot;}},{&quot;context&quot;:&quot;Channels can only send values of a single type, so `tx.send(s.len())` is a type error.\nIf you want to send values of multiple types, you can use either an enum or the \n[`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.\n&quot;,&quot;id&quot;:&quot;94934f0f-4db9-48ee-b63e-198ad1a9ffc8&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:8},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::{sync::mpsc, thread};\n\nfn main() {\n    let (tx, rx) = mpsc::channel();\n    thread::spawn(move || {\n        let s = String::from(\&quot;Hello world\&quot;);\n        tx.send(s.clone()).unwrap();\n        tx.send(s.len()).unwrap();\n    });\n    let s = rx.recv().unwrap();\n    let n = rx.recv().unwrap();\n    println!(\&quot;{s} {n}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -31749,7 +31749,7 @@ var __publicField = (obj, key, value) => {
       widgetRanges = sortedMarks;
       trace.steps = filteredSteps;
     } else {
-      widgetRanges = trace.steps.map((step) => _.last(step.stack.frames).location.end);
+      widgetRanges = trace.steps.map((step) => linecolToPosition(_.last(step.stack.frames).location.end, view.state.doc));
     }
     let decos = widgetRanges.map((mark, i2) => Decoration.widget({
       widget: new StepMarkerWidget(i2, i2 == trace.steps.length - 1 && trace.result.type == "Error")

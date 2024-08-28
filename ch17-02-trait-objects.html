@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -439,17 +440,17 @@ error[E0277]: the trait bound `String: Draw` is not satisfied
   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Draw` is not implemented for `String`
   |
   = help: the trait `Draw` is implemented for `Button`
-  = note: required for the cast from `String` to the object type `dyn Draw`
+  = note: required for the cast from `Box&lt;String&gt;` to `Box&lt;dyn Draw&gt;`
 
 For more information about this error, try `rustc --explain E0277`.
-error: could not compile `gui` due to previous error
+error: could not compile `gui` (bin &quot;gui&quot;) due to 1 previous error
 </code></pre>
 <p>This error lets us know that either we’re passing something to <code>Screen</code> we
 didn’t mean to pass and so should pass a different type or we should implement
 <code>Draw</code> on <code>String</code> so that <code>Screen</code> is able to call <code>draw</code> on it.</p>
 <!-- BEGIN INTERVENTION: cce62358-5291-4eb3-84d6-fbc570873ee3 -->
 <h3 id="trait-objects-and-type-inference"><a class="header" href="#trait-objects-and-type-inference">Trait Objects and Type Inference</a></h3>
-<p>One downside to using trait objects is how they interact with type inference. 
+<p>One downside to using trait objects is how they interact with type inference.
 For example, consider type inference for <code>Vec&lt;T&gt;</code>. When <code>T</code> is not a trait object,
 Rust just needs to know the type of a single element in the vector to infer <code>T</code>. So
 an empty vector causes a type inference error:</p>
@@ -462,7 +463,7 @@ an empty vector causes a type inference error:</p>
 </span>let v = vec![&quot;Hello world&quot;];
 // ok, v : Vec&lt;&amp;str&gt;
 <span class="boring">}</span></code></pre>
-<p>Type inference is trickier for trait objects. For example, say we tried to factor 
+<p>Type inference is trickier for trait objects. For example, say we tried to factor
 the <code>components</code> array in Listing 17-9 into a separate variable, like this:</p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let components = vec![
@@ -489,7 +490,7 @@ the following error:</p>
     | |_____^ expected `SelectBox`, found `Button`
 </code></pre>
 <p>In Listing 17-09, the compiler understands that the <code>components</code> vector must have the type
-<code>Vec&lt;Box&lt;dyn Draw&gt;&gt;</code> because that's specified in the <code>Screen</code> struct definition. But in Listing 17-11,
+<code>Vec&lt;Box&lt;dyn Draw&gt;&gt;</code> because that’s specified in the <code>Screen</code> struct definition. But in Listing 17-11,
 the compiler loses that information at the point where <code>components</code> is defined. To fix the issue, you
 have to give a hint to the type inference algorithm. That can either be via an explicit cast on
 any element of the vector, like this:</p>
@@ -527,7 +528,7 @@ method’s code, which in turn prevents some optimizations. However, we did get
 extra flexibility in the code that we wrote in Listing 17-5 and were able to
 support in Listing 17-9, so it’s a trade-off to consider.</p>
 <div class="quiz-placeholder" data-quiz-name="ch17-02-trait-objects"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Unlike some OOP languages, a trait object cannot be \&quot;downcasted\&quot; to a more concrete type\n(except in the case of the [`Any`](https://doc.rust-lang.org/std/any/index.html) trait).\n&quot;,&quot;id&quot;:&quot;5d60cfc4-6377-48e7-96e4-fe1de0b0904e&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:6},&quot;prompt&quot;:{&quot;program&quot;:&quot;use std::fmt::Debug;\nfn main() {\n    let n = 1;\n    let s = String::from(\&quot;Hello\&quot;);\n    let v: Vec&lt;&amp;dyn Debug&gt; = vec![&amp;n, &amp;s];\n    let n_ref = v[0] as &amp;i32;\n    println!(\&quot;{}\&quot;, n_ref + 1);\n}\n&quot;}},{&quot;context&quot;:&quot;By avoiding monomorphization, trait-object functions will be both faster to compile and produce smaller binaries. However, this usually\ncomes at the cost of runtime performance. Trait objects are rarely easier for developers to work with than trait-bounded generics.\n&quot;,&quot;id&quot;:&quot;cce62358-5291-4eb3-84d6-fbc570873ee3&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;Faster compile times&quot;,&quot;Smaller binary size&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Improved runtime performance&quot;,&quot;Better developer ergonomics&quot;],&quot;prompt&quot;:&quot;Consider implementing a generic function in two ways:\n\n```\nfn f_opt1&lt;T: SomeTrait&gt;(t: &amp;T) { /* ... */ }\nfn f_opt2(t: &amp;dyn SomeTrait) { /* ... */ }\n```\n\nIn most cases, which of the following are good reasons to prefer the trait object version (`f_opt2`) over the type-parametric version (`f_opt1`)? \nSelect each that applies.\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

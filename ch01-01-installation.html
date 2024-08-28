@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -152,17 +153,17 @@
 <p>The first step is to install Rust. We’ll download Rust through <code>rustup</code>, a
 command line tool for managing Rust versions and associated tools. You’ll need
 an internet connection for the download.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: If you prefer not to use <code>rustup</code> for some reason, please see the
 <a href="https://forge.rust-lang.org/infra/other-installation-methods.html">Other Rust Installation Methods page</a> for more options.</p>
-</blockquote>
+</section>
 <p>The following steps install the latest stable version of the Rust compiler.
 Rust’s stability guarantees ensure that all the examples in the book that
 compile will continue to compile with newer Rust versions. The output might
 differ slightly between versions because Rust often improves error messages and
 warnings. In other words, any newer, stable version of Rust you install using
 these steps should work as expected with the content of this book.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h3 id="command-line-notation"><a class="header" href="#command-line-notation">Command Line Notation</a></h3>
 <p>In this chapter and throughout the book, we’ll show some commands used in the
 terminal. Lines that you should enter in a terminal all start with <code>$</code>. You
@@ -170,7 +171,7 @@ don’t need to type the <code>$</code> character; it’s the command line promp
 indicate the start of each command. Lines that don’t start with <code>$</code> typically
 show the output of the previous command. Additionally, PowerShell-specific
 examples will use <code>&gt;</code> rather than <code>$</code>.</p>
-</blockquote>
+</section>
 <h3 id="installing-rustup-on-linux-or-macos"><a class="header" href="#installing-rustup-on-linux-or-macos">Installing <code>rustup</code> on Linux or macOS</a></h3>
 <p>If you’re using Linux or macOS, open a terminal and enter the following command:</p>
 <pre><code class="language-console">$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
@@ -194,16 +195,9 @@ the <code>build-essential</code> package.</p>
 <h3 id="installing-rustup-on-windows"><a class="header" href="#installing-rustup-on-windows">Installing <code>rustup</code> on Windows</a></h3>
 <p>On Windows, go to <a href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install</a> and follow
 the instructions for installing Rust. At some point in the installation, you’ll
-receive a message explaining that you’ll also need the MSVC build tools for
-Visual Studio 2013 or later.</p>
-<p>To acquire the build tools, you’ll need to install <a href="https://visualstudio.microsoft.com/downloads/">Visual Studio
-2022</a>. When asked which workloads to install, include:</p>
-<ul>
-<li>“Desktop Development with C++”</li>
-<li>The Windows 10 or 11 SDK</li>
-<li>The English language pack component, along with any other language pack of
-your choosing</li>
-</ul>
+be prompted to install Visual Studio. This provides a linker and the native
+libraries needed to compile programs. If you need more help with this step, see
+<a href="https://rust-lang.github.io/rustup/installation/windows-msvc.html">https://rust-lang.github.io/rustup/installation/windows-msvc.html</a></p>
 <p>The rest of this book uses commands that work in both <em>cmd.exe</em> and PowerShell.
 If there are specific differences, we’ll explain which to use.</p>
 <h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
@@ -247,7 +241,7 @@ in your browser.</p>
 sure what it does or how to use it, use the application programming interface
 (API) documentation to find out!</p>
 <div class="quiz-placeholder" data-quiz-name="ch01-01-installation"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;For example, you can write `rustup update` to get the latest version of Rust.\n&quot;,&quot;id&quot;:&quot;6286342a-84c1-47c5-bfd2-f34b51df813c&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;rustup&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the name of the command-line tool for managing the version of Rust on your machine?&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

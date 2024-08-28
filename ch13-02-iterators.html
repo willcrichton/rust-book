@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -158,12 +159,15 @@ methods that consume the iterator to use it up. For example, the code in
 Listing 13-10 creates an iterator over the items in the vector <code>v1</code> by calling
 the <code>iter</code> method defined on <code>Vec&lt;T&gt;</code>. This code by itself doesn’t do anything
 useful.</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let v1 = vec![1, 2, 3];
 
     let v1_iter = v1.iter();
 <span class="boring">}</span></code></pre></pre>
-<p><span class="caption">Listing 13-10: Creating an iterator</span></p>
+<figcaption>Listing 13-10: Creating an iterator</figcaption>
+</figure>
 <p>The iterator is stored in the <code>v1_iter</code> variable. Once we’ve created an
 iterator, we can use it in a variety of ways. In Listing 3-5 in Chapter 3, we
 iterated over an array using a <code>for</code> loop to execute some code on each of its
@@ -173,16 +177,19 @@ but we glossed over how exactly that works until now.</p>
 the use of the iterator in the <code>for</code> loop. When the <code>for</code> loop is called using
 the iterator in <code>v1_iter</code>, each element in the iterator is used in one
 iteration of the loop, which prints out each value.</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let v1 = vec![1, 2, 3];
 
     let v1_iter = v1.iter();
 
     for val in v1_iter {
-        println!(&quot;Got: {}&quot;, val);
+        println!(&quot;Got: {val}&quot;);
     }
 <span class="boring">}</span></code></pre></pre>
-<p><span class="caption">Listing 13-11: Using an iterator in a <code>for</code> loop</span></p>
+<figcaption>Listing 13-11: Using an iterator in a <code>for</code> loop</figcaption>
+</figure>
 <p>In languages that don’t have iterators provided by their standard libraries,
 you would likely write this same functionality by starting a variable at index
 0, using that variable to index into the vector to get a value, and
@@ -218,7 +225,8 @@ iterator.</p>
 <p>We can call the <code>next</code> method on iterators directly; Listing 13-12 demonstrates
 what values are returned from repeated calls to <code>next</code> on the iterator created
 from the vector.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">#[cfg(test)]
 </span><span class="boring">mod tests {
 </span>    #[test]
@@ -233,8 +241,8 @@ from the vector.</p>
         assert_eq!(v1_iter.next(), None);
     }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 13-12: Calling the <code>next</code> method on an
-iterator</span></p>
+<figcaption>Listing 13-12: Calling the <code>next</code> method on an iterator</figcaption>
+</figure>
 <p>Note that we needed to make <code>v1_iter</code> mutable: calling the <code>next</code> method on an
 iterator changes internal state that the iterator uses to keep track of where
 it is in the sequence. In other words, this code <em>consumes</em>, or uses up, the
@@ -260,7 +268,8 @@ the iterator and iterates through the items by repeatedly calling <code>next</co
 consuming the iterator. As it iterates through, it adds each item to a running
 total and returns the total when iteration is complete. Listing 13-13 has a
 test illustrating a use of the <code>sum</code> method:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">#[cfg(test)]
 </span><span class="boring">mod tests {
 </span>    #[test]
@@ -274,8 +283,8 @@ test illustrating a use of the <code>sum</code> method:</p>
         assert_eq!(total, 6);
     }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 13-13: Calling the <code>sum</code> method to get the total
-of all items in the iterator</span></p>
+<figcaption>Listing 13-13: Calling the <code>sum</code> method to get the total of all items in the iterator</figcaption>
+</figure>
 <p>We aren’t allowed to use <code>v1_iter</code> after the call to <code>sum</code> because <code>sum</code> takes
 ownership of the iterator we call it on.</p>
 <h3 id="methods-that-produce-other-iterators"><a class="header" href="#methods-that-produce-other-iterators">Methods that Produce Other Iterators</a></h3>
@@ -287,14 +296,15 @@ which takes a closure to call on each item as the items are iterated through.
 The <code>map</code> method returns a new iterator that produces the modified items. The
 closure here creates a new iterator in which each item from the vector will be
 incremented by 1:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><pre class="playground"><code class="language-rust not_desired_behavior"><span class="boring">fn main() {
 </span>    let v1: Vec&lt;i32&gt; = vec![1, 2, 3];
 
     v1.iter().map(|x| x + 1);
 <span class="boring">}</span></code></pre></pre>
-<p><span class="caption">Listing 13-14: Calling the iterator adaptor <code>map</code> to
-create a new iterator</span></p>
+<figcaption>Listing 13-14: Calling the iterator adaptor <code>map</code> to create a new iterator</figcaption>
+</figure>
 <p>However, this code produces a warning:</p>
 <pre><code class="language-console">$ cargo run
    Compiling iterators v0.1.0 (file:///projects/iterators)
@@ -306,9 +316,13 @@ warning: unused `Map` that must be used
   |
   = note: iterators are lazy and do nothing unless consumed
   = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+  |
+4 |     let _ = v1.iter().map(|x| x + 1);
+  |     +++++++
 
 warning: `iterators` (bin &quot;iterators&quot;) generated 1 warning
-    Finished dev [unoptimized + debuginfo] target(s) in 0.47s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.47s
      Running `target/debug/iterators`
 </code></pre>
 <p>The code in Listing 13-14 doesn’t do anything; the closure we’ve specified
@@ -321,7 +335,8 @@ type.</p>
 <p>In Listing 13-15, we collect the results of iterating over the iterator that’s
 returned from the call to <code>map</code> into a vector. This vector will end up
 containing each item from the original vector incremented by 1.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let v1: Vec&lt;i32&gt; = vec![1, 2, 3];
 
@@ -329,9 +344,8 @@ containing each item from the original vector incremented by 1.</p>
 
     assert_eq!(v2, vec![2, 3, 4]);
 <span class="boring">}</span></code></pre></pre>
-<p><span class="caption">Listing 13-15: Calling the <code>map</code> method to create a new
-iterator and then calling the <code>collect</code> method to consume the new iterator and
-create a vector</span></p>
+<figcaption>Listing 13-15: Calling the <code>map</code> method to create a new iterator and then calling the <code>collect</code> method to consume the new iterator and create a vector</figcaption>
+</figure>
 <p>Because <code>map</code> takes a closure, we can specify any operation we want to perform
 on each item. This is a great example of how closures let you customize some
 behavior while reusing the iteration behavior that the <code>Iterator</code> trait
@@ -350,7 +364,8 @@ returns <code>true</code>, the value will be included in the iteration produced 
 <p>In Listing 13-16, we use <code>filter</code> with a closure that captures the <code>shoe_size</code>
 variable from its environment to iterate over a collection of <code>Shoe</code> struct
 instances. It will return only shoes that are the specified size.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">#[derive(PartialEq, Debug)]
 struct Shoe {
     size: u32,
@@ -399,8 +414,8 @@ mod tests {
         );
     }
 }</code></pre>
-<p><span class="caption">Listing 13-16: Using the <code>filter</code> method with a closure
-that captures <code>shoe_size</code></span></p>
+<figcaption>Listing 13-16: Using the <code>filter</code> method with a closure that captures <code>shoe_size</code></figcaption>
+</figure>
 <p>The <code>shoes_in_size</code> function takes ownership of a vector of shoes and a shoe
 size as parameters. It returns a vector containing only shoes of the specified
 size.</p>
@@ -415,7 +430,7 @@ adapted iterator into a vector that’s returned by the function.</p>
 <p>The test shows that when we call <code>shoes_in_size</code>, we get back only shoes
 that have the same size as the value we specified.</p>
 <div class="quiz-placeholder" data-quiz-name="ch13-02-iterators"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Lazy generally means \&quot;does not do work until asked\&quot;, and iterators do not perform any computation until\n`Iterator::next` is called.\n&quot;,&quot;id&quot;:&quot;d50dd9fb-f84c-4748-9e45-cd3dc8d5fb47&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;An iterator has no effect until you call methods that extract elements from the iterator&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;An iterator creates a copy of each item it iterates over&quot;,&quot;An iterator takes ownership of the sequence of items it is iterating over&quot;,&quot;An iterator will only iterate over a given number of items&quot;],&quot;prompt&quot;:&quot;Which of the following best describes why iterators are described as \&quot;lazy\&quot;?\n&quot;}},{&quot;context&quot;:&quot;The for-loop is a syntactic sugar for the `while let`, which is itself a sugar for `loop` and `break`.\n&quot;,&quot;id&quot;:&quot;19eac65e-44ad-4349-9632-47bdbb519d46&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;True&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;False&quot;],&quot;prompt&quot;:&quot;True/false: these two code snippets are semantically equivalent.\n\nSnippet 1:\n```\nwhile let Some(x) = iter.next() {\n    f(x);\n}\n```\n\nSnippet 2:\n```\nfor x in iter {\n    f(x);\n}\n```\n&quot;}},{&quot;context&quot;:&quot;The order of iterators matters &amp;mdash; a filter and a map is not the same as a map and a filter!\n\nYou might wonder why the first filter uses `*x` and the second filter does not. \n`v.iter()` produces an `Iterator&lt;Item = &amp;i32&gt;`. The `.filter()` call takes an `Iterator&lt;Item = T&gt;` as input,\nand passes `&amp;T` to its predicate. Therefore `x: &amp;&amp;i32` on line 3. The Rust standard library implements the\nremainder operator `%` for `&amp;i32` on the left-hand side ([see the docs](https://doc.rust-lang.org/std/ops/trait.Rem.html#impl-Rem%3Ci32%3E-for-%26'a+i32)),\nbut not for `&amp;&amp;i32`. So we have to dereference `x` once to use it in the expression `*x % 2`.\n\nBy contrast on line 4, when `.map()` takes an `Iterator&lt;Item = T&gt;` as input, it passes `T` to its closure.\nTherefore the closure in `map` takes `&amp;i32` as input. The multiplication operator `*` is implemented for `&amp;i32`,\nso `x` does not need to be dereferenced in `x * 2`. The operation `x * 2` produces a value of type `i32`, so\nthe result of the map is an `Iterator&lt;Item = i32&gt;`. The `filter` then takes `x : &amp;i32`, which also does not need\na dereference to do `x % 2`. Now you know!\n&quot;,&quot;id&quot;:&quot;ff652580-b487-4379-bd70-652f5803321d&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;4 2&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let v = vec![1, 2, 3, 4];\n    let a: Vec&lt;_&gt; = v.iter().filter(|x: &amp;&amp;i32| *x % 2 == 0).map(|x: &amp;i32| x * 2).collect();\n    let b: Vec&lt;_&gt; = v.iter().map(|x: &amp;i32| x * 2).filter(|x: &amp;i32| x % 2 == 0).collect();\n    println!(\&quot;{} {}\&quot;, a[0], b[0]);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

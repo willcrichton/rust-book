@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -168,19 +169,20 @@ will display the following error, which means the compiler needs more
 information from us to know which type we want to use:</p>
 <pre><code class="language-console">$ cargo build
    Compiling no_type_annotations v0.1.0 (file:///projects/no_type_annotations)
-error[E0282]: type annotations needed
+error[E0284]: type annotations needed
  --&gt; src/main.rs:2:9
   |
 2 |     let guess = &quot;42&quot;.parse().expect(&quot;Not a number!&quot;);
-  |         ^^^^^
+  |         ^^^^^        ----- type must be known at this point
   |
+  = note: cannot satisfy `&lt;_ as FromStr&gt;::Err == _`
 help: consider giving `guess` an explicit type
   |
-2 |     let guess: _ = &quot;42&quot;.parse().expect(&quot;Not a number!&quot;);
-  |              +++
+2 |     let guess: /* Type */ = &quot;42&quot;.parse().expect(&quot;Not a number!&quot;);
+  |              ++++++++++++
 
-For more information about this error, try `rustc --explain E0282`.
-error: could not compile `no_type_annotations` due to previous error
+For more information about this error, try `rustc --explain E0284`.
+error: could not compile `no_type_annotations` (bin &quot;no_type_annotations&quot;) due to 1 previous error
 </code></pre>
 <p>You’ll see different type annotations for other data types.</p>
 <h3 id="scalar-types"><a class="header" href="#scalar-types">Scalar Types</a></h3>
@@ -240,7 +242,7 @@ have the same value as if you had specified <code>1000</code>.</p>
 defaults are generally good places to start: integer types default to <code>i32</code>.
 The primary situation in which you’d use <code>isize</code> or <code>usize</code> is when indexing
 some sort of collection.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h5 id="integer-overflow"><a class="header" href="#integer-overflow">Integer Overflow</a></h5>
 <p>Let’s say you have a variable of type <code>u8</code> that can hold values between 0 and
 255. If you try to change the variable to a value outside that range, such as
@@ -269,7 +271,7 @@ the <code>overflowing_*</code> methods.</li>
 <li>Saturate at the value’s minimum or maximum values with the <code>saturating_*</code>
 methods.</li>
 </ul>
-</blockquote>
+</section>
 <h4 id="floating-point-types"><a class="header" href="#floating-point-types">Floating-Point Types</a></h4>
 <p>Rust also has two primitive types for <em>floating-point numbers</em>, which are
 numbers with decimal points. Rust’s floating-point types are <code>f32</code> and <code>f64</code>,
@@ -499,7 +501,8 @@ cd listings/ch03-common-programming-concepts/no-listing-15-invalid-array-access
 cargo run
 10
 -->
-<pre><code class="language-console">thread 'main' panicked at 'index out of bounds: the len is 5 but the index is 10', src/main.rs:19:19
+<pre><code class="language-console">thread 'main' panicked at src/main.rs:19:19:
+index out of bounds: the len is 5 but the index is 10
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
 <p>The program resulted in a <em>runtime</em> error at the point of using an invalid
@@ -517,7 +520,7 @@ kind of error by immediately exiting instead of allowing the memory access and
 continuing. Chapter 9 discusses more of Rust’s error handling and how you can
 write readable, safe code that neither panics nor allows invalid memory access.</p>
 <div class="quiz-placeholder" data-quiz-name="ch03-02-data-types-sec2-compound"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;An array can only contain elements of a single type. The syntax `[message, 100]` creates an array with two elements.\nThe variable `message` is a string, and the constant `100` is a number.\n&quot;,&quot;id&quot;:&quot;30212501-00d5-4ef6-838f-3df5112ee7ed&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:3},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let message = \&quot;The temperature today is:\&quot;;\n  let x = [message, 100];\n  println!(\&quot;{} {}\&quot;, x[0], x[1]);\n}\n&quot;}},{&quot;context&quot;:&quot;The syntax `[x; y]` declares an array with `y` copies of the value `x`. The syntax `(a, b)` destructures `t` and binds `a` to `[1; 2]`. \nThe syntax `t.1` refers to the second element of `t`, which is `[3; 4]`.\n&quot;,&quot;id&quot;:&quot;4e632a23-24cc-4c29-8935-cf6b62c3764b&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;4&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let t = ([1; 2], [3; 4]);\n  let (a, b) = t;\n  println!(\&quot;{}\&quot;, a[0] + t.1[0]); \n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

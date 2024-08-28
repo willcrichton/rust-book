@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -149,11 +150,11 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: This edition of the book is the same as <a href="https://nostarch.com/rust-programming-language-2nd-edition">The Rust Programming
 Language</a> available in print and ebook format from <a href="https://nostarch.com/">No Starch
 Press</a>.</p>
-</blockquote>
+</section>
 <p>Welcome to <em>The Rust Programming Language</em>, an introductory book about Rust.
 The Rust programming language helps you write faster, more reliable software.
 High-level ergonomics and low-level control are often at odds in programming
@@ -180,7 +181,7 @@ compiling, and managing dependencies painless and consistent across the Rust
 ecosystem.</li>
 <li>The Rustfmt formatting tool ensures a consistent coding style across
 developers.</li>
-<li>The Rust Language Server powers Integrated Development Environment (IDE)
+<li>The rust-analyzer powers Integrated Development Environment (IDE)
 integration for code completion and inline error messages.</li>
 </ul>
 <p>By using these and other tools in the Rust ecosystem, developers can be

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -397,7 +398,7 @@ error[E0433]: failed to resolve: use of undeclared type `ThreadPool`
    |                ^^^^^^^^^^ use of undeclared type `ThreadPool`
 
 For more information about this error, try `rustc --explain E0433`.
-error: could not compile `hello` due to previous error
+error: could not compile `hello` (bin &quot;hello&quot;) due to 1 previous error
 </code></pre>
 <p>Great! This error tells us we need a <code>ThreadPool</code> type or module, so we’ll
 build one now. Our <code>ThreadPool</code> implementation will be independent of the kind
@@ -467,7 +468,7 @@ error[E0599]: no function or associated item named `new` found for struct `Threa
    |                            ^^^ function or associated item not found in `ThreadPool`
 
 For more information about this error, try `rustc --explain E0599`.
-error: could not compile `hello` due to previous error
+error: could not compile `hello` (bin &quot;hello&quot;) due to 1 previous error
 </code></pre>
 <p>This error indicates that next we need to create an associated function named
 <code>new</code> for <code>ThreadPool</code>. We also know that <code>new</code> needs to have one parameter
@@ -494,10 +495,10 @@ error[E0599]: no method named `execute` found for struct `ThreadPool` in the cur
   --&gt; src/main.rs:17:14
    |
 17 |         pool.execute(|| {
-   |              ^^^^^^^ method not found in `ThreadPool`
+   |         -----^^^^^^^ method not found in `ThreadPool`
 
 For more information about this error, try `rustc --explain E0599`.
-error: could not compile `hello` due to previous error
+error: could not compile `hello` (bin &quot;hello&quot;) due to 1 previous error
 </code></pre>
 <p>Now the error occurs because we don’t have an <code>execute</code> method on <code>ThreadPool</code>.
 Recall from the <a href="#creating-a-finite-number-of-threads">“Creating a Finite Number of
@@ -553,20 +554,20 @@ have no parameters, we still need the parentheses.</p>
 nothing, but we’re trying only to make our code compile. Let’s check it again:</p>
 <pre><code class="language-console">$ cargo check
     Checking hello v0.1.0 (file:///projects/hello)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.24s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.24s
 </code></pre>
 <p>It compiles! But note that if you try <code>cargo run</code> and make a request in the
 browser, you’ll see the errors in the browser that we saw at the beginning of
 the chapter. Our library isn’t actually calling the closure passed to <code>execute</code>
 yet!</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: A saying you might hear about languages with strict compilers, such as
 Haskell and Rust, is “if the code compiles, it works.” But this saying is not
 universally true. Our project compiles, but it does absolutely nothing! If we
 were building a real, complete project, this would be a good time to start
 writing unit tests to check that the code compiles <em>and</em> has the behavior we
 want.</p>
-</blockquote>
+</section>
 <h4 id="validating-the-number-of-threads-in-new"><a class="header" href="#validating-the-number-of-threads-in-new">Validating the Number of Threads in <code>new</code></a></h4>
 <p>We aren’t doing anything with the parameters to <code>new</code> and <code>execute</code>. Let’s
 implement the bodies of these functions with the behavior we want. To start,
@@ -776,7 +777,7 @@ implementation details regarding using a <code>Worker</code> struct within <code
 so we make the <code>Worker</code> struct and its <code>new</code> function private. The
 <code>Worker::new</code> function uses the <code>id</code> we give it and stores a <code>JoinHandle&lt;()&gt;</code>
 instance that is created by spawning a new thread using an empty closure.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: If the operating system can’t create a thread because there aren’t
 enough system resources, <code>thread::spawn</code> will panic. That will cause our
 whole server to panic, even though the creation of some threads might
@@ -784,7 +785,7 @@ succeed. For simplicity’s sake, this behavior is fine, but in a production
 thread pool implementation, you’d likely want to use
 <a href="https://doc.rust-lang.org/std/thread/struct.Builder.html"><code>std::thread::Builder</code></a><!-- ignore --> and its
 <a href="https://doc.rust-lang.org/std/thread/struct.Builder.html#method.spawn"><code>spawn</code></a><!-- ignore --> method that returns <code>Result</code> instead.</p>
-</blockquote>
+</section>
 <p>This code will compile and will store the number of <code>Worker</code> instances we
 specified as an argument to <code>ThreadPool::new</code>. But we’re <em>still</em> not processing
 the closure that we get in <code>execute</code>. Let’s look at how to do that next.</p>
@@ -794,7 +795,7 @@ absolutely nothing. Currently, we get the closure we want to execute in the
 <code>execute</code> method. But we need to give <code>thread::spawn</code> a closure to run when we
 create each <code>Worker</code> during the creation of the <code>ThreadPool</code>.</p>
 <p>We want each <code>Worker</code> struct that we just created to fetch the code to run from
-a queue held in the <code>ThreadPool</code> and send that code to the worker's thread to run.</p>
+a queue held in the <code>ThreadPool</code> and send that code to the worker’s thread to run.</p>
 <p>The channels we learned about in Chapter 16—a simple way to communicate between
 two threads—would be perfect for this use case. We’ll use a channel to function
 as the queue of jobs, and <code>execute</code> will send a job from the <code>ThreadPool</code> to
@@ -944,11 +945,25 @@ error[E0382]: use of moved value: `receiver`
 21 |         let (sender, receiver) = mpsc::channel();
    |                      -------- move occurs because `receiver` has type `std::sync::mpsc::Receiver&lt;Job&gt;`, which does not implement the `Copy` trait
 ...
+25 |         for id in 0..size {
+   |         ----------------- inside of this loop
 26 |             workers.push(Worker::new(id, receiver));
    |                                          ^^^^^^^^ value moved here, in previous iteration of loop
+   |
+note: consider changing this parameter type in method `new` to borrow instead if owning the value isn't necessary
+  --&gt; src/lib.rs:47:33
+   |
+47 |     fn new(id: usize, receiver: mpsc::Receiver&lt;Job&gt;) -&gt; Worker {
+   |        --- in this method       ^^^^^^^^^^^^^^^^^^^ this parameter takes ownership of the value
+help: consider moving the expression out of the loop so it is only moved once
+   |
+25 ~         let mut value = Worker::new(id, receiver);
+26 ~         for id in 0..size {
+27 ~             workers.push(value);
+   |
 
 For more information about this error, try `rustc --explain E0382`.
-error: could not compile `hello` due to previous error
+error: could not compile `hello` (lib) due to 1 previous error
 </code></pre>
 <p>The code is trying to pass <code>receiver</code> to multiple <code>Worker</code> instances. This
 won’t work, as you’ll recall from Chapter 16: the channel implementation that
@@ -1255,12 +1270,12 @@ There are never more than four threads created, so our system won’t get
 overloaded if the server receives a lot of requests. If we make a request to
 <em>/sleep</em>, the server will be able to serve other requests by having another
 thread run them.</p>
-<blockquote>
-<p>Note: if you open <em>/sleep</em> in multiple browser windows simultaneously, they
+<section class="note" aria-role="note">
+<p>Note: If you open <em>/sleep</em> in multiple browser windows simultaneously, they
 might load one at a time in 5 second intervals. Some web browsers execute
 multiple instances of the same request sequentially for caching reasons. This
 limitation is not caused by our web server.</p>
-</blockquote>
+</section>
 <p>After learning about the <code>while let</code> loop in Chapter 18, you might be wondering
 why we didn’t write the worker thread code as shown in Listing 20-21.</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>

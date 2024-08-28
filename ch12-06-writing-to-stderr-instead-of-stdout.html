@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -189,7 +190,8 @@ prints error messages is in one function, <code>main</code>. The standard librar
 the <code>eprintln!</code> macro that prints to the standard error stream, so let’s change
 the two places we were calling <code>println!</code> to print errors to use <code>eprintln!</code>
 instead.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::process;
 </span><span class="boring">
@@ -208,8 +210,8 @@ instead.</p>
         process::exit(1);
     }
 }</code></pre>
-<p><span class="caption">Listing 12-24: Writing error messages to standard error
-instead of standard output using <code>eprintln!</code></span></p>
+<figcaption>Listing 12-24: Writing error messages to standard error instead of standard output using <code>eprintln!</code></figcaption>
+</figure>
 <p>Let’s now run the program again in the same way, without any arguments and
 redirecting standard output with <code>&gt;</code>:</p>
 <pre><code class="language-console">$ cargo run &gt; output.txt

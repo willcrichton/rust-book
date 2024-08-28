@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -149,8 +150,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="design-trade-offs"><a class="header" href="#design-trade-offs">Design Trade-offs</a></h1>
-<p>This section is about <strong>design trade-offs</strong> in Rust. To be an effective Rust engineer, it's not enough just to know how Rust works. You have to decide which of Rust's many tools are appropriate for a given job. In this section, we will give you a sequence of quizzes about your understanding of design trade-offs in Rust.  After each quiz, we will explain in-depth our rationale for each question.</p>
-<p>Here's an example of what a question will look like. It will start out by describing a software case study with a space of designs:</p>
+<p>This section is about <strong>design trade-offs</strong> in Rust. To be an effective Rust engineer, it’s not enough just to know how Rust works. You have to decide which of Rust’s many tools are appropriate for a given job. In this section, we will give you a sequence of quizzes about your understanding of design trade-offs in Rust.  After each quiz, we will explain in-depth our rationale for each question.</p>
+<p>Here’s an example of what a question will look like. It will start out by describing a software case study with a space of designs:</p>
 <blockquote>
 <p><strong>Context:</strong> You are designing an application with a global configuration, e.g. containing command-line flags.</p>
 <p><strong>Functionality:</strong> The application needs to pass immutable references to this configuration throughout the application.</p>
@@ -172,24 +173,24 @@ struct ConfigRef(Rc&lt;Config&gt;);
 // Option 3: use an atomic reference-counted pointer
 struct ConfigRef(Arc&lt;Config&gt;);</code></pre>
 </blockquote>
-<p>Given just the context and key functionality, all three designs are potential candidates. 
+<p>Given just the context and key functionality, all three designs are potential candidates.
 We need more information about the system goals to decide which ones make the most sense.
 Hence, we give a new requirement:</p>
 <blockquote>
 <p>Select each design option that satisfies the following requirement:</p>
-<p><strong>Requirement:</strong> The configuration reference must be sharable between multiple threads.</p>
+<p><strong>Requirement:</strong> The configuration reference must be shareable between multiple threads.</p>
 <p><strong>Answer:</strong></p>
 <p><input type="checkbox" checked disabled> Option 1 <br>
 <input type="checkbox" disabled> Option 2 <br>
 <input type="checkbox" checked disabled> Option 3 <br></p>
 </blockquote>
-<p>In formal terms, this means that <code>ConfigRef</code> implements <a href="https://doc.rust-lang.org/std/marker/trait.Send.html"><code>Send</code></a> and <a href="https://doc.rust-lang.org/std/marker/trait.Sync.html"><code>Sync</code></a>. 
+<p>In formal terms, this means that <code>ConfigRef</code> implements <a href="https://doc.rust-lang.org/std/marker/trait.Send.html"><code>Send</code></a> and <a href="https://doc.rust-lang.org/std/marker/trait.Sync.html"><code>Sync</code></a>.
 Assuming <code>Config: Send + Sync</code>, then both <code>&amp;Config</code> and <code>Arc&lt;Config&gt;</code> satisfy this requirement,
 but <a href="https://doc.rust-lang.org/std/rc/struct.Rc.html"><code>Rc</code></a> does not (because non-atomic reference-counted pointers are not thread-safe). So Option 2 does not satisfy the requirement, while Option 3 does.</p>
 <p>We might also be tempted to conclude that Option 1 does not satisfy the requirement because functions like <a href="https://doc.rust-lang.org/std/thread/fn.spawn.html"><code>thread::spawn</code></a> require that all data moved into a thread can only contain references with a <code>'static</code> lifetime. However, that does not rule out Option 1 for two reasons:</p>
 <ol>
 <li>The <code>Config</code> could be stored as a global static variable (e.g., using <a href="https://doc.rust-lang.org/std/sync/struct.OnceLock.html"><code>OnceLock</code></a>), so one could construct <code>&amp;'static Config</code> references.</li>
-<li>Not all concurrency mechanisms require <code>'static</code> lifetimes, such as <a href="https://doc.rust-lang.org/std/thread/fn.scope.html"><code>thread::scope</code></a>. </li>
+<li>Not all concurrency mechanisms require <code>'static</code> lifetimes, such as <a href="https://doc.rust-lang.org/std/thread/fn.scope.html"><code>thread::scope</code></a>.</li>
 </ol>
 <p>Therefore the requirement as-stated only rules out non-<a href="https://doc.rust-lang.org/std/marker/trait.Send.html"><code>Send</code></a> types, and we consider Options 1 and 3 to be the correct answers.</p>
 <hr>
@@ -207,7 +208,8 @@ but <a href="https://doc.rust-lang.org/std/rc/struct.Rc.html"><code>Rc</code></a
 <h2 id="intermediates"><a class="header" href="#intermediates">Intermediates</a></h2>
 <p><em>Inspiration:</em> <a href="https://docs.rs/serde/1.0.188/serde/trait.Serialize.html">Serde</a> and <a href="https://docs.rs/miniserde/0.1.34/miniserde/trait.Serialize.html">miniserde</a></p>
 <div class="quiz-placeholder" data-quiz-name="ch17-05-design-challenge-intermediates"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Both designs are sufficiently decoupled such that each new data format is independent of any `Serialize` implementations. For Option 1,\neach data format converts a `Value` into the format's representation. `Value` acts as a module boundary.\n\nFor Option 2, there is no explicit intermediate representation of a serialized value, but rather each `Serialize` implementation is explicitly generic\nover any choice of `S` that implements `Serializer`.\n&quot;,&quot;id&quot;:&quot;66e036c9-91a0-4611-8110-967b5ed1a514&quot;,&quot;multipart&quot;:&quot;q&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;1&quot;,&quot;2&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[],&quot;prompt&quot;:&quot;Select each design option that satisfies the following requirement:\n\n**Requirement:** It should be possible to add a new data format without needing to modify code in existing implementations of the `Serialize` trait.\n&quot;,&quot;sortAnswers&quot;:true}},{&quot;context&quot;:&quot;Option 1 serializes data by first converting a data structure into an intermediate representation, `Value`, and then converting `Value` into the final format.\nThis intermediate data structure consumes memory which is not needed by Option 2, where data is converted directly into the final format.\n&quot;,&quot;id&quot;:&quot;eaa95520-1b72-4f7d-a600-5444b6368785&quot;,&quot;multipart&quot;:&quot;q&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;2&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;1&quot;],&quot;prompt&quot;:&quot;Select each design option that satisfies the following requirement:\n\n**Requirement:** The process of serialization should consume as little memory as possible.\n&quot;,&quot;sortAnswers&quot;:true}},{&quot;context&quot;:&quot;With Option 1, there is only a single instantiation of `Serialize` that converts a type `T` into a `Value`. Because Option 2 is generic over serializers `S`, \nthen every time `T::serialize` is called with a new `S`, the Rust compiler will monomorphize a new instance of `T::serialize` which would increase the size of\nthe binary by comparison to Option 1.\n&quot;,&quot;id&quot;:&quot;2751731e-7d18-46a1-aaea-b5734bf51c80&quot;,&quot;multipart&quot;:&quot;q&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;1&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;2&quot;],&quot;prompt&quot;:&quot;Select each design option that satisfies the following requirement:\n\n**Requirement:** When the same data type is serialized into multiple formats, that should increase the size of the compiled binary as little as possible.\n&quot;,&quot;sortAnswers&quot;:true}}],&quot;multipart&quot;:{&quot;q&quot;:&quot;**Context:** You are designing a serialization library that converts Rust data types into formats like JSON.\n\n**Functionality:** A `Serialize` trait that can be implemented by serializable types, and a `to_string` function that converts serializable types into JSON.\n\n**Designs:** Below are several proposed designs to implement the functionality.\n\n```\n// Option 1: types serialize to a `Value` enum\npub enum Value {\n\tString(String),\n\tNumber(isize)\n}\n\npub trait Serialize {\n\tfn serialize(&amp;self) -&gt; Value;\n}\n\nfn value_to_json(value: Value) -&gt; String {\n\t/* .. */\n}\n\npub fn to_json(data: impl Serialize) -&gt; String { \n    let value = data.serialize();\n    value_to_json(value)\n}\n\n\n// Option 2: types serialize via calls to a `Serializer` interface\npub trait Serialize {\n\tfn serialize&lt;S: Serializer&gt;(&amp;self, serializer: &amp;mut S);\n}\n\npub trait Serializer {\n\tfn serialize_string(&amp;mut self, s: &amp;str);\n\tfn serialize_number(&amp;mut self, n: isize);\n}\n\nstruct JsonSerializer { buffer: String };\nimpl Serializer for JsonSerializer {\n\t/* .. */\n}\n\npub fn to_json(data: impl Serialize) -&gt; String { \n\tlet mut serializer = JsonSerializer { buffer: String::new() };\n\tdata.serialize(&amp;mut serializer);\n\tserializer.buffer\n}\n```\n&quot;}}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -149,14 +150,14 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="controlling-how-tests-are-run"><a class="header" href="#controlling-how-tests-are-run">Controlling How Tests Are Run</a></h2>
-<p>Just as <code>cargo run</code> compiles your code and then runs the resulting binary,
-<code>cargo test</code> compiles your code in test mode and runs the resulting test
+<p>Just as <code>cargo run</code> compiles your code and then runs the resultant binary,
+<code>cargo test</code> compiles your code in test mode and runs the resultant test
 binary. The default behavior of the binary produced by <code>cargo test</code> is to run
 all the tests in parallel and capture output generated during test runs,
 preventing the output from being displayed and making it easier to read the
 output related to the test results. You can, however, specify command line
 options to change this default behavior.</p>
-<p>Some command line options go to <code>cargo test</code>, and some go to the resulting test
+<p>Some command line options go to <code>cargo test</code>, and some go to the resultant test
 binary. To separate these two types of arguments, you list the arguments that
 go to <code>cargo test</code> followed by the separator <code>--</code> and then the ones that go to
 the test binary. Running <code>cargo test --help</code> displays the options you can use
@@ -195,9 +196,10 @@ line that indicates the test passed. If a test fails, we’ll see whatever was
 printed to standard output with the rest of the failure message.</p>
 <p>As an example, Listing 11-10 has a silly function that prints the value of its
 parameter and returns 10, as well as a test that passes and a test that fails.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust panics noplayground">fn prints_and_returns_10(a: i32) -&gt; i32 {
-    println!(&quot;I got the value {}&quot;, a);
+    println!(&quot;I got the value {a}&quot;);
     10
 }
 
@@ -208,21 +210,21 @@ mod tests {
     #[test]
     fn this_test_will_pass() {
         let value = prints_and_returns_10(4);
-        assert_eq!(10, value);
+        assert_eq!(value, 10);
     }
 
     #[test]
     fn this_test_will_fail() {
         let value = prints_and_returns_10(8);
-        assert_eq!(5, value);
+        assert_eq!(value, 5);
     }
 }</code></pre>
-<p><span class="caption">Listing 11-10: Tests for a function that calls
-<code>println!</code></span></p>
+<figcaption>Listing 11-10: Tests for a function that calls <code>println!</code></figcaption>
+</figure>
 <p>When we run these tests with <code>cargo test</code>, we’ll see the following output:</p>
 <pre><code class="language-console">$ cargo test
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
-    Finished test [unoptimized + debuginfo] target(s) in 0.58s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
      Running unittests src/lib.rs (target/debug/deps/silly_function-160869f38cff9166)
 
 running 2 tests
@@ -233,9 +235,10 @@ failures:
 
 ---- tests::this_test_will_fail stdout ----
 I got the value 8
-thread 'tests::this_test_will_fail' panicked at 'assertion failed: `(left == right)`
-  left: `5`,
- right: `10`', src/lib.rs:19:9
+thread 'tests::this_test_will_fail' panicked at src/lib.rs:19:9:
+assertion `left == right` failed
+  left: 10
+ right: 5
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -246,19 +249,19 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Note that nowhere in this output do we see <code>I got the value 4</code>, which is what
-is printed when the test that passes runs. That output has been captured. The
+<p>Note that nowhere in this output do we see <code>I got the value 4</code>, which is
+printed when the test that passes runs. That output has been captured. The
 output from the test that failed, <code>I got the value 8</code>, appears in the section
 of the test summary output, which also shows the cause of the test failure.</p>
-<p>If we want to see printed values for passing tests as well, we can tell Rust
-to also show the output of successful tests with <code>--show-output</code>.</p>
+<p>If we want to see printed values for passing tests as well, we can tell Rust to
+also show the output of successful tests with <code>--show-output</code>:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
 </code></pre>
 <p>When we run the tests in Listing 11-10 again with the <code>--show-output</code> flag, we
 see the following output:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
-    Finished test [unoptimized + debuginfo] target(s) in 0.60s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
      Running unittests src/lib.rs (target/debug/deps/silly_function-160869f38cff9166)
 
 running 2 tests
@@ -278,9 +281,10 @@ failures:
 
 ---- tests::this_test_will_fail stdout ----
 I got the value 8
-thread 'tests::this_test_will_fail' panicked at 'assertion failed: `(left == right)`
-  left: `5`,
- right: `10`', src/lib.rs:19:9
+thread 'tests::this_test_will_fail' panicked at src/lib.rs:19:9:
+assertion `left == right` failed
+  left: 5
+ right: 10
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 
@@ -298,8 +302,9 @@ that code. You can choose which tests to run by passing <code>cargo test</code> 
 or names of the test(s) you want to run as an argument.</p>
 <p>To demonstrate how to run a subset of tests, we’ll first create three tests for
 our <code>add_two</code> function, as shown in Listing 11-11, and choose which ones to run.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
-<pre><code class="language-rust noplayground">pub fn add_two(a: i32) -&gt; i32 {
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust noplayground">pub fn add_two(a: usize) -&gt; usize {
     a + 2
 }
 
@@ -309,26 +314,29 @@ mod tests {
 
     #[test]
     fn add_two_and_two() {
-        assert_eq!(4, add_two(2));
+        let result = add_two(2);
+        assert_eq!(result, 4);
     }
 
     #[test]
     fn add_three_and_two() {
-        assert_eq!(5, add_two(3));
+        let result = add_two(3);
+        assert_eq!(result, 5);
     }
 
     #[test]
     fn one_hundred() {
-        assert_eq!(102, add_two(100));
+        let result = add_two(100);
+        assert_eq!(result, 102);
     }
 }</code></pre>
-<p><span class="caption">Listing 11-11: Three tests with three different
-names</span></p>
+<figcaption>Listing 11-11: Three tests with three different names</figcaption>
+</figure>
 <p>If we run the tests without passing any arguments, as we saw earlier, all the
 tests will run in parallel:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
-    Finished test [unoptimized + debuginfo] target(s) in 0.62s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
      Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
 
 running 3 tests
@@ -349,7 +357,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 <p>We can pass the name of any test function to <code>cargo test</code> to run only that test:</p>
 <pre><code class="language-console">$ cargo test one_hundred
    Compiling adder v0.1.0 (file:///projects/adder)
-    Finished test [unoptimized + debuginfo] target(s) in 0.69s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
      Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
 
 running 1 test
@@ -369,7 +377,7 @@ will be run. For example, because two of our tests’ names contain <code>add</c
 run those two by running <code>cargo test add</code>:</p>
 <pre><code class="language-console">$ cargo test add
    Compiling adder v0.1.0 (file:///projects/adder)
-    Finished test [unoptimized + debuginfo] target(s) in 0.61s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
      Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
 
 running 2 tests
@@ -390,26 +398,36 @@ listing as arguments all tests you do want to run, you can instead annotate the
 time-consuming tests using the <code>ignore</code> attribute to exclude them, as shown
 here:</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
-<pre><code class="language-rust noplayground">#[test]
-fn it_works() {
-    assert_eq!(2 + 2, 4);
-}
+<pre><code class="language-rust noplayground"><span class="boring">pub fn add(left: usize, right: usize) -&gt; usize {
+</span><span class="boring">    left + right
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[test]
-#[ignore]
-fn expensive_test() {
-    // code that takes an hour to run
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // code that takes an hour to run
+    }
 }</code></pre>
-<p>After <code>#[test]</code> we add the <code>#[ignore]</code> line to the test we want to exclude. Now
-when we run our tests, <code>it_works</code> runs, but <code>expensive_test</code> doesn’t:</p>
+<p>After <code>#[test]</code>, we add the <code>#[ignore]</code> line to the test we want to exclude.
+Now when we run our tests, <code>it_works</code> runs, but <code>expensive_test</code> doesn’t:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
-    Finished test [unoptimized + debuginfo] target(s) in 0.60s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
      Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
 
 running 2 tests
-test expensive_test ... ignored
-test it_works ... ok
+test tests::expensive_test ... ignored
+test tests::it_works ... ok
 
 test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
@@ -424,7 +442,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 the ignored tests, we can use <code>cargo test -- --ignored</code>:</p>
 <pre><code class="language-console">$ cargo test -- --ignored
    Compiling adder v0.1.0 (file:///projects/adder)
-    Finished test [unoptimized + debuginfo] target(s) in 0.61s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
      Running unittests src/lib.rs (target/debug/deps/adder-92948b65e88960b4)
 
 running 1 test
@@ -440,12 +458,12 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 </code></pre>
 <p>By controlling which tests run, you can make sure your <code>cargo test</code> results
-will be fast. When you’re at a point where it makes sense to check the results
-of the <code>ignored</code> tests and you have time to wait for the results, you can run
-<code>cargo test -- --ignored</code> instead. If you want to run all tests whether they’re
-ignored or not, you can run <code>cargo test -- --include-ignored</code>.</p>
+will be returned quickly. When you’re at a point where it makes sense to check
+the results of the <code>ignored</code> tests and you have time to wait for the results,
+you can run <code>cargo test -- --ignored</code> instead. If you want to run all tests
+whether they’re ignored or not, you can run <code>cargo test -- --include-ignored</code>.</p>
 <div class="quiz-placeholder" data-quiz-name="ch11-02-running-tests"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Tests are run in parallel by default, so actions which are not thread-safe (like writing to a single file) may cause a race condition.\n&quot;,&quot;id&quot;:&quot;affe428d-0a8e-430b-9567-99e6b7563c0f&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;Writing text to a single file&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;Logging strings to stdout&quot;,&quot;Failing via panics&quot;,&quot;Reading data from a single database&quot;],&quot;prompt&quot;:&quot;When running `cargo test` with no additional configuration, which of the following actions may not work correctly if done by multiple tests?\n&quot;}},{&quot;context&quot;:&quot;The shortest substring string that is not contained in `test_logger_and_database` but is contained in `test_the_logger` and `test_the_database`\nis \&quot;h\&quot; (the middle character of \&quot;the\&quot;).\n&quot;,&quot;id&quot;:&quot;19e292f4-4bc4-4868-a58a-edf62c3e3b2a&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;h&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Consider a program with the following unit test:\n\n```\n#[test]\nfn test_the_logger() { /* ... */ }\n\n#[test]\nfn test_the_database() { /* ... */ }\n\n#[test]\nfn test_logger_and_database() { /* ... */ }\n```\n\nWhat is the *shortest* string you can pass to `cargo test &lt;the_string&gt;` such that *only* `test_the_logger` and `test_the_database` are executed?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -179,11 +180,11 @@ we’ll discuss in Chapter 19.</p>
 can be sent safely to another thread. Similar to <code>Send</code>, primitive types are
 <code>Sync</code>, and types composed entirely of types that are <code>Sync</code> are also <code>Sync</code>.</p>
 <!-- BEGIN INTERVENTION: 43081862-aac8-4e18-9c55-1107ea4c7cc1 -->
-<p><code>Sync</code> is the most similar concept in Rust to the colloquial meaning of the phrase &quot;thread-safe&quot;, i.e. that a particular piece of data can be safely used by multiple concurrent threads. The reason for having separate <code>Send</code> and <code>Sync</code> traits is that a type can sometimes be one, or both, or neither. For example:</p>
+<p><code>Sync</code> is the most similar concept in Rust to the colloquial meaning of the phrase “thread-safe”, i.e. that a particular piece of data can be safely used by multiple concurrent threads. The reason for having separate <code>Send</code> and <code>Sync</code> traits is that a type can sometimes be one, or both, or neither. For example:</p>
 <ul>
 <li>The smart pointer <code>Rc&lt;T&gt;</code> is also neither <code>Send</code> nor <code>Sync</code>, for reasons described above.</li>
 <li>The <code>RefCell&lt;T&gt;</code> type (which we talked about in Chapter 15) and the
-family of related <code>Cell&lt;T&gt;</code> types are <code>Send</code> (if <code>T: Send</code>), but they are not <code>Sync</code>. A <code>RefCell</code> can be sent across a thread boundary, but not accessed concurrently because the implementation of borrow checking that <code>RefCell&lt;T&gt;</code> does at runtime is not thread-safe. </li>
+family of related <code>Cell&lt;T&gt;</code> types are <code>Send</code> (if <code>T: Send</code>), but they are not <code>Sync</code>. A <code>RefCell</code> can be sent across a thread boundary, but not accessed concurrently because the implementation of borrow checking that <code>RefCell&lt;T&gt;</code> does at runtime is not thread-safe.</li>
 <li>The smart pointer <code>Mutex&lt;T&gt;</code> is <code>Send</code> and <code>Sync</code>, and can be used to share access with multiple threads as you saw in the <a href="ch16-03-shared-state.html#sharing-a-mutext-between-multiple-threads">“Sharing a <code>Mutex&lt;T&gt;</code> Between Multiple Threads”</a><!-- ignore --> section.</li>
 <li>The type <code>MutexGuard&lt;'a, T&gt;</code> that is returned by <code>Mutex::lock</code> is <code>Sync</code> (if <code>T: Sync</code>) but not <code>Send</code>. It is specifically not <code>Send</code> because <a href="https://github.com/rust-lang/rust/issues/23465#issuecomment-82730326">some platforms mandate that mutexes are unlocked by the same thread that locked them</a>.</li>
 </ul>
@@ -220,7 +221,7 @@ go forth and make your programs concurrent, fearlessly!</p>
 as your Rust programs get bigger. In addition, we’ll discuss how Rust’s idioms
 relate to those you might be familiar with from object-oriented programming.</p>
 <div class="quiz-placeholder" data-quiz-name="ch16-04-extensible-concurrency-send-and-sync"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;It is fine to send a `DbConnection` between threads, so `DbConnection` should implement `Send`.\nBut it would not be valid e.g. for an `Arc&lt;Database&gt;` to be shared such that multiple threads concurrently\ncalled `db.query()`, so `DbConnection` should not implement `Sync`.\n&quot;,&quot;id&quot;:&quot;43081862-aac8-4e18-9c55-1107ea4c7cc1&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`Send`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`Send` and `Sync`&quot;,&quot;`Sync`&quot;,&quot;Neither `Send` nor `Sync`&quot;],&quot;prompt&quot;:&quot;Imagine you are designing an API for a database connection like this:\n\n```\nstruct DbConnection { /* ... */ }\nimpl DbConnection {\n    fn query(&amp;self) -&gt; DbResult {\n        /* ... */\n    }\n}\n```\n\nYour database does not support concurrent queries from the same connection. \nWhich of the following marker traits should `DbConnection` implement?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

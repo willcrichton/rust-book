@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -175,7 +176,7 @@ specified by separate width and height variables</span></p>
 <p>Now, run this program using <code>cargo run</code>:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.42s
      Running `target/debug/rectangles`
 The area of the rectangle is 1500 square pixels.
 </code></pre>
@@ -311,7 +312,7 @@ implementation of <code>Display</code> to use with <code>println!</code> and the
 <pre><code class="language-text">   = help: the trait `std::fmt::Display` is not implemented for `Rectangle`
    = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
 </code></pre>
-<p>Let’s try it! The <code>println!</code> macro call will now look like <code>println!(&quot;rect1 is {:?}&quot;, rect1);</code>. Putting the specifier <code>:?</code> inside the curly brackets tells
+<p>Let’s try it! The <code>println!</code> macro call will now look like <code>println!(&quot;rect1 is {rect1:?}&quot;);</code>. Putting the specifier <code>:?</code> inside the curly brackets tells
 <code>println!</code> we want to use an output format called <code>Debug</code>. The <code>Debug</code> trait
 enables us to print our struct in a way that is useful for developers so we can
 see its value while we’re debugging our code.</p>
@@ -339,7 +340,7 @@ fn main() {
         height: 50,
     };
 
-    println!(&quot;rect1 is {:?}&quot;, rect1);
+    println!(&quot;rect1 is {rect1:?}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 5-12: Adding the attribute to derive the <code>Debug</code>
 trait and printing the <code>Rectangle</code> instance using debug formatting</span></p>
@@ -347,7 +348,7 @@ trait and printing the <code>Rectangle</code> instance using debug formatting</s
 following output:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.48s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
      Running `target/debug/rectangles`
 rect1 is Rectangle { width: 30, height: 50 }
 </code></pre>
@@ -358,7 +359,7 @@ those cases, we can use <code>{:#?}</code> instead of <code>{:?}</code> in the <
 this example, using the <code>{:#?}</code> style will output the following:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.48s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
      Running `target/debug/rectangles`
 rect1 is Rectangle {
     width: 30,
@@ -370,13 +371,13 @@ macro</a><!-- ignore -->, which takes ownership of an expression (as opposed
 to <code>println!</code>, which takes a reference), prints the file and line number of
 where that <code>dbg!</code> macro call occurs in your code along with the resultant value
 of that expression, and returns ownership of the value.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: Calling the <code>dbg!</code> macro prints to the standard error console stream
 (<code>stderr</code>), as opposed to <code>println!</code>, which prints to the standard output
 console stream (<code>stdout</code>). We’ll talk more about <code>stderr</code> and <code>stdout</code> in the
 <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">“Writing Error Messages to Standard Error Instead of Standard Output”
 section in Chapter 12</a><!-- ignore -->.</p>
-</blockquote>
+</section>
 <p>Here’s an example where we’re interested in the value that gets assigned to the
 <code>width</code> field, as well as the value of the whole struct in <code>rect1</code>:</p>
 <pre><pre class="playground"><code class="language-rust">#[derive(Debug)]
@@ -401,10 +402,10 @@ take ownership of <code>rect1</code>, so we use a reference to <code>rect1</code
 Here’s what the output of this example looks like:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.61s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
      Running `target/debug/rectangles`
-[src/main.rs:10] 30 * scale = 60
-[src/main.rs:14] &amp;rect1 = Rectangle {
+[src/main.rs:10:16] 30 * scale = 60
+[src/main.rs:14:5] &amp;rect1 = Rectangle {
     width: 60,
     height: 50,
 }
@@ -429,7 +430,7 @@ because it won’t work with any other type. Let’s look at how we can continue
 refactor this code by turning the <code>area</code> function into an <code>area</code> <em>method</em>
 defined on our <code>Rectangle</code> type.</p>
 <div class="quiz-placeholder" data-quiz-name="ch05-02-example-structs"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nThe `area` function takes ownership of its argument `rectangle`. Calling `area(rect1)` therefore\nmoves `rect1`, meaning it cannot be used on the next line.\n&quot;,&quot;id&quot;:&quot;f0ec64fa-262f-4819-8379-acad7aaf8be2&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:14},&quot;prompt&quot;:{&quot;program&quot;:&quot;#[derive(Debug)]\nstruct Rectangle {\n  width: u32,\n  height: u32,\n}\n\nfn main() {\n  let rect1 = Rectangle {\n    width: 30,\n    height: 50,\n  };\n\n  let a = area(rect1);\n  println!(\&quot;{} * {} = {}\&quot;, rect1.width, rect1.height, a);\n}\n\nfn area(rectangle: Rectangle) -&gt; u32 {\n  rectangle.width * rectangle.height\n}\n&quot;}},{&quot;id&quot;:&quot;9ce4156e-4112-4101-a2c7-51758ceca639&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`Display` is for presenting values to an end-user, while `Debug` is for developers' internal use&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`Display` is for printing values to the console, while `Debug` is for viewing values in a debugger&quot;,&quot;`Display` cannot be implemented for structs, while `Debug` can be implemented for structs&quot;,&quot;There is no difference, `Display` and `Debug` are aliases for the same trait.&quot;],&quot;prompt&quot;:&quot;Which statement best describes a difference between the `Display` and `Debug` traits?&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

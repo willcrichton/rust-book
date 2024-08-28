@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -157,7 +158,7 @@ variant.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let config_max = Some(3u8);
     match config_max {
-        Some(max) =&gt; println!(&quot;The maximum is configured to be {}&quot;, max),
+        Some(max) =&gt; println!(&quot;The maximum is configured to be {max}&quot;),
         _ =&gt; (),
     }
 <span class="boring">}</span></code></pre></pre>
@@ -172,7 +173,7 @@ code behaves the same as the <code>match</code> in Listing 6-6:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>    let config_max = Some(3u8);
     if let Some(max) = config_max {
-        println!(&quot;The maximum is configured to be {}&quot;, max);
+        println!(&quot;The maximum is configured to be {max}&quot;);
     }
 <span class="boring">}</span></code></pre></pre>
 <p>The syntax <code>if let</code> takes a pattern and an expression separated by an equal
@@ -214,7 +215,7 @@ expression, like this:</p>
 </span><span class="boring">    let coin = Coin::Penny;
 </span>    let mut count = 0;
     match coin {
-        Coin::Quarter(state) =&gt; println!(&quot;State quarter from {:?}!&quot;, state),
+        Coin::Quarter(state) =&gt; println!(&quot;State quarter from {state:?}!&quot;),
         _ =&gt; count += 1,
     }
 <span class="boring">}</span></code></pre></pre>
@@ -237,7 +238,7 @@ expression, like this:</p>
 </span><span class="boring">    let coin = Coin::Penny;
 </span>    let mut count = 0;
     if let Coin::Quarter(state) = coin {
-        println!(&quot;State quarter from {:?}!&quot;, state);
+        println!(&quot;State quarter from {state:?}!&quot;);
     } else {
         count += 1;
     }
@@ -258,7 +259,7 @@ function expects.</p>
 <p>In order to provide a well-organized API to your users that is straightforward
 to use and only exposes exactly what your users will need, let’s now turn to
 Rust’s modules.</p>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

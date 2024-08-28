@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -201,7 +202,7 @@ you. Check out the <em>src/main.rs</em> file:</p>
 using the <code>cargo run</code> command:</p>
 <pre><code class="language-console">$ cargo run
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.50s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.50s
      Running `target/debug/guessing_game`
 Hello, world!
 </code></pre>
@@ -214,7 +215,8 @@ the next one.</p>
 that input, and check that the input is in the expected form. To start, we’ll
 allow the player to input a guess. Enter the code in Listing 2-1 into
 <em>src/main.rs</em>.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">use std::io;
 
 fn main() {
@@ -228,10 +230,10 @@ fn main() {
         .read_line(&amp;mut guess)
         .expect(&quot;Failed to read line&quot;);
 
-    println!(&quot;You guessed: {guess}&quot;);
+    println!(&quot;You guessed: {}&quot;, guess);
 }</code></pre>
-<p><span class="caption">Listing 2-1: Code that gets a guess from the user and
-prints it</span></p>
+<figcaption>Listing 2-1: Code that gets a guess from the user and prints it</figcaption>
+</figure> 
 <p>This code contains a lot of information, so let’s go over it line by line. To
 obtain user input and then print the result as output, we need to bring the
 <code>io</code> input/output library into scope. The <code>io</code> library comes from the standard
@@ -249,7 +251,7 @@ library, known as <code>std</code>:</p>
 </span><span class="boring">        .read_line(&amp;mut guess)
 </span><span class="boring">        .expect(&quot;Failed to read line&quot;);
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;You guessed: {guess}&quot;);
+</span><span class="boring">    println!(&quot;You guessed: {}&quot;, guess);
 </span><span class="boring">}</span></code></pre>
 <p>By default, Rust has a set of items defined in the standard library that it
 brings into the scope of every program. This set is called the <em>prelude</em>, and
@@ -273,7 +275,7 @@ program:</p>
 </span><span class="boring">        .read_line(&amp;mut guess)
 </span><span class="boring">        .expect(&quot;Failed to read line&quot;);
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;You guessed: {guess}&quot;);
+</span><span class="boring">    println!(&quot;You guessed: {}&quot;, guess);
 </span><span class="boring">}</span></code></pre>
 <p>The <code>fn</code> syntax declares a new function; the parentheses, <code>()</code>, indicate there
 are no parameters; and the curly bracket, <code>{</code>, starts the body of the function.</p>
@@ -292,7 +294,7 @@ the screen:</p>
 </span><span class="boring">        .read_line(&amp;mut guess)
 </span><span class="boring">        .expect(&quot;Failed to read line&quot;);
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;You guessed: {guess}&quot;);
+</span><span class="boring">    println!(&quot;You guessed: {}&quot;, guess);
 </span><span class="boring">}</span></code></pre>
 <p>This code is printing a prompt stating what the game is and requesting input
 from the user.</p>
@@ -311,7 +313,7 @@ from the user.</p>
 </span><span class="boring">        .read_line(&amp;mut guess)
 </span><span class="boring">        .expect(&quot;Failed to read line&quot;);
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;You guessed: {guess}&quot;);
+</span><span class="boring">    println!(&quot;You guessed: {}&quot;, guess);
 </span><span class="boring">}</span></code></pre>
 <p>Now the program is getting interesting! There’s a lot going on in this little
 line. We use the <code>let</code> statement to create the variable. Here’s another example:</p>
@@ -324,11 +326,11 @@ section in Chapter 3. To make a variable mutable, we add <code>mut</code> before
 variable name:</p>
 <pre><code class="language-rust ignore">let apples = 5; // immutable
 let mut bananas = 5; // mutable</code></pre>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: The <code>//</code> syntax starts a comment that continues until the end of the
 line. Rust ignores everything in comments. We’ll discuss comments in more
 detail in <a href="ch03-04-comments.html">Chapter 3</a><!-- ignore -->.</p>
-</blockquote>
+</section>
 <p>Returning to the guessing game program, you now know that <code>let mut guess</code> will
 introduce a mutable variable named <code>guess</code>. The equal sign (<code>=</code>) tells Rust we
 want to bind something to the variable now. On the right of the equal sign is
@@ -361,7 +363,7 @@ input:</p>
         .read_line(&amp;mut guess)
 <span class="boring">        .expect(&quot;Failed to read line&quot;);
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;You guessed: {guess}&quot;);
+</span><span class="boring">    println!(&quot;You guessed: {}&quot;, guess);
 </span><span class="boring">}</span></code></pre>
 <p>If we hadn’t imported the <code>io</code> library with <code>use std::io;</code> at the beginning of
 the program, we could still use the function by writing this function call as
@@ -404,7 +406,7 @@ part is this method:</p>
 </span><span class="boring">        .read_line(&amp;mut guess)
 </span>        .expect(&quot;Failed to read line&quot;);
 <span class="boring">
-</span><span class="boring">    println!(&quot;You guessed: {guess}&quot;);
+</span><span class="boring">    println!(&quot;You guessed: {}&quot;, guess);
 </span><span class="boring">}</span></code></pre>
 <p>We could have written this code as:</p>
 <pre><code class="language-rust ignore">io::stdin().read_line(&amp;mut guess).expect(&quot;Failed to read line&quot;);</code></pre>
@@ -443,9 +445,13 @@ warning: unused `Result` that must be used
    |
    = note: this `Result` may be an `Err` variant, which should be handled
    = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+10 |     let _ = io::stdin().read_line(&amp;mut guess);
+   |     +++++++
 
 warning: `guessing_game` (bin &quot;guessing_game&quot;) generated 1 warning
-    Finished dev [unoptimized + debuginfo] target(s) in 0.59s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.59s
 </code></pre>
 <p>Rust warns that you haven’t used the <code>Result</code> value returned from <code>read_line</code>,
 indicating that the program hasn’t handled a possible error.</p>
@@ -469,7 +475,7 @@ the code so far:</p>
 </span><span class="boring">        .read_line(&amp;mut guess)
 </span><span class="boring">        .expect(&quot;Failed to read line&quot;);
 </span><span class="boring">
-</span>    println!(&quot;You guessed: {guess}&quot;);
+</span>    println!(&quot;You guessed: {}&quot;, guess);
 <span class="boring">}</span></code></pre>
 <p>This line prints the string that now contains the user’s input. The <code>{}</code> set of
 curly brackets is a placeholder: think of <code>{}</code> as little crab pincers that hold
@@ -552,6 +558,7 @@ cd listings/ch02-guessing-game-tutorial/listing-02-02/
 rm Cargo.lock
 cargo clean
 cargo build -->
+<figure class="listing">
 <pre><code class="language-console">$ cargo build
     Updating crates.io index
   Downloaded rand v0.8.5
@@ -571,8 +578,8 @@ cargo build -->
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished dev [unoptimized + debuginfo] target(s) in 2.53s
 </code></pre>
-<p><span class="caption">Listing 2-2: The output from running <code>cargo build</code> after
-adding the rand crate as a dependency</span></p>
+<figcaption>Listing 2-2: The output from running <code>cargo build</code> after adding the rand crate as a dependency</figcaption>
+</figure>
 <p>You may see different version numbers (but they will all be compatible with the
 code, thanks to SemVer!) and different lines (depending on the operating
 system), and the lines may be in a different order.</p>
@@ -626,8 +633,8 @@ checked into source control with the rest of the code in your project.</p>
 <p>When you <em>do</em> want to update a crate, Cargo provides the command <code>update</code>,
 which will ignore the <em>Cargo.lock</em> file and figure out all the latest versions
 that fit your specifications in <em>Cargo.toml</em>. Cargo will then write those
-versions to the <em>Cargo.lock</em> file. Otherwise, by default, Cargo will only look
-for versions greater than 0.8.5 and less than 0.9.0. If the <code>rand</code> crate has
+versions to the <em>Cargo.lock</em> file. In this case, Cargo will only look for
+versions greater than 0.8.5 and less than 0.9.0. If the <code>rand</code> crate has
 released the two new versions 0.8.6 and 0.9.0, you would see the following if
 you ran <code>cargo update</code>:</p>
 <!-- manual-regeneration
@@ -649,7 +656,7 @@ rand = &quot;0.9.0&quot;
 <p>The next time you run <code>cargo build</code>, Cargo will update the registry of crates
 available and reevaluate your <code>rand</code> requirements according to the new version
 you have specified.</p>
-<p>There’s a lot more to say about <a href="http://doc.crates.io">Cargo</a><!-- ignore --> and <a href="http://doc.crates.io/crates-io.html">its
+<p>There’s a lot more to say about <a href="https://doc.rust-lang.org/cargo/">Cargo</a><!-- ignore --> and <a href="https://doc.rust-lang.org/cargo/reference/publishing.html">its
 ecosystem</a><!-- ignore -->, which we’ll discuss in Chapter 14, but
 for now, that’s all you need to know. Cargo makes it very easy to reuse
 libraries, so Rustaceans are able to write smaller projects that are assembled
@@ -657,7 +664,8 @@ from a number of packages.</p>
 <h3 id="generating-a-random-number"><a class="header" href="#generating-a-random-number">Generating a Random Number</a></h3>
 <p>Let’s start using <code>rand</code> to generate a number to guess. The next step is to
 update <em>src/main.rs</em>, as shown in Listing 2-3.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">use std::io;
 use rand::Rng;
 
@@ -678,8 +686,8 @@ fn main() {
 
     println!(&quot;You guessed: {guess}&quot;);
 }</code></pre>
-<p><span class="caption">Listing 2-3: Adding code to generate a random
-number</span></p>
+<figcaption>Listing 2-3: Adding code to generate a random number</figcaption>
+</figure>
 <p>First we add the line <code>use rand::Rng;</code>. The <code>Rng</code> trait defines methods that
 random number generators implement, and this trait must be in scope for us to
 use those methods. Chapter 10 will cover traits in detail.</p>
@@ -693,14 +701,14 @@ trait that we brought into scope with the <code>use rand::Rng;</code> statement.
 random number in the range. The kind of range expression we’re using here takes
 the form <code>start..=end</code> and is inclusive on the lower and upper bounds, so we
 need to specify <code>1..=100</code> to request a number between 1 and 100.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: You won’t just know which traits to use and which methods and functions
 to call from a crate, so each crate has documentation with instructions for
 using it. Another neat feature of Cargo is that running the <code>cargo doc --open</code> command will build documentation provided by all your dependencies
 locally and open it in your browser. If you’re interested in other
 functionality in the <code>rand</code> crate, for example, run <code>cargo doc --open</code> and
 click <code>rand</code> in the sidebar on the left.</p>
-</blockquote>
+</section>
 <p>The second new line prints the secret number. This is useful while we’re
 developing the program to be able to test it, but we’ll delete it from the
 final version. It’s not much of a game if the program prints the answer as soon
@@ -738,7 +746,8 @@ You guessed: 5
 <p>Now that we have user input and a random number, we can compare them. That step
 is shown in Listing 2-4. Note that this code won’t compile just yet, as we will
 explain.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
@@ -767,8 +776,8 @@ fn main() {
         Ordering::Equal =&gt; println!(&quot;You win!&quot;),
     }
 }</code></pre>
-<p><span class="caption">Listing 2-4: Handling the possible return values of
-comparing two numbers</span></p>
+<figcaption>Listing 2-4: Handling the possible return values of comparing two numbers</figcaption>
+</figure>
 <p>First we add another <code>use</code> statement, bringing a type called
 <code>std::cmp::Ordering</code> into scope from the standard library. The <code>Ordering</code> type
 is another enum and has the variants <code>Less</code>, <code>Greater</code>, and <code>Equal</code>. These are
@@ -819,17 +828,17 @@ error[E0308]: mismatched types
   --&gt; src/main.rs:22:21
    |
 22 |     match guess.cmp(&amp;secret_number) {
-   |                 --- ^^^^^^^^^^^^^^ expected struct `String`, found integer
+   |                 --- ^^^^^^^^^^^^^^ expected `&amp;String`, found `&amp;{integer}`
    |                 |
-   |                 arguments to this function are incorrect
+   |                 arguments to this method are incorrect
    |
    = note: expected reference `&amp;String`
               found reference `&amp;{integer}`
-note: associated function defined here
-  --&gt; /rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/cmp.rs:783:8
+note: method defined here
+  --&gt; /rustc/129f3b9964af4d4a709d1383930ade12dfe7c081/library/core/src/cmp.rs:840:8
 
 For more information about this error, try `rustc --explain E0308`.
-error: could not compile `guessing_game` due to previous error
+error: could not compile `guessing_game` (bin &quot;guessing_game&quot;) due to 1 previous error
 </code></pre>
 <p>The core of the error states that there are <em>mismatched types</em>. Rust has a
 strong, static type system. However, it also has type inference. When we wrote
@@ -842,8 +851,8 @@ an <code>i32</code>, which is the type of <code>secret_number</code> unless you 
 elsewhere that would cause Rust to infer a different numerical type. The reason
 for the error is that Rust cannot compare a string and a number type.</p>
 <p>Ultimately, we want to convert the <code>String</code> the program reads as input into a
-real number type so we can compare it numerically to the secret number. We do
-so by adding this line to the <code>main</code> function body:</p>
+number type so we can compare it numerically to the secret number. We do so by
+adding this line to the <code>main</code> function body:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
 </span><span class="boring">use std::cmp::Ordering;
@@ -890,13 +899,12 @@ in the expression refers to the original <code>guess</code> variable that contai
 input as a string. The <code>trim</code> method on a <code>String</code> instance will eliminate any
 whitespace at the beginning and end, which we must do to be able to compare the
 string to the <code>u32</code>, which can only contain numerical data. The user must press
-<span class="keystroke">enter</span> to satisfy <code>read_line</code> and input their
-guess, which adds a newline character to the string. For example, if the user
-types <span class="keystroke">5</span> and presses <span
-class="keystroke">enter</span>, <code>guess</code> looks like this: <code>5\n</code>. The <code>\n</code>
-represents “newline.” (On Windows, pressing <span
-class="keystroke">enter</span> results in a carriage return and a newline,
-<code>\r\n</code>.) The <code>trim</code> method eliminates <code>\n</code> or <code>\r\n</code>, resulting in just <code>5</code>.</p>
+<kbd>enter</kbd> to satisfy <code>read_line</code> and input their guess, which adds a
+newline character to the string. For example, if the user types <kbd>5</kbd> and
+presses <kbd>enter</kbd>, <code>guess</code> looks like this: <code>5\n</code>. The <code>\n</code> represents
+“newline.” (On Windows, pressing <kbd>enter</kbd> results in a carriage return
+and a newline, <code>\r\n</code>.) The <code>trim</code> method eliminates <code>\n</code> or <code>\r\n</code>, resulting
+in just <code>5</code>.</p>
 <p>The <a href="https://doc.rust-lang.org/std/primitive.str.html#method.parse"><code>parse</code> method on strings</a><!-- ignore --> converts a string to
 another type. Here, we use it to convert from a string to a number. We need to
 tell Rust the exact number type we want by using <code>let guess: u32</code>. The colon
@@ -988,11 +996,11 @@ a loop. Be sure to indent the lines inside the loop another four spaces each
 and run the program again. The program will now ask for another guess forever,
 which actually introduces a new problem. It doesn’t seem like the user can quit!</p>
 <p>The user could always interrupt the program by using the keyboard shortcut
-<span class="keystroke">ctrl-c</span>. But there’s another way to escape this
-insatiable monster, as mentioned in the <code>parse</code> discussion in <a href="#comparing-the-guess-to-the-secret-number">“Comparing the
-Guess to the Secret Number”</a><!--
-ignore -->: if the user enters a non-number answer, the program will crash. We
-can take advantage of that to allow the user to quit, as shown here:</p>
+<kbd>ctrl</kbd>-<kbd>c</kbd>. But there’s another way to escape this insatiable
+monster, as mentioned in the <code>parse</code> discussion in <a href="#comparing-the-guess-to-the-secret-number">“Comparing the Guess to the
+Secret Number”</a><!-- ignore -->: if
+the user enters a non-number answer, the program will crash. We can take
+advantage of that to allow the user to quit, as shown here:</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/no-listing-04-looping/
 cargo run
@@ -1074,7 +1082,8 @@ exiting the program, because the loop is the last part of <code>main</code>.</p>
 the user inputs a non-number, let’s make the game ignore a non-number so the
 user can continue guessing. We can do that by altering the line where <code>guess</code>
 is converted from a <code>String</code> to a <code>u32</code>, as shown in Listing 2-5.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
 </span><span class="boring">use std::cmp::Ordering;
 </span><span class="boring">use std::io;
@@ -1116,8 +1125,8 @@ is converted from a <code>String</code> to a <code>u32</code>, as shown in Listi
 </span><span class="boring">        }
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 2-5: Ignoring a non-number guess and asking for
-another guess instead of crashing the program</span></p>
+<figcaption>Listing 2-5: Ignoring a non-number guess and asking for another guess instead of crashing the program</figcaption>
+</figure>
 <p>We switch from an <code>expect</code> call to a <code>match</code> expression to move from crashing
 on an error to handling the error. Remember that <code>parse</code> returns a <code>Result</code>
 type and <code>Result</code> is an enum that has the variants <code>Ok</code> and <code>Err</code>. We’re using
@@ -1171,7 +1180,8 @@ You win!
 that the program is still printing the secret number. That worked well for
 testing, but it ruins the game. Let’s delete the <code>println!</code> that outputs the
 secret number. Listing 2-6 shows the final code.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
@@ -1207,7 +1217,8 @@ fn main() {
         }
     }
 }</code></pre>
-<p><span class="caption">Listing 2-6: Complete guessing game code</span></p>
+<figcaption>Listing 2-6: Complete guessing game code</figcaption>
+</figure>
 <p>At this point, you’ve successfully built the guessing game. Congratulations!</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>This project was a hands-on way to introduce you to many new Rust concepts:

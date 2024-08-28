@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -178,15 +179,16 @@ to turn it into a collection, such as a vector, that contains all the elements
 the iterator produces.</p>
 <p>The code in Listing 12-1 allows your <code>minigrep</code> program to read any command
 line arguments passed to it and then collect the values into a vector.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><pre class="playground"><code class="language-rust">use std::env;
 
 fn main() {
     let args: Vec&lt;String&gt; = env::args().collect();
     dbg!(args);
 }</code></pre></pre>
-<p><span class="caption">Listing 12-1: Collecting the command line arguments into
-a vector and printing them</span></p>
+<figcaption>Listing 12-1: Collecting the command line arguments into a vector and printing them</figcaption>
+</figure>
 <p>First, we bring the <code>std::env</code> module into scope with a <code>use</code> statement so we
 can use its <code>args</code> function. Notice that the <code>std::env::args</code> function is
 nested in two levels of modules. As we discussed in <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#creating-idiomatic-use-paths">Chapter
@@ -196,7 +198,7 @@ scope rather than the function. By doing so, we can easily use other functions
 from <code>std::env</code>. It’s also less ambiguous than adding <code>use std::env::args</code> and
 then calling the function with just <code>args</code>, because <code>args</code> might easily be
 mistaken for a function that’s defined in the current module.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h3 id="the-args-function-and-invalid-unicode"><a class="header" href="#the-args-function-and-invalid-unicode">The <code>args</code> Function and Invalid Unicode</a></h3>
 <p>Note that <code>std::env::args</code> will panic if any argument contains invalid
 Unicode. If your program needs to accept arguments containing invalid
@@ -204,7 +206,7 @@ Unicode, use <code>std::env::args_os</code> instead. That function returns an it
 that produces <code>OsString</code> values instead of <code>String</code> values. We’ve chosen to
 use <code>std::env::args</code> here for simplicity, because <code>OsString</code> values differ
 per platform and are more complex to work with than <code>String</code> values.</p>
-</blockquote>
+</section>
 <p>On the first line of <code>main</code>, we call <code>env::args</code>, and we immediately use
 <code>collect</code> to turn the iterator into a vector containing all the values produced
 by the iterator. We can use the <code>collect</code> function to create many kinds of
@@ -216,17 +218,17 @@ isn’t able to infer the kind of collection you want.</p>
 first with no arguments and then with two arguments:</p>
 <pre><code class="language-console">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.61s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
      Running `target/debug/minigrep`
-[src/main.rs:5] args = [
+[src/main.rs:5:5] args = [
     &quot;target/debug/minigrep&quot;,
 ]
 </code></pre>
 <pre><code class="language-console">$ cargo run -- needle haystack
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.57s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.57s
      Running `target/debug/minigrep needle haystack`
-[src/main.rs:5] args = [
+[src/main.rs:5:5] args = [
     &quot;target/debug/minigrep&quot;,
     &quot;needle&quot;,
     &quot;haystack&quot;,
@@ -244,7 +246,8 @@ chapter, we’ll ignore it and save only the two arguments we need.</p>
 arguments. Now we need to save the values of the two arguments in variables so
 we can use the values throughout the rest of the program. We do that in Listing
 12-2.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground">use std::env;
 
 fn main() {
@@ -253,11 +256,11 @@ fn main() {
     let query = &amp;args[1];
     let file_path = &amp;args[2];
 
-    println!(&quot;Searching for {}&quot;, query);
-    println!(&quot;In file {}&quot;, file_path);
+    println!(&quot;Searching for {query}&quot;);
+    println!(&quot;In file {file_path}&quot;);
 }</code></pre>
-<p><span class="caption">Listing 12-2: Creating variables to hold the query
-argument and file path argument</span></p>
+<figcaption>Listing 12-2: Creating variables to hold the query argument and file path argument</figcaption>
+</figure>
 <p>As we saw when we printed the vector, the program’s name takes up the first
 value in the vector at <code>args[0]</code>, so we’re starting arguments at index <code>1</code>. The
 first argument <code>minigrep</code> takes is the string we’re searching for, so we put a
@@ -269,7 +272,7 @@ working as we intend. Let’s run this program again with the arguments <code>te
 and <code>sample.txt</code>:</p>
 <pre><code class="language-console">$ cargo run -- test sample.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep test sample.txt`
 Searching for test
 In file sample.txt

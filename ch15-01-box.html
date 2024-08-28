@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -182,7 +183,7 @@ syntax and how to interact with values stored within a <code>Box&lt;T&gt;</code>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let b = Box::new(5);
-    println!(&quot;b = {}&quot;, b);
+    println!(&quot;b = {b}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 15-1: Storing an <code>i32</code> value on the heap using a
 box</span></p>
@@ -244,12 +245,12 @@ we’ll demonstrate.</p>
 </span><span class="boring">fn main() {}</span></code></pre>
 <p><span class="caption">Listing 15-2: The first attempt at defining an enum to
 represent a cons list data structure of <code>i32</code> values</span></p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: We’re implementing a cons list that holds only <code>i32</code> values for the
 purposes of this example. We could have implemented it using generics, as we
 discussed in Chapter 10, to define a cons list type that could store values of
 any type.</p>
-</blockquote>
+</section>
 <p>Using the <code>List</code> type to store the list <code>1, 2, 3</code> would look like the code in
 Listing 15-3:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
@@ -285,8 +286,19 @@ help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cyc
 2 |     Cons(i32, Box&lt;List&gt;),
   |               ++++    +
 
-For more information about this error, try `rustc --explain E0072`.
-error: could not compile `cons-list` due to previous error
+error[E0391]: cycle detected when computing when `List` needs drop
+ --&gt; src/main.rs:1:1
+  |
+1 | enum List {
+  | ^^^^^^^^^
+  |
+  = note: ...which immediately requires computing when `List` needs drop again
+  = note: cycle used when computing whether `List` needs drop
+  = note: see https://rustc-dev-guide.rust-lang.org/overview.html#queries and https://rustc-dev-guide.rust-lang.org/query.html for more information
+
+Some errors have detailed explanations: E0072, E0391.
+For more information about an error, try `rustc --explain E0072`.
+error: could not compile `cons-list` (bin &quot;cons-list&quot;) due to 2 previous errors
 </code></pre>
 <p><span class="caption">Listing 15-4: The error we get when attempting to define
 a recursive enum</span></p>
@@ -329,7 +341,7 @@ defined types, the compiler gives an error with this helpful suggestion:</p>
 <!-- manual-regeneration
 after doing automatic regeneration, look at listings/ch15-smart-pointers/listing-15-03/output.txt and copy the relevant line
 -->
-<pre><code class="language-text">help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to make `List` representable
+<pre><code class="language-text">help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cycle
   |
 2 |     Cons(i32, Box&lt;List&gt;),
   |               ++++    +
@@ -384,7 +396,7 @@ even more important to the functionality provided by the other smart pointer
 types we’ll discuss in the rest of this chapter. Let’s explore these two traits
 in more detail.</p>
 <div class="quiz-placeholder" data-quiz-name="ch15-01-box"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;A box can hold a mutable reference, so dereferencing `b` twice gets back to `n`.\n&quot;,&quot;id&quot;:&quot;6f3c2a68-24f7-439b-9fe0-426abd27e487&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;2&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let mut n = 1;\n    let b = Box::new(&amp;mut n);\n    **b += 1;\n    println!(\&quot;{}\&quot;, n);\n}\n&quot;}},{&quot;context&quot;:&quot;A box contains a pointer, which is 8 bytes on a 64-bit architecture. An array of 4 pointers is therefore at least 4 * 8 = 32 bytes.\n&quot;,&quot;id&quot;:&quot;57595a80-c79f-4aae-a1d4-cdaf212d7c21&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;32&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;Say we have a program with a variable:\n\n```\nlet x: [Box&lt;(usize, usize)&gt;; 4] = /* ... */\n```\n\nFor a compile target with a 64-bit architecture, what is the minimum possible size in memory (in bytes) of `x` on the stack? \nWrite your answer in digits, e.g. 0, 1, so on.\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

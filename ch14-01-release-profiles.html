@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -168,7 +169,7 @@ $ cargo build --release
     Finished release [optimized] target(s) in 0.0s
 </code></pre>
 <p>The <code>dev</code> and <code>release</code> are these different profiles used by the compiler.</p>
-<p>Cargo has default settings for each of the profiles that apply when you haven't
+<p>Cargo has default settings for each of the profiles that apply when you haven’t
 explicitly added any <code>[profile.*]</code> sections in the project’s <em>Cargo.toml</em> file.
 By adding <code>[profile.*]</code> sections for any profile you want to customize, you
 override any subset of the default settings. For example, here are the default
@@ -204,7 +205,7 @@ optimizations than the default, but not as many as in a release build.</p>
 <p>For the full list of configuration options and defaults for each profile, see
 <a href="https://doc.rust-lang.org/cargo/reference/profiles.html">Cargo’s documentation</a>.</p>
 <div class="quiz-placeholder" data-quiz-name="ch14-01-release-profiles"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;To minimize compile times, the default profile is `dev`. You should add `--release` if you want the `release` profile\nfor longer compile times but faster code execution. (There is no `build` profile).\n&quot;,&quot;id&quot;:&quot;c753bc38-0dc1-44d5-8b06-136fdbbc26d2&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`dev`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`release`&quot;,&quot;`build`&quot;],&quot;prompt&quot;:&quot;When you run `cargo build` with no additional flags, which profile is used by default?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

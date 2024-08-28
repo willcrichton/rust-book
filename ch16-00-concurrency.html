@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -169,13 +170,13 @@ your code while you’re working on it rather than potentially after it has been
 shipped to production. We’ve nicknamed this aspect of Rust <em>fearless</em>
 <em>concurrency</em>. Fearless concurrency allows you to write code that is free of
 subtle bugs and is easy to refactor without introducing new bugs.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <p>Note: For simplicity’s sake, we’ll refer to many of the problems as
 <em>concurrent</em> rather than being more precise by saying <em>concurrent and/or
 parallel</em>. If this book were about concurrency and/or parallelism, we’d be
 more specific. For this chapter, please mentally substitute <em>concurrent
 and/or parallel</em> whenever we use <em>concurrent</em>.</p>
-</blockquote>
+</section>
 <p>Many languages are dogmatic about the solutions they offer for handling
 concurrent problems. For example, Erlang has elegant functionality for
 message-passing concurrency but has only obscure ways to share state between

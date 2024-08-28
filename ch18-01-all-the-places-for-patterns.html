@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -163,7 +164,7 @@ expression to run if the value matches that arm’s pattern, like this:</p>
     PATTERN =&gt; EXPRESSION,
 }
 </code></pre>
-<p>For example, here's the <code>match</code> expression from Listing 6-5 that matches on an
+<p>For example, here’s the <code>match</code> expression from Listing 6-5 that matches on an
 <code>Option&lt;i32&gt;</code> value in the variable <code>x</code>:</p>
 <pre><code class="language-rust ignore">match x {
     None =&gt; None,
@@ -189,7 +190,7 @@ Optionally, <code>if let</code> can have a corresponding <code>else</code> conta
 the pattern in the <code>if let</code> doesn’t match.</p>
 <p>Listing 18-1 shows that it’s also possible to mix and match <code>if let</code>, <code>else if</code>, and <code>else if let</code> expressions. Doing so gives us more flexibility than a
 <code>match</code> expression in which we can express only one value to compare with the
-patterns. Also, Rust doesn't require that the conditions in a series of <code>if let</code>, <code>else if</code>, <code>else if let</code> arms relate to each other.</p>
+patterns. Also, Rust doesn’t require that the conditions in a series of <code>if let</code>, <code>else if</code>, <code>else if let</code> arms relate to each other.</p>
 <p>The code in Listing 18-1 determines what color to make your background based on
 a series of checks for several conditions. For this example, we’ve created
 variables with hardcoded values that a real program might receive from user
@@ -248,7 +249,7 @@ values in the vector in the opposite order in which they were pushed.</p>
     stack.push(3);
 
     while let Some(top) = stack.pop() {
-        println!(&quot;{}&quot;, top);
+        println!(&quot;{top}&quot;);
     }
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-2: Using a <code>while let</code> loop to print values
@@ -267,7 +268,7 @@ apart, a tuple as part of the <code>for</code> loop.</p>
 </span>    let v = vec!['a', 'b', 'c'];
 
     for (index, value) in v.iter().enumerate() {
-        println!(&quot;{} is at index {}&quot;, value, index);
+        println!(&quot;{value} is at index {index}&quot;);
     }
 <span class="boring">}</span></code></pre></pre>
 <p><span class="caption">Listing 18-3: Using a pattern in a <code>for</code> loop to
@@ -275,7 +276,7 @@ destructure a tuple</span></p>
 <p>The code in Listing 18-3 will print the following:</p>
 <pre><code class="language-console">$ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.52s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.52s
      Running `target/debug/patterns`
 a is at index 0
 b is at index 1
@@ -295,7 +296,7 @@ variable assignment with <code>let</code>:</p>
 </span><span class="boring">fn main() {
 </span>let x = 5;
 <span class="boring">}</span></code></pre></pre>
-<p>Every time you've used a <code>let</code> statement like this you've been using patterns,
+<p>Every time you’ve used a <code>let</code> statement like this you’ve been using patterns,
 although you might not have realized it! More formally, a <code>let</code> statement looks
 like this:</p>
 <pre><code class="language-text">let PATTERN = EXPRESSION;
@@ -341,7 +342,7 @@ error[E0308]: mismatched types
              found tuple `(_, _)`
 
 For more information about this error, try `rustc --explain E0308`.
-error: could not compile `patterns` due to previous error
+error: could not compile `patterns` (bin &quot;patterns&quot;) due to 1 previous error
 </code></pre>
 <p>To fix the error, we could ignore one or more of the values in the tuple using
 <code>_</code> or <code>..</code>, as you’ll see in the <a href="ch18-03-pattern-syntax.html#ignoring-values-in-a-pattern">“Ignoring Values in a
@@ -365,7 +366,7 @@ function’s arguments to the pattern. Listing 18-7 splits the values in a tuple
 as we pass it to a function.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn print_coordinates(&amp;(x, y): &amp;(i32, i32)) {
-    println!(&quot;Current location: ({}, {})&quot;, x, y);
+    println!(&quot;Current location: ({x}, {y})&quot;);
 }
 
 fn main() {
@@ -384,7 +385,7 @@ work the same in every place we can use them. In some places, the patterns must
 be irrefutable; in other circumstances, they can be refutable. We’ll discuss
 these two concepts next.</p>
 <div class="quiz-placeholder" data-quiz-name="ch18-01-all-the-places-for-patterns"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot; \nThis example provides a valid use of `while let` matching and `let` matching. Note that you\ncould combine them, e.g.\n\n```\nwhile let Some((_, n)) = v.next() {\n    /* ... */\n}\n```\n&quot;,&quot;id&quot;:&quot;214d5183-5a88-4f5e-a54b-09909bd50bf7&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;6&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n    let mut v = vec![(1, 2), (3, 4)].into_iter();\n    let mut sum = 0;    \n    while let Some(t) = v.next() {\n        let (_, n) = t;\n        sum += n;\n    }\n    println!(\&quot;{sum}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

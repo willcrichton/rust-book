@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -185,7 +186,7 @@ error[E0384]: cannot assign twice to immutable variable `x`
   |     ^^^^^ cannot assign twice to immutable variable
 
 For more information about this error, try `rustc --explain E0384`.
-error: could not compile `variables` due to previous error
+error: could not compile `variables` (bin &quot;variables&quot;) due to 1 previous error
 </code></pre>
 <p>This example shows how the compiler helps you find errors in your programs.
 Compiler errors can be frustrating, but really they only mean your program
@@ -219,7 +220,7 @@ will be changing this variable’s value.</p>
 <p>When we run the program now, we get this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.30s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
      Running `target/debug/variables`
 The value of x is: 5
 The value of x is: 6
@@ -299,7 +300,7 @@ When that scope is over, the inner shadowing ends and <code>x</code> returns to 
 When we run this program, it will output the following:</p>
 <pre><code class="language-console">$ cargo run
    Compiling variables v0.1.0 (file:///projects/variables)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/variables`
 The value of x in the inner scope is: 12
 The value of x is: 6
@@ -339,12 +340,12 @@ error[E0308]: mismatched types
   |              ^^^^^^^^^^^^ expected `&amp;str`, found `usize`
 
 For more information about this error, try `rustc --explain E0308`.
-error: could not compile `variables` due to previous error
+error: could not compile `variables` (bin &quot;variables&quot;) due to 1 previous error
 </code></pre>
 <p>Now that we’ve explored how variables work, let’s look at more data types they
 can have.</p>
 <div class="quiz-placeholder" data-quiz-name="ch03-01-variables-and-mutability-sec3-shadowing"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;The statement `x += 2` only affects the shadowed `x` inside the inner curly braces, not the outer `x` on line 2.\n&quot;,&quot;id&quot;:&quot;dca33d34-6294-43f4-9267-fd62d7dce993&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;1&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let mut x: u32 = 1;\n  {\n    let mut x = x;\n    x += 2;\n  }\n  println!(\&quot;{x}\&quot;);\n}\n&quot;}},{&quot;context&quot;:&quot;A variable cannot be assigned to a value of a different type than its original type.\n&quot;,&quot;id&quot;:&quot;15b9d091-3b09-49fe-a472-ba6c0f69e4e0&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:3},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn main() {\n  let mut x: u32 = 1;\n  x = \&quot;Hello world\&quot;;\n  println!(\&quot;{x}\&quot;);\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

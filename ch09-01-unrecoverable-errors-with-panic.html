@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -149,7 +150,7 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="unrecoverable-errors-with-panic"><a class="header" href="#unrecoverable-errors-with-panic">Unrecoverable Errors with <code>panic!</code></a></h2>
-<p>Sometimes, bad things happen in your code, and there’s nothing you can do about
+<p>Sometimes bad things happen in your code, and there’s nothing you can do about
 it. In these cases, Rust has the <code>panic!</code> macro. There are two ways to cause a
 panic in practice: by taking an action that causes our code to panic (such as
 accessing an array past the end) or by explicitly calling the <code>panic!</code> macro.
@@ -157,23 +158,23 @@ In both cases, we cause a panic in our program. By default, these panics will
 print a failure message, unwind, clean up the stack, and quit. Via an
 environment variable, you can also have Rust display the call stack when a
 panic occurs to make it easier to track down the source of the panic.</p>
-<blockquote>
+<section class="note" aria-role="note">
 <h3 id="unwinding-the-stack-or-aborting-in-response-to-a-panic"><a class="header" href="#unwinding-the-stack-or-aborting-in-response-to-a-panic">Unwinding the Stack or Aborting in Response to a Panic</a></h3>
-<p>By default, when a panic occurs, the program starts <em>unwinding</em>, which
-means Rust walks back up the stack and cleans up the data from each function
-it encounters. However, this walking back and cleanup is a lot of work. Rust,
+<p>By default, when a panic occurs the program starts <em>unwinding</em>, which means
+Rust walks back up the stack and cleans up the data from each function it
+encounters. However, walking back and cleaning up is a lot of work. Rust,
 therefore, allows you to choose the alternative of immediately <em>aborting</em>,
 which ends the program without cleaning up.</p>
-<p>Memory that the program was using will then need to be cleaned
-up by the operating system. If in your project you need to make the resulting
-binary as small as possible, you can switch from unwinding to aborting upon a
-panic by adding <code>panic = 'abort'</code> to the appropriate <code>[profile]</code> sections in
-your <em>Cargo.toml</em> file. For example, if you want to abort on panic in release
-mode, add this:</p>
+<p>Memory that the program was using will then need to be cleaned up by the
+operating system. If in your project you need to make the resultant binary as
+small as possible, you can switch from unwinding to aborting upon a panic by
+adding <code>panic = 'abort'</code> to the appropriate <code>[profile]</code> sections in your
+<em>Cargo.toml</em> file. For example, if you want to abort on panic in release mode,
+add this:</p>
 <pre><code class="language-toml">[profile.release]
 panic = 'abort'
 </code></pre>
-</blockquote>
+</section>
 <p>Let’s try calling <code>panic!</code> in a simple program:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust should_panic panics">fn main() {
@@ -182,9 +183,10 @@ panic = 'abort'
 <p>When you run the program, you’ll see something like this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling panic v0.1.0 (file:///projects/panic)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.25s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.25s
      Running `target/debug/panic`
-thread 'main' panicked at 'crash and burn', src/main.rs:2:5
+thread 'main' panicked at src/main.rs:2:5:
+crash and burn
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
 <p>The call to <code>panic!</code> causes the error message contained in the last two lines.
@@ -195,15 +197,15 @@ fifth character of our <em>src/main.rs</em> file.</p>
 line, we see the <code>panic!</code> macro call. In other cases, the <code>panic!</code> call might
 be in code that our code calls, and the filename and line number reported by
 the error message will be someone else’s code where the <code>panic!</code> macro is
-called, not the line of our code that eventually led to the <code>panic!</code> call. We
-can use the backtrace of the functions the <code>panic!</code> call came from to figure
-out the part of our code that is causing the problem. We’ll discuss backtraces
-in more detail next.</p>
-<h3 id="using-a-panic-backtrace"><a class="header" href="#using-a-panic-backtrace">Using a <code>panic!</code> Backtrace</a></h3>
-<p>Let’s look at another example to see what it’s like when a <code>panic!</code> call comes
-from a library because of a bug in our code instead of from our code calling
-the macro directly. Listing 9-1 has some code that attempts to access an
-index in a vector beyond the range of valid indexes.</p>
+called, not the line of our code that eventually led to the <code>panic!</code> call.</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="using-a-panic-backtrace"></a></p>
+<p>We can use the backtrace of the functions the <code>panic!</code> call came from to figure
+out the part of our code that is causing the problem. To understand how to use
+a <code>panic!</code> backtrace, let’s look at another example and see what it’s like when
+a <code>panic!</code> call comes from a library because of a bug in our code instead of
+from our code calling the macro directly. Listing 9-1 has some code that
+attempts to access an index in a vector beyond the range of valid indexes.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust should_panic panics">fn main() {
     let v = vec![1, 2, 3];
@@ -213,10 +215,10 @@ index in a vector beyond the range of valid indexes.</p>
 <p><span class="caption">Listing 9-1: Attempting to access an element beyond the
 end of a vector, which will cause a call to <code>panic!</code></span></p>
 <p>Here, we’re attempting to access the 100th element of our vector (which is at
-index 99 because indexing starts at zero), but the vector has only 3 elements.
-In this situation, Rust will panic. Using <code>[]</code> is supposed to return an
-element, but if you pass an invalid index, there’s no element that Rust could
-return here that would be correct.</p>
+index 99 because indexing starts at zero), but the vector has only three
+elements. In this situation, Rust will panic. Using <code>[]</code> is supposed to return
+an element, but if you pass an invalid index, there’s no element that Rust
+could return here that would be correct.</p>
 <p>In C, attempting to read beyond the end of a data structure is undefined
 behavior. You might get whatever is at the location in memory that would
 correspond to that element in the data structure, even though the memory
@@ -229,23 +231,25 @@ element at an index that doesn’t exist, Rust will stop execution and refuse to
 continue. Let’s try it and see:</p>
 <pre><code class="language-console">$ cargo run
    Compiling panic v0.1.0 (file:///projects/panic)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.27s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
      Running `target/debug/panic`
-thread 'main' panicked at 'index out of bounds: the len is 3 but the index is 99', src/main.rs:4:5
+thread 'main' panicked at src/main.rs:4:6:
+index out of bounds: the len is 3 but the index is 99
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>This error points at line 4 of our <code>main.rs</code> where we attempt to access index
-99. The next note line tells us that we can set the <code>RUST_BACKTRACE</code>
-environment variable to get a backtrace of exactly what happened to cause the
-error. A <em>backtrace</em> is a list of all the functions that have been called to
-get to this point. Backtraces in Rust work as they do in other languages: the
-key to reading the backtrace is to start from the top and read until you see
-files you wrote. That’s the spot where the problem originated. The lines above
-that spot are code that your code has called; the lines below are code that
-called your code. These before-and-after lines might include core Rust code,
-standard library code, or crates that you’re using. Let’s try getting a
-backtrace by setting the <code>RUST_BACKTRACE</code> environment variable to any value
-except 0. Listing 9-2 shows output similar to what you’ll see.</p>
+<p>This error points at line 4 of our <em>main.rs</em> where we attempt to access index
+<code>99</code> of the vector in <code>v</code>.</p>
+<p>The <code>note:</code> line tells us that we can set the <code>RUST_BACKTRACE</code> environment
+variable to get a backtrace of exactly what happened to cause the error. A
+<em>backtrace</em> is a list of all the functions that have been called to get to this
+point. Backtraces in Rust work as they do in other languages: the key to
+reading the backtrace is to start from the top and read until you see files you
+wrote. That’s the spot where the problem originated. The lines above that spot
+are code that your code has called; the lines below are code that called your
+code. These before-and-after lines might include core Rust code, standard
+library code, or crates that you’re using. Let’s try getting a backtrace by
+setting the <code>RUST_BACKTRACE</code> environment variable to any value except <code>0</code>.
+Listing 9-2 shows output similar to what you’ll see.</p>
 <!-- manual-regeneration
 cd listings/ch09-error-handling/listing-09-01
 RUST_BACKTRACE=1 cargo run
@@ -253,24 +257,25 @@ copy the backtrace output below
 check the backtrace number mentioned in the text below the listing
 -->
 <pre><code class="language-console">$ RUST_BACKTRACE=1 cargo run
-thread 'main' panicked at 'index out of bounds: the len is 3 but the index is 99', src/main.rs:4:5
+thread 'main' panicked at src/main.rs:4:6:
+index out of bounds: the len is 3 but the index is 99
 stack backtrace:
    0: rust_begin_unwind
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/std/src/panicking.rs:584:5
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:645:5
    1: core::panicking::panic_fmt
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/core/src/panicking.rs:142:14
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/panicking.rs:72:14
    2: core::panicking::panic_bounds_check
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/core/src/panicking.rs:84:5
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/panicking.rs:208:5
    3: &lt;usize as core::slice::index::SliceIndex&lt;[T]&gt;&gt;::index
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/core/src/slice/index.rs:242:10
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/slice/index.rs:255:10
    4: core::slice::index::&lt;impl core::ops::index::Index&lt;I&gt; for [T]&gt;::index
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/core/src/slice/index.rs:18:9
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/slice/index.rs:18:9
    5: &lt;alloc::vec::Vec&lt;T,A&gt; as core::ops::index::Index&lt;I&gt;&gt;::index
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/alloc/src/vec/mod.rs:2591:9
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/alloc/src/vec/mod.rs:2770:9
    6: panic::main
-             at ./src/main.rs:4:5
+             at ./src/main.rs:4:6
    7: core::ops::function::FnOnce::call_once
-             at /rustc/e092d0b6b43f2de967af0887873151bb1c0b18d3/library/core/src/ops/function.rs:248:5
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:250:5
 note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
 </code></pre>
 <p><span class="caption">Listing 9-2: The backtrace generated by a call to
@@ -293,7 +298,7 @@ handle error conditions in the <a href="ch09-03-to-panic-or-not-to-panic.html#to
 <code>panic!</code>”</a><!-- ignore --> section later in this
 chapter. Next, we’ll look at how to recover from an error using <code>Result</code>.</p>
 <div class="quiz-placeholder" data-quiz-name="ch09-01-panic"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;For example, you can run from the command line: `RUST_BACKTRACE=1 cargo run`\n&quot;,&quot;id&quot;:&quot;18bf21e1-4e1a-4e98-861d-c7032710a8ad&quot;,&quot;type&quot;:&quot;ShortAnswer&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;RUST_BACKTRACE&quot;},&quot;prompt&quot;:{&quot;prompt&quot;:&quot;What is the name of the environment variable you should set to `1` to see the backtrace of a panic?&quot;}},{&quot;context&quot;:&quot;A panic should not be used to communicate failure *within* the program. The default assumption is that caller functions\nwill not try to catch panics.\n&quot;,&quot;id&quot;:&quot;23cabd75-88f5-4ff8-8bf5-4bd4d1a9e64a&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;The program has reached an error state which should be communicated to a caller function&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;The program is about to perform a dangerous operation&quot;,&quot;The program should stop executing as soon as possible&quot;,&quot;The program has reached an unrecoverable error state&quot;],&quot;prompt&quot;:&quot;Which of the following is NOT a good reason to use a panic?&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

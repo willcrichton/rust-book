@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -179,7 +180,7 @@ fn do_twice(f: fn(i32) -&gt; i32, arg: i32) -&gt; i32 {
 fn main() {
     let answer = do_twice(add_one, 5);
 
-    println!(&quot;The answer is: {}&quot;, answer);
+    println!(&quot;The answer is: {answer}&quot;);
 }</code></pre></pre>
 <p><span class="caption">Listing 19-27: Using the <code>fn</code> type to accept a function
 pointer as an argument</span></p>
@@ -255,14 +256,18 @@ error[E0746]: return type cannot have an unboxed trait object
 1 | fn returns_closure() -&gt; dyn Fn(i32) -&gt; i32 {
   |                         ^^^^^^^^^^^^^^^^^^ doesn't have a size known at compile-time
   |
-  = note: for information on `impl Trait`, see &lt;https://doc.rust-lang.org/book/ch10-02-traits.html#returning-types-that-implement-traits&gt;
-help: use `impl Fn(i32) -&gt; i32` as the return type, as all return paths are of type `[closure@src/lib.rs:2:5: 2:8]`, which implements `Fn(i32) -&gt; i32`
+help: return an `impl Trait` instead of a `dyn Trait`, if all returned values are the same type
   |
 1 | fn returns_closure() -&gt; impl Fn(i32) -&gt; i32 {
-  |                         ~~~~~~~~~~~~~~~~~~~
+  |                         ~~~~
+help: box the return type, and wrap all of the returned values in `Box::new`
+  |
+1 ~ fn returns_closure() -&gt; Box&lt;dyn Fn(i32) -&gt; i32&gt; {
+2 ~     Box::new(|x| x + 1)
+  |
 
 For more information about this error, try `rustc --explain E0746`.
-error: could not compile `functions-example` due to previous error
+error: could not compile `functions-example` (lib) due to 1 previous error
 </code></pre>
 <p>The error references the <code>Sized</code> trait again! Rust doesn’t know how much space
 it will need to store the closure. We saw a solution to this problem earlier.
@@ -276,7 +281,7 @@ Types”</a><!--
 ignore --> in Chapter 17.</p>
 <p>Next, let’s look at macros!</p>
 <div class="quiz-placeholder" data-quiz-name="ch19-05-advanced-functions-and-closures"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;Closures with environments can be passed to `register2`, while only top-level functions (or closures without environments) can be passed to `register1`.\n&quot;,&quot;id&quot;:&quot;f08ab588-1dca-438e-8108-a1b2410a4343&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;`register2`&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`register1`&quot;,&quot;They are equivalent&quot;],&quot;prompt&quot;:&quot;Consider implementing a `register` function that takes a callback in two ways:\n\n```\nfn register1(cb: fn(Event) -&gt; ());\nfn register2&lt;F&gt;(cb: F) where F: Fn(Event) -&gt; ();\n```\n\nWhich type signature permits `register` to take the widest variety of arguments?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

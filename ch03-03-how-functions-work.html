@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -180,7 +181,7 @@ further. Place the <code>another_function</code> example in <em>src/main.rs</em>
 should see the following output:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.28s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
      Running `target/debug/functions`
 Hello, world!
 Another function.
@@ -208,7 +209,7 @@ fn another_function(x: i32) {
 <p>Try running this program; you should get the following output:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.21s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.21s
      Running `target/debug/functions`
 The value of x is: 5
 </code></pre>
@@ -239,7 +240,7 @@ both the <code>value</code> and the <code>unit_label</code>.</p>
 project’s <em>src/main.rs</em> file with the preceding example and run it using <code>cargo run</code>:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/functions`
 The measurement is: 5h
 </code></pre>
@@ -263,11 +264,13 @@ a value.</li>
 We’ve actually already used statements and expressions. Creating a variable and
 assigning a value to it with the <code>let</code> keyword is a statement. In Listing 3-1,
 <code>let y = 6;</code> is a statement.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let y = 6;
 }</code></pre></pre>
-<p><span class="caption">Listing 3-1: A <code>main</code> function declaration containing one statement</span></p>
+<figcaption>Listing 3-1: A <code>main</code> function declaration containing one statement</figcaption>
+</figure>
 <p>Function definitions are also statements; the entire preceding example is a
 statement in itself.</p>
 <p>Statements do not return values. Therefore, you can’t assign a <code>let</code> statement
@@ -284,22 +287,8 @@ error: expected expression, found `let` statement
   |
 2 |     let x = (let y = 6);
   |              ^^^
-
-error: expected expression, found statement (`let`)
- --&gt; src/main.rs:2:14
   |
-2 |     let x = (let y = 6);
-  |              ^^^^^^^^^
-  |
-  = note: variable declaration using `let` is a statement
-
-error[E0658]: `let` expressions in this position are unstable
- --&gt; src/main.rs:2:14
-  |
-2 |     let x = (let y = 6);
-  |              ^^^^^^^^^
-  |
-  = note: see issue #53667 &lt;https://github.com/rust-lang/rust/issues/53667&gt; for more information
+  = note: only supported directly in conditions of `if` and `while` expressions
 
 warning: unnecessary parentheses around assigned value
  --&gt; src/main.rs:2:13
@@ -314,9 +303,8 @@ help: remove these parentheses
 2 +     let x = let y = 6;
   |
 
-For more information about this error, try `rustc --explain E0658`.
 warning: `functions` (bin &quot;functions&quot;) generated 1 warning
-error: could not compile `functions` due to 3 previous errors; 1 warning emitted
+error: could not compile `functions` (bin &quot;functions&quot;) due to 1 previous error; 1 warning emitted
 </code></pre>
 <p>The <code>let y = 6</code> statement does not return a value, so there isn’t anything for
 <code>x</code> to bind to. This is different from what happens in other languages, such as
@@ -375,7 +363,7 @@ Rust. Note that the function’s return type is specified too, as <code>-&gt; i3
 running this code; the output should look like this:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.30s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
      Running `target/debug/functions`
 The value of x is: 5
 </code></pre>
@@ -429,7 +417,7 @@ error[E0308]: mismatched types
   |          - help: remove this semicolon to return this value
 
 For more information about this error, try `rustc --explain E0308`.
-error: could not compile `functions` due to previous error
+error: could not compile `functions` (bin &quot;functions&quot;) due to 1 previous error
 </code></pre>
 <p>The main error message, <code>mismatched types</code>, reveals the core issue with this
 code. The definition of the function <code>plus_one</code> says that it will return an
@@ -439,7 +427,7 @@ definition and results in an error. In this output, Rust provides a message to
 possibly help rectify this issue: it suggests removing the semicolon, which
 would fix the error.</p>
 <div class="quiz-placeholder" data-quiz-name="ch03-03-functions-sec2-expressions"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;A block is an expression (#1) that is allowed to contain statements. It also defines a syntactic scope for let-bindings inside it (#3).\n&quot;,&quot;id&quot;:&quot;e816708d-b0eb-4506-8c33-6ea0df69f14f&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:&quot;1 and 3&quot;},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;1 only&quot;,&quot;2 only&quot;,&quot;2 and 3&quot;],&quot;prompt&quot;:&quot;In Rust, a curly-brace block like `{ /* ... */ }` is:\n1. An expression\n2. A statement\n3. A syntactic scope\n&quot;}},{&quot;id&quot;:&quot;42671602-ada3-4943-aa73-28aebcfe5011&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:true,&quot;stdout&quot;:&quot;3&quot;},&quot;prompt&quot;:{&quot;program&quot;:&quot;fn f(x: i32) -&gt; i32 { x + 1 }\nfn main() {\n  println!(\&quot;{}\&quot;, f({\n    let y = 1;\n    y + 1\n  }));\n}\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

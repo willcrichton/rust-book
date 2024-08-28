@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -162,7 +163,8 @@ so the first step is again to write a failing test. We’ll add a new test for
 the new <code>search_case_insensitive</code> function and rename our old test from
 <code>one_result</code> to <code>case_sensitive</code> to clarify the differences between the two
 tests, as shown in Listing 12-20.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::error::Error;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -237,8 +239,8 @@ Trust me.&quot;;
         );
     }
 }</code></pre>
-<p><span class="caption">Listing 12-20: Adding a new failing test for the
-case-insensitive function we’re about to add</span></p>
+<figcaption>Listing 12-20: Adding a new failing test for the case-insensitive function we’re about to add</figcaption>
+</figure>
 <p>Note that we’ve edited the old test’s <code>contents</code> too. We’ve added a new line
 with the text <code>&quot;Duct tape.&quot;</code> using a capital D that shouldn’t match the query
 <code>&quot;duct&quot;</code> when we’re searching in a case-sensitive manner. Changing the old test
@@ -258,7 +260,8 @@ for the <code>search</code> function in Listing 12-16 to see the test compile an
 the same as the <code>search</code> function. The only difference is that we’ll lowercase
 the <code>query</code> and each <code>line</code> so whatever the case of the input arguments,
 they’ll be the same case when we check whether the line contains the query.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">use std::error::Error;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -349,8 +352,8 @@ they’ll be the same case when we check whether the line contains the query.</p
 </span><span class="boring">        );
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-21: Defining the <code>search_case_insensitive</code>
-function to lowercase the query and the line before comparing them</span></p>
+<figcaption>Listing 12-21: Defining the <code>search_case_insensitive</code> function to lowercase the query and the line before comparing them</figcaption>
+</figure>
 <p>First, we lowercase the <code>query</code> string and store it in a shadowed variable with
 the same name. Calling <code>to_lowercase</code> on the query is necessary so no
 matter whether the user’s query is <code>&quot;rust&quot;</code>, <code>&quot;RUST&quot;</code>, <code>&quot;Rust&quot;</code>, or <code>&quot;rUsT&quot;</code>,
@@ -372,7 +375,7 @@ find matches no matter what the case of the query is.</p>
 <p>Let’s see if this implementation passes the tests:</p>
 <pre><code class="language-console">$ cargo test
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished test [unoptimized + debuginfo] target(s) in 1.33s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.33s
      Running unittests src/lib.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
 
 running 2 tests
@@ -501,7 +504,8 @@ this field anywhere yet:</p>
 function to check the <code>ignore_case</code> field’s value and use that to decide
 whether to call the <code>search</code> function or the <code>search_case_insensitive</code>
 function, as shown in Listing 12-22. This still won’t compile yet.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::error::Error;
 </span><span class="boring">use std::fs;
 </span><span class="boring">
@@ -599,15 +603,16 @@ function, as shown in Listing 12-22. This still won’t compile yet.</p>
 </span><span class="boring">        );
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-22: Calling either <code>search</code> or
-<code>search_case_insensitive</code> based on the value in <code>config.ignore_case</code></span></p>
+<figcaption>Listing 12-22: Calling either <code>search</code> or <code>search_case_insensitive</code> based on the value in <code>config.ignore_case</code></figcaption>
+</figure>
 <p>Finally, we need to check for the environment variable. The functions for
 working with environment variables are in the <code>env</code> module in the standard
 library, so we bring that module into scope at the top of <em>src/lib.rs</em>. Then
-we’ll use the <code>var</code> function from the <code>env</code> module to check to see if any value
+we’ll use the <code>var</code> function from the <code>env</code> module to check if any value
 has been set for an environment variable named <code>IGNORE_CASE</code>, as shown in
 Listing 12-23.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<figure class="listing">
+<span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::env;
 // --snip--
 
@@ -714,8 +719,8 @@ Listing 12-23.</p>
 </span><span class="boring">        );
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 12-23: Checking for any value in an environment
-variable named <code>IGNORE_CASE</code></span></p>
+<figcaption>Listing 12-23: Checking for any value in an environment variable named <code>IGNORE_CASE</code></figcaption>
+</figure>
 <p>Here, we create a new variable <code>ignore_case</code>. To set its value, we call the
 <code>env::var</code> function and pass it the name of the <code>IGNORE_CASE</code> environment
 variable. The <code>env::var</code> function returns a <code>Result</code> that will be the
@@ -737,7 +742,7 @@ variable set and with the query <code>to</code>, which should match any line tha
 the word “to” in all lowercase:</p>
 <pre><code class="language-console">$ cargo run -- to poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep to poem.txt`
 Are you nobody, too?
 How dreary to be somebody!

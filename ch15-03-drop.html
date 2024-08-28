@@ -30,7 +30,8 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
-        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
         <link rel="stylesheet" href="js-extensions/packages/consent-form/dist/index.css">
         <link rel="stylesheet" href="js-extensions/packages/feedback/dist/index.css">
 
@@ -208,7 +209,7 @@ call the <code>drop</code> method explicitly.</p>
 <p>When we run this program, we’ll see the following output:</p>
 <pre><code class="language-console">$ cargo run
    Compiling drop-example v0.1.0 (file:///projects/drop-example)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.60s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.60s
      Running `target/debug/drop-example`
 CustomSmartPointers created.
 Dropping CustomSmartPointer with data `other stuff`!
@@ -261,13 +262,15 @@ error[E0040]: explicit use of destructor method
   --&gt; src/main.rs:16:7
    |
 16 |     c.drop();
-   |     --^^^^--
-   |     | |
-   |     | explicit destructor calls not allowed
-   |     help: consider using `drop` function: `drop(c)`
+   |       ^^^^ explicit destructor calls not allowed
+   |
+help: consider using `drop` function
+   |
+16 |     drop(c);
+   |     +++++ ~
 
 For more information about this error, try `rustc --explain E0040`.
-error: could not compile `drop-example` due to previous error
+error: could not compile `drop-example` (bin &quot;drop-example&quot;) due to 1 previous error
 </code></pre>
 <p>This error message states that we’re not allowed to explicitly call <code>drop</code>. The
 error message uses the term <em>destructor</em>, which is the general programming term
@@ -309,7 +312,7 @@ drop a value before it goes out of scope</span></p>
 <p>Running this code will print the following:</p>
 <pre><code class="language-console">$ cargo run
    Compiling drop-example v0.1.0 (file:///projects/drop-example)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.73s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s
      Running `target/debug/drop-example`
 CustomSmartPointer created.
 Dropping CustomSmartPointer with data `some data`!
@@ -330,7 +333,7 @@ the value is no longer being used.</p>
 pointers, let’s look at a few other smart pointers defined in the standard
 library.</p>
 <div class="quiz-placeholder" data-quiz-name="ch15-03-drop"  data-quiz-questions="{&quot;questions&quot;:[{&quot;context&quot;:&quot;An owned value cannot be dropped twice, so it is a compiler error to call a drop the second time.\n&quot;,&quot;id&quot;:&quot;8282968d-b1d3-42b4-b128-f97b951db4c6&quot;,&quot;type&quot;:&quot;Tracing&quot;,&quot;answer&quot;:{&quot;doesCompile&quot;:false,&quot;lineNumber&quot;:11},&quot;prompt&quot;:{&quot;program&quot;:&quot;struct Example(i32);\nimpl Drop for Example {\n    fn drop(&amp;mut self) {\n        self.0 += 1;\n        println!(\&quot;drop {}\&quot;, self.0);\n    }\n}\nfn main() {\n    let e = Example(0);\n    drop(e);\n    drop(e);\n}\n&quot;}},{&quot;context&quot;:&quot;Any use of `s` that moves it and discards the result will cause `s` to be dropped. However, `s.drop()` cannot be\ncalled directly.\n&quot;,&quot;id&quot;:&quot;b9121273-1c1e-4e99-9cff-a23f845aaeeb&quot;,&quot;type&quot;:&quot;MultipleChoice&quot;,&quot;answer&quot;:{&quot;answer&quot;:[&quot;`drop(s);`&quot;,&quot;`(|_| ())(s);`&quot;,&quot;`{ s };`&quot;]},&quot;prompt&quot;:{&quot;distractors&quot;:[&quot;`s.drop();`&quot;],&quot;prompt&quot;:&quot;Consider this snippet that allocates a string:\n\n```rust\nfn main() {\n    let mut s = String::new();\n    ____\n}\n```\n\nWhich of the following are valid operations to fill in the underscore that would cause `s` to be dropped?\n&quot;}}]}"  data-quiz-fullscreen=""  data-quiz-cache-answers="" ></div>
-<script type="module" src="quiz/quiz-embed.mjs"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
+<script type="text/javascript" src="quiz/quiz-embed.iife.js"></script><link rel="stylesheet" type="text/css" href="quiz/style.css">
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">

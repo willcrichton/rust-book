@@ -1,9 +1,9 @@
-@charset "UTF-8";
-/* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/aria/aria.css */
+@charset "UTF-8";/* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/aria/aria.css */
 .monaco-aria-container {
   position: absolute;
   left: -999em;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/widget/media/editor.css */
 ::-ms-clear {
   display: none;
@@ -24,6 +24,7 @@
   position: absolute;
   top: 0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/controller/textAreaHandler.css */
 .monaco-editor .inputarea {
   min-width: 0;
@@ -41,6 +42,7 @@
 .monaco-editor .inputarea.ime-input {
   z-index: 10;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/lineNumbers/lineNumbers.css */
 .monaco-editor .margin-view-overlays .line-numbers {
   font-variant-numeric: tabular-nums;
@@ -60,10 +62,12 @@
 .monaco-editor .margin-view-overlays .line-numbers.lh-odd {
   margin-top: 1px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/mouseCursor/mouseCursor.css */
 .monaco-mouse-cursor-text {
   cursor: text;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/currentLineHighlight/currentLineHighlight.css */
 .monaco-editor .view-overlays .current-line {
   display: block;
@@ -82,10 +86,12 @@
 .monaco-editor .margin-view-overlays .current-line.current-line-margin.current-line-margin-both {
   border-right: 0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/decorations/decorations.css */
 .monaco-editor .lines-content .cdr {
   position: absolute;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/scrollbar/media/scrollbars.css */
 .monaco-scrollable-element > .scrollbar > .scra {
   cursor: pointer;
@@ -128,6 +134,7 @@
   height: 3px;
   width: 3px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/glyphMargin/glyphMargin.css */
 .monaco-editor .glyph-margin {
   position: absolute;
@@ -139,11 +146,13 @@
   align-items: center;
   justify-content: center;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/indentGuides/indentGuides.css */
 .monaco-editor .lines-content .core-guide {
   position: absolute;
   box-sizing: border-box;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/lines/viewLines.css */
 .mtkcontrol {
   color: rgb(255, 255, 255) !important;
@@ -171,6 +180,7 @@
 .monaco-editor .mtkz {
   display: inline-block;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/linesDecorations/linesDecorations.css */
 .monaco-editor .lines-decorations {
   position: absolute;
@@ -181,6 +191,7 @@
   position: absolute;
   height: 100%;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/marginDecorations/marginDecorations.css */
 .monaco-editor .margin-view-overlays .cmdr {
   position: absolute;
@@ -188,6 +199,7 @@
   width: 100%;
   height: 100%;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/minimap/minimap.css */
 .monaco-editor .minimap.slider-mouseover .minimap-slider {
   opacity: 0;
@@ -220,17 +232,20 @@
 .minimap.autohide:hover {
   opacity: 1.0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/overlayWidgets/overlayWidgets.css */
 .monaco-editor .overlayWidgets {
   position: absolute;
   top: 0;
   left: 0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/rulers/rulers.css */
 .monaco-editor .view-ruler {
   position: absolute;
   top: 0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/scrollDecoration/scrollDecoration.css */
 .monaco-editor .scroll-decoration {
   position: absolute;
@@ -238,6 +253,7 @@
   left: 0;
   height: 6px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/selections/selections.css */
 .monaco-editor .lines-content .cslr {
   position: absolute;
@@ -278,6 +294,7 @@
 .monaco-editor.hc-light .bottom-right-radius {
   border-bottom-right-radius: 0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/viewCursors/viewCursors.css */
 .monaco-editor .cursors-layer {
   position: absolute;
@@ -341,6 +358,7 @@
 .cursor-expand > .cursor {
   animation: monaco-cursor-expand 0.5s ease-in-out 0s 20 alternate;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/viewParts/blockDecorations/blockDecorations.css */
 .monaco-editor .blockDecorations-container {
   position: absolute;
@@ -350,6 +368,7 @@
   position: absolute;
   box-sizing: border-box;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/widget/media/diffEditor.css */
 .monaco-diff-editor .diffOverview {
   z-index: 9;
@@ -425,6 +444,7 @@
 .monaco-editor .margin-view-zones .lightbulb-glyph:hover {
   cursor: pointer;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/sash/sash.css */
 :root {
   --sash-size: 4px;
@@ -533,6 +553,7 @@
 .monaco-sash.debug:not(.disabled) > .orthogonal-drag-handle {
   background: red;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/browser/widget/media/diffReview.css */
 .monaco-diff-editor .diff-review-line-number {
   text-align: right;
@@ -580,6 +601,7 @@
   height: 16px;
   margin: 2px 0;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/actionbar/actionbar.css */
 .monaco-action-bar {
   white-space: nowrap;
@@ -667,15 +689,18 @@
 .monaco-action-bar .action-item.action-dropdown-item > .action-label {
   margin-right: 1px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/anchorSelect/browser/anchorSelect.css */
 .monaco-editor .selection-anchor {
   background-color: #007ACC;
   width: 2px !important;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching.css */
 .monaco-editor .bracket-match {
   box-sizing: border-box;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/message/browser/messageController.css */
 .monaco-editor .monaco-editor-overlaymessage {
   padding-bottom: 8px;
@@ -741,6 +766,7 @@
   display: inherit;
   top: -8px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/list/list.css */
 .monaco-list {
   position: relative;
@@ -807,6 +833,7 @@
 .monaco-list-type-filter-message:empty {
   display: none;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/codeAction/browser/media/action.css */
 .codeActionMenuWidget {
   padding: 8px 0px 8px 0px;
@@ -896,6 +923,7 @@
   cursor: pointer;
   touch-action: none;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/codeAction/browser/lightBulbWidget.css */
 .monaco-editor .contentWidgets .codicon-light-bulb,
 .monaco-editor .contentWidgets .codicon-lightbulb-autofix {
@@ -907,6 +935,7 @@
 .monaco-editor .contentWidgets .codicon-lightbulb-autofix:hover {
   cursor: pointer;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/codelens/browser/codelensWidget.css */
 .monaco-editor .codelens-decoration {
   overflow: hidden;
@@ -953,6 +982,7 @@
 .monaco-editor .codelens-decoration.fadein {
   animation: fadein 0.1s linear;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/colorPicker/browser/colorPicker.css */
 .colorpicker-widget {
   height: 190px;
@@ -1067,11 +1097,13 @@
   height: 150px;
   pointer-events: none;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/gotoSymbol/browser/link/goToDefinitionAtPosition.css */
 .monaco-editor .goto-definition-link {
   text-decoration: underline;
   cursor: pointer;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/peekView/browser/media/peekViewWidget.css */
 .monaco-editor .peekview-widget .head {
   box-sizing: border-box;
@@ -1136,6 +1168,7 @@
 .monaco-editor .peekview-widget .monaco-list .monaco-list-row.focused .codicon {
   color: inherit !important;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/zoneWidget/browser/zoneWidget.css */
 .monaco-editor .zone-widget {
   position: absolute;
@@ -1148,6 +1181,7 @@
   border-bottom-width: 0;
   position: relative;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/dropdown/dropdown.css */
 .monaco-dropdown {
   height: 100%;
@@ -1184,6 +1218,7 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/platform/actions/browser/menuEntryActionViewItem.css */
 .monaco-action-bar .action-item.menu-entry .action-label.icon {
   width: 16px;
@@ -1220,6 +1255,7 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/splitview/splitview.css */
 .monaco-split-view2 {
   position: relative;
@@ -1275,6 +1311,7 @@
   height: 1px;
   width: 100%;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/table/table.css */
 .monaco-table {
   display: flex;
@@ -1320,6 +1357,7 @@
 .monaco-table > .monaco-split-view2 .monaco-sash.vertical::before {
   transition: border-color 0.2s ease-out;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/toggle/toggle.css */
 .monaco-custom-toggle {
   margin-left: 2px;
@@ -1365,6 +1403,7 @@
 .monaco-custom-toggle.monaco-checkbox:not(.checked)::before {
   visibility: hidden;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/inputbox/inputBox.css */
 .monaco-inputbox {
   position: relative;
@@ -1451,6 +1490,7 @@
   width: 16px;
   height: 16px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/findinput/findInput.css */
 .monaco-findInput {
   position: relative;
@@ -1518,6 +1558,7 @@
     background: transparent;
   }
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/tree/media/tree.css */
 .monaco-tl-row {
   display: flex;
@@ -1614,6 +1655,7 @@
 .monaco-tree-type-filter-actionbar .monaco-action-bar .action-label {
   padding: 2px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/gotoSymbol/browser/peek/referencesWidget.css */
 .monaco-editor .zone-widget .zone-widget-container.reference-zone-widget {
   border-top-width: 1px;
@@ -1679,6 +1721,7 @@
   border: 1px dotted var(--vscode-contrastActiveBorder, transparent);
   box-sizing: border-box;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/countBadge/countBadge.css */
 .monaco-count-badge {
   padding: 3px 6px;
@@ -1698,6 +1741,7 @@
   min-height: auto;
   line-height: normal;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/iconLabel/iconlabel.css */
 .monaco-icon-label {
   display: flex;
@@ -1774,6 +1818,7 @@
 .monaco-list-row.selected .label-description {
   opacity: .8;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/hover/hover.css */
 .monaco-hover {
   cursor: default;
@@ -1898,6 +1943,7 @@
   opacity: 0.4;
   cursor: default;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/gotoError/browser/media/gotoErrorWidget.css */
 .monaco-editor .peekview-widget .head .peekview-title .severity-icon {
   display: inline-block;
@@ -1957,6 +2003,7 @@
 .monaco-editor .marker-widget .descriptioncontainer .filename {
   cursor: pointer;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/dnd/browser/dnd.css */
 .monaco-editor.vs .dnd-target,
 .monaco-editor.hc-light .dnd-target {
@@ -1983,6 +2030,7 @@
 .monaco-editor.hc-light.mac.mouse-copy .view-lines {
   cursor: copy;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/find/browser/findWidget.css */
 .monaco-editor .find-widget {
   position: absolute;
@@ -2163,6 +2211,7 @@
   top: 1px;
   left: 2px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/folding/browser/folding.css */
 .monaco-editor .margin-view-overlays .codicon-folding-manual-collapsed,
 .monaco-editor .margin-view-overlays .codicon-folding-manual-expanded,
@@ -2191,6 +2240,7 @@
   line-height: 1em;
   cursor: pointer;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/links/browser/links.css */
 .monaco-editor .detected-link,
 .monaco-editor .detected-link-active {
@@ -2200,6 +2250,7 @@
 .monaco-editor .detected-link-active {
   cursor: pointer;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/parameterHints/browser/parameterHints.css */
 .monaco-editor .parameter-hints-widget {
   z-index: 39;
@@ -2291,6 +2342,7 @@
   font-weight: bold;
   margin-right: 0.5em;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/rename/browser/renameInputField.css */
 .monaco-editor .rename-box {
   z-index: 100;
@@ -2310,6 +2362,7 @@
 .monaco-editor .rename-box.preview .rename-label {
   display: inherit;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/snippet/browser/snippetSession.css */
 .monaco-editor .snippet-placeholder {
   min-width: 2px;
@@ -2324,6 +2377,7 @@
   background-color: var(--vscode-editor-snippetFinalTabstopHighlightBackground, transparent);
   outline-color: var(--vscode-editor-snippetFinalTabstopHighlightBorder, transparent);
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.css */
 @font-face {
   font-family: "codicon";
@@ -2343,6 +2397,7 @@
   -webkit-user-select: none;
   -ms-user-select: none;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon-modifiers.css */
 .codicon-wrench-subaction {
   opacity: 0.5;
@@ -2366,6 +2421,7 @@
   animation-duration: 1s !important;
   animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67) !important;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/contrib/suggest/browser/media/suggest.css */
 .monaco-editor .suggest-widget {
   width: 430px;
@@ -2712,6 +2768,7 @@
 .monaco-editor .suggest-details p code {
   font-family: var(--monaco-monospace-font);
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/standalone/browser/standalone-tokens.css */
 .monaco-editor {
   font-family:
@@ -2923,6 +2980,7 @@
     background: transparent !important;
   }
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/contextview/contextview.css */
 .context-view {
   position: absolute;
@@ -2934,6 +2992,7 @@
   position: fixed;
   color: inherit;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/standalone/browser/quickInput/standaloneQuickInput.css */
 .quick-input-widget {
   font-size: 13px;
@@ -2984,6 +3043,7 @@
   box-shadow: inset 0 -1px 0 rgba(68, 68, 68, 0.6);
   color: #ccc;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/button/button.css */
 .monaco-text-button {
   box-sizing: border-box;
@@ -3059,6 +3119,7 @@
   margin: 0 0.2em;
   color: inherit !important;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/progressbar/progressbar.css */
 .monaco-progress-container {
   width: 100%;
@@ -3103,6 +3164,7 @@
     transform: translateX(4900%) scaleX(1);
   }
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/parts/quickinput/browser/media/quickInput.css */
 .quick-input-widget {
   position: absolute;
@@ -3335,6 +3397,7 @@
 .quick-input-list .monaco-list-row.focused .monaco-keybinding-key {
   background: none;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/base/browser/ui/keybindingLabel/keybindingLabel.css */
 .monaco-keybinding {
   display: flex;
@@ -3363,12 +3426,14 @@
 .monaco-keybinding > .monaco-keybinding-key-chord-separator {
   width: 6px;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/standalone/browser/accessibilityHelp/accessibilityHelp.css */
 .monaco-editor .accessibilityHelpWidget {
   padding: 10px;
   vertical-align: middle;
   overflow: scroll;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.css */
 .monaco-editor .iPadShowKeyboard {
   width: 58px;
@@ -3388,6 +3453,7 @@
   background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTMiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCA1MyAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwKSI+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNDguMDM2NCA0LjAxMDQySDQuMDA3NzlMNC4wMDc3OSAzMi4wMjg2SDQ4LjAzNjRWNC4wMTA0MlpNNC4wMDc3OSAwLjAwNzgxMjVDMS43OTcyMSAwLjAwNzgxMjUgMC4wMDUxODc5OSAxLjc5OTg0IDAuMDA1MTg3OTkgNC4wMTA0MlYzMi4wMjg2QzAuMDA1MTg3OTkgMzQuMjM5MiAxLjc5NzIxIDM2LjAzMTIgNC4wMDc3OSAzNi4wMzEySDQ4LjAzNjRDNTAuMjQ3IDM2LjAzMTIgNTIuMDM5IDM0LjIzOTIgNTIuMDM5IDMyLjAyODZWNC4wMTA0MkM1Mi4wMzkgMS43OTk4NCA1MC4yNDcgMC4wMDc4MTI1IDQ4LjAzNjQgMC4wMDc4MTI1SDQuMDA3NzlaTTguMDEwNDIgOC4wMTMwMkgxMi4wMTNWMTIuMDE1Nkg4LjAxMDQyVjguMDEzMDJaTTIwLjAxODIgOC4wMTMwMkgxNi4wMTU2VjEyLjAxNTZIMjAuMDE4MlY4LjAxMzAyWk0yNC4wMjA4IDguMDEzMDJIMjguMDIzNFYxMi4wMTU2SDI0LjAyMDhWOC4wMTMwMlpNMzYuMDI4NiA4LjAxMzAySDMyLjAyNlYxMi4wMTU2SDM2LjAyODZWOC4wMTMwMlpNNDAuMDMxMiA4LjAxMzAySDQ0LjAzMzlWMTIuMDE1Nkg0MC4wMzEyVjguMDEzMDJaTTE2LjAxNTYgMTYuMDE4Mkg4LjAxMDQyVjIwLjAyMDhIMTYuMDE1NlYxNi4wMTgyWk0yMC4wMTgyIDE2LjAxODJIMjQuMDIwOFYyMC4wMjA4SDIwLjAxODJWMTYuMDE4MlpNMzIuMDI2IDE2LjAxODJIMjguMDIzNFYyMC4wMjA4SDMyLjAyNlYxNi4wMTgyWk00NC4wMzM5IDE2LjAxODJWMjAuMDIwOEgzNi4wMjg2VjE2LjAxODJINDQuMDMzOVpNMTIuMDEzIDI0LjAyMzRIOC4wMTA0MlYyOC4wMjZIMTIuMDEzVjI0LjAyMzRaTTE2LjAxNTYgMjQuMDIzNEgzNi4wMjg2VjI4LjAyNkgxNi4wMTU2VjI0LjAyMzRaTTQ0LjAzMzkgMjQuMDIzNEg0MC4wMzEyVjI4LjAyNkg0NC4wMzM5VjI0LjAyMzRaIiBmaWxsPSIjQzVDNUM1Ii8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDAiPgo8cmVjdCB3aWR0aD0iNTMiIGhlaWdodD0iMzYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==) center center no-repeat;
   border: 4px solid #252526;
 }
+
 /* node_modules/.pnpm/monaco-editor@0.34.1/node_modules/monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens.css */
 .monaco-editor .tokens-inspect-widget {
   z-index: 50;
@@ -3418,46 +3484,25 @@
 .monaco-editor .tokens-inspect-widget .tm-token-type {
   font-family: var(--monaco-monospace-font);
 }
-.ayu {
-  --highlight: #46480f;
-}
-.coal {
-  --highlight: #46480f;
-}
-.light {
-  --highlight: #ffffc1;
-}
-.navy {
-  --highlight: #46480f;
-}
-.rust {
-  --highlight: #fdf2ca;
-}
-.mdbook-quiz-wrapper.expanded {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 999;
-  padding: 0 10rem;
-  box-sizing: border-box;
-  overflow-y: auto;
-  background: var(--bg);
-}
-@media (max-width: 799px) {
-  .mdbook-quiz-wrapper.expanded {
-    padding: 0 1rem;
-  }
-}
-.mdbook-quiz-wrapper.expanded .mdbook-quiz {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+
+:root {
+  --mdbook-fg: black;
+  --mdbook-bg: white;
+  --mdbook-light-border-color: #ccc;
+  --mdbook-heavy-border-color: #aaa;
+  --mdbook-button-bg: #fafafa;
+  --mdbook-button-fg: black;
+  --mdbook-button-border-color: #888;
+  --mdbook-prompt-bg: #f1f6f9;
+  --mdbook-error-color: #e16969;
+  --mdbook-highlight: #ffffc1;
+  --mdbook-correct: green;
+  --mdbook-incorrect: red;
+  --mdbook-icon-color: #747474;
+  --mdbook-multipart-bg: #fafafa;
 }
 .mdbook-quiz {
-  border: 2px solid var(--searchresults-border-color);
+  border: 2px solid var(--mdbook-heavy-border-color);
   border-radius: 4px;
   padding: 1em;
   margin-top: 2.5em;
@@ -3516,103 +3561,18 @@
 .mdbook-quiz button, .mdbook-quiz input[type=submit] {
   font-size: 1.1em;
   cursor: pointer;
-  background-color: var(--searchbar-bg);
-  color: var(--searchbar-fg);
-  border: 1px solid var(--searchbar-border-color);
+  background-color: var(--mdbook-button-bg);
+  color: var(--mdbook-button-fg);
+  border: 1px solid var(--mdbook-button-border-color);
   border-radius: 4px;
   padding: 3px 5px;
 }
-.mdbook-quiz .prompt,
-.mdbook-quiz .response {
-  position: relative;
-  padding: 1em;
-}
-@media (max-width: 799px) {
-  .mdbook-quiz .prompt,
-  .mdbook-quiz .response {
-    padding: 0.75em;
-  }
-}
-.mdbook-quiz .prompt {
-  background: var(--quote-bg);
-  margin-bottom: 1em;
-}
-.mdbook-quiz .prompt pre {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-.mdbook-quiz .prompt .bug-report {
-  position: absolute;
-  max-width: 70%;
-  right: 0.5em;
-  top: 0.5em;
-  text-align: right;
-}
-.mdbook-quiz .prompt .bug-report button {
-  filter: grayscale(100%);
-  border: 0;
-  background: none;
-}
-.mdbook-quiz .prompt .bug-report .reporter {
-  background: var(--bg);
-  border: 2px solid var(--theme-popup-border);
-  padding: 0.5em;
-  text-align: left;
-  border-radius: 4px;
-  box-shadow: 1px 1px 4px var(--theme-popup-border);
-  position: relative;
-  z-index: 1000;
-}
-.mdbook-quiz .prompt .bug-report .reporter .close {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-.mdbook-quiz .response fieldset {
-  border: none;
-  margin: 0 0 1em 0;
-  padding: 0;
-}
-.mdbook-quiz .response fieldset .choice {
-  max-width: 100%;
-}
-.mdbook-quiz .response fieldset .choice label {
-  display: block;
-  flex-grow: 1;
-  width: 0;
-}
-.mdbook-quiz .response fieldset .choice pre, .mdbook-quiz .response fieldset .choice .editor {
-  border: 1px solid var(--theme-popup-border);
-  border-radius: 4px;
-  padding: 2px 4px;
-}
-.mdbook-quiz .response fieldset .choice pre {
-  width: max-content;
-}
-.mdbook-quiz .response .response-block {
-  margin-bottom: 0.5em;
-}
-@media (max-width: 799px) {
-  .mdbook-quiz .response .response-block {
-    line-height: 2em;
-  }
-}
-.mdbook-quiz .option {
-  border: 2px solid var(--theme-popup-border);
-  border-radius: 4px;
-  padding: 0.25em;
-  margin: 0 0.25em;
-  display: inline-block;
-}
-.mdbook-quiz .option-separator {
-  margin: 0 0.5em;
-}
 .mdbook-quiz form input.error,
 .mdbook-quiz form textarea.error {
-  outline-color: #e16969;
+  outline-color: var(--mdbook-error-color);
 }
 .mdbook-quiz form :not(input, textarea).error {
-  border: 1px solid #e16969;
+  border: 1px solid var(--mdbook-error-color);
 }
 .mdbook-quiz textarea,
 .mdbook-quiz input[type=text] {
@@ -3644,19 +3604,19 @@
 .mdbook-quiz pre .line-number {
   text-align: right;
 }
-.mdbook-quiz pre .line-number:before {
+.mdbook-quiz pre .line-number::before {
   counter-increment: line;
   content: counter(line);
   user-select: none;
   padding-right: 1em;
-  color: var(--searchresults-border-color);
+  color: var(--mdbook-heavy-border-color);
   font-size: 0.8em;
 }
 .mdbook-quiz pre code {
   padding: 0;
 }
 .mdbook-quiz pre mark {
-  background: var(--highlight);
+  background: var(--mdbook-highlight);
 }
 .mdbook-quiz .editor .monaco-editor, .mdbook-quiz .editor .monaco-editor-background, .mdbook-quiz .editor .monaco-editor .margin {
   background: none !important;
@@ -3665,7 +3625,7 @@
   margin-bottom: 4px;
 }
 .mdbook-quiz .editor .highlight {
-  background: var(--highlight);
+  background: var(--mdbook-highlight);
 }
 .mdbook-quiz p:first-child,
 .mdbook-quiz pre:first-child {
@@ -3678,23 +3638,96 @@
 .mdbook-quiz input[type=submit] {
   margin-top: 1em;
 }
+.mdbook-quiz .prompt,
+.mdbook-quiz .response {
+  position: relative;
+  padding: 1em;
+}
+@media (max-width: 799px) {
+  .mdbook-quiz .prompt,
+  .mdbook-quiz .response {
+    padding: 0.75em;
+  }
+}
+.mdbook-quiz .prompt {
+  background: var(--mdbook-prompt-bg);
+  margin-bottom: 1em;
+}
+.mdbook-quiz .prompt pre {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.mdbook-quiz .prompt .bug-report {
+  position: absolute;
+  max-width: 70%;
+  right: 0.5em;
+  top: 0.5em;
+  text-align: right;
+}
+.mdbook-quiz .prompt .bug-report button {
+  filter: grayscale(100%);
+  border: 0;
+  background: none;
+  color: var(--mdbook-fg);
+}
+.mdbook-quiz .prompt .bug-report .reporter {
+  background: var(--mdbook-bg);
+  border: 2px solid var(--mdbook-light-border-color);
+  padding: 0.5em;
+  text-align: left;
+  border-radius: 4px;
+  box-shadow: 1px 1px 4px var(--mdbook-light-border-color);
+  position: relative;
+  z-index: 1000;
+}
+.mdbook-quiz .prompt .bug-report .reporter .close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.mdbook-quiz .response fieldset {
+  border: none;
+  margin: 0 0 1em;
+  padding: 0;
+}
+.mdbook-quiz .response fieldset .choice {
+  max-width: 100%;
+}
+.mdbook-quiz .response fieldset .choice label {
+  display: block;
+  flex-grow: 1;
+  width: 0;
+}
+.mdbook-quiz .response fieldset .choice pre, .mdbook-quiz .response fieldset .choice .editor {
+  border: 1px solid var(--mdbook-light-border-color);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.mdbook-quiz .response fieldset .choice pre {
+  width: max-content;
+}
+.mdbook-quiz .response .response-block {
+  margin-bottom: 0.5em;
+}
+@media (max-width: 799px) {
+  .mdbook-quiz .response .response-block {
+    line-height: 2em;
+  }
+}
+.mdbook-quiz .option {
+  border: 2px solid var(--mdbook-light-border-color);
+  border-radius: 4px;
+  padding: 0.25em;
+  margin: 0 0.25em;
+  display: inline-block;
+}
+.mdbook-quiz .option-separator {
+  margin: 0 0.5em;
+}
 .mdbook-quiz .answer-wrapper:not(:last-child) {
   margin-bottom: 4rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #ccc;
-}
-.mdbook-quiz .multiple-choice .choice {
-  display: flex;
-  gap: 10px;
-}
-.mdbook-quiz .multiple-choice .choice:not(:last-child) {
-  margin-bottom: 1em;
-}
-.mdbook-quiz .multiple-choice input[type=radio] {
-  margin: 0;
-}
-.mdbook-quiz .multiple-choice input[type=radio].error {
-  outline: 1px solid #e16969;
+  border-bottom: 2px solid var(--mdbook-light-border-color);
 }
 .mdbook-quiz .answer .answer-header {
   margin-bottom: 1em;
@@ -3717,7 +3750,7 @@
   margin-block-end: 0.5em;
 }
 .mdbook-quiz .answer .answer-row > div {
-  border: 2px solid var(--theme-popup-border);
+  border: 2px solid var(--mdbook-light-border-color);
   padding: 1rem;
   width: 50%;
   overflow: auto;
@@ -3730,14 +3763,14 @@
 .mdbook-quiz .answer .answer-row > div .answer-header {
   font-weight: bold;
 }
-.mdbook-quiz .answer .answer-row > div .correct:before {
-  color: green;
+.mdbook-quiz .answer .answer-row > div .correct::before {
+  color: var(--mdbook-correct);
   margin-right: 1rem;
   content: "✓ Correct";
   font-size: 1.5rem;
 }
-.mdbook-quiz .answer .answer-row > div .incorrect:before {
-  color: red;
+.mdbook-quiz .answer .answer-row > div .incorrect::before {
+  color: var(--mdbook-incorrect);
   margin-right: 1rem;
   content: "✗ Incorrect";
   font-size: 1.5rem;
@@ -3751,20 +3784,20 @@
 }
 .mdbook-quiz .info-popout {
   position: absolute;
-  background: var(--bg);
+  background: var(--mdbook-bg);
   left: calc(100% + 10px);
-  border: 1px solid var(--theme-popup-border);
+  border: 1px solid var(--mdbook-light-border-color);
   padding: 0.5em;
   text-align: left;
   border-radius: 4px;
   max-width: 400px;
   width: max-content;
-  box-shadow: 1px 1px 4px var(--theme-popup-border);
+  box-shadow: 1px 1px 4px var(--mdbook-light-border-color);
 }
 .mdbook-quiz .info {
   display: inline-block;
-  color: var(--icons);
-  border: 1px solid var(--icons);
+  color: var(--mdbook-icon-color);
+  border: 1px solid var(--mdbook-icon-color);
   border-radius: 50%;
   vertical-align: middle;
   font-size: 12px;
@@ -3776,23 +3809,86 @@
   cursor: pointer;
 }
 .mdbook-quiz .info:hover {
-  color: var(--fg);
-  border-color: var(--fg);
+  color: var(--mdbook-fg);
+  border-color: var(--mdbook-fg);
 }
 .mdbook-quiz .info::before {
   content: "?";
   vertical-align: middle;
 }
+.mdbook-quiz .multiple-choice .response fieldset .choice {
+  display: flex;
+  gap: 10px;
+}
+.mdbook-quiz .multiple-choice .response fieldset .choice:not(:last-child) {
+  margin-bottom: 1em;
+}
+.mdbook-quiz .multiple-choice input[type=radio] {
+  margin: 0;
+}
+.mdbook-quiz .multiple-choice input[type=radio].error {
+  outline: 1px solid var(--mdbook-error-color);
+}
 .mdbook-quiz .multipart-context {
   padding-left: 1em;
 }
 .mdbook-quiz .multipart-context .multipart-context-content {
-  border: 1px solid var(--theme-popup-border);
+  border: 1px solid var(--mdbook-light-border-color);
   padding: 0.5em;
-  background-color: var(--theme-popup-bg);
+  background-color: var(--mdbook-multipart-bg);
   margin-bottom: 1em;
 }
 .mdbook-quiz .rotate-arrow {
   transform: rotate(-90deg);
   display: inline-block;
+}
+.mdbook-quiz-wrapper.expanded {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 999;
+  padding: 0 10rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: var(--mdbook-bg);
+}
+@media (max-width: 799px) {
+  .mdbook-quiz-wrapper.expanded {
+    padding: 0 1rem;
+  }
+}
+.mdbook-quiz-wrapper.expanded .mdbook-quiz {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+:root {
+  --mdbook-fg: var(--fg);
+  --mdbook-bg: var(--bg);
+  --mdbook-light-border-color: var(--theme-popup-border);
+  --mdbook-heavy-border-color: var(--searchresults-border-color);
+  --mdbook-button-bg: var(--searchbar-bg);
+  --mdbook-button-fg: var(--searchbar-fg);
+  --mdbook-button-border-color: var(--searchresults-border-color);
+  --mdbook-prompt-bg: var(--quote-bg);
+  --mdbook-icon-color: var(--icons);
+  --mdbook-multipart-bg: var(--theme-popup-bg);
+}
+.ayu {
+  --mdbook-highlight: #46480f;
+}
+.coal {
+  --mdbook-highlight: #46480f;
+}
+.light {
+  --mdbook-highlight: #ffffc1;
+}
+.navy {
+  --mdbook-highlight: #46480f;
+}
+.rust {
+  --mdbook-highlight: #fdf2ca;
 }
