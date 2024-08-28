@@ -321,3 +321,4 @@ Let’s move on to the next collection type: `String`!
 [deref]: ch04-02-references-and-borrowing.html#dereferencing-a-pointer-accesses-its-data
 [`Vec::iter`]: https://doc.rust-lang.org/std/vec/struct.Vec.html#method.iter
 [`Iterator::next`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html#tymethod.next
+[1, 2, 3]: ignore_me

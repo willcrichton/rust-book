@@ -459,3 +459,6 @@ In this section, it probably feels like we've described more of what Rust _canno
 [`String::push_str`]: https://doc.rust-lang.org/std/string/struct.String.html#method.push_str
 [`Vec`]: https://doc.rust-lang.org/std/vec/struct.Vec.html
 [`Vec::push`]: https://doc.rust-lang.org/std/vec/struct.Vec.html#method.push
+[gained]: ignore_me
+[lost]: ignore_me
+[missing]: ignore_me
