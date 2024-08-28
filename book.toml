@@ -1,3 +1,6 @@
+# Sync any changes to this *other than where explicitly specified* with the copy
+# in `nostarch/book.toml`!
+
 [book]
 title = "The Rust Programming Language"
 authors = ["Steve Klabnik", "Carol Nichols", "Contributions from the Rust Community"]
@@ -5,7 +8,8 @@ authors = ["Steve Klabnik", "Carol Nichols", "Contributions from the Rust Commun
 [output.html]
 additional-css = [
   "ferris.css",
-  "theme/2018-edition.css",
+  "theme/semantic-notes.css", 
+  "theme/listing.css",
   "js-extensions/packages/consent-form/dist/index.css",
   "js-extensions/packages/feedback/dist/index.css",  
 ]
@@ -26,7 +30,13 @@ more-words = "words.dic"
 
 [preprocessor.aquascope]
 
-[build]
-extra-watch-dirs = ["quizzes", "../mdbook-quiz/target/debug", "js-extensions/packages/feedback/dist"]
+# [build]
+# extra-watch-dirs = ["quizzes", "../mdbook-quiz/target/debug", "js-extensions/packages/feedback/dist"]
+
+# Do not sync this preprocessor; it is for the HTML renderer only.
+[preprocessor.trpl-note]
+
+[preprocessor.trpl-listing]
+output-mode = "default"
 
 # [output.linkcheck]
