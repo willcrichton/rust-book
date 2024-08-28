@@ -460,8 +460,5 @@ When fixing an ownership error, you should ask yourself: is my program actually 
 [`slice::join`]: https://doc.rust-lang.org/std/primitive.slice.html#method.join
 [iterators]: ch13-02-iterators.html
 [closures]: ch13-01-closures.html
-[String::from("Hello world")]: ignore_me
-[0]: ignore_me
-[...\]: ignore_me
 
 [^safe-subset]: This guarantee applies for programs written in the "safe subset" of Rust. If you use `unsafe` code or invoke unsafe components (like calling a C library), then you must take extra care to avoid undefined behavior.

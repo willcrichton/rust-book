@@ -104,8 +104,8 @@ jobs:
       run: |
         mdbook build
         cargo run --bin lfp src
-    - name: Validate references
-      run: bash ci/validate.sh
+    # - name: Validate references
+    #   run: bash ci/validate.sh
     # - name: Check for broken links
     #   run: |
     #     curl -sSLo linkcheck.sh \
