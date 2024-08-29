@@ -10,6 +10,7 @@ additional-css = [
   "ferris.css",
   "theme/semantic-notes.css", 
   "theme/listing.css",
+  "theme/2018-edition.css",
   "js-extensions/packages/consent-form/dist/index.css",
   "js-extensions/packages/feedback/dist/index.css",  
 ]
@@ -40,3 +41,6 @@ more-words = "words.dic"
 output-mode = "default"
 
 # [output.linkcheck]
+
+[rust]
+edition = "2021"
