@@ -334,6 +334,8 @@ functionality like file or network I/O.
 Now that you know the basics of how futures and runtimes work, we can see some
 of the things we can *do* with async.
 
+{{#quiz ../quizzes/async-01-futures-and-syntax.toml}}
+
 [impl-trait]: ch10-02-traits.html#traits-as-parameters
 [iterators-lazy]: ch13-02-iterators.html
 [under-the-hood]: https://rust-lang.github.io/async-book/02_execution/01_chapter.html

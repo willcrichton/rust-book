@@ -443,6 +443,8 @@ need to reach for `pin` now and again to use them with those APIs. `Pin` and
 building a runtime itself, rather than for day to day Rust code. When you see
 them, though, now you will know what to do!
 
+{{#quiz ../quizzes/async-03-more-futures.toml}}
+
 [collections]: ch08-01-vectors.html#using-an-enum-to-store-multiple-types
 [dyn]: ch12-03-improving-error-handling-and-modularity.html
 [what-are-futures]: ch17-01-futures-and-syntax.html#what-are-futures

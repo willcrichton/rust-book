@@ -1,0 +1,38 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Given a function `sleep(d)` that sleeps for the given duration, consider this function:
+
+```rust
+let futs: Vec<_> = [1, 2, 3].iter().map(|n| async {
+  sleep(Duration::from_secs(5)).await;
+  n + 1
+}).collect();
+for fut in futs {
+  let n = fut.await;
+  println!("{n}");
+}
+```
+
+When executed, about how many seconds should this take to execute?
+"""
+prompt.distractors = ["5", "0"]
+answer.answer = "15"
+context = """
+Without using a function like `join_all`, the futures will not run concurrently. Therefore this code would take 15 seconds (5 seconds per list element).
+"""
+id = "68680e2e-7a9f-4cee-8080-70e57fe5a2b3"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Imagine Rust did not require that futures were pinned in order to be polled. Which of the following best describes the kind of problem that could occur?
+"""
+prompt.distractors = [
+  "If a future were movable at any point in its lifetime, then ..."
+]
+answer.answer = "If a future contains a reference to itself, then moving the future between polls would violate memory safety"
+context = """
+"""
+id = "1c3b2ad9-d9af-48b1-8cdf-bfc658ec456b"
+
