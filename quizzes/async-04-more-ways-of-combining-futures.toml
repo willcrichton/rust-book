@@ -1,0 +1,82 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are designing a utility function with the following specification:
+
+> `map_stringify` takes two arguments: a vector of inputs, and an async function that converts the input to an output,
+> where the outputs can be converted to strings.
+> `map_stringify` returns a vector of stringified outputs.
+
+Which function type signature best encodes this specification?
+"""
+prompt.distractors = [
+"""
+```rust
+async fn map_stringify(
+  inputs: Vec<String>, f: impl Future<Output = String>
+) -> Vec<String>
+```
+""",
+"""
+```rust
+fn map_stringify<I, O, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> O,
+) -> Vec<impl Future<Output = String>>
+where
+  O: ToString,  
+```
+""",
+"""
+```rust
+async fn map_stringify<I, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> F, 
+) -> Vec<String>
+where
+  F: Future + ToString,
+```
+"""]
+answer.answer = """
+```rust
+async fn map_stringify<I, O, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> F, 
+) -> Vec<String>
+where
+  O: ToString,
+  F: Future<Output = O>,
+```
+"""
+context = """
+Here's one implementation of the specified function:
+
+```rust
+async fn map_stringify<I, O, F>(
+  f: impl Fn(I) -> F, inputs: Vec<I>
+) -> Vec<String>
+where
+  O: ToString,
+  F: Future<Output = O>,
+{
+  let f = &f;
+  let futs = inputs
+    .into_iter()
+    .map(|input| async move { f(input).await.to_string() });
+  futures::future::join_all(futs).await
+}
+```
+"""
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are writing a program that needs to run some async code, but every 500ms check to see if the computation should be halted.
+Which helper function would be most appropriate for accomplishing this task?
+"""
+answer.answer = "`race` / `select`"
+prompt.distractors = [
+  "`join`",
+  "`yield`",
+  "`spawn` / `spawn_task`"
+]
+context = """
+For instance, you could run a `select` in a loop between a long-running future and a sleep future that completes in 500ms.
+"""

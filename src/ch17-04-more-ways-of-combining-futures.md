@@ -292,4 +292,7 @@ Over the last two sections, we have seen how to work with multiple futures at
 the same time. Up next, let’s look at how we can work with multiple futures in a
 sequence over time, with *streams*.
 
+{{#quiz ../quizzes/async-04-more-ways-of-combining-futures.toml}}
+
+
 [futures]: ch17-01-futures-and-syntax.html#what-are-futures

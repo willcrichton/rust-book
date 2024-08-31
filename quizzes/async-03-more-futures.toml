@@ -8,6 +8,7 @@ let futs: Vec<_> = [1, 2, 3].iter().map(|n| async {
   sleep(Duration::from_secs(5)).await;
   n + 1
 }).collect();
+
 for fut in futs {
   let n = fut.await;
   println!("{n}");
@@ -26,13 +27,48 @@ id = "68680e2e-7a9f-4cee-8080-70e57fe5a2b3"
 [[questions]]
 type = "MultipleChoice"
 prompt.prompt = """
-Imagine Rust did not require that futures were pinned in order to be polled. Which of the following best describes the kind of problem that could occur?
+Imagine Rust did not require that futures were pinned in order to be polled. 
+Which of the following async functions could potentially cause undefined behavior if not pinned?
 """
 prompt.distractors = [
-  "If a future were movable at any point in its lifetime, then ..."
-]
-answer.answer = "If a future contains a reference to itself, then moving the future between polls would violate memory safety"
-context = """
 """
-id = "1c3b2ad9-d9af-48b1-8cdf-bfc658ec456b"
-
+```rust
+async fn example(x: &i32) -> i32 {
+    sleep(Duration::from_secs(1)).await;
+    *y
+}
+```
+""",
+"""
+```rust
+async fn example(x: Vec<i32>) -> i32 {
+    sleep(Duration::from_secs(1)).await;
+    x[0]
+}
+```
+""",
+"""
+```rust
+async fn example() -> i32 {
+    let x = 0;
+    sleep(Duration::from_secs(1)).await;
+    x
+}
+```
+""",  
+]
+answer.answer = """
+```rust
+async fn example(x: i32) -> i32 {
+    let y = &x;
+    sleep(Duration::from_secs(1)).await;
+    *y
+}
+```
+"""
+context = """
+The core problem addressed by pinning in self-reference, or a future which contains a pointer to itself. 
+This happens an async block contains a local variable that refers to another local variable in the future.
+Here, that would be `y = &x`.
+"""
+id = "bc8b4acb-d111-4fec-b89a-e5d1bc77c8f2"
