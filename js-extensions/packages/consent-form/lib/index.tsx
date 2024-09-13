@@ -18,11 +18,8 @@ let ConsentForm = () => {
           <h2>What is this?</h2>
           <div className="row">
             <p>
-              This website is an experiment by Brown University researchers{" "}
-              <a href="https://willcrichton.net/">Will Crichton</a>,{" "}
-              <a href="https://gavinleroy.com/">Gavin Gray</a>, and{" "}
-              <a href="https://cs.brown.edu/~sk/">Shriram Krishnamurthi</a>. The goal of this
-              experiment is to evaluate and improve the content of the Rust Book to help people
+              This website is an experiment by the <a href="https://cel.cs.brown.edu/">Cognitive Engineering Lab</a> at Brown University.{" "}
+              The goal of this experiment is to evaluate and improve the content of the Rust Book to help people
               learn Rust more effectively.
             </p>
             <img src="img/experiment/brown-logo.png" width="150" />
