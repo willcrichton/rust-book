@@ -186,7 +186,7 @@ moved into the `add` call and will no longer be valid after that. So, although
 this statement instead does the following:
 1. `add` takes ownership of `s1`,
 2. it appends a copy of the contents of `s2` to `s1`, 
-3. and then it returns back ownership of `s1`.
+3. and then it returns back ownership of `s3`.
 
 If `s1` has enough capacity for `s2`, then no memory allocations occur. However, if `s1` does not have enough capacity for `s2`, then `s1` will internally make a larger memory allocation to fit both strings.
 <!-- END INTERVENTION -->
