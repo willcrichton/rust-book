@@ -6,7 +6,7 @@ fn main() {
     let mut s = String::from("Hello");
     let mut add_suffix = || s.push_str(" world");
     println!("{s}");
-    add_suffix();  
+    add_suffix();
 }
 """
 answer.doesCompile = false
@@ -23,7 +23,7 @@ fn main() {
     let mut s = String::from("Hello");
     let add_suffix = |s: &mut String| s.push_str(" world");
     println!("{s}");
-    add_suffix(&mut s);  
+    add_suffix(&mut s);
 }
 """
 answer.doesCompile = true
@@ -81,7 +81,7 @@ Which of the following function traits is most appropriate to fill in the blank?
 answer.answer = "`Fn`"
 prompt.distractors = ["`FnMut`", "`FnOnce`"]
 context = """
-`pipeline` could be called multiple times, so `FnOnce` is not appropriate. 
-`pipeline` takes an immutable reference to `self`, if `f` were `FnMut`, it could not be called within `pipeline`. 
+`pipeline` could be called multiple times, so `FnOnce` is not appropriate.
+`pipeline` takes an immutable reference to `self`, if `postprocess` were `FnMut`, it could not be called within `pipeline`.
 Therefore `Fn` is most appropriate here.
 """
