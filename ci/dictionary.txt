@@ -662,3 +662,7 @@ RawVec
 malloc
 Javascript's
 blockquote
+Krycho's
+Shriram
+Krishnamurthi
+OOPSLA
