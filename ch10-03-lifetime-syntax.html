@@ -678,7 +678,7 @@ compiler gets to the end of the three rules and there are still references for
 which it can’t figure out lifetimes, the compiler will stop with an error.
 These rules apply to <code>fn</code> definitions as well as <code>impl</code> blocks.</p>
 <!-- BEGIN INTERVENTION: d03748df-8dcf-4ec8-bd30-341927544665 -->
-<p>The first rule is that the compiler assigns a different lifetime parameter to each lifetime in each input type. References like <code>&amp;'_ i32</code> needs a lifetime parameter, and structures like <code>ImportantExcerpt&lt;'_&gt;</code> need a lifetime parameter. For example:</p>
+<p>The first rule is that the compiler assigns a different lifetime parameter to each lifetime in each input type. References like <code>&amp;'_ i32</code> need a lifetime parameter, and structures like <code>ImportantExcerpt&lt;'_&gt;</code> need a lifetime parameter. For example:</p>
 <ul>
 <li>The function <code>fn foo(x: &amp;i32)</code> would get one lifetime parameter and become <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>.</li>
 <li>The function <code>fn foo(x: &amp;i32, y: &amp;i32)</code> would get two lifetime parameters and become <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>.</li>
