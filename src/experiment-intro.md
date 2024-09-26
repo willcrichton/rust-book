@@ -33,6 +33,8 @@ You can use highlights to save information for yourself. You can also use highli
 
 The book's content may change as you go through the experiment. We will update this page as we add new features. Here's the changelog:
 
+* September 26, 2024
+  * Chris Krycho's chapter on async Rust has been added, along with new quiz questions.
 * February 16, 2023
   * A new chapter on ownership has replaced the previous Chapter 4.
 * January 18, 2023
@@ -48,6 +50,16 @@ The book's content may change as you go through the experiment. We will update t
 
 _Interested in participating in other experiments about making Rust easier to learn? Please sign up here:_ <https://forms.gle/U3jEUkb2fGXykp1DA>
 
-## 4. Acknowledgments
+## 4. Publications
+
+Thus far, this experiment has led to two open-access publications. Check them out if you're interested to see the academic research behind this book:
+
+* [Profiling Programming Language Learning](https://dl.acm.org/doi/10.1145/3649812) <br />
+  Will Crichton and Shriram Krishnamurthi. OOPSLA 2024. (Distinguished Paper!)
+
+* [A Grounded Conceptual Model for Ownership Types in Rust](https://dl.acm.org/doi/10.1145/3622841) <br />
+  Will Crichton, Gavin Gray, and Shriram Krishnamurthi. OOPSLA 2023.
+
+## 5. Acknowledgments
 
 Niko Matsakis and Amazon Web Services provided funding for this experiment. Carol Nichols and the Rust Foundation helped publicize the experiment. TRPL is the product of many people's hard work before we started this experiment.
