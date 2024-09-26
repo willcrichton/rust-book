@@ -175,12 +175,12 @@ Data can be aliased. Data can be mutated. But data cannot be _both_ aliased _and
 
 However, because references are non-owning pointers, they need different rules than boxes to ensure the *Pointer Safety Principle*. By design, references are meant to temporarily create aliases. In the rest of this section, we will explain the basics of how Rust ensures the safety of references through the **borrow checker.**
 
-### References Change Permissions on Paths
+### References Change Permissions on Places
 
 The core idea behind the borrow checker is that variables have three kinds of **permissions** on their data:
 
 - **Read** (@Perm{read}): data can be copied to another location.
-- **Write** (@Perm{write}): data can be mutated in-place.
+- **Write** (@Perm{write}): data can be mutated.
 - **Own** (@Perm{own}): data can be moved or dropped.
 
 These permissions don't exist at runtime, only within the compiler. They describe how the compiler "thinks" about your program before the program is executed.
@@ -205,7 +205,7 @@ Let's walk through each line:
 2. After `let num = &v[2]`, the data in `v` has been **borrowed** by `num` (indicated by <i class="fa fa-arrow-right"></i>). Three things happen:
    - The borrow removes @Perm[lost]{write}@Perm[lost]{own} permissions from `v` (the slash indicates loss). `v` cannot be written or owned, but it can still be read.
    - The variable `num` has gained @Perm{read}@Perm{own} permissions. `num` is not writable (the missing @Perm{write} permission is shown as a dash <span class="perm write">‒</span>) because it was not marked `let mut`.
-   - The **path** `*num` has gained the @Perm{read} permission.
+   - The **place** `*num` has gained the @Perm{read} permission.
 3. After `println!(...)`, then `num` is no longer in use, so `v` is no longer borrowed. Therefore:
    - `v` regains its @Perm{write}@Perm{own} permissions (indicated by <i class="fa fa-rotate-left"></i>).
    - `num` and `*num` have lost all of their permissions (indicated by <i class="fa fa-level-down"></i>).
@@ -221,18 +221,18 @@ let mut x_ref = &x;
 #}
 ```
 
-Notice that `x_ref` has the @Perm{write} permission, while `*x_ref` does not. That means we can assign `x_ref` to a different reference (e.g. `x_ref = &y`), but we cannot mutate the pointed data (e.g. `*x_ref += 1`).
+Notice that `x_ref` has the @Perm{write} permission, while `*x_ref` does not. That means we can assign a different reference to the `x_ref` variable (e.g. `x_ref = &y`), but we cannot mutate the data it points to (e.g. `*x_ref += 1`).
 
-More generally, permissions are defined on **paths** and not just variables. A path is anything you can put on the left-hand side of an assignment. Paths include:
+More generally, permissions are defined on **places** and not just variables. A place is anything you can put on the left-hand side of an assignment. Places include:
 
 - Variables, like `a`.
-- Dereferences of paths, like `*a`.
-- Array accesses of paths, like `a[0]`.
-- Fields of paths, like `a.0` for tuples or `a.field` for structs (discussed next chapter).
+- Dereferences of places, like `*a`.
+- Array accesses of places, like `a[0]`.
+- Fields of places, like `a.0` for tuples or `a.field` for structs (discussed next chapter).
 - Any combination of the above, like `*((*a)[0].1)`.
 
 
-Second, why do paths lose permissions when they become unused? Because some permissions are mutually exclusive. If `num = &v[2]`, then `v` cannot be mutated or dropped while `num` is in use. But that doesn't mean it's invalid to use `num` for more time. For example, if we add another `print` to the above program, then `num` simply loses its permissions later:
+Second, why do places lose permissions when they become unused? Because some permissions are mutually exclusive. If you write `num = &v[2]`, then `v` cannot be mutated or dropped while `num` is in use. But that doesn't mean it's invalid to use `num` again. For example, if we add another `println!` to the above program, then `num` simply loses its permissions one line later:
 
 ```aquascope,permissions,stepper
 #fn main() {
@@ -244,9 +244,12 @@ v.push(4);
 #}
 ```
 
+It's only a problem if you attempt to use `num` again *after* mutating `v`. Let's look at this in more detail.
+
+
 ### The Borrow Checker Finds Permission Violations
 
-Recall the *Pointer Safety Principle*: data should not be aliased and mutated. The goal of these permissions is to ensure that data cannot be mutated if it is aliased. Creating a reference to data ("borrowing" it) causes that data to be temporarily read-only until the reference is no longer used.
+Recall the *Pointer Safety Principle*: data should not be aliased and mutated. The goal of these permissions is to ensure that data cannot be mutated if it is aliased. Creating a reference to data ("borrowing" it) causes that data to be temporarily read-only until the reference is no longer in use.
 
 Rust uses these permissions in its **borrow checker**. The borrow checker looks for potentially unsafe operations involving references. Let's return to the unsafe program we saw earlier, where `push` invalidates a reference. This time we'll add another aspect to the permissions diagram:
 
@@ -259,7 +262,7 @@ println!("Third element is {}", *num);
 #}
 ```
 
-Any time a path is used, Rust expects that path to have certain permissions depending on the operation. For example, the borrow `&v[2]` requires that `v` is readable. Therefore the @Perm{read} permission is shown between the operation `&` and the path `v`. The letter is filled-in because `v` has the read permission at that line.
+Any time a place is used, Rust expects that place to have certain permissions depending on the operation. For example, the borrow `&v[2]` requires that `v` is readable. Therefore the @Perm{read} permission is shown between the operation `&` and the place `v`. The letter is filled-in because `v` has the read permission at that line.
 
 By contrast, the mutating operation `v.push(4)` requires that `v` is readable and writable. Both @Perm{read} and @Perm{write} are shown. However, `v` does not have write permissions (it is borrowed by `num`). So the letter @Perm[missing]{write} is hollow, indicating that the write permission is *expected* but `v` does not have it.
 
@@ -301,9 +304,9 @@ println!("Vector is now {:?}", v);
 A mutable reference is created with the `&mut` operator. The type of `num` is written as `&mut i32`. Compared to immutable references, you can see two important differences in the permissions:
 
 1. When `num` was an immutable reference, `v` still had the @Perm{read} permission. Now that `num` is a mutable reference, `v` has lost _all_ permissions while `num` is in use.
-2. When `num` was an immutable reference, the path `*num` only had the @Perm{read} permission. Now that `num` is a mutable reference, `*num` has also gained the @Perm{write} permission.
+2. When `num` was an immutable reference, the place `*num` only had the @Perm{read} permission. Now that `num` is a mutable reference, `*num` has also gained the @Perm{write} permission.
 
-The first observation is what makes mutable references *safe*. Mutable references allow mutation but prevent aliasing. The borrowed path `v` becomes temporarily unusable, so effectively not an alias.
+The first observation is what makes mutable references *safe*. Mutable references allow mutation but prevent aliasing. The borrowed place `v` becomes temporarily unusable, so effectively not an alias.
 
 The second observation is what makes mutable references *useful*. `v[2]` can be mutated through `*num`. For example, `*num += 1` mutates `v[2]`. Note that `*num` has the @Perm{write} permission, but `num` does not. `num` refers to the mutable reference itself, e.g. `num` cannot be reassigned to a *different* mutable reference.
 
@@ -450,7 +453,7 @@ References provide the ability to read and write data without consuming ownershi
 However, references can be easily misused. Rust's borrow checker enforces a system of permissions that ensures references are used safely:
 
 - All variables can read, own, and (optionally) write their data.
-- Creating a reference will transfer permissions from the borrowed path to the reference.
+- Creating a reference will transfer permissions from the borrowed place to the reference.
 - Permissions are returned once the reference's lifetime has ended.
 - Data must outlive all references that point to it.
 
