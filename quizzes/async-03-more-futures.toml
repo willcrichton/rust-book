@@ -27,48 +27,84 @@ id = "68680e2e-7a9f-4cee-8080-70e57fe5a2b3"
 [[questions]]
 type = "MultipleChoice"
 prompt.prompt = """
-Imagine Rust did not require that futures were pinned in order to be polled. 
-Which of the following async functions could potentially cause undefined behavior if not pinned?
+Say you are designing a utility function with the following specification:
+
+> `map_stringify` takes two arguments: a vector of inputs, and an async function that converts the input to an output,
+> where the outputs can be converted to strings.
+> `map_stringify` returns a vector of stringified outputs.
+
+Which function type signature best encodes this specification?
 """
 prompt.distractors = [
 """
 ```rust
-async fn example(x: &i32) -> i32 {
-    sleep(Duration::from_secs(1)).await;
-    *y
-}
+async fn map_stringify(
+  inputs: Vec<String>, f: impl Future<Output = String>
+) -> Vec<String>
 ```
 """,
 """
 ```rust
-async fn example(x: Vec<i32>) -> i32 {
-    sleep(Duration::from_secs(1)).await;
-    x[0]
-}
+fn map_stringify<I, O, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> O,
+) -> Vec<impl Future<Output = String>>
+where
+  O: ToString,  
 ```
 """,
 """
 ```rust
-async fn example() -> i32 {
-    let x = 0;
-    sleep(Duration::from_secs(1)).await;
-    x
-}
+async fn map_stringify<I, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> F, 
+) -> Vec<String>
+where
+  F: Future + ToString,
 ```
-""",  
-]
+"""]
 answer.answer = """
 ```rust
-async fn example(x: i32) -> i32 {
-    let y = &x;
-    sleep(Duration::from_secs(1)).await;
-    *y
-}
+async fn map_stringify<I, O, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> F, 
+) -> Vec<String>
+where
+  O: ToString,
+  F: Future<Output = O>,
 ```
 """
 context = """
-The core problem addressed by pinning in self-reference, or a future which contains a pointer to itself. 
-This happens an async block contains a local variable that refers to another local variable in the future.
-Here, that would be `y = &x`.
+Here's one implementation of the specified function:
+
+```rust
+async fn map_stringify<I, O, F>(
+  f: impl Fn(I) -> F, inputs: Vec<I>
+) -> Vec<String>
+where
+  O: ToString,
+  F: Future<Output = O>,
+{
+  let f = &f;
+  let futs = inputs
+    .into_iter()
+    .map(|input| async move { f(input).await.to_string() });
+  futures::future::join_all(futs).await
+}
+```
 """
-id = "bc8b4acb-d111-4fec-b89a-e5d1bc77c8f2"
+id = "b42a9c5b-bfe7-4d6f-967a-f8ff2a6faa0d"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are writing a program that needs to run some async code, but every 500ms check to see if the computation should be halted.
+Which helper function would be most appropriate for accomplishing this task?
+"""
+prompt.distractors = [
+  "`join`",
+  "`yield`",
+  "`spawn` / `spawn_task`"
+]
+answer.answer = "`race` / `select`"
+context = """
+For instance, you could run a `select` in a loop between a long-running future and a sleep future that completes in 500ms.
+"""
+id = "7da21e95-8e03-412b-8c4d-90ccfc8c6802"

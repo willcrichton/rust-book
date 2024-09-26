@@ -389,3 +389,5 @@ and its methods with it automatically.
 That’s all we’re going to cover for the lower-level details on these traits. To
 wrap up, let’s consider how futures (including streams), tasks, and threads all
 fit together!
+
+{{#quiz ../quizzes/async-05-traits-for-async.toml}}
