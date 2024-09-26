@@ -4,7 +4,7 @@
 
 *(and with experimental modifications!)*
 
-This version of the text assumes you’re using Rust 1.79.0 (released 2024-06-13)
+This version of the text assumes you’re using Rust 1.81.0 (released 2024-09-04)
 or later. See the [“Installation” section of Chapter 1][install]<!-- ignore -->
 to install or update Rust. Run `rustc --version` to see your Rust version.
 

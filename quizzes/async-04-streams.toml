@@ -1,0 +1,31 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+The `Stream` trait is most analogous to which non-async trait in the Rust standard library?
+"""
+prompt.distractors = ["`Write`", "`Index`", "`Sync`"]
+answer.answer = "`Iterator`"
+context = """
+The `Stream` trait provides an asynchronous version of a Rust iterator.
+"""
+id = "f94a87f0-a4d6-4cd6-bcee-dfcc606f8ec2"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you have a stream that produces the sequence `["A", "B", "C"]` and another stream that produces the sequence ["D", "E", "F"].
+You do not know when each stream will emit each character, only that it occurs in the specified sequences.
+Consider merging these streams and printing each character. Then select each of the following output strings that could print.
+"""
+prompt.distractors = [
+  "ACBDEF",
+  "CFBEAD"
+]
+answer.answer = [
+  "ABDEFC",
+  "DEFABC"
+]
+context = """
+Merging will always respect ordering in each stream, so for example "B" cannot occur before "C".
+"""
+id = "84452eff-13df-4fcb-91ea-1f504d5bfaf0"

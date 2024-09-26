@@ -389,5 +389,5 @@ of generics.
 
 {{#quiz ../quizzes/ch10-02-traits-sec2.toml}}
 
-[using-trait-objects-that-allow-for-values-of-different-types]: ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types
+[using-trait-objects-that-allow-for-values-of-different-types]: ch18-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types
 [methods]: ch05-03-method-syntax.html#defining-methods

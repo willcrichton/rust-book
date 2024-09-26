@@ -1,0 +1,86 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Consider the following function:
+
+```rust
+async fn print_letters() {
+  let a = async { print!("A"); };
+  let b = async { print!("B"); };
+  let c = async { print!("C"); };
+  c.await;
+  b.await;
+  a.await;
+}
+```
+
+Which of the following strings can possibly be printed after running `print_letters().await`?
+"""
+prompt.distractors = ["`ABC`", "`BCA`", "`ACB`"]
+answer.answer = ["`CBA`"]
+context = """
+This program has deterministic behavior. The prints do not execute until the async blocks are awaited.
+The blocks are awaited in the order `c`/`b`/`a`, so the program will only print `CBA`.
+"""
+id = "8f62c158-525a-43a2-aa6a-0cc106cada10"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are given a helper function `wait_all(a, b)` with the following behavior:
+* `wait_all` guarantees that `a` and `b` are executed to completion.
+* `wait_all` makes no guarantees regarding fairness or initial execution order.
+
+Then given the following code:
+
+```rust
+async fn print_letters() {
+  let fut1 = async { 
+    print!("A");
+    sleep().await;
+    print!("B");
+  };
+  let fut2 = async {
+    print!("C");
+    sleep().await;
+    print!("D");
+  }
+  wait_all(fut1, fut2).await;
+}
+```
+
+Which of the following strings can possibly be printed after running `print_letters().await`?
+"""
+prompt.distractors = ["`DABC`"]
+answer.answer = [
+  "`ABCD`", "`CADB`", "`ACBD`"
+]
+context = """
+The hypothetical `wait_all` primitive is like `join` but with fewer guarantees. Given only the spec in this problem, any interleaving of the
+two futures is valid. The only invalid output is one that inverts program execution order, i.e., `DABC` which would have `D` printed before `C`.
+"""
+id = "4b28f13e-9781-4d29-b886-7639fa527f36"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are given a message-passing channel `channel()` which is non-blocking and unbounded,
+and a function `join(a, b)` which fairly waits on both its arguments to completion. Then given this async code:
+
+```rust
+let (tx, mut rx) = channel();
+let recv_fut = rx.recv();
+let send_fut = tx.send(0);
+let (n, _) = join(recv_fut, send_fut).await;
+println!("{}", n.unwrap());
+```
+
+What will happen as a result of executing this code?
+"""
+prompt.distractors = [
+  "The program prints `0` and loops forever",
+  "The program prints nothing and loops forever",
+  "The program panics"
+]
+answer.answer = "The program prints `0` and exits"
+id = "e23b7c48-3780-44e7-8ea4-df35032548a1"

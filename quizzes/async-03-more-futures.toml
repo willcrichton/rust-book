@@ -1,0 +1,110 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Given a function `sleep(d)` that sleeps for the given duration, consider this function:
+
+```rust
+let futs: Vec<_> = [1, 2, 3].iter().map(|n| async {
+  sleep(Duration::from_secs(5)).await;
+  n + 1
+}).collect();
+
+for fut in futs {
+  let n = fut.await;
+  println!("{n}");
+}
+```
+
+When executed, about how many seconds should this take to execute?
+"""
+prompt.distractors = ["5", "0"]
+answer.answer = "15"
+context = """
+Without using a function like `join_all`, the futures will not run concurrently. Therefore this code would take 15 seconds (5 seconds per list element).
+"""
+id = "68680e2e-7a9f-4cee-8080-70e57fe5a2b3"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are designing a utility function with the following specification:
+
+> `map_stringify` takes two arguments: a vector of inputs, and an async function that converts the input to an output,
+> where the outputs can be converted to strings.
+> `map_stringify` returns a vector of stringified outputs.
+
+Which function type signature best encodes this specification?
+"""
+prompt.distractors = [
+"""
+```rust
+async fn map_stringify(
+  inputs: Vec<String>, f: impl Future<Output = String>
+) -> Vec<String>
+```
+""",
+"""
+```rust
+fn map_stringify<I, O, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> O,
+) -> Vec<impl Future<Output = String>>
+where
+  O: ToString,  
+```
+""",
+"""
+```rust
+async fn map_stringify<I, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> F, 
+) -> Vec<String>
+where
+  F: Future + ToString,
+```
+"""]
+answer.answer = """
+```rust
+async fn map_stringify<I, O, F>(
+  inputs: Vec<I>, f: impl Fn(I) -> F, 
+) -> Vec<String>
+where
+  O: ToString,
+  F: Future<Output = O>,
+```
+"""
+context = """
+Here's one implementation of the specified function:
+
+```rust
+async fn map_stringify<I, O, F>(
+  f: impl Fn(I) -> F, inputs: Vec<I>
+) -> Vec<String>
+where
+  O: ToString,
+  F: Future<Output = O>,
+{
+  let f = &f;
+  let futs = inputs
+    .into_iter()
+    .map(|input| async move { f(input).await.to_string() });
+  futures::future::join_all(futs).await
+}
+```
+"""
+id = "b42a9c5b-bfe7-4d6f-967a-f8ff2a6faa0d"
+
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Say you are writing a program that needs to run some async code, but every 500ms check to see if the computation should be halted.
+Which helper function would be most appropriate for accomplishing this task?
+"""
+prompt.distractors = [
+  "`join`",
+  "`yield`",
+  "`spawn` / `spawn_task`"
+]
+answer.answer = "`race` / `select`"
+context = """
+For instance, you could run a `select` in a loop between a long-running future and a sleep future that completes in 500ms.
+"""
+id = "7da21e95-8e03-412b-8c4d-90ccfc8c6802"

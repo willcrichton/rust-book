@@ -1,0 +1,48 @@
+[[questions]]
+type = "MultipleChoice"
+prompt.prompt = """
+Imagine Rust did not require that futures were pinned in order to be polled. 
+Which of the following async functions could potentially cause undefined behavior if not pinned?
+"""
+prompt.distractors = [
+"""
+```rust
+async fn example(x: &i32) -> i32 {
+    sleep(Duration::from_secs(1)).await;
+    *y
+}
+```
+""",
+"""
+```rust
+async fn example(x: Vec<i32>) -> i32 {
+    sleep(Duration::from_secs(1)).await;
+    x[0]
+}
+```
+""",
+"""
+```rust
+async fn example() -> i32 {
+    let x = 0;
+    sleep(Duration::from_secs(1)).await;
+    x
+}
+```
+""",  
+]
+answer.answer = """
+```rust
+async fn example(x: i32) -> i32 {
+    let y = &x;
+    sleep(Duration::from_secs(1)).await;
+    *y
+}
+```
+"""
+context = """
+The core problem addressed by pinning in self-reference, or a future which contains a pointer to itself. 
+This happens an async block contains a local variable that refers to another local variable in the future.
+Here, that would be `y = &x`.
+"""
+id = "bc8b4acb-d111-4fec-b89a-e5d1bc77c8f2"
