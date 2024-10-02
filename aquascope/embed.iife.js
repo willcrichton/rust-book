@@ -50216,8 +50216,9 @@ fn main() {
     root.querySelectorAll(`.${EMBED_NAME}`).forEach((elem) => {
       elem.classList.remove(EMBED_NAME);
       elem.classList.add(AQUASCOPE_NAME);
-      let readOnly2 = elem.dataset.noInteract === "true";
-      let showBugReporter = elem.dataset.showBugReporter === "true";
+      let maybeParseJson = (s2) => s2 ? JSON.parse(s2) : void 0;
+      let readOnly2 = maybeParseJson(elem.dataset.noInteract) === true;
+      let showBugReporter = maybeParseJson(elem.dataset.showBugReporter) === true;
       let computePermBtn;
       if (!readOnly2) {
         let btnWrap = document.createElement("div");
@@ -50227,7 +50228,6 @@ fn main() {
         btnWrap.appendChild(computePermBtn);
         elem.appendChild(btnWrap);
       }
-      let maybeParseJson = (s2) => s2 ? JSON.parse(s2) : void 0;
       let initialCode = maybeParseJson(elem.dataset.code);
       if (!initialCode)
         throw new Error("Missing data-code attribute");
