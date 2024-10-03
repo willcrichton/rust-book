@@ -64,11 +64,12 @@ id = "4b28f13e-9781-4d29-b886-7639fa527f36"
 [[questions]]
 type = "MultipleChoice"
 prompt.prompt = """
-Say you are given a message-passing channel `channel()` which is non-blocking and unbounded,
-and a function `join(a, b)` which fairly waits on both its arguments to completion. Then given this async code:
+Say you are given a message-passing channel `channel()` which is non-blocking and *bounded*, 
+meaning `send` returns a future that completes once there is capacity in the channel.
+Assume you also have a function `join(a, b)` which *fairly* waits on both its arguments to completion. Then given this async code:
 
 ```rust
-let (tx, mut rx) = channel();
+let (tx, mut rx) = channel(16);
 let recv_fut = rx.recv();
 let send_fut = tx.send(0);
 let (n, _) = join(recv_fut, send_fut).await;
@@ -83,4 +84,7 @@ prompt.distractors = [
   "The program panics"
 ]
 answer.answer = "The program prints `0` and exits"
+context = """
+Because the channel is non-blocking, we can create a receive future before sending without looping forever.
+"""
 id = "e23b7c48-3780-44e7-8ea4-df35032548a1"
