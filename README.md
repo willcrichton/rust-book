@@ -23,6 +23,30 @@ See the [releases] to download just the code of all the code listings that appea
 
 [releases]: https://github.com/rust-lang/book/releases
 
+## In-flight entertainment
+
+You can now build a portable container with the book inside, handy for situations where you have limited to no internet access!
+
+It's recommended to take a shallow clone of this repository when building a Docker container.
+
+```bash
+git clone https://github.com/cognitive-engineering-lab/rust-book.git --depth 1
+```
+
+Build the container:
+
+```bash
+docker build -t rust-book .
+```
+
+And run it:
+
+```
+docker run --rm -it -p 8080:80 rust-book
+```
+
+Now just navigate using your browser of choice to http://localhost:8080 to access the book.
+
 ## Requirements
 
 Building the book requires [mdBook], ideally the same version that
