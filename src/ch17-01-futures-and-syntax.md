@@ -123,7 +123,7 @@ Notice that Rust’s `await` keyword goes after the expression you are awaiting,
 not before it. That is, it is a *postfix keyword*. This may be different from
 what you might be used to if you have used async in other languages. Rust chose
 this because it makes chains of methods much nicer to work with. As a result, we
-can change the body of `page_url_for` to chain the `trpl::get` and `text`
+can change the body of `page_title` to chain the `trpl::get` and `text`
 function calls together with `await` between them, as shown in Listing 17-2:
 
 <Listing number="17-2" file-name="src/main.rs" caption="Chaining with the `await` keyword">
