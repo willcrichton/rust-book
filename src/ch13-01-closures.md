@@ -413,7 +413,7 @@ than once:
 
 When you start designing functions that accept or return closures, you'll need to think about the lifetime of data captured by the closure. For example, here is a simple program that is supposed to return a closure that clones a string:
 
-```rust,ignore,should_fail
+```rust,ignore,does_not_compile
 fn make_a_cloner(s_ref: &str) -> impl Fn() -> String {
     move || s_ref.to_string()
 }
