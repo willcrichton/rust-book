@@ -614,7 +614,7 @@ fits that arm’s pattern. Rust takes the value given to `match` and looks
 through each arm’s pattern in turn. Patterns and the `match` construct are
 powerful Rust features: they let you express a variety of situations your code
 might encounter and they make sure you handle them all. These features will be
-covered in detail in Chapter 6 and Chapter 18, respectively.
+covered in detail in Chapter 6 and Chapter 19, respectively.
 
 Let’s walk through an example with the `match` expression we use here. Say that
 the user has guessed 50 and the randomly generated secret number this time is
