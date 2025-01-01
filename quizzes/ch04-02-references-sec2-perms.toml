@@ -31,7 +31,7 @@ prompt.prompt = """
 Consider the permissions in the following program:
 
 ```aquascope,permissions,stepper,boundaries
-fn get_first(v: &Vec<String>) -> &str {
+fn get_first(v: &Vec<String>) -> &String {
     &v[0]
 }
 

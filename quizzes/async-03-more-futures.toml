@@ -4,7 +4,7 @@ prompt.prompt = """
 Given a function `sleep(d)` that sleeps for the given duration, consider this function:
 
 ```rust
-let futs: Vec<_> = [1, 2, 3].iter().map(|n| async {
+let futs: Vec<_> = [1, 2, 3].iter().map(|n| async move {
   sleep(Duration::from_secs(5)).await;
   n + 1
 }).collect();

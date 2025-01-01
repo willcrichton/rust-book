@@ -546,7 +546,7 @@ Let’s finally implement the `execute` method on `ThreadPool`. We’ll also cha
 `Job` from a struct to a type alias for a trait object that holds the type of
 closure that `execute` receives. As discussed in the [“Creating Type Synonyms
 with Type Aliases”][creating-type-synonyms-with-type-aliases]<!-- ignore -->
-section of Chapter 19, type aliases allow us to make long types shorter for
+section of Chapter 20, type aliases allow us to make long types shorter for
 ease of use. Look at Listing 20-19.
 
 <span class="filename">Filename: src/lib.rs</span>
@@ -658,7 +658,7 @@ thread run them.
 > multiple instances of the same request sequentially for caching reasons. This
 > limitation is not caused by our web server.
 
-After learning about the `while let` loop in Chapter 18, you might be wondering
+After learning about the `while let` loop in Chapter 19, you might be wondering
 why we didn’t write the worker thread code as shown in Listing 20-21.
 
 <span class="filename">Filename: src/lib.rs</span>

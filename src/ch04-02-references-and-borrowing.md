@@ -392,16 +392,6 @@ This snippet introduces a new kind of permission, the flow permission @Perm{flow
 
 Unlike the @Perm{read}@Perm{write}@Perm{own} permissions, @Perm{flow} does not change throughout the body of a function. A reference has the @Perm{flow} permission if it's allowed to be used (that is, to *flow*) in a particular expression. For example, let's say we change `first` to a new function `first_or` that includes a `default` parameter:
 
-```aquascope,permissions,boundaries,showFlows,shouldFail
-fn first_or(strings: &Vec<String>, default: &String) -> &String {
-    if strings.len() > 0 {
-        &strings[0]`{}`
-    } else {
-        default`{}`
-    }
-}
-```
-
 This function no longer compiles, because the expressions `&strings[0]` and `default` lack the necessary @Perm{flow} permission to be returned. But why? Rust gives the following error:
 
 ```text

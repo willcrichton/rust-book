@@ -189,12 +189,11 @@ many fields as we want in any order, regardless of the order of the fields in
 the struct’s definition.
 
 Note that the struct update syntax uses `=` like an assignment; this is
-because it moves the data, just as we saw in the ["What Is Ownership?"][move]<!-- ignore --> section. In this example, we can no
-longer use `user1` after creating `user2` because the `String` in the
+because it moves the data, just as we saw in the ["What Is Ownership?"][move]<!-- ignore --> section. In this example, after creating `user2`, `user1` is partially invalidated because the `String` in the
 `username` field of `user1` was moved into `user2`. If we had given `user2` new
 `String` values for both `email` and `username`, and thus only used the
 `active` and `sign_in_count` values from `user1`, then `user1` would still be
-valid after creating `user2`. The types of `active` and `sign_in_count` are
+fully valid after creating `user2`. The types of `active` and `sign_in_count` are
 types that implement the `Copy` trait, so the behavior we discussed in the
 [“Copying vs. Moving Out of a Collection”][copy]<!-- ignore --> section would apply.
 
