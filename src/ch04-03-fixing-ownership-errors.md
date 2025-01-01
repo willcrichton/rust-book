@@ -79,7 +79,7 @@ This program is rejected by the borrow checker because `name` is an immutable re
 
 ```aquascope,interpreter,shouldFail,horizontal
 #fn stringify_name_with_title(name: &Vec<String>) -> String {
-#    name.push(String::from("Esq."));`{}`
+#    name.push(String::from("Esq."));
 #    let full = name.join(" ");
 #    full
 #}
