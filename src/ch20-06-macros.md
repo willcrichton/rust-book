@@ -106,7 +106,7 @@ one arm.
 
 <!-- BEGIN INTERVENTION: f4f664ef-4b0b-43ac-ba90-5051a4ef89fb -->
 Valid pattern syntax in macro definitions is different than the pattern syntax
-covered in Chapter 18 because macro patterns are matched against Rust code
+covered in Chapter 19 because macro patterns are matched against Rust code
 structure rather than values. For example, declarative macros can match against expressions (`expr`), types (`ty`), and even entire items (`item`).
 Let's walk through what the pattern pieces in
 Listing 19-28 mean; for the full macro pattern syntax, see the [Rust

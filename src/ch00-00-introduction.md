@@ -143,15 +143,15 @@ traits that enable their functionality.
 
 In Chapter 16, we’ll walk through different models of concurrent programming
 and talk about how Rust helps you to program in multiple threads fearlessly.
-Chapter 17 looks at how Rust idioms compare to object-oriented programming
+Chapter 18 looks at how Rust idioms compare to object-oriented programming
 principles you might be familiar with.
 
-Chapter 18 is a reference on patterns and pattern matching, which are powerful
-ways of expressing ideas throughout Rust programs. Chapter 19 contains a
+Chapter 19 is a reference on patterns and pattern matching, which are powerful
+ways of expressing ideas throughout Rust programs. Chapter 20 contains a
 smorgasbord of advanced topics of interest, including unsafe Rust, macros, and
 more about lifetimes, traits, types, functions, and closures.
 
-In Chapter 20, we’ll complete a project in which we’ll implement a low-level
+In Chapter 21, we’ll complete a project in which we’ll implement a low-level
 multithreaded web server!
 
 Finally, some appendices contain useful information about the language in a
