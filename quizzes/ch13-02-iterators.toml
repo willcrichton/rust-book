@@ -19,7 +19,7 @@ Lazy generally means "does not do work until asked", and iterators do not perfor
 id = "19eac65e-44ad-4349-9632-47bdbb519d46"
 type = "MultipleChoice"
 prompt.prompt = """
-True/false: these two code snippets are semantically equivalent.
+True/false: these two code snippets are semantically equivalent where `iter` is an iterator.
 
 Snippet 1:
 ```
