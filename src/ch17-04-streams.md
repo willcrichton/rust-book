@@ -93,7 +93,7 @@ Listing 17-31.
 
 <Listing number="17-31" caption="Successfully using an iterator as the basis for a stream" file-name="src/main.rs">
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch17-async-await/listing-17-31/src/main.rs}}
 ```
 
