@@ -252,7 +252,7 @@ The method call `r.area()` becomes `Rectangle::area(&r)`. The function name is t
 
 The method call `r.set_width(2)` similarly becomes `Rectangle::set_width(&mut r, 2)`. This method expects `&mut self`, so the first argument is a mutable borrow `&mut r`. The second argument is exactly the same, the number 2.
 
-As we described in Chapter 4.3 ["Dereferencing a Pointer Accesses Its Data"](ch04-02-references-and-borrowing.html#dereferencing-a-pointer-accesses-its-data), Rust will insert as many references and dereferences as needed to make the types match up for the `self` parameter. For example, here are two equivalent calls to `area` for a mutable reference to a boxed rectangle:
+As we described in Chapter 4.2 ["Dereferencing a Pointer Accesses Its Data"](ch04-02-references-and-borrowing.html#dereferencing-a-pointer-accesses-its-data), Rust will insert as many references and dereferences as needed to make the types match up for the `self` parameter. For example, here are two equivalent calls to `area` for a mutable reference to a boxed rectangle:
 
 ```rust
 # struct Rectangle {
