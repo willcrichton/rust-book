@@ -5,12 +5,12 @@ prompt.prompt = """
 Which of the following are "superpowers" that Rust enables inside an `unsafe` block?
 """
 answer.answer = [
-    "Dereferencing a raw pointer",
-    "Calling a function marked as `unsafe`",
+  "Dereferencing a raw pointer",
+  "Calling a function marked as `unsafe`",
 ]
 prompt.distractors = [
-    "Disabling the borrow checker",
-    "Converting a reference to a raw pointer",
+  "Disabling the borrow checker",
+  "Converting a reference to a raw pointer",
 ]
 context = """
 `unsafe` blocks enable you to dereference raw pointers and call `unsafe` functions. However,
@@ -48,13 +48,13 @@ prompt.prompt = """
 Which of the following are situations where using `unsafe` code (or a safe wrapper around `unsafe` code) 
 is an idiomatic method for working around the borrow checker?
 """
-answer.answer = [    
-    "Getting two mutable references to disjoint indices in an array",
-    "Allowing values to be uninitialized when they are not being read",
-    "Having a reference to one field of a struct sit in another field of the same struct"
+answer.answer = [
+  "Getting two mutable references to disjoint indices in an array",
+  "Allowing values to be uninitialized when they are not being read",
+  "Having a reference to one field of a struct sit in another field of the same struct",
 ]
 prompt.distractors = [
-    "Returning a pointer to a stack-allocated variable out of a function",    
+  "Returning a pointer to a stack-allocated variable out of a function",
 ]
 context = """
 Two mutable references to disjoint indices is reasonable because the borrow checker doesn't understand when indices are disjoint. See: [`slice::split_at_mut`](https://doc.rust-lang.org/stable/std/primitive.slice.html#method.split_at_mut).
@@ -65,6 +65,6 @@ Having a struct hold a reference to itself is reasonable because the borrow chec
 reason about the lifetime of self-references. See the [`std::pin`](https://doc.rust-lang.org/stable/std/pin/index.html) module.
 
 However, returning a pointer to a stack-allocated variable is *never* valid to do with unsafe
-code. The only appropriate workaround is to use garbage collection, e.g. returning an `Rc<T>`
+code. The only appropriate workaround is to use reference counting, e.g. returning an `Rc<T>`
 instead of `&T`.
 """
