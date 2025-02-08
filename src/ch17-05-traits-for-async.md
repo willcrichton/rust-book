@@ -96,7 +96,7 @@ on this future and work on other futures and check this one again later. That
 “something” is an async runtime, and this scheduling and coordination work is
 one of the main jobs for a runtime.
 
-Recall our description (in the [Counting][counting] section) of waiting on
+Recall our description (in the [Message Passing][message-passing] section) of waiting on
 `rx.recv`. The `recv` call returns a `Future`, and awaiting it polls it. In our
 initial discussion, we noted that a runtime will pause the future until it is
 ready with either `Some(message)` or `None` when the channel closes. With our
@@ -380,7 +380,7 @@ implement `Stream`, and then anyone who uses your data type can use `StreamExt`
 and its methods with it automatically.
 
 [futures-syntax]: ch17-01-futures-and-syntax.html
-[counting]: ch17-02-concurrency-with-async.html
+[message-passing]: ch17-02-concurrency-with-async.html
 [async-book]: https://rust-lang.github.io/async-book/
 [under-the-hood]: https://rust-lang.github.io/async-book/02_execution/01_chapter.html
 [pinning]: https://rust-lang.github.io/async-book/04_pinning/01_chapter.html
